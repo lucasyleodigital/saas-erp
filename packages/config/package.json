@@ -1,0 +1,13 @@
+{
+  "name": "@saas/config",
+  "version": "0.1.0",
+  "private": true,
+  "exports": {
+    "./tailwind": "./tailwind.config.ts",
+    "./typescript": "./typescript.json",
+    "./eslint": "./eslint.js"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}

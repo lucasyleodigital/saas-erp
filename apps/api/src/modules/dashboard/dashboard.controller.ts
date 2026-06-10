@@ -1,0 +1,23 @@
+import { Controller, Get, UseGuards } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
+import { DashboardService } from "./dashboard.service";
+import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
+import { CurrentUser } from "../auth/decorators/current-user.decorator";
+import type { JwtPayload } from "@saas/types";
+
+@ApiTags("Dashboard")
+@UseGuards(JwtAuthGuard)
+@Controller("dashboard")
+export class DashboardController {
+  constructor(private dashboardService: DashboardService) {}
+
+  @Get("stats")
+  getStats(@CurrentUser() user: JwtPayload) {
+    return this.dashboardService.getStats(user.companyId);
+  }
+
+  @Get("revenue-chart")
+  getRevenueChart(@CurrentUser() user: JwtPayload) {
+    return this.dashboardService.getRevenueChart(user.companyId);
+  }
+}
