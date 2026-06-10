@@ -1,0 +1,77 @@
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/api";
+import { toast } from "sonner";
+
+export const invoiceKeys = {
+  all: ["invoices"] as const,
+  list: (params?: Record<string, unknown>) => [...invoiceKeys.all, "list", params] as const,
+  detail: (id: string) => [...invoiceKeys.all, "detail", id] as const,
+};
+
+export function useInvoices(params?: {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: string;
+}) {
+  return useQuery({
+    queryKey: invoiceKeys.list(params),
+    queryFn: () => api.get("/invoices", { params }).then((r) => r.data),
+  });
+}
+
+export function useInvoice(id: string) {
+  return useQuery({
+    queryKey: invoiceKeys.detail(id),
+    queryFn: () => api.get(`/invoices/${id}`).then((r) => r.data),
+    enabled: !!id,
+  });
+}
+
+export function useCreateInvoice() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (data: Record<string, unknown>) =>
+      api.post("/invoices", data).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: invoiceKeys.all });
+      toast.success("Factura creada correctamente");
+    },
+    onError: () => toast.error("Error al crear la factura"),
+  });
+}
+
+export function useUpdateInvoiceStatus() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, status }: { id: string; status: string }) =>
+      api.patch(`/invoices/${id}/status`, { status }).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: invoiceKeys.all });
+      toast.success("Estado actualizado");
+    },
+  });
+}
+
+export function useRegisterPayment() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      invoiceId,
+      amount,
+      method,
+    }: {
+      invoiceId: string;
+      amount: number;
+      method: string;
+    }) =>
+      api
+        .post(`/invoices/${invoiceId}/payments`, { amount, method })
+        .then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: invoiceKeys.all });
+      toast.success("Pago registrado");
+    },
+    onError: () => toast.error("Error al registrar el pago"),
+  });
+}
