@@ -33,12 +33,24 @@ FROM node:20-alpine AS runner
 RUN npm install -g pnpm@10
 WORKDIR /app
 
-COPY --from=api-builder /app/node_modules        ./node_modules
+# Copy workspace config and package manifests so pnpm can install correctly
+COPY --from=api-builder /app/package.json        ./package.json
+COPY --from=api-builder /app/pnpm-lock.yaml      ./pnpm-lock.yaml
+COPY --from=api-builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
+COPY --from=api-builder /app/packages/types/package.json    ./packages/types/package.json
+COPY --from=api-builder /app/packages/database/package.json ./packages/database/package.json
+COPY --from=api-builder /app/apps/api/package.json          ./apps/api/package.json
+
+# Install production dependencies — lets pnpm recreate its symlink structure natively
+RUN pnpm install --prod --frozen-lockfile
+
+# Copy built artifacts on top
 COPY --from=api-builder /app/packages            ./packages
 COPY --from=api-builder /app/apps/api/dist       ./apps/api/dist
-COPY --from=api-builder /app/apps/api/package.json ./apps/api/package.json
-COPY --from=api-builder /app/package.json        ./package.json
-COPY --from=api-builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
+
+# Re-generate Prisma client so it is available in the production node_modules
+COPY --from=api-builder /app/packages/database/prisma ./packages/database/prisma
+RUN cd packages/database && npx prisma generate
 
 ENV NODE_ENV=production
 ENV PORT=3001
