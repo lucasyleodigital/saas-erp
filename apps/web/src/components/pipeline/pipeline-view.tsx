@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatCurrency, getInitials } from "@/lib/utils";
 import { Plus, MoreHorizontal, GripVertical } from "lucide-react";
 import { motion } from "framer-motion";
+import { DealDialog } from "./deal-dialog";
 
 const STAGE_COLORS: Record<string, string> = {
   "lead": "bg-blue-500",
@@ -22,6 +23,7 @@ export function PipelineView() {
   const { data: pipelines, isLoading } = usePipeline();
   const moveStage = useMoveDealStage();
   const [dragging, setDragging] = useState<{ dealId: string; fromStageId: string } | null>(null);
+  const [dealDialogOpen, setDealDialogOpen] = useState(false);
 
   const pipeline = pipelines?.[0];
   const stages = pipeline?.stages ?? [];
@@ -74,11 +76,13 @@ export function PipelineView() {
             {totalDeals} deals · {formatCurrency(totalValue)} en total
           </p>
         </div>
-        <Button className="gap-2">
+        <Button className="gap-2" onClick={() => setDealDialogOpen(true)}>
           <Plus className="h-4 w-4" />
           Nuevo deal
         </Button>
       </div>
+
+      <DealDialog open={dealDialogOpen} onOpenChange={setDealDialogOpen} stages={stages} />
 
       {/* Board */}
       <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin">

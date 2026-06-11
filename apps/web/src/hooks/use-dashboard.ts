@@ -15,3 +15,19 @@ export function useRevenueChart() {
     queryFn: () => api.get("/dashboard/revenue-chart").then((r) => r.data),
   });
 }
+
+export function useRecentInvoices() {
+  return useQuery({
+    queryKey: ["dashboard", "recent-invoices"],
+    queryFn: () => api.get("/dashboard/recent-invoices").then((r) => r.data),
+    refetchInterval: 60_000,
+  });
+}
+
+export function useTopClients() {
+  return useQuery({
+    queryKey: ["dashboard", "top-clients"],
+    queryFn: () => api.get("/dashboard/top-clients").then((r) => r.data),
+    refetchInterval: 120_000,
+  });
+}

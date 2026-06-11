@@ -28,6 +28,14 @@ const COOKIE_OPTIONS = {
   maxAge: 30 * 24 * 60 * 60 * 1000,
   path: "/",
 };
+// auth_session is readable by Next.js middleware to protect routes
+const SESSION_COOKIE_OPTIONS = {
+  httpOnly: false,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax" as const,
+  maxAge: 30 * 24 * 60 * 60 * 1000,
+  path: "/",
+};
 
 @ApiTags("Auth")
 @Controller("auth")
@@ -41,6 +49,7 @@ export class AuthController {
   ) {
     const tokens = await this.authService.register(dto);
     res.cookie(REFRESH_COOKIE, tokens.refreshToken, COOKIE_OPTIONS);
+    res.cookie("auth_session", "1", SESSION_COOKIE_OPTIONS);
     return { accessToken: tokens.accessToken };
   }
 
@@ -51,6 +60,7 @@ export class AuthController {
     const user = req.user as any;
     const tokens = await this.authService.login(user.id, user.email);
     res.cookie(REFRESH_COOKIE, tokens.refreshToken, COOKIE_OPTIONS);
+    res.cookie("auth_session", "1", SESSION_COOKIE_OPTIONS);
     return { accessToken: tokens.accessToken };
   }
 
@@ -65,11 +75,12 @@ export class AuthController {
 
   @Post("logout")
   @HttpCode(HttpStatus.OK)
-  @JwtAuthGuard()
+  @UseGuards(JwtAuthGuard)
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const token = req.cookies?.[REFRESH_COOKIE];
     if (token) await this.authService.revokeRefreshToken(token);
     res.clearCookie(REFRESH_COOKIE);
+    res.clearCookie("auth_session");
     return { message: "Sesión cerrada" };
   }
 
@@ -107,6 +118,7 @@ export class AuthController {
     const user = req.user as any;
     const tokens = await this.authService.login(user.id, user.email);
     res.cookie(REFRESH_COOKIE, tokens.refreshToken, COOKIE_OPTIONS);
+    res.cookie("auth_session", "1", SESSION_COOKIE_OPTIONS);
     res.redirect(`${process.env.CLIENT_URL}/dashboard?token=${tokens.accessToken}`);
   }
 }

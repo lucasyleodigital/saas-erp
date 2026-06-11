@@ -76,7 +76,7 @@ export function ProductsView() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {products.map((product: any, i: number) => {
-            const config = typeConfig[product.type] ?? typeConfig.SERVICE;
+            const config = typeConfig[product.type] ?? { label: "Servicio", icon: Settings, color: "text-blue-500 bg-blue-500/10" };
             const Icon = config.icon;
             return (
               <motion.div

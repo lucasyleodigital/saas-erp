@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { logoutAction } from "@/lib/auth";
 import {
   LayoutDashboard,
   Users,
@@ -19,9 +20,13 @@ import {
   ChevronLeft,
   ChevronRight,
   LogOut,
+  UserPlus,
+  CreditCard,
+  ClipboardList,
 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useUnreadCount } from "@/hooks/use-notifications";
 
 const navItems = [
   {
@@ -34,7 +39,7 @@ const navItems = [
     group: "CRM",
     items: [
       { href: "/clientes", label: "Clientes", icon: Users },
-      { href: "/leads", label: "Leads", icon: Briefcase },
+      { href: "/leads", label: "Leads", icon: UserPlus },
       { href: "/pipeline", label: "Pipeline", icon: BarChart3 },
     ],
   },
@@ -42,7 +47,7 @@ const navItems = [
     group: "Facturación",
     items: [
       { href: "/facturas", label: "Facturas", icon: FileText },
-      { href: "/presupuestos", label: "Presupuestos", icon: FileText },
+      { href: "/presupuestos", label: "Presupuestos", icon: ClipboardList },
       { href: "/productos", label: "Productos", icon: Package },
     ],
   },
@@ -57,6 +62,7 @@ const navItems = [
     group: "Sistema",
     items: [
       { href: "/empresa", label: "Mi empresa", icon: Building2 },
+      { href: "/billing", label: "Planes", icon: CreditCard },
       { href: "/automatizaciones", label: "Automatizaciones", icon: Zap },
       { href: "/notificaciones", label: "Notificaciones", icon: Bell },
       { href: "/configuracion", label: "Configuración", icon: Settings },
@@ -67,6 +73,7 @@ const navItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+  const { data: unreadCount } = useUnreadCount();
 
   return (
     <motion.aside
@@ -120,7 +127,7 @@ export function Sidebar() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-3 mx-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                    "relative flex items-center gap-3 mx-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
                     "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                     isActive
                       ? "bg-sidebar-primary text-sidebar-primary-foreground"
@@ -136,12 +143,20 @@ export function Sidebar() {
                         animate={{ opacity: 1, width: "auto" }}
                         exit={{ opacity: 0, width: 0 }}
                         transition={{ duration: 0.15 }}
-                        className="truncate"
+                        className="truncate flex-1"
                       >
                         {item.label}
                       </motion.span>
                     )}
                   </AnimatePresence>
+                  {item.href === "/notificaciones" && (unreadCount ?? 0) > 0 && (
+                    <span className={cn(
+                      "flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold px-1",
+                      collapsed && "absolute right-1 top-1 h-3 min-w-3 text-[8px]"
+                    )}>
+                      {unreadCount}
+                    </span>
+                  )}
                 </Link>
               );
             })}
@@ -151,7 +166,10 @@ export function Sidebar() {
 
       {/* Footer */}
       <div className="border-t border-sidebar-border p-2">
-        <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
+        <button
+          onClick={() => logoutAction()}
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors"
+        >
           <LogOut className="h-4 w-4 shrink-0" />
           {!collapsed && <span>Cerrar sesión</span>}
         </button>

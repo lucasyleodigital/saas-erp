@@ -19,6 +19,12 @@ build
 *.pem
 .vercel
 
+# Secrets / passwords (never commit)
+*.txt
+password*
+*password*
+*secret*
+
 # Debug
 npm-debug.log*
 pnpm-debug.log*

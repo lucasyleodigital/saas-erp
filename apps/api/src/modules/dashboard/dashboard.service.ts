@@ -118,4 +118,26 @@ export class DashboardService {
 
     return results;
   }
+
+  async getRecentInvoices(companyId: string) {
+    return this.prisma.invoice.findMany({
+      where: { companyId },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      include: {
+        client: { select: { id: true, name: true, cifNif: true } },
+      },
+    });
+  }
+
+  async getTopClients(companyId: string) {
+    return this.prisma.client.findMany({
+      where: { companyId, isActive: true },
+      orderBy: { totalBilled: "desc" },
+      take: 5,
+      include: {
+        _count: { select: { invoices: true } },
+      },
+    });
+  }
 }

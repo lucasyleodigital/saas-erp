@@ -20,4 +20,14 @@ export class DashboardController {
   getRevenueChart(@CurrentUser() user: JwtPayload) {
     return this.dashboardService.getRevenueChart(user.companyId);
   }
+
+  @Get("recent-invoices")
+  getRecentInvoices(@CurrentUser() user: JwtPayload) {
+    return this.dashboardService.getRecentInvoices(user.companyId);
+  }
+
+  @Get("top-clients")
+  getTopClients(@CurrentUser() user: JwtPayload) {
+    return this.dashboardService.getTopClients(user.companyId);
+  }
 }

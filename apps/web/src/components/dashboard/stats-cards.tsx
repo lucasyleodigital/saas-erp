@@ -17,7 +17,7 @@ const COLORS = [
 export function StatsCards() {
   const { data, isLoading } = useDashboardStats();
 
-  const stats = data
+  const stats: { label: string; value: string; change: number; extra?: string }[] = data
     ? [
         {
           label: "Ingresos del mes",
@@ -43,7 +43,7 @@ export function StatsCards() {
         },
       ]
     : Array.from({ length: 4 }, (_, i) => ({
-        label: ["Ingresos del mes", "Facturas pendientes", "Clientes activos", "Deals abiertos"][i],
+        label: ["Ingresos del mes", "Facturas pendientes", "Clientes activos", "Deals abiertos"][i] ?? "",
         value: "—",
         change: 0,
       }));

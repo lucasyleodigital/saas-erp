@@ -15,11 +15,12 @@ export class VerifactuService {
         items: true,
         taxes: { include: { tax: true } },
         company: true,
+        verifactu: true,
       },
     });
 
     if (!invoice) throw new BadRequestException("Factura no encontrada");
-    if (invoice.verifactu) throw new BadRequestException("VeriFactu ya generado para esta factura");
+    if ((invoice as any).verifactu) throw new BadRequestException("VeriFactu ya generado para esta factura");
     if (!["SENT", "PAID"].includes(invoice.status)) {
       throw new BadRequestException("Solo se puede generar VeriFactu para facturas enviadas o pagadas");
     }

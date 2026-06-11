@@ -1,0 +1,489 @@
+"use client";
+
+import { useState } from "react";
+import { useForm, useFieldArray } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import {
+  useProfitAndLoss, useVatReport, useJournalEntries,
+  useCreateJournalEntry, useDeleteJournalEntry, useAccounts,
+} from "@/hooks/use-accounting";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend,
+} from "recharts";
+import { cn, formatCurrency } from "@/lib/utils";
+import { Plus, Trash2, Loader2, BookOpen, Receipt, TrendingUp, Calculator } from "lucide-react";
+import { motion } from "framer-motion";
+
+// ---- Journal entry dialog ----
+const entrySchema = z.object({
+  date: z.string().min(1, "Fecha obligatoria"),
+  description: z.string().min(1, "Descripción obligatoria"),
+  items: z.array(z.object({
+    accountId: z.string().min(1, "Cuenta obligatoria"),
+    debit: z.coerce.number().min(0),
+    credit: z.coerce.number().min(0),
+    description: z.string().optional(),
+  })).min(2, "Mínimo 2 líneas"),
+});
+type EntryForm = z.infer<typeof entrySchema>;
+
+function JournalEntryDialog({
+  open, onOpenChange, accounts,
+}: {
+  open: boolean; onOpenChange: (o: boolean) => void; accounts: any[];
+}) {
+  const create = useCreateJournalEntry();
+  const {
+    register, handleSubmit, control, watch, reset, formState: { errors },
+  } = useForm<EntryForm>({
+    resolver: zodResolver(entrySchema),
+    defaultValues: {
+      date: new Date().toISOString().split("T")[0],
+      items: [
+        { accountId: "", debit: 0, credit: 0, description: "" },
+        { accountId: "", debit: 0, credit: 0, description: "" },
+      ],
+    },
+  });
+  const { fields, append, remove } = useFieldArray({ control, name: "items" });
+  const items = watch("items");
+  const totalDebit = items.reduce((s, i) => s + (Number(i.debit) || 0), 0);
+  const totalCredit = items.reduce((s, i) => s + (Number(i.credit) || 0), 0);
+  const balanced = Math.abs(totalDebit - totalCredit) < 0.01;
+
+  async function onSubmit(data: EntryForm) {
+    await create.mutateAsync(data as any);
+    onOpenChange(false);
+    reset();
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Nuevo asiento contable</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label>Fecha *</Label>
+              <Input type="date" {...register("date")} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Descripción *</Label>
+              <Input {...register("description")} placeholder="Pago de proveedor..." />
+              {errors.description && <p className="text-xs text-destructive">{errors.description.message}</p>}
+            </div>
+          </div>
+
+          {/* Lines */}
+          <div className="space-y-2">
+            <div className="grid grid-cols-12 gap-2 text-xs text-muted-foreground px-1">
+              <span className="col-span-4">Cuenta</span>
+              <span className="col-span-3">Descripción</span>
+              <span className="col-span-2 text-right">Debe</span>
+              <span className="col-span-2 text-right">Haber</span>
+              <span className="col-span-1" />
+            </div>
+            {fields.map((field, idx) => (
+              <div key={field.id} className="grid grid-cols-12 gap-2">
+                <div className="col-span-4">
+                  <select
+                    {...register(`items.${idx}.accountId`)}
+                    className="flex h-9 w-full rounded-lg border border-input bg-background px-2 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-ring"
+                  >
+                    <option value="">Cuenta...</option>
+                    {accounts.map((a: any) => (
+                      <option key={a.id} value={a.id}>{a.code} — {a.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="col-span-3">
+                  <Input
+                    className="h-9 text-xs"
+                    placeholder="Concepto"
+                    {...register(`items.${idx}.description`)}
+                  />
+                </div>
+                <div className="col-span-2">
+                  <Input
+                    type="number" step="0.01" min="0" className="h-9 text-xs text-right"
+                    {...register(`items.${idx}.debit`)}
+                  />
+                </div>
+                <div className="col-span-2">
+                  <Input
+                    type="number" step="0.01" min="0" className="h-9 text-xs text-right"
+                    {...register(`items.${idx}.credit`)}
+                  />
+                </div>
+                <div className="col-span-1 flex justify-center items-center">
+                  {fields.length > 2 && (
+                    <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground"
+                      onClick={() => remove(idx)}>
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+            ))}
+            <Button
+              type="button" variant="outline" size="sm" className="gap-2 text-xs"
+              onClick={() => append({ accountId: "", debit: 0, credit: 0, description: "" })}
+            >
+              <Plus className="h-3.5 w-3.5" /> Añadir línea
+            </Button>
+          </div>
+
+          {/* Totals */}
+          <div className="flex items-center justify-end gap-6 text-sm border-t pt-3">
+            <div className="flex gap-4">
+              <span>Debe: <strong>{formatCurrency(totalDebit)}</strong></span>
+              <span>Haber: <strong>{formatCurrency(totalCredit)}</strong></span>
+            </div>
+            <span className={cn(
+              "text-xs font-medium px-2 py-0.5 rounded-full",
+              balanced ? "bg-emerald-100 text-emerald-700" : "bg-destructive/10 text-destructive"
+            )}>
+              {balanced ? "Cuadrado" : "Descuadrado"}
+            </span>
+          </div>
+
+          <DialogFooter className="gap-2">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+            <Button type="submit" disabled={create.isPending || !balanced}>
+              {create.isPending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+              Crear asiento
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// ---- Main view ----
+export function AccountingView() {
+  const [tab, setTab] = useState<"pyl" | "vat" | "journal" | "accounts">("pyl");
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [entryDialogOpen, setEntryDialogOpen] = useState(false);
+
+  const { data: pyl, isLoading: pylLoading } = useProfitAndLoss(year);
+  const { data: vat, isLoading: vatLoading } = useVatReport(year);
+  const { data: journalData, isLoading: journalLoading } = useJournalEntries({});
+  const deleteEntry = useDeleteJournalEntry();
+  const { data: accountsData } = useAccounts();
+
+  const accounts: any[] = accountsData ?? [];
+  const entries: any[] = journalData?.data ?? [];
+
+  const MONTHS = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+  const chartData = pyl?.monthly?.map((m: any, i: number) => ({
+    mes: MONTHS[i],
+    Ingresos: m.revenue,
+    Gastos: m.expenses,
+  })) ?? [];
+
+  return (
+    <div className="space-y-5">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Contabilidad</h1>
+          <p className="text-sm text-muted-foreground mt-1">PGC, asientos e informes fiscales</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 border rounded-lg overflow-hidden">
+            <button
+              onClick={() => setYear(y => y - 1)}
+              className="px-3 py-1.5 text-sm hover:bg-muted transition-colors"
+            >‹</button>
+            <span className="px-3 py-1.5 text-sm font-medium border-x">{year}</span>
+            <button
+              onClick={() => setYear(y => y + 1)}
+              className="px-3 py-1.5 text-sm hover:bg-muted transition-colors"
+            >›</button>
+          </div>
+          {tab === "journal" && (
+            <Button size="sm" className="gap-2" onClick={() => setEntryDialogOpen(true)}>
+              <Plus className="h-4 w-4" /> Asiento
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg w-fit overflow-x-auto">
+        {[
+          { key: "pyl", label: "Pérdidas y Ganancias", icon: TrendingUp },
+          { key: "vat", label: "IVA Trimestral", icon: Calculator },
+          { key: "journal", label: "Libro Diario", icon: BookOpen },
+          { key: "accounts", label: "Plan de Cuentas", icon: Receipt },
+        ].map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setTab(t.key as any)}
+            className={cn(
+              "flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap",
+              tab === t.key ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <t.icon className="h-3.5 w-3.5" />
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* P&L tab */}
+      {tab === "pyl" && (
+        <div className="space-y-4">
+          {/* KPI cards */}
+          <div className="grid grid-cols-3 gap-4">
+            {[
+              { label: "Ingresos", value: pyl?.revenue ?? 0, color: "text-emerald-600" },
+              { label: "Gastos", value: pyl?.expenses ?? 0, color: "text-destructive" },
+              { label: "Resultado neto", value: pyl?.profit ?? 0, color: (pyl?.profit ?? 0) >= 0 ? "text-emerald-600" : "text-destructive" },
+            ].map((c) => (
+              <Card key={c.label}>
+                <CardContent className="p-5">
+                  <p className="text-xs text-muted-foreground">{c.label}</p>
+                  <p className={cn("text-2xl font-bold mt-1", c.color)}>
+                    {formatCurrency(c.value)}
+                  </p>
+                  {c.label === "Resultado neto" && pyl?.margin !== undefined && (
+                    <p className="text-xs text-muted-foreground mt-1">Margen: {pyl.margin.toFixed(1)}%</p>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Chart */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Evolución mensual {year}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {pylLoading ? (
+                <div className="h-64 bg-muted rounded-lg animate-pulse" />
+              ) : chartData.length === 0 ? (
+                <div className="h-64 flex items-center justify-center text-muted-foreground text-sm">
+                  Sin datos para {year}
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height={260}>
+                  <BarChart data={chartData} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="mes" tick={{ fontSize: 12 }} />
+                    <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
+                    <Tooltip formatter={(v: number) => formatCurrency(v)} />
+                    <Legend />
+                    <Bar dataKey="Ingresos" fill="hsl(142 76% 36%)" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="Gastos" fill="hsl(0 84% 60%)" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* VAT tab */}
+      {tab === "vat" && (
+        <div className="space-y-4">
+          {vatLoading ? (
+            <div className="grid grid-cols-4 gap-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="h-32 bg-muted rounded-xl animate-pulse" />
+              ))}
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {(vat?.quarters ?? []).map((q: any) => (
+                  <Card key={q.quarter}>
+                    <CardContent className="p-5">
+                      <p className="text-sm font-semibold text-muted-foreground mb-3">{q.quarter} {year}</p>
+                      <div className="space-y-1.5 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Base</span>
+                          <span className="font-medium">{formatCurrency(q.base)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">IVA (21%)</span>
+                          <span className="font-medium text-amber-600">{formatCurrency(q.vat)}</span>
+                        </div>
+                        <div className="flex justify-between border-t pt-1.5">
+                          <span className="font-semibold">Total</span>
+                          <span className="font-bold">{formatCurrency(q.total)}</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+              {/* Annual total */}
+              <Card className="border-primary/30 bg-primary/5">
+                <CardContent className="p-5 flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold">Total IVA a declarar {year}</p>
+                    <p className="text-sm text-muted-foreground mt-0.5">Modelos 303 anuales</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-2xl font-bold text-primary">
+                      {formatCurrency(vat?.yearTotal?.vat ?? 0)}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      sobre {formatCurrency(vat?.yearTotal?.base ?? 0)} de base
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Journal tab */}
+      {tab === "journal" && (
+        <Card>
+          <CardContent className="p-0">
+            {journalLoading ? (
+              <div className="p-8 flex justify-center">
+                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+              </div>
+            ) : entries.length === 0 ? (
+              <div className="flex flex-col items-center py-14 text-center">
+                <BookOpen className="h-10 w-10 text-muted-foreground mb-3" />
+                <p className="font-medium">Sin asientos</p>
+                <p className="text-sm text-muted-foreground mt-1">Crea el primer asiento contable</p>
+                <Button className="mt-4 gap-2" onClick={() => setEntryDialogOpen(true)}>
+                  <Plus className="h-4 w-4" /> Nuevo asiento
+                </Button>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">Fecha</th>
+                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">Descripción</th>
+                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">Tipo</th>
+                      <th className="text-right p-4 text-xs font-medium text-muted-foreground">Importe</th>
+                      <th className="text-right p-4 text-xs font-medium text-muted-foreground">Estado</th>
+                      <th className="p-4" />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {entries.map((entry: any, i: number) => (
+                      <motion.tr
+                        key={entry.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: i * 0.02 }}
+                        className="border-b last:border-0 hover:bg-muted/30 transition-colors"
+                      >
+                        <td className="p-4 text-sm text-muted-foreground">
+                          {new Date(entry.date).toLocaleDateString("es-ES")}
+                        </td>
+                        <td className="p-4 text-sm font-medium">{entry.description}</td>
+                        <td className="p-4 text-xs text-muted-foreground">{entry.type}</td>
+                        <td className="p-4 text-right text-sm font-semibold">
+                          {formatCurrency(
+                            entry.items?.reduce((s: number, it: any) => s + Number(it.debit || 0), 0) ?? 0
+                          )}
+                        </td>
+                        <td className="p-4 text-right">
+                          <span className={cn(
+                            "text-xs font-medium px-2 py-0.5 rounded-full",
+                            entry.isLocked ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700"
+                          )}>
+                            {entry.isLocked ? "Bloqueado" : "Borrador"}
+                          </span>
+                        </td>
+                        <td className="p-4 text-right">
+                          {!entry.isLocked && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                              onClick={() => deleteEntry.mutate(entry.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Accounts tab */}
+      {tab === "accounts" && (
+        <Card>
+          <CardContent className="p-0">
+            {accounts.length === 0 ? (
+              <div className="flex flex-col items-center py-14 text-center">
+                <Receipt className="h-10 w-10 text-muted-foreground mb-3" />
+                <p className="font-medium">Plan de cuentas vacío</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  El plan de cuentas PGC español se crea automáticamente al registrar el primer asiento
+                </p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">Código</th>
+                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">Nombre</th>
+                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">Tipo</th>
+                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">Grupo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {accounts
+                      .sort((a: any, b: any) => a.code.localeCompare(b.code))
+                      .map((account: any, i: number) => (
+                        <motion.tr
+                          key={account.id}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: i * 0.01 }}
+                          className="border-b last:border-0 hover:bg-muted/30 transition-colors"
+                        >
+                          <td className="p-4 font-mono text-sm font-semibold text-primary">{account.code}</td>
+                          <td className="p-4 text-sm font-medium">{account.name}</td>
+                          <td className="p-4 text-xs text-muted-foreground">{account.type}</td>
+                          <td className="p-4 text-xs text-muted-foreground">{account.group ?? "—"}</td>
+                        </motion.tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      <JournalEntryDialog
+        open={entryDialogOpen}
+        onOpenChange={setEntryDialogOpen}
+        accounts={accounts}
+      />
+    </div>
+  );
+}

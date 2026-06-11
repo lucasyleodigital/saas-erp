@@ -10,6 +10,13 @@ import { ProductsModule } from "./modules/products/products.module";
 import { DealsModule } from "./modules/deals/deals.module";
 import { DashboardModule } from "./modules/dashboard/dashboard.module";
 import { VerifactuModule } from "./modules/verifactu/verifactu.module";
+import { LeadsModule } from "./modules/leads/leads.module";
+import { QuotesModule } from "./modules/quotes/quotes.module";
+import { BillingModule } from "./modules/billing/billing.module";
+import { EmailModule } from "./modules/email/email.module";
+import { NotificationsModule } from "./modules/notifications/notifications.module";
+import { InventoryModule } from "./modules/inventory/inventory.module";
+import { AccountingModule } from "./modules/accounting/accounting.module";
 import { DatabaseModule } from "./database/database.module";
 import { validateEnv } from "./config/env.validation";
 
@@ -33,6 +40,13 @@ import { validateEnv } from "./config/env.validation";
     DealsModule,
     DashboardModule,
     VerifactuModule,
+    LeadsModule,
+    QuotesModule,
+    BillingModule,
+    EmailModule,
+    NotificationsModule,
+    InventoryModule,
+    AccountingModule,
   ],
 })
 export class AppModule {}

@@ -3,7 +3,9 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
+    "build:packages": "cd packages/types && tsc -p tsconfig.build.json && cd ../database && tsc -p tsconfig.build.json",
     "dev": "turbo dev",
+    "start:api": "cd apps/api && nest build && node dist/apps/api/src/main.js",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "db:generate": "turbo db:generate",

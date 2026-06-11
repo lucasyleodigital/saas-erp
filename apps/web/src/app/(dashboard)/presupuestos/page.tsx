@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
+import { QuotesView } from "@/components/quotes/quotes-view";
 
-export const metadata: Metadata = { title: "Presupuestos" };
+export const metadata: Metadata = { title: "Presupuestos — ERP SaaS" };
 
 export default function QuotesPage() {
-  return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Presupuestos</h1>
-      <p className="text-muted-foreground">Módulo de presupuestos — próximamente.</p>
-    </div>
-  );
+  return <QuotesView />;
 }

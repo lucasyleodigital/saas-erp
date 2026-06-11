@@ -7,6 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { loginAction } from "@/lib/auth";
+import { useAuthStore } from "@/store/auth.store";
+import { api } from "@/lib/api";
 
 const schema = z.object({
   email: z.string().email("Email inválido"),
@@ -17,6 +22,9 @@ type FormData = z.infer<typeof schema>;
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
+  const setUser = useAuthStore((s) => s.setUser);
+
   const {
     register,
     handleSubmit,
@@ -24,9 +32,15 @@ export function LoginForm() {
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   async function onSubmit(data: FormData) {
-    // TODO: connect to API
-    await new Promise((r) => setTimeout(r, 1000));
-    console.log(data);
+    try {
+      await loginAction(data.email, data.password);
+      const { data: me } = await api.get("/auth/me");
+      setUser(me);
+      router.push("/dashboard");
+    } catch (err: any) {
+      const msg = err.response?.data?.message ?? "Credenciales incorrectas";
+      toast.error(Array.isArray(msg) ? msg[0] : msg);
+    }
   }
 
   return (
@@ -106,7 +120,15 @@ export function LoginForm() {
         </div>
       </div>
 
-      <Button type="button" variant="outline" className="w-full">
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full"
+        onClick={() => {
+          const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api/v1";
+          window.location.href = `${apiUrl}/auth/google`;
+        }}
+      >
         <svg className="h-4 w-4" viewBox="0 0 24 24">
           <path
             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"

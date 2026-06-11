@@ -9,6 +9,7 @@ import { ConfigService } from "@nestjs/config";
 import * as bcrypt from "bcryptjs";
 import * as speakeasy from "speakeasy";
 import { PrismaService } from "../../database/prisma.service";
+import { EmailService } from "../email/email.service";
 import { RegisterDto } from "./dto/register.dto";
 import type { JwtPayload, AuthTokens } from "@saas/types";
 
@@ -17,7 +18,8 @@ export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwt: JwtService,
-    private config: ConfigService
+    private config: ConfigService,
+    private email: EmailService
   ) {}
 
   async register(dto: RegisterDto) {
@@ -47,7 +49,14 @@ export class AuthService {
       },
     });
 
-    return this.generateTokens(user.id, user.email, company.id, "OWNER");
+    const tokens = await this.generateTokens(user.id, user.email, company.id, "OWNER");
+
+    // Send welcome email (fire-and-forget)
+    this.email
+      .sendWelcome(user.email, dto.firstName, dto.companyName)
+      .catch(() => {});
+
+    return tokens;
   }
 
   async validateUser(email: string, password: string) {
