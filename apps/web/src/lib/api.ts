@@ -34,6 +34,8 @@ api.interceptors.response.use(
         return api(original);
       } catch {
         localStorage.removeItem("access_token");
+        // Clear auth_session cookie so middleware doesn't redirect back to dashboard
+        document.cookie = "auth_session=; path=/; max-age=0; SameSite=Lax";
         window.location.href = "/login";
       }
     }

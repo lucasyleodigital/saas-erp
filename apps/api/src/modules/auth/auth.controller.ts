@@ -21,18 +21,20 @@ import { CurrentUser } from "./decorators/current-user.decorator";
 import type { JwtPayload } from "@saas/types";
 
 const REFRESH_COOKIE = "refresh_token";
+const IS_PROD = process.env.NODE_ENV === "production";
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "lax" as const,
+  secure: IS_PROD,
+  // SameSite=None required for cross-origin cookies (Railway API → Vercel frontend)
+  sameSite: IS_PROD ? ("none" as const) : ("lax" as const),
   maxAge: 30 * 24 * 60 * 60 * 1000,
   path: "/",
 };
 // auth_session is readable by Next.js middleware to protect routes
 const SESSION_COOKIE_OPTIONS = {
   httpOnly: false,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "lax" as const,
+  secure: IS_PROD,
+  sameSite: IS_PROD ? ("none" as const) : ("lax" as const),
   maxAge: 30 * 24 * 60 * 60 * 1000,
   path: "/",
 };
