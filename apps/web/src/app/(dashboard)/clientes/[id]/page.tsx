@@ -3,10 +3,11 @@ import { ClientDetail } from "@/components/clients/client-detail";
 
 export const metadata: Metadata = { title: "Detalle de cliente — ERP SaaS" };
 
-export default function ClientDetailPage({
+export default async function ClientDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  return <ClientDetail id={params.id} />;
+  const { id } = await params;
+  return <ClientDetail id={id} />;
 }

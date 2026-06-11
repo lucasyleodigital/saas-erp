@@ -3,10 +3,11 @@ import { InvoiceDetail } from "@/components/invoices/invoice-detail";
 
 export const metadata: Metadata = { title: "Detalle de factura — ERP SaaS" };
 
-export default function InvoiceDetailPage({
+export default async function InvoiceDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  return <InvoiceDetail id={params.id} />;
+  const { id } = await params;
+  return <InvoiceDetail id={id} />;
 }
