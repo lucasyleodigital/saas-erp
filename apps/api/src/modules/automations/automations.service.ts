@@ -94,7 +94,7 @@ export class AutomationsService {
         break;
 
       case "SEND_WEBHOOK":
-        if (config.url) {
+        if (config.url && this.isSafeWebhookUrl(config.url)) {
           await fetch(config.url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -105,6 +105,27 @@ export class AutomationsService {
 
       default:
         break;
+    }
+  }
+
+  // SSRF protection — only allow public HTTPS URLs
+  private isSafeWebhookUrl(url: string): boolean {
+    try {
+      const parsed = new URL(url);
+      if (parsed.protocol !== "https:") return false;
+      const hostname = parsed.hostname.toLowerCase();
+      // Block private/internal IP ranges and localhost
+      const blocked = [
+        "localhost", "127.", "0.0.0.0", "::1",
+        "10.", "172.16.", "172.17.", "172.18.", "172.19.",
+        "172.20.", "172.21.", "172.22.", "172.23.", "172.24.",
+        "172.25.", "172.26.", "172.27.", "172.28.", "172.29.",
+        "172.30.", "172.31.", "192.168.", "169.254.",
+        "metadata.google", "metadata.aws", "169.254.169.254",
+      ];
+      return !blocked.some((b) => hostname.startsWith(b) || hostname.includes(b));
+    } catch {
+      return false;
     }
   }
 

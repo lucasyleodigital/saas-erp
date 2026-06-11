@@ -11,6 +11,7 @@ import {
 } from "@nestjs/common";
 import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
 import { AuthGuard } from "@nestjs/passport";
+import { Throttle, SkipThrottle } from "@nestjs/throttler";
 import { Request, Response } from "express";
 import { AuthService } from "./auth.service";
 import { RegisterDto } from "./dto/register.dto";
@@ -44,6 +45,8 @@ const SESSION_COOKIE_OPTIONS = {
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  // 5 attempts per minute per IP — brute force protection
+  @Throttle({ short: { ttl: 60000, limit: 5 } })
   @Post("register")
   async register(
     @Body() dto: RegisterDto,
@@ -55,6 +58,8 @@ export class AuthController {
     return { accessToken: tokens.accessToken };
   }
 
+  // 10 attempts per minute per IP — brute force protection
+  @Throttle({ short: { ttl: 60000, limit: 10 } })
   @Post("login")
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("local"))

@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
+import { APP_GUARD } from "@nestjs/core";
 import { ConfigModule } from "@nestjs/config";
-import { ThrottlerModule } from "@nestjs/throttler";
+import { ThrottlerModule, ThrottlerGuard } from "@nestjs/throttler";
 import { AuthModule } from "./modules/auth/auth.module";
 import { CompaniesModule } from "./modules/companies/companies.module";
 import { UsersModule } from "./modules/users/users.module";
@@ -49,6 +50,10 @@ import { validateEnv } from "./config/env.validation";
     InventoryModule,
     AccountingModule,
     AutomationsModule,
+  ],
+  providers: [
+    // Apply rate limiting globally to ALL routes
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
   ],
 })
 export class AppModule {}
