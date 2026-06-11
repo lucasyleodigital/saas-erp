@@ -77,9 +77,31 @@ enum ProductType {
 }
 
 enum StockMovementType {
-  IN
-  OUT
-  ADJUSTMENT
+  PURCHASE
+  SALE
+  ADJUSTMENT_IN
+  ADJUSTMENT_OUT
+  RETURN
+  TRANSFER
+}
+
+enum AutomationTrigger {
+  INVOICE_CREATED
+  INVOICE_PAID
+  INVOICE_OVERDUE
+  QUOTE_ACCEPTED
+  QUOTE_CREATED
+  LEAD_CREATED
+  DEAL_STAGE_CHANGED
+  PAYMENT_RECEIVED
+  CLIENT_CREATED
+}
+
+enum AutomationActionType {
+  SEND_EMAIL
+  CREATE_NOTIFICATION
+  SEND_WEBHOOK
+  UPDATE_DEAL_STAGE
 }
 
 enum VerifactuStatus {
@@ -151,6 +173,7 @@ model Company {
   warehouses     Warehouse[]
   suppliers      Supplier[]
   invoiceSeries  InvoiceSeries[]
+  automations    Automation[]
 
   @@map("companies")
 }
@@ -793,4 +816,29 @@ model AuditLog {
 
   @@index([companyId, entity])
   @@map("audit_logs")
+}
+
+// ============================================================
+// AUTOMATIONS
+// ============================================================
+
+model Automation {
+  id           String               @id @default(uuid())
+  companyId    String
+  name         String
+  description  String?
+  trigger      AutomationTrigger
+  conditions   Json?
+  action       AutomationActionType
+  actionConfig Json
+  isActive     Boolean              @default(true)
+  runCount     Int                  @default(0)
+  lastRunAt    DateTime?
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+
+  company      Company              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, isActive])
+  @@map("automations")
 }

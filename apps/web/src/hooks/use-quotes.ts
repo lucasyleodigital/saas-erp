@@ -35,6 +35,20 @@ export function useCreateQuote() {
   });
 }
 
+export function useSendQuote() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, to }: { id: string; to?: string }) =>
+      api.post(`/quotes/${id}/send`, { to }).then((r) => r.data),
+    onSuccess: (data) => {
+      qc.invalidateQueries({ queryKey: ["quotes"] });
+      if (data.sent) toast.success(`Presupuesto enviado a ${data.to}`);
+      else toast.error(data.reason ?? "No se pudo enviar");
+    },
+    onError: () => toast.error("Error al enviar el presupuesto"),
+  });
+}
+
 export function useUpdateQuoteStatus() {
   const qc = useQueryClient();
   return useMutation({

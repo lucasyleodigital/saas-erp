@@ -17,6 +17,7 @@ import { EmailModule } from "./modules/email/email.module";
 import { NotificationsModule } from "./modules/notifications/notifications.module";
 import { InventoryModule } from "./modules/inventory/inventory.module";
 import { AccountingModule } from "./modules/accounting/accounting.module";
+import { AutomationsModule } from "./modules/automations/automations.module";
 import { DatabaseModule } from "./database/database.module";
 import { validateEnv } from "./config/env.validation";
 
@@ -47,6 +48,7 @@ import { validateEnv } from "./config/env.validation";
     NotificationsModule,
     InventoryModule,
     AccountingModule,
+    AutomationsModule,
   ],
 })
 export class AppModule {}

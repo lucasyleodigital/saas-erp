@@ -81,6 +81,34 @@ export class EmailService {
     );
   }
 
+  async sendQuote(
+    to: string,
+    clientName: string,
+    quoteNumber: string,
+    amount: number,
+    validUntil: string,
+  ) {
+    await this.send(
+      to,
+      `Presupuesto ${quoteNumber}`,
+      `
+      <div style="font-family: -apple-system, sans-serif; max-width: 560px; margin: 0 auto; padding: 40px 32px; color: #111827;">
+        <h1 style="font-size: 22px; font-weight: 700; margin: 0 0 8px;">Presupuesto</h1>
+        <p style="color: #6b7280; margin: 0 0 24px;">Estimado/a ${clientName},</p>
+        <p style="color: #374151; line-height: 1.6; margin-bottom: 24px;">
+          Adjuntamos el presupuesto <strong>${quoteNumber}</strong> por un importe de
+          <strong>${new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(amount)}</strong>.
+          Este presupuesto es válido hasta el <strong>${validUntil}</strong>.
+        </p>
+        <p style="color: #374151;">Para aceptarlo o solicitar modificaciones, responde a este email.</p>
+        <p style="color: #9ca3af; font-size: 12px; margin-top: 32px;">
+          Responde a este email para cualquier consulta.
+        </p>
+      </div>
+      `
+    );
+  }
+
   async sendPaymentReminder(
     to: string,
     clientName: string,
