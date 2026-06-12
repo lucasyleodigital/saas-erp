@@ -17,9 +17,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
       // Must point to the API server (Railway), NOT the web frontend (Vercel)
       callbackURL: `${config.get("API_URL", "http://localhost:3001")}/api/v1/auth/google/callback`,
       scope: ["email", "profile"],
-      // Allow user to pick which Google account to use
-      prompt: "select_account",
-    });
+    } as any);
   }
 
   async validate(
