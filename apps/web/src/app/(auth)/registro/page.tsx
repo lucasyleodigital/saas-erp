@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { RegisterForm } from "@/components/auth/register-form";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = { title: "Register" };
 
 export default async function RegisterPage() {

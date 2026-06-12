@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { LoginForm } from "@/components/auth/login-form";
 
+// LoginForm uses useTranslations() → needs NextIntlClientProvider at runtime
+// The [locale] wrapper provides it; the non-locale route must not be statically rendered
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = { title: "Login" };
 
 export default async function LoginPage() {
