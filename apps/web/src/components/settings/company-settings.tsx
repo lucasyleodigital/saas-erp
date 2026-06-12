@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMyCompany, useUpdateCompany } from "@/hooks/use-company";
+import { useUser } from "@/hooks/use-user";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Building2, CreditCard } from "lucide-react";
 import Link from "next/link";
+import { TeamSection } from "@/components/empresa/team-section";
 
 const schema = z.object({
   name: z.string().min(1, "El nombre es obligatorio"),
@@ -38,6 +40,7 @@ const PLAN_LABELS: Record<string, { label: string; description: string }> = {
 
 export function CompanySettings() {
   const { data: company, isLoading } = useMyCompany();
+  const { data: currentUser } = useUser();
   const updateCompany = useUpdateCompany();
 
   const {
@@ -236,6 +239,9 @@ export function CompanySettings() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Team section */}
+      <TeamSection currentRole={currentUser?.role ?? "EMPLOYEE"} />
     </div>
   );
 }

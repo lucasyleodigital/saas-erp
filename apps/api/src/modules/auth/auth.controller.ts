@@ -3,6 +3,7 @@ import {
   Post,
   Get,
   Body,
+  Param,
   UseGuards,
   Req,
   Res,
@@ -19,6 +20,7 @@ import { LoginDto } from "./dto/login.dto";
 import { Verify2FADto } from "./dto/verify-2fa.dto";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { CurrentUser } from "./decorators/current-user.decorator";
+import { CompaniesService } from "../companies/companies.service";
 import type { JwtPayload } from "@saas/types";
 
 const REFRESH_COOKIE = "refresh_token";
@@ -43,7 +45,10 @@ const SESSION_COOKIE_OPTIONS = {
 @ApiTags("Auth")
 @Controller("auth")
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private companiesService: CompaniesService,
+  ) {}
 
   // 5 attempts per minute per IP — brute force protection
   @Throttle({ short: { ttl: 60000, limit: 5 } })
@@ -127,5 +132,29 @@ export class AuthController {
     res.cookie(REFRESH_COOKIE, tokens.refreshToken, COOKIE_OPTIONS);
     res.cookie("auth_session", "1", SESSION_COOKIE_OPTIONS);
     res.redirect(`${process.env.CLIENT_URL}/dashboard?token=${tokens.accessToken}`);
+  }
+
+  // ─── INVITATIONS ──────────────────────────────────────────────────
+
+  @Get("invite/:token")
+  @SkipThrottle()
+  getInvitation(@Param("token") token: string) {
+    return this.companiesService.getInvitation(token);
+  }
+
+  @Post("invite/:token/accept")
+  @SkipThrottle()
+  @UseGuards(JwtAuthGuard)
+  async acceptInvitation(
+    @Param("token") token: string,
+    @CurrentUser() user: JwtPayload,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const result = await this.companiesService.acceptInvitation(token, user.sub);
+    // Issue new tokens with the new company context
+    const tokens = await this.authService.login(user.sub, user.email, result.companyId);
+    res.cookie(REFRESH_COOKIE, tokens.refreshToken, COOKIE_OPTIONS);
+    res.cookie("auth_session", "1", SESSION_COOKIE_OPTIONS);
+    return { accessToken: tokens.accessToken, companyId: result.companyId };
   }
 }

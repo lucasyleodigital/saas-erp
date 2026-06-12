@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
 import { ConfigModule, ConfigService } from "@nestjs/config";
@@ -7,6 +7,7 @@ import { AuthService } from "./auth.service";
 import { JwtStrategy } from "./strategies/jwt.strategy";
 import { LocalStrategy } from "./strategies/local.strategy";
 import { GoogleStrategy } from "./strategies/google.strategy";
+import { CompaniesModule } from "../companies/companies.module";
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { GoogleStrategy } from "./strategies/google.strategy";
         signOptions: { expiresIn: "7d" },
       }),
     }),
+    forwardRef(() => CompaniesModule),
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, LocalStrategy, GoogleStrategy],

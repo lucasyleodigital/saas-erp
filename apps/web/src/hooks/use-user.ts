@@ -1,6 +1,21 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
+
+export interface CurrentUser {
+  sub: string;
+  email: string;
+  companyId: string;
+  role: "OWNER" | "ADMIN" | "ACCOUNTANT" | "SALES" | "EMPLOYEE" | "SUPER_ADMIN";
+}
+
+export function useUser() {
+  return useQuery<CurrentUser>({
+    queryKey: ["auth", "me"],
+    queryFn: () => api.get("/auth/me").then((r) => r.data),
+    staleTime: 5 * 60 * 1000, // 5 min — role doesn't change often
+  });
+}
 
 export function useUpdateProfile() {
   const qc = useQueryClient();

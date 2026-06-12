@@ -109,6 +109,51 @@ export class EmailService {
     );
   }
 
+  async sendInvitation(
+    to: string,
+    inviterName: string,
+    companyName: string,
+    role: string,
+    inviteUrl: string,
+  ) {
+    const roleLabel: Record<string, string> = {
+      OWNER: "Propietario",
+      ADMIN: "Administrador",
+      ACCOUNTANT: "Contable",
+      SALES: "Ventas",
+      EMPLOYEE: "Empleado",
+    };
+    await this.send(
+      to,
+      `${inviterName} te invita a unirte a ${companyName} en ERP SaaS`,
+      `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 560px; margin: 0 auto; padding: 40px 32px; color: #111827;">
+        <div style="width: 40px; height: 40px; background: #6366f1; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
+          <span style="color: white; font-weight: bold; font-size: 18px;">E</span>
+        </div>
+        <h1 style="font-size: 22px; font-weight: 700; margin: 0 0 8px;">Te han invitado a ${companyName}</h1>
+        <p style="color: #6b7280; margin: 0 0 24px; line-height: 1.6;">
+          <strong style="color: #111827;">${inviterName}</strong> te ha invitado a unirte a
+          <strong style="color: #111827;">${companyName}</strong> como
+          <strong style="color: #111827;">${roleLabel[role] ?? role}</strong>.
+        </p>
+        <a href="${inviteUrl}"
+          style="display: inline-block; background: #6366f1; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 500; font-size: 15px;">
+          Aceptar invitación →
+        </a>
+        <p style="color: #9ca3af; font-size: 13px; margin-top: 24px;">
+          Este enlace expira en 7 días. Si no esperabas esta invitación, puedes ignorar este email.
+        </p>
+        <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 32px 0;" />
+        <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+          O copia y pega este enlace en tu navegador:<br/>
+          <span style="color: #6366f1;">${inviteUrl}</span>
+        </p>
+      </div>
+      `
+    );
+  }
+
   async sendPaymentReminder(
     to: string,
     clientName: string,
