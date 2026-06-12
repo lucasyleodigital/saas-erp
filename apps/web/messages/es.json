@@ -72,7 +72,8 @@
     "groupMain": "Principal",
     "groupBilling": "Facturación",
     "groupSystem": "Sistema",
-    "orWith": "O continúa con"
+    "orWith": "O continúa con",
+    "verifactu": "VeriFactu"
   },
   "auth": {
     "login": {
@@ -338,11 +339,19 @@
   },
   "verifactu": {
     "title": "VeriFactu",
+    "subtitle": "Registro de facturas conforme a la normativa AEAT 2025",
     "generate": "Generar VeriFactu",
     "status": "Estado AEAT",
+    "generated": "Generado",
     "pending": "Pendiente de envío",
     "sent": "Enviado a AEAT",
-    "error": "Error en AEAT"
+    "accepted": "Aceptado",
+    "rejected": "Rechazado",
+    "error": "Error en AEAT",
+    "verifyAeat": "Verificar en AEAT",
+    "hashCopied": "Hash copiado",
+    "noRecords": "Sin registros VeriFactu",
+    "noRecordsHint": "Genera el primer registro desde el detalle de una factura enviada o pagada"
   },
   "errors": {
     "unauthorized": "No tienes permiso para realizar esta acción",

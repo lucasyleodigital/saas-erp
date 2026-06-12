@@ -72,7 +72,8 @@
     "groupMain": "Main",
     "groupBilling": "Billing",
     "groupSystem": "System",
-    "orWith": "Or continue with"
+    "orWith": "Or continue with",
+    "verifactu": "VeriFactu"
   },
   "auth": {
     "login": {
@@ -338,11 +339,19 @@
   },
   "verifactu": {
     "title": "VeriFactu",
+    "subtitle": "Invoice registry compliant with AEAT regulations 2025",
     "generate": "Generate VeriFactu",
     "status": "AEAT status",
+    "generated": "Generated",
     "pending": "Pending submission",
     "sent": "Sent to AEAT",
-    "error": "AEAT error"
+    "accepted": "Accepted",
+    "rejected": "Rejected",
+    "error": "AEAT error",
+    "verifyAeat": "Verify at AEAT",
+    "hashCopied": "Hash copied",
+    "noRecords": "No VeriFactu records",
+    "noRecordsHint": "Generate the first record from a sent or paid invoice detail"
   },
   "errors": {
     "unauthorized": "You don't have permission to perform this action",

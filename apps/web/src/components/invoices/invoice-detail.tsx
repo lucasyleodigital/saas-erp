@@ -1,15 +1,14 @@
 "use client";
 
 import { useInvoice, useUpdateInvoiceStatus, useRegisterPayment } from "@/hooks/use-invoices";
+import { useGenerateVerifactu } from "@/hooks/use-verifactu";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { ArrowLeft, Download, Send, CheckCircle, Shield } from "lucide-react";
+import { ArrowLeft, Download, Send, CheckCircle, Shield, ExternalLink, Copy } from "lucide-react";
 import Link from "next/link";
-import { api } from "@/lib/api";
 import { toast } from "sonner";
-import { useState } from "react";
 
 const STATUS_CONFIG: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info" }> = {
   DRAFT: { label: "Borrador", variant: "secondary" },
@@ -24,7 +23,7 @@ export function InvoiceDetail({ id }: { id: string }) {
   const { data: invoice, isLoading } = useInvoice(id);
   const updateStatus = useUpdateInvoiceStatus();
   const registerPayment = useRegisterPayment();
-  const [generatingVerifactu, setGeneratingVerifactu] = useState(false);
+  const generateVerifactu = useGenerateVerifactu();
 
   if (isLoading) {
     return (
@@ -46,18 +45,6 @@ export function InvoiceDetail({ id }: { id: string }) {
 
   const config = STATUS_CONFIG[invoice.status] ?? { label: "Borrador", variant: "secondary" as const };
   const pendingAmount = Number(invoice.total) - Number(invoice.paidAmount ?? 0);
-
-  async function handleGenerateVerifactu() {
-    setGeneratingVerifactu(true);
-    try {
-      await api.post(`/verifactu/generate/${id}`);
-      toast.success("VeriFactu generado correctamente");
-    } catch {
-      toast.error("Error al generar VeriFactu");
-    } finally {
-      setGeneratingVerifactu(false);
-    }
-  }
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
@@ -288,40 +275,71 @@ export function InvoiceDetail({ id }: { id: string }) {
             </CardHeader>
             <CardContent className="space-y-3">
               {invoice.verifactu ? (
-                <div className="space-y-2">
-                  <Badge variant={"success" as any}>Registrada en AEAT</Badge>
-                  <div className="text-xs text-muted-foreground space-y-1">
-                    <p>
-                      <span className="font-medium">Estado:</span>{" "}
-                      {invoice.verifactu.status ?? "GENERATED"}
-                    </p>
+                <div className="space-y-3">
+                  <Badge variant={"success" as any} className="w-full justify-center">
+                    ✓ Generado
+                  </Badge>
+                  <div className="text-xs space-y-1.5">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Estado</span>
+                      <span className="font-medium">{invoice.verifactu.status}</span>
+                    </div>
                     {invoice.verifactu.hash && (
-                      <p className="font-mono break-all">
-                        {invoice.verifactu.hash.slice(0, 24)}...
-                      </p>
+                      <div>
+                        <p className="text-muted-foreground mb-0.5">Hash</p>
+                        <div className="flex items-center gap-1">
+                          <p className="font-mono text-[10px] break-all flex-1 bg-muted/50 rounded p-1">
+                            {invoice.verifactu.hash.slice(0, 32)}...
+                          </p>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6 shrink-0"
+                            onClick={() => {
+                              navigator.clipboard.writeText(invoice.verifactu!.hash);
+                              toast.success("Hash copiado");
+                            }}
+                          >
+                            <Copy className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                    {invoice.verifactu.qrCode && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full gap-2 text-xs"
+                        asChild
+                      >
+                        <a href={invoice.verifactu.qrCode} target="_blank" rel="noopener noreferrer">
+                          <ExternalLink className="h-3 w-3" />
+                          Verificar en AEAT
+                        </a>
+                      </Button>
                     )}
                   </div>
                 </div>
               ) : (
                 <div className="space-y-2">
                   <p className="text-xs text-muted-foreground">
-                    Esta factura no tiene registro VeriFactu todavía.
+                    Genera el registro VeriFactu para cumplir con la normativa AEAT.
                   </p>
                   {["SENT", "PAID"].includes(invoice.status) && (
                     <Button
                       size="sm"
                       variant="outline"
                       className="w-full gap-2 text-xs"
-                      disabled={generatingVerifactu}
-                      onClick={handleGenerateVerifactu}
+                      disabled={generateVerifactu.isPending}
+                      onClick={() => generateVerifactu.mutate(id)}
                     >
                       <Shield className="h-3 w-3" />
-                      {generatingVerifactu ? "Generando..." : "Generar VeriFactu"}
+                      {generateVerifactu.isPending ? "Generando..." : "Generar VeriFactu"}
                     </Button>
                   )}
                   {invoice.status === "DRAFT" && (
-                    <p className="text-xs text-muted-foreground">
-                      Envía la factura primero para poder registrarla.
+                    <p className="text-xs text-amber-600 bg-amber-50 dark:bg-amber-950/20 rounded p-2">
+                      Envía la factura primero para poder generar VeriFactu.
                     </p>
                   )}
                 </div>

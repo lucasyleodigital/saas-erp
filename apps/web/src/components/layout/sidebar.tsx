@@ -23,6 +23,7 @@ import {
   UserPlus,
   CreditCard,
   ClipboardList,
+  Shield,
 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -62,9 +63,10 @@ export function Sidebar() {
     {
       group: t("groupBilling"),
       items: [
-        { href: "/facturas",     label: t("invoices"), icon: FileText },
-        { href: "/presupuestos", label: t("quotes"),   icon: ClipboardList },
-        { href: "/productos",    label: t("products"), icon: Package },
+        { href: "/facturas",     label: t("invoices"),   icon: FileText },
+        { href: "/presupuestos", label: t("quotes"),     icon: ClipboardList },
+        { href: "/productos",    label: t("products"),   icon: Package },
+        { href: "/verifactu",    label: t("verifactu"),  icon: Shield },
       ],
     },
     {

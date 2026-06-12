@@ -11,6 +11,11 @@ import type { JwtPayload } from "@saas/types";
 export class VerifactuController {
   constructor(private verifactuService: VerifactuService) {}
 
+  @Get("records")
+  getAll(@CurrentUser() user: JwtPayload) {
+    return this.verifactuService.getAll(user.companyId);
+  }
+
   @Post("invoices/:invoiceId/generate")
   generate(@CurrentUser() user: JwtPayload, @Param("invoiceId") invoiceId: string) {
     return this.verifactuService.generateForInvoice(user.companyId, invoiceId);

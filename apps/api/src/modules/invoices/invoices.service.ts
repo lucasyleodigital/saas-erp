@@ -52,9 +52,11 @@ export class InvoicesService {
       where: { id, companyId },
       include: {
         client: true,
+        company: { select: { id: true, name: true, legalName: true, cif: true, address: true, email: true, phone: true } },
         items: { include: { product: true }, orderBy: { order: "asc" } },
         taxes: { include: { tax: true } },
         payments: { orderBy: { paidAt: "desc" } },
+        series: { select: { prefix: true } },
         verifactu: true,
       },
     });

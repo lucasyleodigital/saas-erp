@@ -126,4 +126,26 @@ export class VerifactuService {
       include: { events: { orderBy: { createdAt: "desc" } } },
     });
   }
+
+  async getAll(companyId: string) {
+    const records = await this.prisma.verifactuRecord.findMany({
+      where: { companyId },
+      include: {
+        invoice: {
+          include: {
+            client: { select: { id: true, name: true } },
+          },
+        },
+        events: { orderBy: { createdAt: "desc" }, take: 1 },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    const total = records.length;
+    const generated = records.filter((r) => r.status === "GENERATED").length;
+    const submitted = records.filter((r) => r.status === "SUBMITTED").length;
+    const accepted = records.filter((r) => r.status === "ACCEPTED").length;
+
+    return { records, stats: { total, generated, submitted, accepted } };
+  }
 }
