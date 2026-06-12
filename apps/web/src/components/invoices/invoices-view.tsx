@@ -30,28 +30,29 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-
-const STATUS_TABS = [
-  { key: undefined, label: "Todas" },
-  { key: "DRAFT", label: "Borradores" },
-  { key: "SENT", label: "Enviadas" },
-  { key: "PAID", label: "Pagadas" },
-  { key: "OVERDUE", label: "Vencidas" },
-];
-
-const statusConfig: Record<
-  string,
-  { label: string; variant: "success" | "info" | "destructive" | "secondary" | "warning" }
-> = {
-  DRAFT: { label: "Borrador", variant: "secondary" },
-  SENT: { label: "Enviada", variant: "info" },
-  PAID: { label: "Pagada", variant: "success" },
-  PARTIAL: { label: "Parcial", variant: "warning" },
-  OVERDUE: { label: "Vencida", variant: "destructive" },
-  CANCELLED: { label: "Cancelada", variant: "secondary" },
-};
+import { useTranslations } from "next-intl";
 
 export function InvoicesView() {
+  const t = useTranslations("invoices");
+  const tCommon = useTranslations("common");
+
+  const STATUS_TABS = [
+    { key: undefined,  label: tCommon("all") },
+    { key: "DRAFT",    label: tCommon("draft") },
+    { key: "SENT",     label: tCommon("sent") },
+    { key: "PAID",     label: tCommon("paid") },
+    { key: "OVERDUE",  label: tCommon("overdue") },
+  ];
+
+  const statusConfig: Record<string, { label: string; variant: "success" | "info" | "destructive" | "secondary" | "warning" }> = {
+    DRAFT:     { label: tCommon("draft"),     variant: "secondary" },
+    SENT:      { label: tCommon("sent"),      variant: "info" },
+    PAID:      { label: tCommon("paid"),      variant: "success" },
+    PARTIAL:   { label: tCommon("partial"),   variant: "warning" },
+    OVERDUE:   { label: tCommon("overdue"),   variant: "destructive" },
+    CANCELLED: { label: tCommon("cancelled"), variant: "secondary" },
+  };
+
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<string | undefined>(undefined);
   const [page, setPage] = useState(1);
@@ -75,14 +76,12 @@ export function InvoicesView() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Facturas</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {total} factura{total !== 1 ? "s" : ""} en total
-          </p>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground mt-1">{t("subtitle")}</p>
         </div>
         <Button onClick={() => setDialogOpen(true)} className="gap-2">
           <Plus className="h-4 w-4" />
-          Nueva factura
+          {t("new")}
         </Button>
       </div>
 

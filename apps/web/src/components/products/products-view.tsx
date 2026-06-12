@@ -11,6 +11,7 @@ import { formatCurrency } from "@/lib/utils";
 import { Search, Plus, Package, Settings, Boxes, Tag } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 const typeConfig: Record<string, { label: string; icon: any; color: string }> = {
   SERVICE: { label: "Servicio", icon: Settings, color: "text-blue-500 bg-blue-500/10" },
@@ -19,6 +20,7 @@ const typeConfig: Record<string, { label: string; icon: any; color: string }> = 
 };
 
 export function ProductsView() {
+  const t = useTranslations("products");
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
@@ -31,17 +33,15 @@ export function ProductsView() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Productos y servicios</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {products.length} producto{products.length !== 1 ? "s" : ""} activos
-          </p>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground mt-1">{t("subtitle")}</p>
         </div>
         <Button
           onClick={() => { setEditingProduct(null); setDialogOpen(true); }}
           className="gap-2"
         >
           <Plus className="h-4 w-4" />
-          Nuevo producto
+          {t("new")}
         </Button>
       </div>
 

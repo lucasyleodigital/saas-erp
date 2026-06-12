@@ -33,30 +33,28 @@ import {
 import { useDebounce } from "@/hooks/use-debounce";
 import { motion } from "framer-motion";
 import { QuoteDialog } from "./quote-dialog";
-
-const STATUS_TABS = [
-  { key: undefined, label: "Todas" },
-  { key: "DRAFT", label: "Borradores" },
-  { key: "SENT", label: "Enviados" },
-  { key: "ACCEPTED", label: "Aceptados" },
-  { key: "REJECTED", label: "Rechazados" },
-];
-
-const STATUS_CONFIG: Record<
-  string,
-  {
-    label: string;
-    variant: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info";
-  }
-> = {
-  DRAFT: { label: "Borrador", variant: "secondary" },
-  SENT: { label: "Enviado", variant: "info" },
-  ACCEPTED: { label: "Aceptado", variant: "success" },
-  REJECTED: { label: "Rechazado", variant: "destructive" },
-  EXPIRED: { label: "Expirado", variant: "warning" },
-};
+import { useTranslations } from "next-intl";
 
 export function QuotesView() {
+  const t = useTranslations("quotes");
+  const tCommon = useTranslations("common");
+
+  const STATUS_TABS = [
+    { key: undefined,   label: tCommon("all") },
+    { key: "DRAFT",     label: tCommon("draft") },
+    { key: "SENT",      label: tCommon("sent") },
+    { key: "ACCEPTED",  label: t("status.accepted") },
+    { key: "REJECTED",  label: t("status.rejected") },
+  ];
+
+  const STATUS_CONFIG: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info" }> = {
+    DRAFT:    { label: tCommon("draft"),      variant: "secondary" },
+    SENT:     { label: tCommon("sent"),       variant: "info" },
+    ACCEPTED: { label: t("status.accepted"), variant: "success" },
+    REJECTED: { label: t("status.rejected"), variant: "destructive" },
+    EXPIRED:  { label: t("status.expired"),  variant: "warning" },
+  };
+
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<string | undefined>(undefined);
   const [page, setPage] = useState(1);
@@ -83,14 +81,12 @@ export function QuotesView() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Presupuestos</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {total} presupuesto{total !== 1 ? "s" : ""} en total
-          </p>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground mt-1">{t("subtitle")}</p>
         </div>
         <Button className="gap-2" onClick={() => setDialogOpen(true)}>
           <Plus className="h-4 w-4" />
-          Nuevo presupuesto
+          {t("new")}
         </Button>
       </div>
 

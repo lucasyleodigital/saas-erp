@@ -1,22 +1,20 @@
 import { Suspense } from "react";
+import { getTranslations } from "next-intl/server";
 import { StatsCards } from "@/components/dashboard/stats-cards";
 import { RevenueChart } from "@/components/dashboard/revenue-chart";
 import { RecentInvoices } from "@/components/dashboard/recent-invoices";
 import { TopClients } from "@/components/dashboard/top-clients";
 import { DealsFunnel } from "@/components/dashboard/deals-funnel";
 import { QuickActions } from "@/components/dashboard/quick-actions";
-import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Dashboard" };
+export default async function DashboardPage() {
+  const t = await getTranslations("dashboard");
 
-export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          Bienvenido. Aquí tienes el resumen de tu empresa.
-        </p>
+        <h1 className="text-2xl font-bold">{t("title")}</h1>
+        <p className="text-muted-foreground text-sm mt-1">{t("subtitle")}</p>
       </div>
 
       <QuickActions />

@@ -44,7 +44,9 @@
     "noResults": "No results found",
     "required": "This field is required",
     "optional": "Optional",
-    "language": "Language"
+    "language": "Language",
+    "all": "All",
+    "partial": "Partial"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -66,7 +68,11 @@
     "crm": "CRM",
     "management": "Management",
     "finance": "Finance",
-    "admin": "Administration"
+    "admin": "Administration",
+    "groupMain": "Main",
+    "groupBilling": "Billing",
+    "groupSystem": "System",
+    "orWith": "Or continue with"
   },
   "auth": {
     "login": {
@@ -80,7 +86,8 @@
       "registerLink": "Sign up for free",
       "google": "Continue with Google",
       "forgotPassword": "Forgot your password?",
-      "error": "Invalid email or password"
+      "error": "Invalid email or password",
+      "orWith": "Or continue with"
     },
     "register": {
       "title": "Create account",

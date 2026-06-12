@@ -28,8 +28,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export function ClientsView() {
+  const t = useTranslations("clients");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -63,14 +65,12 @@ export function ClientsView() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Clientes</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {total} cliente{total !== 1 ? "s" : ""} en total
-          </p>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground mt-1">{t("subtitle")}</p>
         </div>
         <Button onClick={handleNew} className="gap-2">
           <Plus className="h-4 w-4" />
-          Nuevo cliente
+          {t("new")}
         </Button>
       </div>
 

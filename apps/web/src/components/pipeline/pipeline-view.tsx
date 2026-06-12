@@ -9,6 +9,7 @@ import { formatCurrency, getInitials } from "@/lib/utils";
 import { Plus, MoreHorizontal, GripVertical } from "lucide-react";
 import { motion } from "framer-motion";
 import { DealDialog } from "./deal-dialog";
+import { useTranslations } from "next-intl";
 
 const STAGE_COLORS: Record<string, string> = {
   "lead": "bg-blue-500",
@@ -20,6 +21,7 @@ const STAGE_COLORS: Record<string, string> = {
 };
 
 export function PipelineView() {
+  const t = useTranslations("pipeline");
   const { data: pipelines, isLoading } = usePipeline();
   const moveStage = useMoveDealStage();
   const [dragging, setDragging] = useState<{ dealId: string; fromStageId: string } | null>(null);
@@ -71,14 +73,12 @@ export function PipelineView() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Pipeline</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {totalDeals} deals · {formatCurrency(totalValue)} en total
-          </p>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground mt-1">{t("subtitle")}</p>
         </div>
         <Button className="gap-2" onClick={() => setDealDialogOpen(true)}>
           <Plus className="h-4 w-4" />
-          Nuevo deal
+          {t("new")}
         </Button>
       </div>
 

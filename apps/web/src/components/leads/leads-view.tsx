@@ -39,6 +39,7 @@ import {
 } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { formatDate } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 const SOURCES = [
   "Web",
@@ -63,6 +64,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export function LeadsView() {
+  const t = useTranslations("leads");
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const debouncedSearch = useDebounce(search, 300);
@@ -96,14 +98,12 @@ export function LeadsView() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Leads</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {leads.length} leads activos
-          </p>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground mt-1">{t("subtitle")}</p>
         </div>
         <Button onClick={() => setDialogOpen(true)} className="gap-2">
           <Plus className="h-4 w-4" />
-          Nuevo lead
+          {t("new")}
         </Button>
       </div>
 

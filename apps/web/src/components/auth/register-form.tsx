@@ -3,7 +3,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,23 +14,27 @@ import { api } from "@/lib/api";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
+const LOCALES = ["es", "en", "fr", "de", "pt", "it"];
+
 const schema = z.object({
-  firstName: z.string().min(1, "Requerido"),
-  lastName: z.string().min(1, "Requerido"),
-  companyName: z.string().min(2, "Mínimo 2 caracteres"),
-  email: z.string().email("Email inválido"),
-  password: z
-    .string()
-    .min(8, "Mínimo 8 caracteres")
-    .regex(/[A-Z]/, "Debe contener al menos una mayúscula")
-    .regex(/[0-9]/, "Debe contener al menos un número"),
+  firstName:   z.string().min(1),
+  lastName:    z.string().min(1),
+  companyName: z.string().min(2),
+  email:       z.string().email(),
+  password:    z.string().min(8).regex(/[A-Z]/).regex(/[0-9]/),
 });
 
 type FormData = z.infer<typeof schema>;
 
 export function RegisterForm() {
-  const router = useRouter();
-  const setUser = useAuthStore((s) => s.setUser);
+  const router   = useRouter();
+  const pathname = usePathname();
+  const t        = useTranslations("auth.register");
+  const tCommon  = useTranslations("common");
+  const setUser  = useAuthStore((s) => s.setUser);
+
+  const segments = pathname.split("/");
+  const locale   = LOCALES.includes(segments[1] ?? "") ? segments[1]! : "es";
 
   const {
     register,
@@ -43,9 +48,9 @@ export function RegisterForm() {
       const { data: me } = await api.get("/auth/me");
       setUser(me);
       toast.success("¡Cuenta creada! Bienvenido al ERP SaaS");
-      router.push("/dashboard");
+      router.push(`/${locale}/dashboard`);
     } catch (err: any) {
-      const msg = err.response?.data?.message ?? "Error al registrarse";
+      const msg = err.response?.data?.message ?? t("error");
       toast.error(Array.isArray(msg) ? msg[0] : msg);
     }
   }
@@ -54,56 +59,40 @@ export function RegisterForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1.5">
-          <Label htmlFor="firstName">Nombre *</Label>
+          <Label htmlFor="firstName">{t("firstName")} *</Label>
           <Input id="firstName" {...register("firstName")} placeholder="Lucas" />
           {errors.firstName && (
-            <p className="text-xs text-destructive">{errors.firstName.message}</p>
+            <p className="text-xs text-destructive">{tCommon("required")}</p>
           )}
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="lastName">Apellido *</Label>
+          <Label htmlFor="lastName">{t("lastName")} *</Label>
           <Input id="lastName" {...register("lastName")} placeholder="García" />
           {errors.lastName && (
-            <p className="text-xs text-destructive">{errors.lastName.message}</p>
+            <p className="text-xs text-destructive">{tCommon("required")}</p>
           )}
         </div>
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="companyName">Empresa *</Label>
-        <Input
-          id="companyName"
-          {...register("companyName")}
-          placeholder="Mi empresa SL"
-        />
+        <Label htmlFor="companyName">{t("company")} *</Label>
+        <Input id="companyName" {...register("companyName")} placeholder="Mi empresa SL" />
         {errors.companyName && (
-          <p className="text-xs text-destructive">{errors.companyName.message}</p>
+          <p className="text-xs text-destructive">{tCommon("required")}</p>
         )}
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="email">Email *</Label>
-        <Input
-          id="email"
-          type="email"
-          {...register("email")}
-          placeholder="tu@empresa.com"
-          autoComplete="email"
-        />
+        <Label htmlFor="email">{t("email")} *</Label>
+        <Input id="email" type="email" {...register("email")} placeholder="tu@empresa.com" autoComplete="email" />
         {errors.email && (
           <p className="text-xs text-destructive">{errors.email.message}</p>
         )}
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="password">Contraseña *</Label>
-        <Input
-          id="password"
-          type="password"
-          {...register("password")}
-          placeholder="Mínimo 8 caracteres"
-          autoComplete="new-password"
-        />
+        <Label htmlFor="password">{t("password")} *</Label>
+        <Input id="password" type="password" {...register("password")} placeholder="••••••••" autoComplete="new-password" />
         {errors.password && (
           <p className="text-xs text-destructive">{errors.password.message}</p>
         )}
@@ -111,18 +100,11 @@ export function RegisterForm() {
 
       <Button type="submit" className="w-full" disabled={isSubmitting}>
         {isSubmitting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-        Crear cuenta gratis
+        {isSubmitting ? t("loading") : t("submit")}
       </Button>
 
       <p className="text-xs text-center text-muted-foreground">
-        Al registrarte aceptas los{" "}
-        <a href="/terminos" className="underline hover:text-primary">
-          Términos de uso
-        </a>{" "}
-        y la{" "}
-        <a href="/privacidad" className="underline hover:text-primary">
-          Política de privacidad
-        </a>
+        {t("terms")}
       </p>
     </form>
   );

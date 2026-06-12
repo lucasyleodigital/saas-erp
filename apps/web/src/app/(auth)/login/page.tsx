@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { LoginForm } from "@/components/auth/login-form";
 
-export const metadata: Metadata = { title: "Iniciar sesión" };
+export const metadata: Metadata = { title: "Login" };
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const t = await getTranslations("auth.login");
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <div className="w-full max-w-sm space-y-6">
@@ -11,16 +14,14 @@ export default function LoginPage() {
           <div className="h-12 w-12 rounded-xl bg-primary flex items-center justify-center text-primary-foreground font-bold text-xl mx-auto">
             E
           </div>
-          <h1 className="text-2xl font-bold">Bienvenido</h1>
-          <p className="text-muted-foreground text-sm">
-            Inicia sesión en tu cuenta
-          </p>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
+          <p className="text-muted-foreground text-sm">{t("subtitle")}</p>
         </div>
         <LoginForm />
         <p className="text-center text-xs text-muted-foreground">
-          ¿No tienes cuenta?{" "}
+          {t("noAccount")}{" "}
           <a href="/registro" className="text-primary hover:underline">
-            Regístrate gratis
+            {t("registerLink")}
           </a>
         </p>
       </div>
