@@ -1,9 +1,13 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
+import { PlansService } from "../plans/plans.service";
 
 @Injectable()
 export class ProductsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private plans: PlansService,
+  ) {}
 
   async findAll(companyId: string, params: any) {
     const { page = 1, limit = 50, search } = params;
@@ -35,6 +39,8 @@ export class ProductsService {
   }
 
   async create(companyId: string, data: any) {
+    const count = await this.plans.countProducts(companyId);
+    await this.plans.checkLimit(companyId, "maxProducts", count);
     return this.prisma.product.create({ data: { ...data, companyId } });
   }
 

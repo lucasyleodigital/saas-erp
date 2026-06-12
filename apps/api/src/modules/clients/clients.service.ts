@@ -1,12 +1,16 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
+import { PlansService } from "../plans/plans.service";
 import { CreateClientDto } from "./dto/create-client.dto";
 import { UpdateClientDto } from "./dto/update-client.dto";
 import type { PaginationParams } from "@saas/types";
 
 @Injectable()
 export class ClientsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private plans: PlansService,
+  ) {}
 
   async findAll(companyId: string, params: PaginationParams) {
     const { page = 1, limit = 20, search, sortBy = "createdAt", sortOrder = "desc" } = params;
@@ -52,6 +56,8 @@ export class ClientsService {
   }
 
   async create(companyId: string, dto: CreateClientDto) {
+    const count = await this.plans.countClients(companyId);
+    await this.plans.checkLimit(companyId, "maxClients", count);
     return this.prisma.client.create({
       data: { ...dto, companyId },
     });

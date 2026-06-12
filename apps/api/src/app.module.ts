@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 import { ConfigModule } from "@nestjs/config";
 import { ThrottlerModule, ThrottlerGuard } from "@nestjs/throttler";
+import { PlansModule } from "./modules/plans/plans.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { CompaniesModule } from "./modules/companies/companies.module";
 import { UsersModule } from "./modules/users/users.module";
@@ -33,6 +34,7 @@ import { validateEnv } from "./config/env.validation";
       { name: "medium", ttl: 60000, limit: 200 },
     ]),
     DatabaseModule,
+    PlansModule,
     AuthModule,
     CompaniesModule,
     UsersModule,

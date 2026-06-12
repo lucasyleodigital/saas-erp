@@ -4,12 +4,16 @@ import {
   BadRequestException,
 } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
+import { PlansService } from "../plans/plans.service";
 import { CreateInvoiceDto } from "./dto/create-invoice.dto";
 import type { PaginationParams } from "@saas/types";
 
 @Injectable()
 export class InvoicesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private plans: PlansService,
+  ) {}
 
   async findAll(companyId: string, params: PaginationParams & { status?: string }) {
     const { page = 1, limit = 20, search, status, sortBy = "createdAt", sortOrder = "desc" } = params;
@@ -59,6 +63,9 @@ export class InvoicesService {
   }
 
   async create(companyId: string, dto: CreateInvoiceDto) {
+    const monthCount = await this.plans.countInvoicesThisMonth(companyId);
+    await this.plans.checkLimit(companyId, "maxInvoicesPerMonth", monthCount);
+
     const series = dto.seriesId
       ? await this.prisma.invoiceSeries.findFirst({
           where: { id: dto.seriesId, companyId },

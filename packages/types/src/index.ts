@@ -163,55 +163,74 @@ export interface VerifactuInvoiceData {
 // ============================================================
 
 export interface PlanLimits {
-  clients: number;
-  invoicesPerMonth: number;
-  users: number;
-  storage: number; // GB
-  verifactu: boolean;
-  ai: boolean;
-  api: boolean;
-  customDomain: boolean;
+  // -1 = unlimited
+  maxUsers: number;
+  maxClients: number;
+  maxInvoicesPerMonth: number;
+  maxQuotesPerMonth: number;
+  maxProducts: number;
+  maxAutomations: number;
+  // Feature flags
+  canSendEmails: boolean;
+  hasAccounting: boolean;
+  hasVeriFactu: boolean;
+  hasApiAccess: boolean;
 }
 
 export const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
   FREE: {
-    clients: 5,
-    invoicesPerMonth: 10,
-    users: 1,
-    storage: 1,
-    verifactu: false,
-    ai: false,
-    api: false,
-    customDomain: false,
+    maxUsers: 1,
+    maxClients: 25,
+    maxInvoicesPerMonth: 10,
+    maxQuotesPerMonth: 5,
+    maxProducts: 50,
+    maxAutomations: 0,
+    canSendEmails: false,
+    hasAccounting: false,
+    hasVeriFactu: false,
+    hasApiAccess: false,
   },
   STARTER: {
-    clients: 50,
-    invoicesPerMonth: 100,
-    users: 3,
-    storage: 10,
-    verifactu: true,
-    ai: false,
-    api: false,
-    customDomain: false,
+    maxUsers: 3,
+    maxClients: 200,
+    maxInvoicesPerMonth: -1,
+    maxQuotesPerMonth: -1,
+    maxProducts: 500,
+    maxAutomations: 3,
+    canSendEmails: true,
+    hasAccounting: false,
+    hasVeriFactu: true,
+    hasApiAccess: false,
   },
   PRO: {
-    clients: 500,
-    invoicesPerMonth: 1000,
-    users: 10,
-    storage: 50,
-    verifactu: true,
-    ai: true,
-    api: true,
-    customDomain: false,
+    maxUsers: 10,
+    maxClients: -1,
+    maxInvoicesPerMonth: -1,
+    maxQuotesPerMonth: -1,
+    maxProducts: -1,
+    maxAutomations: 20,
+    canSendEmails: true,
+    hasAccounting: true,
+    hasVeriFactu: true,
+    hasApiAccess: false,
   },
   ENTERPRISE: {
-    clients: -1,
-    invoicesPerMonth: -1,
-    users: -1,
-    storage: 200,
-    verifactu: true,
-    ai: true,
-    api: true,
-    customDomain: true,
+    maxUsers: -1,
+    maxClients: -1,
+    maxInvoicesPerMonth: -1,
+    maxQuotesPerMonth: -1,
+    maxProducts: -1,
+    maxAutomations: -1,
+    canSendEmails: true,
+    hasAccounting: true,
+    hasVeriFactu: true,
+    hasApiAccess: true,
   },
+};
+
+export const PLAN_PRICES: Record<PlanType, { monthly: number; annual: number; name: string; description: string }> = {
+  FREE: { monthly: 0, annual: 0, name: "Gratis", description: "Para probar el ERP" },
+  STARTER: { monthly: 29, annual: 24, name: "Starter", description: "Para pequeñas empresas" },
+  PRO: { monthly: 79, annual: 66, name: "Pro", description: "Para empresas en crecimiento" },
+  ENTERPRISE: { monthly: 199, annual: 166, name: "Enterprise", description: "Para grandes empresas" },
 };

@@ -1,9 +1,13 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
+import { PlansService } from "../plans/plans.service";
 
 @Injectable()
 export class QuotesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private plans: PlansService,
+  ) {}
 
   async findAll(companyId: string, params: any) {
     const { page = 1, limit = 20, search, status } = params;
@@ -51,6 +55,9 @@ export class QuotesService {
   }
 
   async create(companyId: string, dto: any) {
+    const monthCount = await this.plans.countQuotesThisMonth(companyId);
+    await this.plans.checkLimit(companyId, "maxQuotesPerMonth", monthCount);
+
     const count = await this.prisma.quote.count({ where: { companyId } });
     const year = new Date().getFullYear();
     const number = `P-${year}-${String(count + 1).padStart(4, "0")}`;

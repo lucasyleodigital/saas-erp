@@ -3,6 +3,7 @@ import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
 import { AccountingService } from "./accounting.service";
+import { PlansService } from "../plans/plans.service";
 import type { JwtPayload } from "@saas/types";
 
 @ApiTags("Accounting")
@@ -10,10 +11,14 @@ import type { JwtPayload } from "@saas/types";
 @UseGuards(JwtAuthGuard)
 @Controller("accounting")
 export class AccountingController {
-  constructor(private service: AccountingService) {}
+  constructor(
+    private service: AccountingService,
+    private plans: PlansService,
+  ) {}
 
   @Get("profit-loss")
-  getProfitAndLoss(@CurrentUser() user: JwtPayload, @Query("year") year: string) {
+  async getProfitAndLoss(@CurrentUser() user: JwtPayload, @Query("year") year: string) {
+    await this.plans.requireFeature(user.companyId, "hasAccounting");
     return this.service.getProfitAndLoss(user.companyId, Number(year) || new Date().getFullYear());
   }
 

@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
+import { PlansService } from "../plans/plans.service";
 import { EmailService } from "../email/email.service";
 import { NotificationsService } from "../notifications/notifications.service";
 
@@ -7,6 +8,7 @@ import { NotificationsService } from "../notifications/notifications.service";
 export class AutomationsService {
   constructor(
     private prisma: PrismaService,
+    private plans: PlansService,
     private email: EmailService,
     private notifications: NotificationsService,
   ) {}
@@ -19,6 +21,8 @@ export class AutomationsService {
   }
 
   async create(companyId: string, data: any) {
+    const count = await this.plans.countAutomations(companyId);
+    await this.plans.checkLimit(companyId, "maxAutomations", count);
     return this.prisma.automation.create({
       data: { ...data, companyId },
     });
