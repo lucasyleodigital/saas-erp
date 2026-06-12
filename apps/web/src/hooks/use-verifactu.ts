@@ -27,7 +27,7 @@ export interface VerifactuRecord {
 export interface VerifactuStats {
   total: number;
   generated: number;
-  submitted: number;
+  sent: number;
   accepted: number;
 }
 

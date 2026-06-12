@@ -19,11 +19,11 @@ import { toast } from "sonner";
 import Link from "next/link";
 
 const STATUS_CONFIG: Record<string, { label: string; variant: any; icon: any }> = {
-  GENERATED: { label: "Generado",  variant: "secondary", icon: Clock },
-  SUBMITTED: { label: "Enviado",   variant: "info",      icon: Clock },
-  ACCEPTED:  { label: "Aceptado",  variant: "success",   icon: CheckCircle2 },
-  REJECTED:  { label: "Rechazado", variant: "destructive", icon: AlertCircle },
-  ERROR:     { label: "Error",     variant: "destructive", icon: AlertCircle },
+  GENERATED: { label: "Generado",  variant: "secondary",    icon: Clock },
+  SIGNED:    { label: "Firmado",   variant: "info",         icon: Clock },
+  SENT:      { label: "Enviado",   variant: "info",         icon: Clock },
+  ACCEPTED:  { label: "Aceptado",  variant: "success",      icon: CheckCircle2 },
+  REJECTED:  { label: "Rechazado", variant: "destructive",  icon: AlertCircle },
 };
 
 export function VerifactuView() {
@@ -64,7 +64,7 @@ export function VerifactuView() {
         <Card>
           <CardContent className="p-4">
             <p className="text-xs text-muted-foreground">Enviados</p>
-            <p className="text-2xl font-bold mt-1 text-amber-500">{stats?.submitted ?? 0}</p>
+            <p className="text-2xl font-bold mt-1 text-amber-500">{stats?.sent ?? 0}</p>
           </CardContent>
         </Card>
         <Card>

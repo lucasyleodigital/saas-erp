@@ -143,9 +143,9 @@ export class VerifactuService {
 
     const total = records.length;
     const generated = records.filter((r) => r.status === "GENERATED").length;
-    const submitted = records.filter((r) => r.status === "SUBMITTED").length;
+    const sent = records.filter((r) => r.status === "SENT").length;
     const accepted = records.filter((r) => r.status === "ACCEPTED").length;
 
-    return { records, stats: { total, generated, submitted, accepted } };
+    return { records, stats: { total, generated, sent, accepted } };
   }
 }
