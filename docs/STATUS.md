@@ -1,161 +1,209 @@
-# SaaS ERP — Estado del Proyecto
-> Última actualización: 2026-06-11
+# SaaS ERP - Estado del Proyecto
+> Ultima actualizacion: 2026-06-12
 
-## Stack
-- **Frontend**: Next.js 15.5.19, shadcn/ui, TanStack Query v5, Zustand, Recharts
-- **Backend**: NestJS 10, Prisma 6, PostgreSQL (Supabase eu-west-1)
-- **Monorepo**: Turborepo + pnpm workspaces
-- **Deploy**: Vercel (web) + Railway (API)
+---
 
-## URLs de producción
-| Servicio | URL |
-|----------|-----|
-| Web (Vercel) | https://saas-erp-pi.vercel.app |
-| API (Railway) | https://saasapi-production-b5f3.up.railway.app/api/v1 |
-| Supabase | proyecto `eqqjbqlewmpoxjlhbrwz` (eu-west-1) |
+## Stack tecnico
+| Capa | Tecnologia |
+|---|---|
+| Frontend | Next.js 15.5.19, shadcn/ui, TanStack Query v5, Framer Motion |
+| Backend | NestJS 10, Prisma 6, PostgreSQL (Supabase eu-west-1) |
+| Monorepo | Turborepo + pnpm workspaces |
+| Deploy Web | Vercel (saas-erp-pi.vercel.app) |
+| Deploy API | Railway (saasapi-production-b5f3.up.railway.app) |
+| i18n | next-intl v4 - 6 idiomas: es, en, fr, de, pt, it |
+
+## URLs de produccion
+| Web | https://saas-erp-pi.vercel.app |
+| API | https://saasapi-production-b5f3.up.railway.app/api/v1 |
 | GitHub | https://github.com/lucasyleodigital/saas-erp |
 
-## Cuentas y accesos
-- **Vercel**: cuenta `polchu2899s-projects` (Hobby) — commits deben ir con email `lucasyleodigital@gmail.com`
-- **Railway**: proyecto `saas-erp`, servicio `@saas/api`
-- **Supabase**: proyecto `eqqjbqlewmpoxjlhbrwz`
-- **GitHub org**: `lucasyleodigital` — repo `saas-erp` (público)
-- **Git config local**: user.email = `lucasyleodigital@gmail.com` / user.name = `lucasyleodigital`
-
-## Notas importantes de deploy
-- **Vercel**: hacer push con email `lucasyleodigital@gmail.com` en git config — si no, bloquea el deploy
-- **Railway watchPath**: el servicio `@saas/api` solo redespliega si cambian ficheros en `/apps/api/**`
-- **PATs de GitHub**: revocar todos los usados en https://github.com/settings/tokens (los del historial de esta sesión)
+## Accesos importantes
+- Git: user.email = lucasyleodigital@gmail.com
+- Git PAT activo: ghp_<ver-en-local-no-subir-a-git>
+- Empresa "Lucas y leo digital" en BD plan ENTERPRISE (para tests)
 
 ---
 
-## ✅ COMPLETADO
+## COMPLETADO
 
 ### Infraestructura
-- [x] Monorepo Turborepo + pnpm workspaces
-- [x] `packages/types` — tipos compartidos
-- [x] `packages/database` — Prisma client + schema completo (30+ modelos)
-- [x] `packages/ui` — componentes shadcn/ui
-- [x] `packages/config` — Tailwind config compartida
-- [x] Deploy API → Railway (Dockerfile multi-stage)
-- [x] Deploy Web → Vercel (root dir: apps/web)
-- [x] GitHub repo público en `lucasyleodigital/saas-erp`
+- [x] Monorepo Turborepo + pnpm (packages/types, database, ui, config)
+- [x] Prisma schema completo (35+ modelos, multi-tenant por companyId)
+- [x] Deploy API -> Railway (Dockerfile multi-stage, watchPath /apps/api/**)
+- [x] Deploy Web -> Vercel (auto-deploy desde master)
+- [x] Multi-idioma: next-intl, 6 locales, middleware, [locale] routing, force-dynamic
+- [x] Sistema de planes (FREE/STARTER/PRO/ENTERPRISE) con limites por recurso
+- [x] Multi-tenant: toda query filtra por companyId del JWT
 
-### Backend (NestJS API)
-- [x] Auth: JWT (7d) + refresh token (30d, cookie httpOnly) + bcrypt + 2FA + Google OAuth skeleton
-- [x] Rate limiting global: 20 req/s, 200 req/min (ThrottlerGuard)
-- [x] Rate limiting auth: login 10/min, registro 5/min (brute force protection)
-- [x] SSRF protection en webhooks de automatizaciones
-- [x] Módulos: clients, invoices, quotes, products, leads, deals/pipeline
-- [x] Módulos: dashboard, companies, users, notifications, inventory
-- [x] Módulos: accounting, automations, billing (Stripe), email (Resend), VeriFactu skeleton
-- [x] ValidationPipe global (whitelist + forbidNonWhitelisted)
-- [x] Helmet (cabeceras de seguridad)
-- [x] CORS: solo acepta CLIENT_URL
-- [x] Cookies cross-domain: SameSite=None en producción
-- [x] Health check en `/health`
-- [x] Swagger desactivado en producción
+### Backend - Modulos completados
+- [x] auth (JWT + refresh httpOnly + bcrypt + Google OAuth)
+- [x] companies, users, plans
+- [x] clients, invoices (con VeriFactu), quotes, products
+- [x] leads, deals (pipeline CRM)
+- [x] dashboard, notifications, inventory, accounting
+- [x] automations (trigger-accion con SSRF protection)
+- [x] billing (Stripe skeleton), email (Resend skeleton), verifactu
+- [x] Rate limiting, Helmet, CORS, ValidationPipe, health check
 
-### Frontend (Next.js)
-- [x] Auth: login, registro, cookie `auth_session` para middleware
-- [x] Middleware: protección de rutas con cookie session
-- [x] Dashboard: KPIs, gráficas ingresos, facturas recientes, top clientes, funnel deals
-- [x] Clientes: lista paginada, búsqueda, detalle con historial
-- [x] Facturas: lista, filtros por estado, detalle, registro de pagos
-- [x] Presupuestos: CRUD completo
-- [x] Productos: catálogo con precios y stock
-- [x] Pipeline CRM: Kanban con drag (deals por etapas)
-- [x] Leads: lista + gestión
+### Frontend - Vistas completadas
+- [x] Login / Registro
+- [x] Dashboard: KPIs, grafica ingresos, facturas recientes, top clientes, funnel
+- [x] Clientes: lista paginada, busqueda, detalle con historial
+- [x] Facturas: lista+filtros, detalle completo, registro de pagos, VeriFactu
+- [x] Presupuestos: CRUD completo, conversion a factura
+- [x] Productos: catalogo, tipos, precio + IVA
+- [x] Pipeline CRM: Kanban drag and drop
+- [x] Leads: lista + gestion
 - [x] Inventario: stock, movimientos, almacenes
 - [x] Contabilidad: P&L, IVA trimestral, asientos, plan de cuentas
-- [x] Automatizaciones: motor trigger→acción (email/notificación/webhook)
-- [x] Notificaciones: centro de notificaciones con badge
-- [x] Empresa: configuración de empresa
-- [x] Configuración: perfil usuario, cambio contraseña
-- [x] Billing: checkout Stripe, portal cliente
+- [x] Automatizaciones: trigger-accion, templates, edit mode, plan upgrade wall
+- [x] VeriFactu: vista registros hash/QR/stats, generacion desde detalle factura
+- [x] Notificaciones: centro con badge no leidas
+- [x] Empresa, Configuracion, Billing skeleton
+- [x] Sidebar: colapsable, traducido, badge notificaciones
 
 ---
 
-## 🔴 PENDIENTE — Por fases
+## PENDIENTE - ROADMAP
 
-### FASE 3 — Servicios externos (PRÓXIMO)
-- [ ] **Resend email**: crear cuenta nueva → verificar dominio → añadir RESEND_API_KEY en Railway
-  - EMAIL_FROM = `ERP SaaS <noreply@TUDOMINIO.com>`
-- [ ] **Stripe**: crear cuenta → obtener keys prod → configurar webhook → añadir en Railway
-  - Variables: STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_PRICE_STARTER, STRIPE_PRICE_PRO, STRIPE_PRICE_ENTERPRISE
-- [ ] **Google OAuth**: Google Cloud Console → OAuth 2.0 → añadir GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET en Railway
+### FASE 5 - Multi-usuario [SIGUIENTE] [ALTA PRIORIDAD]
+Sin esto el 80% de las PYMEs no pueden usarlo (tienen equipo).
 
-### FASE 4 — VeriFactu (cumplimiento legal España)
-- [ ] Integración real con AEAT (endpoint de envío de facturas)
-- [ ] Generación de hash SHA-256 de cada factura
-- [ ] Encadenamiento de facturas (cada una referencia la anterior)
-- [ ] Almacenamiento del QR VeriFactu en factura
-- [ ] PDF de factura con QR incluido
+- [ ] Invitar miembros al equipo (email + rol) con link de invitacion
+- [ ] Gestion de miembros: ver equipo, cambiar roles, revocar acceso (en /empresa)
+- [ ] Roles: OWNER / ADMIN / MEMBER / VIEWER
+- [ ] RBAC en API: guards por rol en endpoints sensibles
+- [ ] Limite maxUsers aplicado al invitar nuevos miembros
+- [ ] Vista: miembros activos + invitaciones pendientes
 
-### FASE 5 — Robustez y UX
-- [ ] **RBAC**: aplicar roles (OWNER/ADMIN/MEMBER) en endpoints de API
-- [ ] **Seed datos demo**: cuando un usuario se registra, crear datos de ejemplo
-- [ ] **Cron job**: limpiar refresh tokens expirados de la BD
-- [ ] **Onboarding**: wizard primer uso (configurar empresa, serie de facturas, primer cliente)
-- [ ] **PDF de facturas**: generar PDF descargable (puppeteer o react-pdf)
-- [ ] **Envío de facturas**: botón "Enviar por email" en factura (ya tiene endpoint, falta Resend)
-- [ ] **Exportar a Excel**: facturas, clientes, contabilidad
+### FASE 5b - Resend email [ALTA PRIORIDAD]
+Necesario para invitaciones de equipo y envio de facturas.
 
-### FASE 6 — Dominio y SEO
-- [ ] Dominio propio (apuntar DNS a Vercel)
-- [ ] Landing page mejorada (pricing real, testimonios, demo)
-- [ ] Actualizar CLIENT_URL en Railway con dominio definitivo
+- [ ] Crear cuenta Resend con lucasyleodigital@gmail.com
+- [ ] Verificar dominio lucasyleodigital.com (SPF, DKIM, DMARC)
+- [ ] Obtener API key -> anadir RESEND_API_KEY en Railway
+- [ ] EMAIL_FROM = ERP SaaS noreply@lucasyleodigital.com
+- [ ] Activar envio de facturas por email (endpoint ya existe)
+- [ ] Email de bienvenida al registrarse
 
-### FASE 7 — Escala (cuando crezcáis)
-- [ ] Redis para caché (Railway Add-on)
-- [ ] BullMQ para cola de tareas (automations async)
-- [ ] Múltiples instancias API (Railway scale)
-- [ ] Backup automático de BD
+### FASE 6 - Albaranes [MEDIA-ALTA PRIORIDAD]
+Abre mercado: distribucion, retail, hosteleria, construccion.
+
+- [ ] Modelo Prisma: DeliveryNote + DeliveryNoteItem
+- [ ] Flujo: Presupuesto -> Albaran -> Factura
+- [ ] API CRUD /delivery-notes
+- [ ] Vista: lista con filtros, detalle, firma de entrega
+- [ ] PDF de albaran
+- [ ] Serie propia (DN-0001)
+
+### FASE 6b - Importacion CSV/Excel [MEDIA-ALTA PRIORIDAD]
+Elimina la friccion de migracion desde otros ERPs.
+
+- [ ] Importar clientes desde CSV/Excel (campos mapeables)
+- [ ] Importar productos desde CSV/Excel
+- [ ] Importar facturas historicas
+- [ ] Validacion de datos + informe de errores
+- [ ] Plantillas Excel descargables por entidad
+
+### FASE 7 - Empleados + RRHH [MEDIA PRIORIDAD]
+Abre mercado: empresas con 5-50 empleados.
+
+- [ ] Modelo Prisma: Employee (nombre, cargo, fecha alta, sueldo, nif, cuenta bancaria)
+- [ ] Vista de empleados: ficha, historial, documentos
+- [ ] Control horario: fichaje entrada/salida
+- [ ] Vacaciones y ausencias: solicitud y aprobacion
+- [ ] Documentos: contratos adjuntos
+
+### FASE 7b - Nominas [MEDIA PRIORIDAD]
+El modulo mas pegajoso: empresa nunca cambia ERP si le calculas nominas.
+
+- [ ] Calculo nomina mensual (sueldo + complementos + deducciones)
+- [ ] Tramos IRPF automaticos segun salario anual
+- [ ] Cuotas SS empresa y trabajador
+- [ ] PDF nomina
+- [ ] Modelos: 111 (trimestral IRPF), 190 (anual resumen)
+- [ ] Exportacion SEPA XML para transferencias bancarias masivas
+
+### FASE 8 - Portal del cliente [MEDIA PRIORIDAD]
+Reduce tiempo de cobro, mejora imagen profesional.
+
+- [ ] Link unico por cliente -> ver sus facturas
+- [ ] Pagar factura online con Stripe
+- [ ] Marcar automaticamente como pagada
+- [ ] Aceptar/rechazar presupuesto desde el portal
+
+### FASE 8b - Pedidos [MEDIA PRIORIDAD]
+
+- [ ] Pedidos de cliente -> albaran -> factura
+- [ ] Ordenes de compra a proveedor -> entrada de stock
+- [ ] CRUD Proveedores
+- [ ] Estado: pendiente / confirmado / enviado / entregado
+
+### FASE 9 - Almacen avanzado [BAJA-MEDIA PRIORIDAD]
+Mercado: logistica, fabricacion, e-commerce.
+
+- [ ] Multiples almacenes con ubicaciones (pasillo, estanteria)
+- [ ] Entradas automaticas por orden de compra
+- [ ] Salidas automaticas por albaran/factura
+- [ ] Stock minimo con alerta automatica
+- [ ] Inventario fisico: conteo y ajuste
+- [ ] Trazabilidad: lotes y numeros de serie
+
+### FASE 9b - Automatizaciones externas [BAJA-MEDIA PRIORIDAD]
+Posiciona el SaaS como hub central de la empresa.
+
+- [ ] Webhooks de salida configurables (base ya existe)
+- [ ] Conectores nativos: Slack, Gmail, WhatsApp Business API
+- [ ] Integracion Zapier/Make
+- [ ] Integracion e-commerce: Shopify, WooCommerce
+- [ ] API publica documentada
+
+### FASE 10 - PDF profesional [BAJA PRIORIDAD]
+
+- [ ] PDF factura con QR VeriFactu, logo empresa, formato legal
+- [ ] PDF presupuesto y albaran
+- [ ] PDF nomina
+- [ ] Plantillas personalizables
+
+### FASE 11 - Dominio y SEO [BAJA PRIORIDAD]
+
+- [ ] Apuntar DNS de lucasyleodigital.com a Vercel
+- [ ] Actualizar CLIENT_URL en Railway
+- [ ] Landing page con pricing real, testimonios, demo
 
 ---
 
-## Variables de entorno
+## Mercados desbloqueados por feature
 
-### Railway (@saas/api)
-```
-DATABASE_URL=postgresql://postgres.eqqjbqlewmpoxjlhbrwz:wEPKjHuTMGWjjBnJ@aws-0-eu-west-1.pooler.supabase.com:5432/postgres
-JWT_SECRET=<generado>
-JWT_REFRESH_SECRET=<generado>
-PORT=3001
-NODE_ENV=production
-CLIENT_URL=https://saas-erp-pi.vercel.app
-RESEND_API_KEY=<pendiente>
-EMAIL_FROM=<pendiente>
-STRIPE_SECRET_KEY=<pendiente>
-STRIPE_WEBHOOK_SECRET=<pendiente>
-STRIPE_PRICE_STARTER=<pendiente>
-STRIPE_PRICE_PRO=<pendiente>
-STRIPE_PRICE_ENTERPRISE=<pendiente>
-GOOGLE_CLIENT_ID=<pendiente>
-GOOGLE_CLIENT_SECRET=<pendiente>
-```
-
-### Vercel (web)
-```
-NEXT_PUBLIC_API_URL=https://saasapi-production-b5f3.up.railway.app/api/v1
-```
+| Feature | Mercado nuevo |
+|---|---|
+| Multi-usuario + roles | Cualquier empresa con equipo (80% del mercado) |
+| Albaranes | Distribucion, retail, hosteleria, construccion |
+| Importacion CSV | Todos los que migran desde otro software |
+| Empleados + horario | PYMEs con 5-50 empleados |
+| Nominas | Empresas que externalizan gestoria |
+| Portal del cliente | Servicios, consultoria, agencias |
+| Pedidos + Proveedores | Comercio, mayoristas, e-commerce |
+| Almacen avanzado | Logistica, fabricacion, distribucion |
+| Automatizaciones externas | Agencias, empresas tech |
 
 ---
 
-## Arquitectura multi-tenant
-Cada query filtra siempre por `companyId` extraído del JWT — nunca de la URL.
-El usuario no puede acceder a datos de otra empresa aunque manipule IDs.
+## Servicios externos pendientes
 
-## Prisma schema — modelos principales
-Company → User (many-to-many via UserCompany)
-Company → Client → Invoice → InvoiceItem
-Company → Client → Quote → QuoteItem
-Company → Product → StockMovement
-Company → Deal (pipeline CRM)
-Company → Lead
-Company → Automation
-Company → Notification
-Company → JournalEntry (contabilidad)
-Company → Warehouse → Stock
-RefreshToken → User (con revocación)
-InvoiceVerifactu → Invoice (cumplimiento AEAT)
+| Servicio | Estado | Variables Railway |
+|---|---|---|
+| Resend | Pendiente crear cuenta | RESEND_API_KEY, EMAIL_FROM |
+| Stripe | Pendiente crear cuenta | STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_PRICE_* |
+| Google OAuth | Pendiente completar | GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET |
+
+---
+
+## Decisiones tecnicas clave
+
+- Multi-tenant: companyId siempre del JWT, nunca de la URL
+- i18n: localePrefix always, force-dynamic en layouts con useTranslations()
+- VeriFactu: modo QR (hash chain + QR AEAT), sin certificado p12, valido para cumplimiento
+- Planes: limites validados en el servicio API, PlanUpgradeWall en frontend
+- Automatizaciones: SSRF protection en webhooks salientes (bloquea IPs privadas)
