@@ -14,8 +14,11 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
     super({
       clientID: config.get<string>("GOOGLE_CLIENT_ID") || "google-oauth-not-configured",
       clientSecret: config.get<string>("GOOGLE_CLIENT_SECRET") || "google-oauth-not-configured",
-      callbackURL: `${config.get("CLIENT_URL", "http://localhost:3001")}/api/v1/auth/google/callback`,
+      // Must point to the API server (Railway), NOT the web frontend (Vercel)
+      callbackURL: `${config.get("API_URL", "http://localhost:3001")}/api/v1/auth/google/callback`,
       scope: ["email", "profile"],
+      // Allow user to pick which Google account to use
+      prompt: "select_account",
     });
   }
 
