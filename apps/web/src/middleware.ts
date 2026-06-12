@@ -1,45 +1,58 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./i18n/routing";
+import { type NextRequest, NextResponse } from "next/server";
 
+const intlMiddleware = createMiddleware(routing);
+
+// Paths that don't require authentication (without locale prefix)
 const PUBLIC_PATHS = ["/", "/login", "/registro", "/recuperar-password"];
-const PUBLIC_PREFIXES = ["/_next", "/api/auth", "/favicon", "/static"];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip public paths and static assets
+  // Skip static files and Next.js internals
   if (
-    PUBLIC_PATHS.includes(pathname) ||
-    PUBLIC_PREFIXES.some((p) => pathname.startsWith(p))
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/favicon") ||
+    pathname.match(/\.(png|jpg|jpeg|gif|svg|ico|webp|css|js|woff|woff2)$/)
   ) {
-    // If already authenticated, redirect away from login/register
-    const session = request.cookies.get("auth_session")?.value;
-    if (session && (pathname === "/login" || pathname === "/registro")) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    }
     return NextResponse.next();
   }
 
-  // Check auth session cookie (set by server on login/register)
+  // Strip locale prefix to get the actual path
+  const localePattern = new RegExp(`^/(${routing.locales.join("|")})(/.*)?\$`);
+  const localeMatch = pathname.match(localePattern);
+  const pathWithoutLocale = localeMatch ? localeMatch[2] || "/" : pathname;
+  const currentLocale = localeMatch
+    ? localeMatch[1]
+    : routing.defaultLocale;
+
+  const isPublicPath = PUBLIC_PATHS.includes(pathWithoutLocale);
+  const isAuthPath =
+    pathWithoutLocale === "/login" || pathWithoutLocale === "/registro";
+
   const session = request.cookies.get("auth_session")?.value;
-  if (!session) {
-    const url = new URL("/login", request.url);
-    url.searchParams.set("from", pathname);
-    return NextResponse.redirect(url);
+
+  // Authenticated user trying to access login/register → go to dashboard
+  if (session && isAuthPath) {
+    return NextResponse.redirect(
+      new URL(`/${currentLocale}/dashboard`, request.url)
+    );
   }
 
-  return NextResponse.next();
+  // Unauthenticated user trying to access protected route → go to login
+  if (!session && !isPublicPath) {
+    const loginUrl = new URL(`/${currentLocale}/login`, request.url);
+    loginUrl.searchParams.set("from", pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  // Let next-intl handle locale routing and detection
+  return intlMiddleware(request);
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization)
-     * - favicon.ico
-     * - public folder files (.png, .svg, etc.)
-     */
     "/((?!_next/static|_next/image|favicon\\.ico|.*\\.(?:png|jpg|jpeg|gif|svg|ico|webp)$).*)",
   ],
 };
