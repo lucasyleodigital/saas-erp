@@ -70,10 +70,19 @@ const navItems = [
   },
 ];
 
+const LOCALES = ["es", "en", "fr", "de", "pt", "it"];
+
 export function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const { data: unreadCount } = useUnreadCount();
+
+  // Extract locale from URL path (e.g. /es/dashboard → "es")
+  const segments = pathname.split("/");
+  const locale = LOCALES.includes(segments[1] ?? "") ? segments[1]! : "es";
+
+  // Strip locale prefix to compare paths
+  const pathWithoutLocale = pathname.replace(/^\/(es|en|fr|de|pt|it)/, "") || "/";
 
   return (
     <motion.aside
@@ -119,13 +128,14 @@ export function Sidebar() {
             )}
             {group.items.map((item) => {
               const isActive =
-                pathname === item.href ||
-                (item.href !== "/dashboard" && pathname.startsWith(item.href));
+                pathWithoutLocale === item.href ||
+                (item.href !== "/dashboard" && pathWithoutLocale.startsWith(item.href));
               const Icon = item.icon;
+              const localizedHref = `/${locale}${item.href}`;
               return (
                 <Link
                   key={item.href}
-                  href={item.href}
+                  href={localizedHref}
                   className={cn(
                     "relative flex items-center gap-3 mx-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
                     "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",

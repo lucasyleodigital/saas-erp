@@ -3,6 +3,7 @@
 import { Bell, Search, Sun, Moon, ChevronDown } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
+import { LanguageSwitcher } from "@/components/layout/language-switcher";
 
 export function Header() {
   const { theme, setTheme } = useTheme();
@@ -19,6 +20,7 @@ export function Header() {
 
       {/* Actions */}
       <div className="flex items-center gap-2">
+        <LanguageSwitcher />
         <Button
           variant="ghost"
           size="icon"
