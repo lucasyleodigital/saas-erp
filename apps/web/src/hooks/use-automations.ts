@@ -37,6 +37,19 @@ export function useToggleAutomation() {
   });
 }
 
+export function useUpdateAutomation() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Record<string, unknown> }) =>
+      api.patch(`/automations/${id}`, data).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["automations"] });
+      toast.success("Automatización actualizada");
+    },
+    onError: () => toast.error("Error al actualizar"),
+  });
+}
+
 export function useDeleteAutomation() {
   const qc = useQueryClient();
   return useMutation({
