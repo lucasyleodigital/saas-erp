@@ -77,7 +77,10 @@
     "deliveryNotes": "Bons de livraison",
     "import": "Importer des données",
     "employees": "Employés",
-    "payroll": "Paie"
+    "payroll": "Paie",
+    "suppliers": "Fournisseurs",
+    "orders": "Commandes",
+    "purchaseOrders": "Bons de commande"
   },
   "auth": {
     "login": {

@@ -25,6 +25,9 @@ import { NotificationsModule } from "./modules/notifications/notifications.modul
 import { InventoryModule } from "./modules/inventory/inventory.module";
 import { AccountingModule } from "./modules/accounting/accounting.module";
 import { AutomationsModule } from "./modules/automations/automations.module";
+import { SuppliersModule } from "./modules/suppliers/suppliers.module";
+import { OrdersModule } from "./modules/orders/orders.module";
+import { PurchaseOrdersModule } from "./modules/purchase-orders/purchase-orders.module";
 import { DatabaseModule } from "./database/database.module";
 import { validateEnv } from "./config/env.validation";
 
@@ -62,6 +65,9 @@ import { validateEnv } from "./config/env.validation";
     InventoryModule,
     AccountingModule,
     AutomationsModule,
+    SuppliersModule,
+    OrdersModule,
+    PurchaseOrdersModule,
   ],
   providers: [
     // Apply rate limiting globally to ALL routes

@@ -77,7 +77,10 @@
     "deliveryNotes": "Guias de remessa",
     "import": "Importar dados",
     "employees": "Funcionários",
-    "payroll": "Folha de pagamento"
+    "payroll": "Folha de pagamento",
+    "suppliers": "Fornecedores",
+    "orders": "Pedidos",
+    "purchaseOrders": "Ordens de compra"
   },
   "auth": {
     "login": {

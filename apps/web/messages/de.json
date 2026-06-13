@@ -77,7 +77,10 @@
     "deliveryNotes": "Lieferscheine",
     "import": "Daten importieren",
     "employees": "Mitarbeiter",
-    "payroll": "Lohnabrechnung"
+    "payroll": "Lohnabrechnung",
+    "suppliers": "Lieferanten",
+    "orders": "Bestellungen",
+    "purchaseOrders": "Bestellaufträge"
   },
   "auth": {
     "login": {

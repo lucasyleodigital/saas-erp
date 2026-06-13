@@ -77,7 +77,10 @@
     "deliveryNotes": "Bolle di consegna",
     "import": "Importa dati",
     "employees": "Dipendenti",
-    "payroll": "Buste paga"
+    "payroll": "Buste paga",
+    "suppliers": "Fornitori",
+    "orders": "Ordini",
+    "purchaseOrders": "Ordini di acquisto"
   },
   "auth": {
     "login": {

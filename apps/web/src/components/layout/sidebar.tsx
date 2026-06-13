@@ -28,6 +28,8 @@ import {
   UploadCloud,
   UserCheck,
   Banknote,
+  ShoppingCart,
+  PackageCheck,
 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -79,8 +81,11 @@ export function Sidebar() {
     {
       group: t("accounting"),
       items: [
-        { href: "/contabilidad", label: t("accounting"), icon: Calculator },
-        { href: "/inventario",   label: t("inventory"),  icon: Warehouse },
+        { href: "/contabilidad", label: t("accounting"),    icon: Calculator },
+        { href: "/inventario",   label: t("inventory"),     icon: Warehouse },
+        { href: "/proveedores",  label: t("suppliers"),     icon: Truck },
+        { href: "/pedidos",      label: t("orders"),        icon: ShoppingCart },
+        { href: "/compras",      label: t("purchaseOrders"),icon: PackageCheck },
       ],
     },
     {

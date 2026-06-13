@@ -77,7 +77,10 @@
     "deliveryNotes": "Delivery Notes",
     "import": "Import data",
     "employees": "Employees",
-    "payroll": "Payroll"
+    "payroll": "Payroll",
+    "suppliers": "Suppliers",
+    "orders": "Orders",
+    "purchaseOrders": "Purchase orders"
   },
   "auth": {
     "login": {

@@ -77,7 +77,10 @@
     "deliveryNotes": "Albaranes",
     "import": "Importar datos",
     "employees": "Empleados",
-    "payroll": "Nóminas"
+    "payroll": "Nóminas",
+    "suppliers": "Proveedores",
+    "orders": "Pedidos",
+    "purchaseOrders": "Órdenes de compra"
   },
   "auth": {
     "login": {
