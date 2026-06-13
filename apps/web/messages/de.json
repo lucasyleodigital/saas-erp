@@ -74,7 +74,8 @@
     "groupSystem": "System",
     "orWith": "Oder weiter mit",
     "verifactu": "VeriFactu",
-    "deliveryNotes": "Lieferscheine"
+    "deliveryNotes": "Lieferscheine",
+    "import": "Daten importieren"
   },
   "auth": {
     "login": {

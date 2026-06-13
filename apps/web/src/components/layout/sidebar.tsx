@@ -25,6 +25,7 @@ import {
   ClipboardList,
   Shield,
   Truck,
+  UploadCloud,
 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -81,6 +82,7 @@ export function Sidebar() {
     {
       group: t("groupSystem"),
       items: [
+        { href: "/importacion",     label: t("import"),        icon: UploadCloud },
         { href: "/empresa",         label: t("company"),       icon: Building2 },
         { href: "/billing",         label: t("billing"),       icon: CreditCard },
         { href: "/automatizaciones",label: t("automations"),   icon: Zap },

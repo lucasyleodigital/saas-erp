@@ -74,7 +74,8 @@
     "groupSystem": "Sistema",
     "orWith": "Ou continuar com",
     "verifactu": "VeriFactu",
-    "deliveryNotes": "Guias de remessa"
+    "deliveryNotes": "Guias de remessa",
+    "import": "Importar dados"
   },
   "auth": {
     "login": {

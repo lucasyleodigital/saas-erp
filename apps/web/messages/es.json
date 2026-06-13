@@ -74,7 +74,8 @@
     "groupSystem": "Sistema",
     "orWith": "O continúa con",
     "verifactu": "VeriFactu",
-    "deliveryNotes": "Albaranes"
+    "deliveryNotes": "Albaranes",
+    "import": "Importar datos"
   },
   "auth": {
     "login": {
