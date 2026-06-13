@@ -73,7 +73,8 @@
     "groupBilling": "Facturación",
     "groupSystem": "Sistema",
     "orWith": "O continúa con",
-    "verifactu": "VeriFactu"
+    "verifactu": "VeriFactu",
+    "deliveryNotes": "Albaranes"
   },
   "auth": {
     "login": {

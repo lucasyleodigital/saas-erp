@@ -14,6 +14,7 @@ import { DashboardModule } from "./modules/dashboard/dashboard.module";
 import { VerifactuModule } from "./modules/verifactu/verifactu.module";
 import { LeadsModule } from "./modules/leads/leads.module";
 import { QuotesModule } from "./modules/quotes/quotes.module";
+import { DeliveryNotesModule } from "./modules/delivery-notes/delivery-notes.module";
 import { BillingModule } from "./modules/billing/billing.module";
 import { EmailModule } from "./modules/email/email.module";
 import { NotificationsModule } from "./modules/notifications/notifications.module";
@@ -46,6 +47,7 @@ import { validateEnv } from "./config/env.validation";
     VerifactuModule,
     LeadsModule,
     QuotesModule,
+    DeliveryNotesModule,
     BillingModule,
     EmailModule,
     NotificationsModule,

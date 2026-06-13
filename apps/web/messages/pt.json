@@ -73,7 +73,8 @@
     "groupBilling": "Faturação",
     "groupSystem": "Sistema",
     "orWith": "Ou continuar com",
-    "verifactu": "VeriFactu"
+    "verifactu": "VeriFactu",
+    "deliveryNotes": "Guias de remessa"
   },
   "auth": {
     "login": {

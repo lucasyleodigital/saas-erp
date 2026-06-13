@@ -24,6 +24,7 @@ import {
   CreditCard,
   ClipboardList,
   Shield,
+  Truck,
 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -65,6 +66,7 @@ export function Sidebar() {
       items: [
         { href: "/facturas",     label: t("invoices"),   icon: FileText },
         { href: "/presupuestos", label: t("quotes"),     icon: ClipboardList },
+        { href: "/albaranes",   label: t("deliveryNotes"), icon: Truck },
         { href: "/productos",    label: t("products"),   icon: Package },
         { href: "/verifactu",    label: t("verifactu"),  icon: Shield },
       ],

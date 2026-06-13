@@ -112,6 +112,14 @@ enum VerifactuStatus {
   REJECTED
 }
 
+enum DeliveryNoteStatus {
+  DRAFT
+  SENT
+  DELIVERED
+  INVOICED
+  CANCELLED
+}
+
 enum JournalEntryType {
   INVOICE
   PAYMENT
@@ -175,6 +183,7 @@ model Company {
   invoiceSeries  InvoiceSeries[]
   automations    Automation[]
   invitations    Invitation[]
+  deliveryNotes  DeliveryNote[]
 
   @@map("companies")
 }
@@ -289,6 +298,7 @@ model Client {
   deals          Deal[]
   activities     Activity[]
   contacts       Contact[]
+  deliveryNotes  DeliveryNote[]
 
   @@index([companyId])
   @@map("clients")
@@ -451,6 +461,7 @@ model Product {
   invoiceItems InvoiceItem[]
   quoteItems  QuoteItem[]
   stockMovements StockMovement[]
+  deliveryNoteItems DeliveryNoteItem[]
 
   @@index([companyId])
   @@map("products")
@@ -587,6 +598,7 @@ model Quote {
   company    Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
   client     Client      @relation(fields: [clientId], references: [id])
   items      QuoteItem[]
+  deliveryNotes DeliveryNote[]
 
   @@unique([companyId, number])
   @@map("quotes")
@@ -661,6 +673,54 @@ model VerifactuEvent {
   record     VerifactuRecord @relation(fields: [recordId], references: [id], onDelete: Cascade)
 
   @@map("verifactu_events")
+}
+
+// ============================================================
+// ALBARANES
+// ============================================================
+
+model DeliveryNote {
+  id                   String             @id @default(uuid())
+  companyId            String
+  clientId             String
+  quoteId              String?
+  number               String
+  status               DeliveryNoteStatus @default(DRAFT)
+  issueDate            DateTime           @default(now())
+  deliveryDate         DateTime?
+  notes                String?
+  subtotal             Decimal            @db.Decimal(12, 2)
+  taxAmount            Decimal            @db.Decimal(12, 2)
+  total                Decimal            @db.Decimal(12, 2)
+  convertedToInvoiceId String?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  company              Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  client               Client             @relation(fields: [clientId], references: [id])
+  quote                Quote?             @relation(fields: [quoteId], references: [id])
+  items                DeliveryNoteItem[]
+
+  @@unique([companyId, number])
+  @@index([companyId, status])
+  @@map("delivery_notes")
+}
+
+model DeliveryNoteItem {
+  id             String       @id @default(uuid())
+  deliveryNoteId String
+  productId      String?
+  description    String
+  quantity       Decimal      @db.Decimal(10, 3)
+  unitPrice      Decimal      @db.Decimal(12, 2)
+  discount       Decimal      @default(0) @db.Decimal(5, 2)
+  subtotal       Decimal      @db.Decimal(12, 2)
+  order          Int          @default(0)
+
+  deliveryNote   DeliveryNote @relation(fields: [deliveryNoteId], references: [id], onDelete: Cascade)
+  product        Product?     @relation(fields: [productId], references: [id])
+
+  @@map("delivery_note_items")
 }
 
 // ============================================================

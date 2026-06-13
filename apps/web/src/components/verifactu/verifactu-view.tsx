@@ -18,13 +18,19 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import Link from "next/link";
 
-const STATUS_CONFIG: Record<string, { label: string; variant: any; icon: any }> = {
+const _STATUS_MAP = {
   GENERATED: { label: "Generado",  variant: "secondary",    icon: Clock },
   SIGNED:    { label: "Firmado",   variant: "info",         icon: Clock },
   SENT:      { label: "Enviado",   variant: "info",         icon: Clock },
   ACCEPTED:  { label: "Aceptado",  variant: "success",      icon: CheckCircle2 },
   REJECTED:  { label: "Rechazado", variant: "destructive",  icon: AlertCircle },
 };
+
+const STATUS_CONFIG = _STATUS_MAP as Record<string, { label: string; variant: any; icon: any }>;
+
+function getStatusConfig(status: string) {
+  return STATUS_CONFIG[status] ?? _STATUS_MAP.GENERATED;
+}
 
 export function VerifactuView() {
   const { data, isLoading } = useVerifactuRecords();
@@ -133,7 +139,7 @@ export function VerifactuView() {
                 </thead>
                 <tbody>
                   {records.map((record, i) => {
-                    const cfg = STATUS_CONFIG[record.status] ?? STATUS_CONFIG.GENERATED;
+                    const cfg = getStatusConfig(record.status);
                     const Icon = cfg.icon;
                     return (
                       <motion.tr
