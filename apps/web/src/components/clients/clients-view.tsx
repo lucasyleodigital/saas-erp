@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useClients, useDeleteClient } from "@/hooks/use-clients";
+import { useClients, useDeleteClient, useGeneratePortalToken } from "@/hooks/use-clients";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -17,7 +17,9 @@ import {
   Edit,
   Trash2,
   Eye,
+  Globe,
 } from "lucide-react";
+import { toast } from "sonner";
 import { useDebounce } from "@/hooks/use-debounce";
 import {
   DropdownMenu,
@@ -45,6 +47,18 @@ export function ClientsView() {
   });
 
   const deleteClient = useDeleteClient();
+  const generatePortalToken = useGeneratePortalToken();
+
+  async function handlePortalLink(clientId: string) {
+    try {
+      const result = await generatePortalToken.mutateAsync(clientId);
+      const url = `${typeof window !== "undefined" ? window.location.origin : ""}/portal/${result.portalToken}`;
+      await navigator.clipboard.writeText(url);
+      toast.success("¡Enlace del portal copiado al portapapeles!");
+    } catch {
+      toast.error("Error al generar el enlace");
+    }
+  }
 
   const clients = data?.data ?? [];
   const total = data?.total ?? 0;
@@ -196,6 +210,10 @@ export function ClientsView() {
                               <DropdownMenuItem onClick={() => handleEdit(client)}>
                                 <Edit className="h-4 w-4 mr-2" />
                                 Editar
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handlePortalLink(client.id)}>
+                                <Globe className="h-4 w-4 mr-2" />
+                                Copiar enlace portal
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem

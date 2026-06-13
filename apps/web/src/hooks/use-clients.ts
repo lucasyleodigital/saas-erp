@@ -61,3 +61,29 @@ export function useDeleteClient() {
     onError: () => toast.error("Error al eliminar el cliente"),
   });
 }
+
+export function useGeneratePortalToken() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (clientId: string) =>
+      api.post(`/portal/manage/${clientId}/token`, {}).then((r) => r.data as { id: string; name: string; portalToken: string }),
+    onSuccess: (_, clientId) => {
+      qc.invalidateQueries({ queryKey: clientKeys.detail(clientId) });
+      qc.invalidateQueries({ queryKey: clientKeys.all });
+    },
+    onError: () => toast.error("Error al generar el enlace del portal"),
+  });
+}
+
+export function useRevokePortalToken() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (clientId: string) =>
+      api.post(`/portal/manage/${clientId}/revoke`, {}).then((r) => r.data),
+    onSuccess: (_, clientId) => {
+      qc.invalidateQueries({ queryKey: clientKeys.detail(clientId) });
+      qc.invalidateQueries({ queryKey: clientKeys.all });
+    },
+    onError: () => toast.error("Error al revocar el enlace"),
+  });
+}
