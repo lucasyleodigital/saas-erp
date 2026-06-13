@@ -75,7 +75,8 @@
     "orWith": "Or continue with",
     "verifactu": "VeriFactu",
     "deliveryNotes": "Delivery Notes",
-    "import": "Import data"
+    "import": "Import data",
+    "employees": "Employees"
   },
   "auth": {
     "login": {

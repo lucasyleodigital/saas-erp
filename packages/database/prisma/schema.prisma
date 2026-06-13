@@ -120,6 +120,35 @@ enum DeliveryNoteStatus {
   CANCELLED
 }
 
+enum EmployeeStatus {
+  ACTIVE
+  INACTIVE
+  ON_LEAVE
+}
+
+enum ContractType {
+  INDEFINIDO
+  TEMPORAL
+  PRACTICAS
+  AUTONOMO
+  OBRA_SERVICIO
+}
+
+enum LeaveType {
+  VACATION
+  SICK
+  PERSONAL
+  MATERNITY
+  PATERNITY
+  OTHER
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum JournalEntryType {
   INVOICE
   PAYMENT
@@ -184,6 +213,7 @@ model Company {
   automations    Automation[]
   invitations    Invitation[]
   deliveryNotes  DeliveryNote[]
+  employees      Employee[]
 
   @@map("companies")
 }
@@ -894,6 +924,87 @@ model AuditLog {
 
   @@index([companyId, entity])
   @@map("audit_logs")
+}
+
+// ============================================================
+// RRHH
+// ============================================================
+
+model Employee {
+  id                   String         @id @default(uuid())
+  companyId            String
+  firstName            String
+  lastName             String
+  email                String?
+  phone                String?
+  nif                  String?
+  socialSecurityNumber String?
+  position             String?
+  department           String?
+  contractType         ContractType   @default(INDEFINIDO)
+  startDate            DateTime
+  endDate              DateTime?
+  salary               Decimal        @db.Decimal(12, 2)
+  bankAccount          String?
+  bankHolder           String?
+  address              String?
+  city                 String?
+  province             String?
+  postalCode           String?
+  workingHours         Decimal        @default(40) @db.Decimal(4, 1)
+  status               EmployeeStatus @default(ACTIVE)
+  avatar               String?
+  notes                String?
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+
+  company              Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  timeEntries          TimeEntry[]
+  leaveRequests        LeaveRequest[]
+
+  @@index([companyId, status])
+  @@map("employees")
+}
+
+model TimeEntry {
+  id           String    @id @default(uuid())
+  companyId    String
+  employeeId   String
+  date         DateTime
+  clockIn      DateTime
+  clockOut     DateTime?
+  breakMinutes Int       @default(0)
+  totalMinutes Int?
+  notes        String?
+  createdAt    DateTime  @default(now())
+
+  employee     Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, employeeId])
+  @@index([employeeId, date])
+  @@map("time_entries")
+}
+
+model LeaveRequest {
+  id          String      @id @default(uuid())
+  companyId   String
+  employeeId  String
+  type        LeaveType   @default(VACATION)
+  startDate   DateTime
+  endDate     DateTime
+  days        Int
+  status      LeaveStatus @default(PENDING)
+  reason      String?
+  approvedBy  String?
+  approvedAt  DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  employee    Employee    @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, employeeId])
+  @@index([companyId, status])
+  @@map("leave_requests")
 }
 
 // ============================================================

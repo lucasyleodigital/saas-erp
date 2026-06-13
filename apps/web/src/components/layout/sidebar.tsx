@@ -26,6 +26,7 @@ import {
   Shield,
   Truck,
   UploadCloud,
+  UserCheck,
 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -57,9 +58,10 @@ export function Sidebar() {
     {
       group: t("crm"),
       items: [
-        { href: "/clientes",  label: t("clients"),  icon: Users },
-        { href: "/leads",     label: t("leads"),    icon: UserPlus },
-        { href: "/pipeline",  label: t("pipeline"), icon: BarChart3 },
+        { href: "/clientes",  label: t("clients"),   icon: Users },
+        { href: "/leads",     label: t("leads"),     icon: UserPlus },
+        { href: "/pipeline",  label: t("pipeline"),  icon: BarChart3 },
+        { href: "/empleados", label: t("employees"), icon: UserCheck },
       ],
     },
     {

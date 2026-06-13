@@ -75,7 +75,8 @@
     "orWith": "O continúa con",
     "verifactu": "VeriFactu",
     "deliveryNotes": "Albaranes",
-    "import": "Importar datos"
+    "import": "Importar datos",
+    "employees": "Empleados"
   },
   "auth": {
     "login": {
