@@ -149,6 +149,12 @@ enum LeaveStatus {
   REJECTED
 }
 
+enum PayrollStatus {
+  DRAFT
+  APPROVED
+  PAID
+}
+
 enum JournalEntryType {
   INVOICE
   PAYMENT
@@ -214,6 +220,7 @@ model Company {
   invitations    Invitation[]
   deliveryNotes  DeliveryNote[]
   employees      Employee[]
+  payrolls       Payroll[]
 
   @@map("companies")
 }
@@ -961,6 +968,7 @@ model Employee {
   company              Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
   timeEntries          TimeEntry[]
   leaveRequests        LeaveRequest[]
+  payrolls             Payroll[]
 
   @@index([companyId, status])
   @@map("employees")
@@ -1005,6 +1013,48 @@ model LeaveRequest {
   @@index([companyId, employeeId])
   @@index([companyId, status])
   @@map("leave_requests")
+}
+
+// ============================================================
+// NÓMINAS
+// ============================================================
+
+model Payroll {
+  id              String        @id @default(uuid())
+  companyId       String
+  employeeId      String
+  year            Int
+  month           Int
+
+  baseSalary      Decimal       @db.Decimal(12, 2)
+  overtimePay     Decimal       @default(0) @db.Decimal(12, 2)
+  bonuses         Decimal       @default(0) @db.Decimal(12, 2)
+  grossSalary     Decimal       @db.Decimal(12, 2)
+
+  ssEmployeeRate  Decimal       @db.Decimal(6, 4)
+  ssEmployerRate  Decimal       @db.Decimal(6, 4)
+  ssEmployee      Decimal       @db.Decimal(12, 2)
+  ssEmployer      Decimal       @db.Decimal(12, 2)
+
+  irpfRate        Decimal       @db.Decimal(5, 2)
+  irpfAmount      Decimal       @db.Decimal(12, 2)
+
+  otherDeductions Decimal       @default(0) @db.Decimal(12, 2)
+  netSalary       Decimal       @db.Decimal(12, 2)
+  totalCost       Decimal       @db.Decimal(12, 2)
+
+  status          PayrollStatus @default(DRAFT)
+  paymentDate     DateTime?
+  notes           String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  company         Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee        Employee      @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, employeeId, year, month])
+  @@index([companyId, year, month])
+  @@map("payrolls")
 }
 
 // ============================================================

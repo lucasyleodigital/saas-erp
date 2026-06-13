@@ -27,6 +27,7 @@ import {
   Truck,
   UploadCloud,
   UserCheck,
+  Banknote,
 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -62,6 +63,7 @@ export function Sidebar() {
         { href: "/leads",     label: t("leads"),     icon: UserPlus },
         { href: "/pipeline",  label: t("pipeline"),  icon: BarChart3 },
         { href: "/empleados", label: t("employees"), icon: UserCheck },
+        { href: "/nominas",   label: t("payroll"),   icon: Banknote },
       ],
     },
     {

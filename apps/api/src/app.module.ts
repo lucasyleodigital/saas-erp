@@ -17,6 +17,7 @@ import { QuotesModule } from "./modules/quotes/quotes.module";
 import { DeliveryNotesModule } from "./modules/delivery-notes/delivery-notes.module";
 import { ImportModule } from "./modules/import/import.module";
 import { EmployeesModule } from "./modules/employees/employees.module";
+import { PayrollModule } from "./modules/payroll/payroll.module";
 import { BillingModule } from "./modules/billing/billing.module";
 import { EmailModule } from "./modules/email/email.module";
 import { NotificationsModule } from "./modules/notifications/notifications.module";
@@ -52,6 +53,7 @@ import { validateEnv } from "./config/env.validation";
     DeliveryNotesModule,
     ImportModule,
     EmployeesModule,
+    PayrollModule,
     BillingModule,
     EmailModule,
     NotificationsModule,

@@ -76,7 +76,8 @@
     "verifactu": "VeriFactu",
     "deliveryNotes": "Albaranes",
     "import": "Importar datos",
-    "employees": "Empleados"
+    "employees": "Empleados",
+    "payroll": "Nóminas"
   },
   "auth": {
     "login": {

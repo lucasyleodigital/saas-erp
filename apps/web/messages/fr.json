@@ -76,7 +76,8 @@
     "verifactu": "VeriFactu",
     "deliveryNotes": "Bons de livraison",
     "import": "Importer des données",
-    "employees": "Employés"
+    "employees": "Employés",
+    "payroll": "Paie"
   },
   "auth": {
     "login": {

@@ -76,7 +76,8 @@
     "verifactu": "VeriFactu",
     "deliveryNotes": "Guias de remessa",
     "import": "Importar dados",
-    "employees": "Funcionários"
+    "employees": "Funcionários",
+    "payroll": "Folha de pagamento"
   },
   "auth": {
     "login": {

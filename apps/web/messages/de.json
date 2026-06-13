@@ -76,7 +76,8 @@
     "verifactu": "VeriFactu",
     "deliveryNotes": "Lieferscheine",
     "import": "Daten importieren",
-    "employees": "Mitarbeiter"
+    "employees": "Mitarbeiter",
+    "payroll": "Lohnabrechnung"
   },
   "auth": {
     "login": {
