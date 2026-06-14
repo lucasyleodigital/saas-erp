@@ -1,26 +1,56 @@
-import { Controller, Get, Post, Put, Body, Param, Query, UseGuards } from "@nestjs/common";
-import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
+import {
+  Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, HttpCode,
+} from "@nestjs/common";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
 import { InventoryService } from "./inventory.service";
 import type { JwtPayload } from "@saas/types";
 
-@ApiTags("Inventory")
-@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller("inventory")
 export class InventoryController {
   constructor(private service: InventoryService) {}
+
+  // ── Summary & Reports (static before /:id) ────────────────────────────────
 
   @Get("summary")
   getSummary(@CurrentUser() user: JwtPayload) {
     return this.service.getSummary(user.companyId);
   }
 
+  @Get("alerts")
+  getAlerts(@CurrentUser() user: JwtPayload) {
+    return this.service.getAlerts(user.companyId);
+  }
+
+  @Get("valuation")
+  getValuation(@CurrentUser() user: JwtPayload, @Query() query: any) {
+    return this.service.getValuation(user.companyId, { warehouseId: query.warehouseId });
+  }
+
+  // ── Stock ─────────────────────────────────────────────────────────────────
+
   @Get("stock")
   getStock(@CurrentUser() user: JwtPayload, @Query() query: any) {
     return this.service.getStock(user.companyId, query);
   }
+
+  @Get("stock/:productId/warehouses")
+  getStockByWarehouse(@CurrentUser() user: JwtPayload, @Param("productId") productId: string) {
+    return this.service.getStockByWarehouse(user.companyId, productId);
+  }
+
+  @Put("stock/:productId/min-stock")
+  @HttpCode(200)
+  setMinStock(
+    @CurrentUser() user: JwtPayload,
+    @Param("productId") productId: string,
+    @Body() body: { minStock: number | null },
+  ) {
+    return this.service.setMinStock(user.companyId, productId, body.minStock);
+  }
+
+  // ── Movements ─────────────────────────────────────────────────────────────
 
   @Get("movements")
   getMovements(@CurrentUser() user: JwtPayload, @Query() query: any) {
@@ -31,6 +61,20 @@ export class InventoryController {
   addMovement(@CurrentUser() user: JwtPayload, @Body() body: any) {
     return this.service.addMovement(user.companyId, body);
   }
+
+  @Post("transfer")
+  @HttpCode(200)
+  transferStock(@CurrentUser() user: JwtPayload, @Body() body: any) {
+    return this.service.transferStock(user.companyId, body);
+  }
+
+  @Post("physical")
+  @HttpCode(200)
+  physicalInventory(@CurrentUser() user: JwtPayload, @Body() body: { items: any[] }) {
+    return this.service.physicalInventory(user.companyId, body.items);
+  }
+
+  // ── Warehouses ────────────────────────────────────────────────────────────
 
   @Get("warehouses")
   getWarehouses(@CurrentUser() user: JwtPayload) {
@@ -45,5 +89,17 @@ export class InventoryController {
   @Put("warehouses/:id")
   updateWarehouse(@CurrentUser() user: JwtPayload, @Param("id") id: string, @Body() body: any) {
     return this.service.updateWarehouse(user.companyId, id, body);
+  }
+
+  @Delete("warehouses/:id")
+  @HttpCode(204)
+  deleteWarehouse(@CurrentUser() user: JwtPayload, @Param("id") id: string) {
+    return this.service.deleteWarehouse(user.companyId, id);
+  }
+
+  @Post("warehouses/:id/default")
+  @HttpCode(200)
+  setDefault(@CurrentUser() user: JwtPayload, @Param("id") id: string) {
+    return this.service.setDefaultWarehouse(user.companyId, id);
   }
 }
