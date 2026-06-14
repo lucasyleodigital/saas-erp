@@ -1,5 +1,5 @@
 import {
-  Controller, Get, Post, Patch, Delete, Param, Body, UseGuards, HttpCode, HttpStatus,
+  Controller, Get, Post, Patch, Delete, Param, Query, Body, UseGuards, HttpCode, HttpStatus,
 } from "@nestjs/common";
 import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
 import { AutomationsService } from "./automations.service";
@@ -24,9 +24,20 @@ export class AutomationsController {
     return this.svc.getStats(u.companyId);
   }
 
+  @Get("logs")
+  getLogs(@CurrentUser() u: JwtPayload, @Query("automationId") automationId?: string) {
+    return this.svc.getLogs(u.companyId, automationId);
+  }
+
   @Post()
   create(@CurrentUser() u: JwtPayload, @Body() body: any) {
     return this.svc.create(u.companyId, body);
+  }
+
+  @Post(":id/test")
+  @HttpCode(HttpStatus.OK)
+  test(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
+    return this.svc.testAutomation(u.companyId, id);
   }
 
   @Patch(":id")

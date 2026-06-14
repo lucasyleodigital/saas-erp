@@ -97,6 +97,9 @@ enum AutomationTrigger {
   DEAL_STAGE_CHANGED
   PAYMENT_RECEIVED
   CLIENT_CREATED
+  ORDER_CREATED
+  PURCHASE_ORDER_RECEIVED
+  LOW_STOCK
 }
 
 enum AutomationActionType {
@@ -1121,9 +1124,27 @@ model Automation {
   updatedAt    DateTime             @updatedAt
 
   company      Company              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  logs         AutomationLog[]
 
   @@index([companyId, isActive])
   @@map("automations")
+}
+
+model AutomationLog {
+  id           String    @id @default(uuid())
+  automationId String
+  companyId    String
+  trigger      String
+  success      Boolean
+  errorMessage String?
+  payload      Json?
+  createdAt    DateTime  @default(now())
+
+  automation   Automation @relation(fields: [automationId], references: [id], onDelete: Cascade)
+
+  @@index([automationId, createdAt])
+  @@index([companyId, createdAt])
+  @@map("automation_logs")
 }
 
 // ============================================================

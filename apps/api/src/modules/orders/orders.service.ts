@@ -1,9 +1,13 @@
 import { Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
+import { AutomationsService } from "../automations/automations.service";
 
 @Injectable()
 export class OrdersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private automations: AutomationsService,
+  ) {}
 
   private async nextOrderNumber(companyId: string): Promise<string> {
     const year = new Date().getFullYear();
@@ -74,7 +78,7 @@ export class OrdersService {
     const number = await this.nextOrderNumber(companyId);
     const { subtotal, taxAmount, total } = this.calcTotals(items);
 
-    return this.prisma.order.create({
+    const order = await this.prisma.order.create({
       data: {
         ...orderData,
         companyId,
@@ -95,10 +99,20 @@ export class OrdersService {
         },
       },
       include: {
-        client: { select: { id: true, name: true } },
+        client: { select: { id: true, name: true, email: true } },
         items: true,
       },
     });
+
+    this.automations.trigger(companyId, "ORDER_CREATED", {
+      orderNumber: order.number,
+      clientName:  (order as any).client?.name  ?? "",
+      clientEmail: (order as any).client?.email ?? "",
+      total:       String(order.total),
+      currency:    order.currency,
+    }).catch(() => {});
+
+    return order;
   }
 
   async update(companyId: string, id: string, dto: any) {
@@ -162,6 +176,8 @@ export class OrdersService {
           number: dnNumber,
           issueDate: new Date(),
           notes: order.notes ?? undefined,
+          subtotal: order.subtotal,
+          taxAmount: order.taxAmount,
           total: order.total,
           items: {
             create: order.items.map((item: any) => ({

@@ -1,9 +1,13 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
+import { AutomationsService } from "../automations/automations.service";
 
 @Injectable()
 export class LeadsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private automations: AutomationsService,
+  ) {}
 
   async findAll(companyId: string, params: any) {
     const { page = 1, limit = 20, search } = params;
@@ -33,7 +37,13 @@ export class LeadsService {
   }
 
   async create(companyId: string, data: any) {
-    return this.prisma.lead.create({ data: { ...data, companyId } });
+    const lead = await this.prisma.lead.create({ data: { ...data, companyId } });
+    this.automations.trigger(companyId, "LEAD_CREATED", {
+      leadName:  lead.name,
+      leadEmail: lead.email ?? "",
+      source:    lead.source ?? "",
+    }).catch(() => {});
+    return lead;
   }
 
   async update(companyId: string, id: string, data: any) {

@@ -16,6 +16,25 @@ export function useAutomationStats() {
   });
 }
 
+export function useAutomationLogs(automationId?: string) {
+  return useQuery({
+    queryKey: ["automations", "logs", automationId],
+    queryFn: () =>
+      api
+        .get("/automations/logs", { params: automationId ? { automationId } : undefined })
+        .then((r) => r.data as {
+          id: string;
+          automationId: string;
+          trigger: string;
+          success: boolean;
+          errorMessage?: string;
+          payload?: Record<string, unknown>;
+          createdAt: string;
+          automation: { id: string; name: string; trigger: string; action: string };
+        }[]),
+  });
+}
+
 export function useCreateAutomation() {
   const qc = useQueryClient();
   return useMutation({
@@ -58,5 +77,21 @@ export function useDeleteAutomation() {
       qc.invalidateQueries({ queryKey: ["automations"] });
       toast.success("Automatización eliminada");
     },
+  });
+}
+
+export function useTestAutomation() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => api.post(`/automations/${id}/test`).then((r) => r.data),
+    onSuccess: (data: { success: boolean; errorMessage?: string }) => {
+      if (data.success) {
+        toast.success("Prueba ejecutada correctamente");
+      } else {
+        toast.error(`Prueba fallida: ${data.errorMessage ?? "error desconocido"}`);
+      }
+      qc.invalidateQueries({ queryKey: ["automations", "logs"] });
+    },
+    onError: () => toast.error("Error al ejecutar la prueba"),
   });
 }

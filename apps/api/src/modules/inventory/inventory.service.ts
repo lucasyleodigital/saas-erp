@@ -1,12 +1,16 @@
 import { Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
+import { AutomationsService } from "../automations/automations.service";
 
 const IN_TYPES  = ["PURCHASE", "ADJUSTMENT_IN", "RETURN", "TRANSFER_IN", "IN"];
 const OUT_TYPES = ["SALE", "ADJUSTMENT_OUT", "TRANSFER"];
 
 @Injectable()
 export class InventoryService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private automations: AutomationsService,
+  ) {}
 
   // ─── Warehouses ──────────────────────────────────────────────────────────────
 
@@ -198,6 +202,18 @@ export class InventoryService {
         },
       }),
     ]);
+
+    // Fire LOW_STOCK trigger if stock drops at/below minStock
+    const newStock = Number(product.stock) + delta;
+    const minStock = product.minStock != null ? Number(product.minStock) : null;
+    if (delta < 0 && minStock !== null && newStock <= minStock) {
+      this.automations.trigger(companyId, "LOW_STOCK", {
+        productName:  product.name,
+        sku:          product.sku ?? "",
+        currentStock: newStock,
+        minStock,
+      }).catch(() => {});
+    }
 
     return movement;
   }

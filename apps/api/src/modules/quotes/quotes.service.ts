@@ -1,12 +1,14 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
 import { PlansService } from "../plans/plans.service";
+import { AutomationsService } from "../automations/automations.service";
 
 @Injectable()
 export class QuotesService {
   constructor(
     private prisma: PrismaService,
     private plans: PlansService,
+    private automations: AutomationsService,
   ) {}
 
   async findAll(companyId: string, params: any) {
@@ -69,7 +71,7 @@ export class QuotesService {
     );
     const taxAmount = subtotal * 0.21;
 
-    return this.prisma.quote.create({
+    const newQuote = await this.prisma.quote.create({
       data: {
         companyId,
         clientId: dto.clientId,
@@ -96,8 +98,17 @@ export class QuotesService {
           })),
         },
       },
-      include: { items: true, client: { select: { id: true, name: true } } },
+      include: { items: true, client: { select: { id: true, name: true, email: true } } },
     });
+
+    this.automations.trigger(companyId, "QUOTE_CREATED", {
+      quoteNumber: newQuote.number,
+      clientName:  (newQuote as any).client?.name  ?? "",
+      clientEmail: (newQuote as any).client?.email ?? "",
+      total:       String(newQuote.total),
+    }).catch(() => {});
+
+    return newQuote;
   }
 
   async updateStatus(companyId: string, id: string, status: string) {
@@ -149,6 +160,13 @@ export class QuotesService {
         data: { status: "ACCEPTED" },
       }),
     ]);
+
+    this.automations.trigger(companyId, "QUOTE_ACCEPTED", {
+      quoteNumber: quote.number,
+      clientName:  quote.client?.name  ?? "",
+      clientEmail: quote.client?.email ?? "",
+      total:       String(quote.total),
+    }).catch(() => {});
 
     return invoice;
   }

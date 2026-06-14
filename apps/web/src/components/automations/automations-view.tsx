@@ -7,6 +7,7 @@ import { z } from "zod";
 import {
   useAutomations, useAutomationStats, useCreateAutomation,
   useToggleAutomation, useDeleteAutomation, useUpdateAutomation,
+  useTestAutomation, useAutomationLogs,
 } from "@/hooks/use-automations";
 import { usePlanUsage } from "@/hooks/use-plan";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,22 +21,27 @@ import { cn } from "@/lib/utils";
 import {
   Zap, Plus, Trash2, Play, Pause, Mail, Bell, Globe,
   FileText, Users, TrendingUp, CreditCard, Loader2,
-  Pencil, ArrowRight, Lock, Sparkles,
+  Pencil, ArrowRight, Lock, Sparkles, FlaskConical,
+  ShoppingCart, PackageCheck, AlertTriangle, History,
+  CheckCircle2, XCircle, ChevronDown, ChevronUp,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const TRIGGERS = [
-  { value: "INVOICE_CREATED",      label: "Factura creada",         icon: FileText,   color: "text-blue-500" },
-  { value: "INVOICE_PAID",         label: "Factura pagada",         icon: CreditCard, color: "text-emerald-500" },
-  { value: "INVOICE_OVERDUE",      label: "Factura vencida",        icon: FileText,   color: "text-destructive" },
-  { value: "QUOTE_CREATED",        label: "Presupuesto creado",     icon: FileText,   color: "text-violet-500" },
-  { value: "QUOTE_ACCEPTED",       label: "Presupuesto aceptado",   icon: FileText,   color: "text-emerald-500" },
-  { value: "LEAD_CREATED",         label: "Nuevo lead",             icon: Users,      color: "text-amber-500" },
-  { value: "DEAL_STAGE_CHANGED",   label: "Deal cambia de etapa",   icon: TrendingUp, color: "text-purple-500" },
-  { value: "CLIENT_CREATED",       label: "Nuevo cliente",          icon: Users,      color: "text-blue-500" },
-  { value: "PAYMENT_RECEIVED",     label: "Pago recibido",          icon: CreditCard, color: "text-emerald-500" },
+  { value: "INVOICE_CREATED",          label: "Factura creada",              icon: FileText,       color: "text-blue-500" },
+  { value: "INVOICE_PAID",             label: "Factura pagada",              icon: CreditCard,     color: "text-emerald-500" },
+  { value: "INVOICE_OVERDUE",          label: "Factura vencida",             icon: FileText,       color: "text-destructive" },
+  { value: "QUOTE_CREATED",            label: "Presupuesto creado",          icon: FileText,       color: "text-violet-500" },
+  { value: "QUOTE_ACCEPTED",           label: "Presupuesto aceptado",        icon: FileText,       color: "text-emerald-500" },
+  { value: "LEAD_CREATED",             label: "Nuevo lead",                  icon: Users,          color: "text-amber-500" },
+  { value: "DEAL_STAGE_CHANGED",       label: "Deal cambia de etapa",        icon: TrendingUp,     color: "text-purple-500" },
+  { value: "CLIENT_CREATED",           label: "Nuevo cliente",               icon: Users,          color: "text-blue-500" },
+  { value: "PAYMENT_RECEIVED",         label: "Pago recibido",               icon: CreditCard,     color: "text-emerald-500" },
+  { value: "ORDER_CREATED",            label: "Pedido creado",               icon: ShoppingCart,   color: "text-orange-500" },
+  { value: "PURCHASE_ORDER_RECEIVED",  label: "Compra recibida en almacén",  icon: PackageCheck,   color: "text-teal-500" },
+  { value: "LOW_STOCK",                label: "Stock por debajo del mínimo", icon: AlertTriangle,  color: "text-destructive" },
 ];
 
 const ACTIONS = [
@@ -96,6 +102,39 @@ const TEMPLATES = [
     action: "SEND_WEBHOOK",
     actionConfig: { url: "https://hooks.zapier.com/hooks/catch/YOUR_ID" },
     emoji: "🔗",
+  },
+  {
+    name: "Alerta de stock bajo",
+    description: "Recibe una notificación interna cuando el stock de un producto cae por debajo del mínimo",
+    trigger: "LOW_STOCK",
+    action: "CREATE_NOTIFICATION",
+    actionConfig: {
+      title: "Stock bajo: {{productName}}",
+      body: "El producto {{productName}} ({{sku}}) tiene {{currentStock}} unidades, mínimo {{minStock}}.",
+    },
+    emoji: "⚠️",
+  },
+  {
+    name: "Notificación de nuevo pedido",
+    description: "Avisa internamente cuando llega un nuevo pedido de cliente",
+    trigger: "ORDER_CREATED",
+    action: "CREATE_NOTIFICATION",
+    actionConfig: {
+      title: "Nuevo pedido: {{orderNumber}}",
+      body: "{{clientName}} ha creado el pedido {{orderNumber}} por {{total}} {{currency}}.",
+    },
+    emoji: "🛒",
+  },
+  {
+    name: "Alerta de compra recibida",
+    description: "Notifica cuando una orden de compra queda completamente recibida en almacén",
+    trigger: "PURCHASE_ORDER_RECEIVED",
+    action: "CREATE_NOTIFICATION",
+    actionConfig: {
+      title: "OC recibida: {{orderNumber}}",
+      body: "La orden {{orderNumber}} de {{supplierName}} ha sido recibida completamente.",
+    },
+    emoji: "📦",
   },
 ];
 
@@ -290,6 +329,7 @@ function AutomationCard({
 }: { automation: any; onEdit: (a: any) => void }) {
   const toggle = useToggleAutomation();
   const remove = useDeleteAutomation();
+  const test   = useTestAutomation();
 
   const trigger = TRIGGERS.find((t) => t.value === automation.trigger);
   const action  = ACTIONS.find((a) => a.value === automation.action);
@@ -338,6 +378,16 @@ function AutomationCard({
               onClick={() => onEdit(automation)} title="Editar"
             >
               <Pencil className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-violet-500"
+              onClick={() => test.mutate(automation.id)}
+              disabled={test.isPending}
+              title="Probar ahora"
+            >
+              {test.isPending
+                ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                : <FlaskConical className="h-3.5 w-3.5" />}
             </Button>
             <Button
               variant="ghost" size="icon" className="h-8 w-8"
@@ -423,6 +473,72 @@ function TemplatesSection({ onApply }: { onApply: (tpl: typeof TEMPLATES[number]
           </button>
         ))}
       </div>
+    </div>
+  );
+}
+
+// ─── Execution Logs ───────────────────────────────────────────────────────────
+
+function ExecutionLogs() {
+  const [expanded, setExpanded] = useState(false);
+  const { data: logs, isLoading } = useAutomationLogs();
+
+  const list = logs ?? [];
+
+  return (
+    <div className="border rounded-xl overflow-hidden">
+      <button
+        className="w-full flex items-center justify-between px-4 py-3 bg-muted/30 hover:bg-muted/50 transition-colors"
+        onClick={() => setExpanded((p) => !p)}
+      >
+        <div className="flex items-center gap-2">
+          <History className="h-4 w-4 text-muted-foreground" />
+          <span className="text-sm font-medium">Historial de ejecuciones</span>
+          {list.length > 0 && (
+            <span className="text-xs bg-muted rounded-full px-2 py-0.5">{list.length}</span>
+          )}
+        </div>
+        {expanded ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
+      </button>
+
+      {expanded && (
+        <div className="divide-y max-h-80 overflow-y-auto">
+          {isLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            </div>
+          ) : list.length === 0 ? (
+            <div className="py-8 text-center text-sm text-muted-foreground">
+              Sin ejecuciones registradas todavía
+            </div>
+          ) : (
+            list.map((log) => (
+              <div key={log.id} className="flex items-start gap-3 px-4 py-3">
+                {log.success
+                  ? <CheckCircle2 className="h-4 w-4 text-emerald-500 mt-0.5 shrink-0" />
+                  : <XCircle className="h-4 w-4 text-destructive mt-0.5 shrink-0" />}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-sm font-medium truncate">{log.automation?.name ?? "—"}</span>
+                    <span className="text-[10px] bg-muted rounded px-1.5 py-0.5 text-muted-foreground">
+                      {TRIGGERS.find((t) => t.value === log.trigger)?.label ?? log.trigger}
+                    </span>
+                    {(log.payload as any)?._test && (
+                      <span className="text-[10px] bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300 rounded px-1.5 py-0.5">TEST</span>
+                    )}
+                  </div>
+                  {log.errorMessage && (
+                    <p className="text-xs text-destructive mt-0.5 truncate">{log.errorMessage}</p>
+                  )}
+                </div>
+                <span className="text-xs text-muted-foreground shrink-0 whitespace-nowrap">
+                  {new Date(log.createdAt).toLocaleDateString("es-ES", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+                </span>
+              </div>
+            ))
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -554,6 +670,9 @@ export function AutomationsView() {
           {!isLoading && list.length > 0 && (
             <TemplatesSection onApply={applyTemplate} />
           )}
+
+          {/* Execution logs */}
+          {!isLoading && <ExecutionLogs />}
         </>
       )}
 

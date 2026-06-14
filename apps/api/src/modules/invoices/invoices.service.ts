@@ -5,6 +5,7 @@ import {
 } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
 import { PlansService } from "../plans/plans.service";
+import { AutomationsService } from "../automations/automations.service";
 import { CreateInvoiceDto } from "./dto/create-invoice.dto";
 import type { PaginationParams } from "@saas/types";
 
@@ -13,6 +14,7 @@ export class InvoicesService {
   constructor(
     private prisma: PrismaService,
     private plans: PlansService,
+    private automations: AutomationsService,
   ) {}
 
   async findAll(companyId: string, params: PaginationParams & { status?: string }) {
@@ -135,6 +137,14 @@ export class InvoicesService {
       }),
     ]);
 
+    this.automations.trigger(companyId, "INVOICE_CREATED", {
+      invoiceNumber: invoice.number,
+      clientEmail:   (invoice as any).client?.email ?? "",
+      clientName:    (invoice as any).client?.name  ?? "",
+      total:         String(invoice.total),
+      currency:      invoice.currency,
+    }).catch(() => {});
+
     return invoice;
   }
 
@@ -160,6 +170,16 @@ export class InvoicesService {
         data: { paidAmount: newPaid, status: newStatus as any },
       }),
     ]);
+
+    if (newStatus === "PAID") {
+      this.automations.trigger(companyId, "INVOICE_PAID", {
+        invoiceNumber: invoice.number,
+        clientEmail:   invoice.client?.email ?? "",
+        clientName:    invoice.client?.name  ?? "",
+        total:         String(invoice.total),
+        currency:      invoice.currency,
+      }).catch(() => {});
+    }
 
     return payment;
   }

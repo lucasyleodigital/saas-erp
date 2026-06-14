@@ -1,9 +1,13 @@
 import { Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
+import { AutomationsService } from "../automations/automations.service";
 
 @Injectable()
 export class PurchaseOrdersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private automations: AutomationsService,
+  ) {}
 
   private async nextPoNumber(companyId: string): Promise<string> {
     const year = new Date().getFullYear();
@@ -166,12 +170,11 @@ export class PurchaseOrdersService {
             if (delta > 0) {
               await tx.stockMovement.create({
                 data: {
-                  companyId,
                   warehouseId: warehouse.id,
                   productId: item.productId,
                   type: "IN",
                   quantity: delta,
-                  reason: `Recepción OC ${po.number}`,
+                  notes: `Recepción OC ${po.number}`,
                 },
               });
               await tx.product.update({
@@ -194,6 +197,20 @@ export class PurchaseOrdersService {
       const newStatus = allReceived ? "RECEIVED" : anyReceived ? "PARTIAL_RECEIVED" : "SENT";
 
       await tx.purchaseOrder.update({ where: { id }, data: { status: newStatus } });
+
+      if (newStatus === "RECEIVED") {
+        const updatedPo = await tx.purchaseOrder.findFirst({
+          where: { id },
+          include: { supplier: { select: { name: true } } },
+        });
+        if (updatedPo) {
+          this.automations.trigger(companyId, "PURCHASE_ORDER_RECEIVED", {
+            orderNumber:  updatedPo.number,
+            supplierName: (updatedPo as any).supplier?.name ?? "",
+            total:        String(updatedPo.total),
+          }).catch(() => {});
+        }
+      }
     });
 
     return this.findOne(companyId, id);
