@@ -5,7 +5,7 @@
     "dockerfilePath": "apps/api/Dockerfile"
   },
   "deploy": {
-    "startCommand": "cd packages/database && npx prisma db push --accept-data-loss && cd /app && node apps/api/dist/apps/api/src/main.js",
+    "startCommand": "sh /app/start.sh",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 120,
     "restartPolicyType": "ON_FAILURE",

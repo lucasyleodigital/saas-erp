@@ -56,4 +56,7 @@ ENV NODE_ENV=production
 ENV PORT=3001
 EXPOSE 3001
 
-CMD ["node", "apps/api/dist/apps/api/src/main.js"]
+COPY apps/api/start.sh ./start.sh
+RUN chmod +x ./start.sh
+
+CMD ["sh", "./start.sh"]
