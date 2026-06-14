@@ -35,17 +35,18 @@ export function useCreateQuote() {
   });
 }
 
-export function useSendQuote() {
+export function useSendQuoteEmail() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, to }: { id: string; to?: string }) =>
-      api.post(`/quotes/${id}/send`, { to }).then((r) => r.data),
+    mutationFn: (id: string) =>
+      api.post(`/quotes/${id}/send-email`).then((r) => r.data),
     onSuccess: (data) => {
       qc.invalidateQueries({ queryKey: ["quotes"] });
       if (data.sent) toast.success(`Presupuesto enviado a ${data.to}`);
-      else toast.error(data.reason ?? "No se pudo enviar");
+      else toast.error("No se pudo enviar");
     },
-    onError: () => toast.error("Error al enviar el presupuesto"),
+    onError: (err: any) =>
+      toast.error(err?.response?.data?.message ?? "Error al enviar el presupuesto"),
   });
 }
 

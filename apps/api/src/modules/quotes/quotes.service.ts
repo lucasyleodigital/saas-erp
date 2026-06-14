@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
 import { PlansService } from "../plans/plans.service";
 import { AutomationsService } from "../automations/automations.service";
+import { EmailService } from "../email/email.service";
 
 @Injectable()
 export class QuotesService {
@@ -9,6 +10,7 @@ export class QuotesService {
     private prisma: PrismaService,
     private plans: PlansService,
     private automations: AutomationsService,
+    private email: EmailService,
   ) {}
 
   async findAll(companyId: string, params: any) {
@@ -169,6 +171,28 @@ export class QuotesService {
     }).catch(() => {});
 
     return invoice;
+  }
+
+  async sendByEmail(companyId: string, id: string) {
+    const quote = await this.findOne(companyId, id);
+    const clientEmail = (quote as any).client?.email;
+    if (!clientEmail) throw new BadRequestException("El cliente no tiene email registrado");
+
+    const validUntil = quote.validUntil
+      ? new Date(quote.validUntil).toLocaleDateString("es-ES")
+      : "Sin fecha de caducidad";
+
+    await this.email.sendQuote(
+      clientEmail,
+      (quote as any).client!.name,
+      quote.number,
+      Number(quote.total),
+      validUntil,
+    );
+    if (quote.status === "DRAFT") {
+      await this.prisma.quote.update({ where: { id }, data: { status: "SENT" } });
+    }
+    return { sent: true, to: clientEmail };
   }
 
   async remove(companyId: string, id: string) {

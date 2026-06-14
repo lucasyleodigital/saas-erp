@@ -6,7 +6,9 @@ import {
   useUpdateQuoteStatus,
   useConvertQuoteToInvoice,
   useDeleteQuote,
+  useSendQuoteEmail,
 } from "@/hooks/use-quotes";
+import { downloadQuotePdf } from "@/lib/pdf/download-pdf";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -29,9 +31,11 @@ import {
   Send,
   Trash2,
   ArrowRight,
+  Download,
 } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import { QuoteDialog } from "./quote-dialog";
 import { useTranslations } from "next-intl";
 
@@ -59,11 +63,13 @@ export function QuotesView() {
   const [status, setStatus] = useState<string | undefined>(undefined);
   const [page, setPage] = useState(1);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState<string | null>(null);
   const debouncedSearch = useDebounce(search, 300);
 
   const updateStatus = useUpdateQuoteStatus();
   const convertToInvoice = useConvertQuoteToInvoice();
   const deleteQuote = useDeleteQuote();
+  const sendEmail = useSendQuoteEmail();
 
   const { data, isLoading } = useQuotes({
     search: debouncedSearch || undefined,
@@ -227,6 +233,26 @@ export function QuotesView() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                disabled={pdfLoading === q.id}
+                                onClick={async () => {
+                                  setPdfLoading(q.id);
+                                  try { await downloadQuotePdf(q.id); }
+                                  catch { toast.error("Error al generar PDF"); }
+                                  finally { setPdfLoading(null); }
+                                }}
+                              >
+                                <Download className="h-4 w-4 mr-2" />
+                                {pdfLoading === q.id ? "Generando..." : "Descargar PDF"}
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => sendEmail.mutate(q.id)}
+                                disabled={sendEmail.isPending}
+                              >
+                                <Send className="h-4 w-4 mr-2" />
+                                Enviar por email
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
                               {q.status === "DRAFT" && (
                                 <DropdownMenuItem
                                   onClick={() =>

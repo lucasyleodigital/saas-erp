@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useInvoices, useUpdateInvoiceStatus } from "@/hooks/use-invoices";
+import { useInvoices, useUpdateInvoiceStatus, useSendInvoiceEmail } from "@/hooks/use-invoices";
+import { downloadInvoicePdf } from "@/lib/pdf/download-pdf";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -28,6 +29,7 @@ import {
 } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
@@ -57,8 +59,10 @@ export function InvoicesView() {
   const [status, setStatus] = useState<string | undefined>(undefined);
   const [page, setPage] = useState(1);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState<string | null>(null);
   const debouncedSearch = useDebounce(search, 300);
   const updateStatus = useUpdateInvoiceStatus();
+  const sendEmail = useSendInvoiceEmail();
 
   const { data, isLoading } = useInvoices({
     search: debouncedSearch || undefined,
@@ -211,9 +215,24 @@ export function InvoicesView() {
                                   Ver factura
                                 </Link>
                               </DropdownMenuItem>
-                              <DropdownMenuItem>
+                              <DropdownMenuItem
+                                disabled={pdfLoading === inv.id}
+                                onClick={async () => {
+                                  setPdfLoading(inv.id);
+                                  try { await downloadInvoicePdf(inv.id); }
+                                  catch { toast.error("Error al generar PDF"); }
+                                  finally { setPdfLoading(null); }
+                                }}
+                              >
                                 <Download className="h-4 w-4 mr-2" />
-                                Descargar PDF
+                                {pdfLoading === inv.id ? "Generando..." : "Descargar PDF"}
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => sendEmail.mutate(inv.id)}
+                                disabled={sendEmail.isPending}
+                              >
+                                <Send className="h-4 w-4 mr-2" />
+                                Enviar por email
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               {inv.status === "DRAFT" && (

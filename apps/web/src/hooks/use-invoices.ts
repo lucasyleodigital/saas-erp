@@ -53,17 +53,18 @@ export function useUpdateInvoiceStatus() {
   });
 }
 
-export function useSendInvoice() {
+export function useSendInvoiceEmail() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, to }: { id: string; to?: string }) =>
-      api.post(`/invoices/${id}/send`, { to }).then((r) => r.data),
+    mutationFn: (id: string) =>
+      api.post(`/invoices/${id}/send-email`).then((r) => r.data),
     onSuccess: (data) => {
       qc.invalidateQueries({ queryKey: invoiceKeys.all });
       if (data.sent) toast.success(`Factura enviada a ${data.to}`);
-      else toast.error(data.reason ?? "No se pudo enviar");
+      else toast.error("No se pudo enviar");
     },
-    onError: () => toast.error("Error al enviar la factura"),
+    onError: (err: any) =>
+      toast.error(err?.response?.data?.message ?? "Error al enviar la factura"),
   });
 }
 

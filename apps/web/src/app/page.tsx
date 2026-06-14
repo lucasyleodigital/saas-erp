@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   title: "ERP SaaS — Gestión empresarial para pymes españolas",
   description:
     "CRM, facturación electrónica, VeriFactu y contabilidad en una sola plataforma. Diseñado para el mercado español. Empieza gratis.",
+  robots: { index: true, follow: true },
+  alternates: { canonical: "/" },
 };
 
 export default function LandingPage() {

@@ -4,7 +4,10 @@ import { RegisterForm } from "@/components/auth/register-form";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = { title: "Register" };
+export const metadata: Metadata = {
+  title: "Crear cuenta",
+  robots: { index: true, follow: false },
+};
 
 export default async function RegisterPage() {
   const t = await getTranslations("auth.register");

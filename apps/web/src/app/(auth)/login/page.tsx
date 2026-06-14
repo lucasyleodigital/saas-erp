@@ -6,7 +6,10 @@ import { LoginForm } from "@/components/auth/login-form";
 // The [locale] wrapper provides it; the non-locale route must not be statically rendered
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = { title: "Login" };
+export const metadata: Metadata = {
+  title: "Iniciar sesión",
+  robots: { index: true, follow: false },
+};
 
 export default async function LoginPage() {
   const t = await getTranslations("auth.login");

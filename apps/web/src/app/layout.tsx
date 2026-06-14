@@ -15,16 +15,36 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
 });
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://tusaas.es";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(APP_URL),
   title: {
     default: "ERP SaaS — Gestión empresarial inteligente",
     template: "%s | ERP SaaS",
   },
   description:
     "La plataforma de gestión empresarial más moderna para pymes españolas. CRM, facturación, VeriFactu, contabilidad y más.",
-  keywords: ["ERP", "CRM", "facturación", "VeriFactu", "contabilidad", "pymes"],
+  keywords: ["ERP", "CRM", "facturación", "VeriFactu", "contabilidad", "pymes", "gestión empresarial"],
   authors: [{ name: "Lucas y Leo Digital" }],
-  robots: { index: false, follow: false },
+  robots: { index: false, follow: true },
+  openGraph: {
+    type: "website",
+    locale: "es_ES",
+    url: APP_URL,
+    siteName: "ERP SaaS",
+    title: "ERP SaaS — Gestión empresarial inteligente",
+    description:
+      "La plataforma de gestión empresarial más moderna para pymes españolas. CRM, facturación, VeriFactu, contabilidad y más.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "ERP SaaS" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ERP SaaS — Gestión empresarial inteligente",
+    description:
+      "La plataforma de gestión empresarial más moderna para pymes españolas.",
+    images: ["/og-image.png"],
+  },
 };
 
 export const viewport: Viewport = {

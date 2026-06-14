@@ -17,6 +17,10 @@ export class EmailService {
     this.clientUrl = config.get("CLIENT_URL", "http://localhost:3000");
   }
 
+  async sendGeneric(to: string, subject: string, html: string) {
+    return this.send(to, subject, html);
+  }
+
   private async send(to: string, subject: string, html: string) {
     if (!this.resend) {
       // In development, log instead of sending

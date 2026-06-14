@@ -6,6 +6,7 @@ import {
 import { PrismaService } from "../../database/prisma.service";
 import { PlansService } from "../plans/plans.service";
 import { AutomationsService } from "../automations/automations.service";
+import { EmailService } from "../email/email.service";
 import { CreateInvoiceDto } from "./dto/create-invoice.dto";
 import type { PaginationParams } from "@saas/types";
 
@@ -15,6 +16,7 @@ export class InvoicesService {
     private prisma: PrismaService,
     private plans: PlansService,
     private automations: AutomationsService,
+    private email: EmailService,
   ) {}
 
   async findAll(companyId: string, params: PaginationParams & { status?: string }) {
@@ -49,7 +51,7 @@ export class InvoicesService {
     return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
   }
 
-  async findOne(companyId: string, id: string) {
+  async findOne(companyId: string, id: string) {  // public — used by controller
     const invoice = await this.prisma.invoice.findFirst({
       where: { id, companyId },
       include: {
@@ -182,5 +184,23 @@ export class InvoicesService {
     }
 
     return payment;
+  }
+
+  async sendByEmail(companyId: string, id: string) {
+    const invoice = await this.findOne(companyId, id);
+    const clientEmail = invoice.client?.email;
+    if (!clientEmail) throw new BadRequestException("El cliente no tiene email registrado");
+
+    await this.email.sendInvoice(
+      clientEmail,
+      invoice.client!.name,
+      invoice.number,
+      Number(invoice.total),
+      invoice.company?.name ?? "",
+    );
+    if (invoice.status === "DRAFT") {
+      await this.prisma.invoice.update({ where: { id }, data: { status: "SENT" } });
+    }
+    return { sent: true, to: clientEmail };
   }
 }

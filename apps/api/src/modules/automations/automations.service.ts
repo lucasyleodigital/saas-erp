@@ -153,7 +153,7 @@ export class AutomationsService {
     switch (automation.action) {
       case "SEND_EMAIL":
         if (ctx.clientEmail && config.subject) {
-          await (this.email as any).send(
+          await this.email.sendGeneric(
             ctx.clientEmail,
             interpolate(config.subject),
             interpolate(config.body ?? ""),
