@@ -49,6 +49,25 @@ export class AuthService {
       },
     });
 
+    // Seed default pipeline for new companies (fire-and-forget, non-blocking)
+    this.prisma.pipeline.create({
+      data: {
+        companyId: company.id,
+        name: "Pipeline de ventas",
+        isDefault: true,
+        stages: {
+          create: [
+            { name: "Lead",         order: 0, color: "#3b82f6" },
+            { name: "Cualificado",  order: 1, color: "#6366f1" },
+            { name: "Propuesta",    order: 2, color: "#8b5cf6" },
+            { name: "Negociación",  order: 3, color: "#a855f7" },
+            { name: "Ganado",       order: 4, color: "#10b981" },
+            { name: "Perdido",      order: 5, color: "#6b7280" },
+          ],
+        },
+      },
+    }).catch(() => {});
+
     const tokens = await this.generateTokens(user.id, user.email, company.id, "OWNER");
 
     // Send welcome email (fire-and-forget)

@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { usePipeline, useMoveDealStage, useCreateDeal } from "@/hooks/use-deals";
+import { usePipeline, useMoveDealStage, useCreateDeal, useCreatePipeline } from "@/hooks/use-deals";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { formatCurrency, getInitials } from "@/lib/utils";
-import { Plus, MoreHorizontal, GripVertical } from "lucide-react";
+import { Plus, MoreHorizontal, GitBranch, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { DealDialog } from "./deal-dialog";
 import { useTranslations } from "next-intl";
@@ -24,8 +24,10 @@ export function PipelineView() {
   const t = useTranslations("pipeline");
   const { data: pipelines, isLoading } = usePipeline();
   const moveStage = useMoveDealStage();
+  const createPipeline = useCreatePipeline();
   const [dragging, setDragging] = useState<{ dealId: string; fromStageId: string } | null>(null);
   const [dealDialogOpen, setDealDialogOpen] = useState(false);
+  const [pipelineName, setPipelineName] = useState("Pipeline de ventas");
 
   const pipeline = pipelines?.[0];
   const stages = pipeline?.stages ?? [];
@@ -53,11 +55,38 @@ export function PipelineView() {
 
   if (!pipeline) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center">
-        <p className="font-medium">No hay pipelines configurados</p>
-        <p className="text-sm text-muted-foreground mt-1">
-          Conecta la base de datos y crea un pipeline primero.
+      <div className="flex flex-col items-center justify-center py-20 text-center max-w-md mx-auto">
+        <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
+          <GitBranch className="h-8 w-8 text-primary" />
+        </div>
+        <h2 className="text-xl font-bold mb-2">Crea tu primer pipeline</h2>
+        <p className="text-sm text-muted-foreground mb-8 leading-relaxed">
+          Un pipeline te permite hacer seguimiento de tus oportunidades de venta desde el primer contacto hasta el cierre.
+          Se crea automáticamente con 6 etapas: Lead, Cualificado, Propuesta, Negociación, Ganado y Perdido.
         </p>
+        <div className="flex gap-3 w-full mb-4">
+          <Input
+            value={pipelineName}
+            onChange={(e) => setPipelineName(e.target.value)}
+            placeholder="Nombre del pipeline"
+            className="flex-1"
+          />
+          <Button
+            onClick={() => createPipeline.mutate(pipelineName || "Pipeline de ventas")}
+            disabled={createPipeline.isPending}
+          >
+            <Plus className="h-4 w-4 mr-1.5" />
+            Crear pipeline
+          </Button>
+        </div>
+        <div className="grid grid-cols-3 gap-2 w-full text-left mt-2">
+          {["Lead", "Cualificado", "Propuesta", "Negociación", "Ganado", "Perdido"].map((s) => (
+            <div key={s} className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/50 rounded-lg px-2.5 py-1.5">
+              <CheckCircle2 className="h-3 w-3 text-primary shrink-0" />
+              {s}
+            </div>
+          ))}
+        </div>
       </div>
     );
   }

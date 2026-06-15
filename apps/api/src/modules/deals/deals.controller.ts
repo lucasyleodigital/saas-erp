@@ -1,11 +1,18 @@
 import { Controller, Get, Post, Put, Param, Body, UseGuards } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { IsOptional, IsString } from "class-validator";
 import { DealsService } from "./deals.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
 import { CreateDealDto } from "./dto/create-deal.dto";
 import { UpdateDealDto } from "./dto/update-deal.dto";
 import type { JwtPayload } from "@saas/types";
+
+class CreatePipelineDto {
+  @IsOptional()
+  @IsString()
+  name?: string;
+}
 
 @ApiTags("Deals")
 @UseGuards(JwtAuthGuard)
@@ -16,6 +23,11 @@ export class DealsController {
   @Get("pipeline")
   getPipeline(@CurrentUser() user: JwtPayload) {
     return this.dealsService.getPipelineView(user.companyId);
+  }
+
+  @Post("pipeline")
+  createPipeline(@CurrentUser() user: JwtPayload, @Body() body: CreatePipelineDto) {
+    return this.dealsService.createPipeline(user.companyId, body.name ?? "Pipeline de ventas");
   }
 
   @Post()

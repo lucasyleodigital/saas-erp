@@ -31,3 +31,16 @@ export function useMoveDealStage() {
     onError: () => toast.error("Error al mover el deal"),
   });
 }
+
+export function useCreatePipeline() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (name: string) =>
+      api.post("/deals/pipeline", { name }).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["deals", "pipeline"] });
+      toast.success("Pipeline creado");
+    },
+    onError: () => toast.error("Error al crear el pipeline"),
+  });
+}
