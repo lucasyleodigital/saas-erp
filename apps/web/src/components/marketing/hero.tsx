@@ -10,7 +10,6 @@ function ParticleCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -20,12 +19,11 @@ function ParticleCanvas() {
     let mouseX = -9999, mouseY = -9999;
 
     const resize = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     };
     resize();
-    const ro = new ResizeObserver(resize);
-    ro.observe(canvas);
+    window.addEventListener("resize", resize);
 
     const onMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
@@ -34,44 +32,25 @@ function ParticleCanvas() {
     };
     window.addEventListener("mousemove", onMouseMove);
 
-    type P = { x: number; y: number; vx: number; vy: number; r: number; a: number };
-    const pts: P[] = Array.from({ length: 90 }, () => ({
+    type P = { x: number; y: number; vx: number; vy: number; r: number; a: number; twinkle: number; twinkleDir: number };
+    const pts: P[] = Array.from({ length: 120 }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5,
-      r: Math.random() * 2.0 + 0.5,
-      a: Math.random() * 0.6 + 0.25,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      r: Math.random() * 2.5 + 1.0,
+      a: Math.random() * 0.4 + 0.6,
+      twinkle: Math.random(),
+      twinkleDir: Math.random() > 0.5 ? 1 : -1,
     }));
 
-    const LINK = 165, MOUSE_R = 140;
+    const LINK = 180, MOUSE_R = 160;
 
     const tick = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      for (const p of pts) {
-        const dx = mouseX - p.x, dy = mouseY - p.y;
-        const d = Math.hypot(dx, dy);
-        if (d < MOUSE_R && d > 0) {
-          const f = ((MOUSE_R - d) / MOUSE_R) * 0.02;
-          p.vx -= (dx / d) * f;
-          p.vy -= (dy / d) * f;
-        }
-        const spd = Math.hypot(p.vx, p.vy);
-        if (spd > 1.5) { p.vx = (p.vx / spd) * 1.5; p.vy = (p.vy / spd) * 1.5; }
-        p.vx *= 0.99; p.vy *= 0.99;
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0) p.x += canvas.width;
-        if (p.x > canvas.width) p.x -= canvas.width;
-        if (p.y < 0) p.y += canvas.height;
-        if (p.y > canvas.height) p.y -= canvas.height;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(45,212,191,${p.a})`;
-        ctx.fill();
-      }
-
+      // Draw connecting lines first (below particles)
+      ctx.save();
       for (let i = 0; i < pts.length; i++) {
         for (let j = i + 1; j < pts.length; j++) {
           const pi = pts[i]; const pj = pts[j];
@@ -79,14 +58,60 @@ function ParticleCanvas() {
           const dx = pi.x - pj.x, dy = pi.y - pj.y;
           const d = Math.hypot(dx, dy);
           if (d < LINK) {
+            const alpha = (1 - d / LINK) * 0.6;
             ctx.beginPath();
             ctx.moveTo(pi.x, pi.y);
             ctx.lineTo(pj.x, pj.y);
-            ctx.strokeStyle = `rgba(13,148,136,${(1 - d / LINK) * 0.5})`;
-            ctx.lineWidth = 0.8;
+            ctx.strokeStyle = `rgba(45,212,191,${alpha})`;
+            ctx.lineWidth = 1.2;
             ctx.stroke();
           }
         }
+      }
+      ctx.restore();
+
+      // Update particle physics
+      for (const p of pts) {
+        const dx = mouseX - p.x, dy = mouseY - p.y;
+        const d = Math.hypot(dx, dy);
+        if (d < MOUSE_R && d > 0) {
+          const f = ((MOUSE_R - d) / MOUSE_R) * 0.025;
+          p.vx -= (dx / d) * f;
+          p.vy -= (dy / d) * f;
+        }
+        const spd = Math.hypot(p.vx, p.vy);
+        if (spd > 1.8) { p.vx = (p.vx / spd) * 1.8; p.vy = (p.vy / spd) * 1.8; }
+        p.vx *= 0.99; p.vy *= 0.99;
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x += canvas.width;
+        if (p.x > canvas.width) p.x -= canvas.width;
+        if (p.y < 0) p.y += canvas.height;
+        if (p.y > canvas.height) p.y -= canvas.height;
+        p.twinkle += p.twinkleDir * 0.008;
+        if (p.twinkle > 1) { p.twinkle = 1; p.twinkleDir = -1; }
+        if (p.twinkle < 0.3) { p.twinkle = 0.3; p.twinkleDir = 1; }
+      }
+
+      // Draw all glowing halos in one shadow pass (cheap: one save/restore for all)
+      ctx.save();
+      ctx.shadowBlur = 16;
+      ctx.shadowColor = "rgba(45,212,191,0.9)";
+      for (const p of pts) {
+        const alpha = p.a * p.twinkle;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(45,212,191,${alpha})`;
+        ctx.fill();
+      }
+      ctx.restore();
+
+      // Bright white-teal cores on top
+      for (const p of pts) {
+        const alpha = p.a * p.twinkle;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * 0.45, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(200,255,250,${alpha})`;
+        ctx.fill();
       }
 
       rafId = requestAnimationFrame(tick);
@@ -95,7 +120,7 @@ function ParticleCanvas() {
 
     return () => {
       cancelAnimationFrame(rafId);
-      ro.disconnect();
+      window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", onMouseMove);
     };
   }, []);
