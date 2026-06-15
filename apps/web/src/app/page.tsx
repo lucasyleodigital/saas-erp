@@ -8,6 +8,8 @@ import { Testimonials } from "@/components/marketing/testimonials";
 import { MarketingNav } from "@/components/marketing/nav";
 import { MarketingFooter } from "@/components/marketing/footer";
 import { PricingCards } from "@/components/billing/pricing-cards";
+import { Faq } from "@/components/marketing/faq";
+import { ChatWidget } from "@/components/marketing/chat-widget";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -42,7 +44,10 @@ export default function LandingPage() {
         {/* 6 · Testimonials */}
         <Testimonials />
 
-        {/* 7 · Pricing */}
+        {/* 7 · FAQ */}
+        <Faq />
+
+        {/* 8 · Pricing */}
         <section id="pricing" className="py-24 bg-background">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
@@ -133,6 +138,7 @@ export default function LandingPage() {
       </main>
 
       <MarketingFooter />
+      <ChatWidget />
     </div>
   );
 }

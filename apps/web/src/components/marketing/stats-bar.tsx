@@ -62,29 +62,33 @@ export function StatsBar() {
     <section className="py-20 border-y border-border bg-background">
       <div className="container mx-auto px-4">
         <motion.div
-          className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-0 md:divide-x divide-border"
+          className="flex flex-wrap justify-center"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
           {STATS.map((stat, i) => (
-            <motion.div
-              key={stat.label}
-              className="text-center px-6"
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.4 }}
-            >
-              <div
-                className="text-4xl sm:text-5xl font-bold mb-2 tabular-nums"
-                style={{ color: "#0d9488" }}
+            <div key={stat.label} className="flex items-stretch">
+              <motion.div
+                className="text-center px-8 sm:px-12 py-2"
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.4 }}
               >
-                <AnimatedNumber target={stat.value} suffix={stat.suffix} prefix={stat.prefix} />
-              </div>
-              <p className="text-sm text-muted-foreground">{stat.label}</p>
-            </motion.div>
+                <div
+                  className="text-4xl sm:text-5xl font-bold mb-2 tabular-nums"
+                  style={{ color: "#0d9488" }}
+                >
+                  <AnimatedNumber target={stat.value} suffix={stat.suffix} prefix={stat.prefix} />
+                </div>
+                <p className="text-sm text-muted-foreground">{stat.label}</p>
+              </motion.div>
+              {i < STATS.length - 1 && (
+                <div className="self-stretch w-px my-2" style={{ background: "hsl(var(--border))" }} />
+              )}
+            </div>
           ))}
         </motion.div>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Shield, Lock, FileCheck, CheckCircle } from "lucide-react";
+import { Shield, Lock, FileCheck, CheckCircle, ArrowRight } from "lucide-react";
 
 const POINTS = [
   {
@@ -30,6 +30,41 @@ const POINTS = [
   },
 ];
 
+const FLOW_STEPS = [
+  {
+    label: "Tu empresa",
+    sublabel: "Emites la factura",
+    icon: "🏢",
+    color: "#0d9488",
+    border: "rgba(13,148,136,0.4)",
+    bg: "rgba(13,148,136,0.12)",
+  },
+  {
+    label: "YouWhole",
+    sublabel: "Firma SHA256 y procesa",
+    icon: "⚡",
+    color: "#6366f1",
+    border: "rgba(99,102,241,0.4)",
+    bg: "rgba(99,102,241,0.12)",
+  },
+  {
+    label: "AEAT",
+    sublabel: "Registra y confirma",
+    icon: "🏛️",
+    color: "#f59e0b",
+    border: "rgba(245,158,11,0.4)",
+    bg: "rgba(245,158,11,0.12)",
+  },
+  {
+    label: "Cumplimiento",
+    sublabel: "100% legal garantizado",
+    icon: "✅",
+    color: "#10b981",
+    border: "rgba(16,185,129,0.4)",
+    bg: "rgba(16,185,129,0.12)",
+  },
+];
+
 export function VerifactuSection() {
   return (
     <section
@@ -47,185 +82,97 @@ export function VerifactuSection() {
       />
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left: text */}
-          <motion.div
-            initial={{ opacity: 0, x: -24 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.55 }}
+        {/* Header */}
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <div
+            className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium mb-5 border"
+            style={{
+              background: "rgba(13,148,136,0.12)",
+              borderColor: "rgba(13,148,136,0.3)",
+              color: "#5eead4",
+            }}
           >
-            <div
-              className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium mb-6 border"
-              style={{
-                background: "rgba(13,148,136,0.12)",
-                borderColor: "rgba(13,148,136,0.3)",
-                color: "#5eead4",
-              }}
-            >
-              <Shield className="h-4 w-4" />
-              VeriFactu certificado
-            </div>
+            <Shield className="h-3.5 w-3.5" />
+            VeriFactu certificado
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4">
+            Cumplimiento fiscal total
+            <br />
+            <span style={{ color: "#2dd4bf" }}>desde el primer día</span>
+          </h2>
+          <p className="text-lg max-w-2xl mx-auto" style={{ color: "#94a3b8" }}>
+            La Ley VeriFactu (Ley Antifraude 11/2021) obliga a registrar cada factura en la AEAT
+            desde 2025. Con YouWhole ocurre automáticamente — sin configuración, sin trabajo extra.
+          </p>
+        </motion.div>
 
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-5 text-white leading-tight">
-              Cumplimiento fiscal total
-              <br />
-              <span style={{ color: "#2dd4bf" }}>desde el primer día</span>
-            </h2>
-
-            <p className="text-lg leading-relaxed mb-8" style={{ color: "#94a3b8" }}>
-              La Ley VeriFactu (Ley Antifraude 11/2021) obliga a registrar cada
-              factura en la AEAT desde 2025. Con YouWhole, esto ocurre
-              automáticamente — sin configuración, sin trabajo extra.
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {POINTS.map((p, i) => {
-                const Icon = p.icon;
-                return (
-                  <motion.div
-                    key={p.title}
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                    className="rounded-xl p-4 border"
-                    style={{
-                      background: "rgba(255,255,255,0.03)",
-                      borderColor: "rgba(255,255,255,0.08)",
-                    }}
-                  >
-                    <Icon className="h-5 w-5 mb-2" style={{ color: p.color }} />
-                    <p className="font-medium text-sm mb-1 text-white">{p.title}</p>
-                    <p className="text-xs leading-relaxed" style={{ color: "#64748b" }}>
-                      {p.desc}
-                    </p>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </motion.div>
-
-          {/* Right: XML code mockup */}
-          <motion.div
-            className="relative"
-            initial={{ opacity: 0, x: 24 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.55, delay: 0.1 }}
-          >
-            {/* Glow behind card */}
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 rounded-3xl blur-2xl"
-              style={{ background: "rgba(13,148,136,0.15)", transform: "scale(1.1)" }}
-            />
-
-            <div
-              className="relative rounded-2xl border overflow-hidden"
-              style={{
-                background: "rgba(3,9,8,0.95)",
-                borderColor: "rgba(13,148,136,0.3)",
-                boxShadow: "0 24px 60px rgba(0,0,0,0.6)",
-              }}
-            >
-              {/* Window chrome */}
-              <div
-                className="flex items-center gap-2 px-4 py-3 border-b"
-                style={{ borderColor: "rgba(255,255,255,0.07)", background: "rgba(0,0,0,0.3)" }}
+        {/* Flow diagram */}
+        <motion.div
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-0 mb-16"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+        >
+          {FLOW_STEPS.map((step, i) => (
+            <div key={step.label} className="flex sm:flex-row flex-col items-center">
+              <motion.div
+                className="flex flex-col items-center text-center px-5 py-4 rounded-2xl border min-w-[130px]"
+                style={{ background: step.bg, borderColor: step.border }}
+                initial={{ opacity: 0, scale: 0.85 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.12 }}
               >
-                <div className="h-3 w-3 rounded-full" style={{ background: "#ef4444" }} />
-                <div className="h-3 w-3 rounded-full" style={{ background: "#f59e0b" }} />
-                <div className="h-3 w-3 rounded-full" style={{ background: "#22c55e" }} />
-                <span className="ml-2 text-xs font-mono" style={{ color: "#475569" }}>
-                  verifactu.xml
-                </span>
-              </div>
+                <span className="text-3xl mb-2">{step.icon}</span>
+                <span className="font-bold text-white text-sm mb-0.5">{step.label}</span>
+                <span className="text-xs" style={{ color: step.color }}>{step.sublabel}</span>
+              </motion.div>
 
-              <div className="p-5">
-                <pre
-                  className="text-xs leading-relaxed overflow-auto"
-                  style={{ fontFamily: "ui-monospace, 'Cascadia Code', monospace" }}
-                >
-                  <span style={{ color: "#64748b" }}>&lt;</span>
-                  <span style={{ color: "#2dd4bf" }}>VERI*FACTU</span>
-                  <span style={{ color: "#64748b" }}>&gt;</span>
-                  {"\n"}
-                  {"  "}<span style={{ color: "#64748b" }}>&lt;</span>
-                  <span style={{ color: "#5eead4" }}>Cabecera</span>
-                  <span style={{ color: "#64748b" }}>&gt;</span>
-                  {"\n"}
-                  {"    "}<span style={{ color: "#64748b" }}>&lt;</span>
-                  <span style={{ color: "#7dd3fc" }}>NIF</span>
-                  <span style={{ color: "#64748b" }}>&gt;</span>
-                  <span style={{ color: "#fde68a" }}>B12345678</span>
-                  <span style={{ color: "#64748b" }}>&lt;/</span>
-                  <span style={{ color: "#7dd3fc" }}>NIF</span>
-                  <span style={{ color: "#64748b" }}>&gt;</span>
-                  {"\n"}
-                  {"    "}<span style={{ color: "#64748b" }}>&lt;</span>
-                  <span style={{ color: "#7dd3fc" }}>NombreRazon</span>
-                  <span style={{ color: "#64748b" }}>&gt;</span>
-                  <span style={{ color: "#fde68a" }}>Mi Empresa SL</span>
-                  <span style={{ color: "#64748b" }}>&lt;/</span>
-                  <span style={{ color: "#7dd3fc" }}>NombreRazon</span>
-                  <span style={{ color: "#64748b" }}>&gt;</span>
-                  {"\n"}
-                  {"  "}<span style={{ color: "#64748b" }}>&lt;/</span>
-                  <span style={{ color: "#5eead4" }}>Cabecera</span>
-                  <span style={{ color: "#64748b" }}>&gt;</span>
-                  {"\n"}
-                  {"  "}<span style={{ color: "#64748b" }}>&lt;</span>
-                  <span style={{ color: "#5eead4" }}>RegistroFactura</span>
-                  <span style={{ color: "#64748b" }}>&gt;</span>
-                  {"\n"}
-                  {"    "}<span style={{ color: "#64748b" }}>&lt;</span>
-                  <span style={{ color: "#7dd3fc" }}>NumSerie</span>
-                  <span style={{ color: "#64748b" }}>&gt;</span>
-                  <span style={{ color: "#fde68a" }}>F-2025-0001</span>
-                  <span style={{ color: "#64748b" }}>&lt;/</span>
-                  <span style={{ color: "#7dd3fc" }}>NumSerie</span>
-                  <span style={{ color: "#64748b" }}>&gt;</span>
-                  {"\n"}
-                  {"    "}<span style={{ color: "#64748b" }}>&lt;</span>
-                  <span style={{ color: "#7dd3fc" }}>ImporteTotal</span>
-                  <span style={{ color: "#64748b" }}>&gt;</span>
-                  <span style={{ color: "#6ee7b7" }}>1210.00</span>
-                  <span style={{ color: "#64748b" }}>&lt;/</span>
-                  <span style={{ color: "#7dd3fc" }}>ImporteTotal</span>
-                  <span style={{ color: "#64748b" }}>&gt;</span>
-                  {"\n"}
-                  {"    "}<span style={{ color: "#64748b" }}>&lt;</span>
-                  <span style={{ color: "#7dd3fc" }}>Huella</span>
-                  <span style={{ color: "#64748b" }}>&gt;</span>
-                  {"\n"}
-                  {"      "}<span style={{ color: "#a78bfa" }}>a3f8c2d1e9b4712f...</span>
-                  {"\n"}
-                  {"    "}<span style={{ color: "#64748b" }}>&lt;/</span>
-                  <span style={{ color: "#7dd3fc" }}>Huella</span>
-                  <span style={{ color: "#64748b" }}>&gt;</span>
-                  {"\n"}
-                  {"  "}<span style={{ color: "#64748b" }}>&lt;/</span>
-                  <span style={{ color: "#5eead4" }}>RegistroFactura</span>
-                  <span style={{ color: "#64748b" }}>&gt;</span>
-                  {"\n"}
-                  <span style={{ color: "#64748b" }}>&lt;/</span>
-                  <span style={{ color: "#2dd4bf" }}>VERI*FACTU</span>
-                  <span style={{ color: "#64748b" }}>&gt;</span>
-                </pre>
-              </div>
-
-              <div
-                className="flex items-center gap-3 px-5 py-3 border-t"
-                style={{ borderColor: "rgba(255,255,255,0.07)" }}
-              >
-                <div className="h-2.5 w-2.5 rounded-full animate-pulse" style={{ background: "#10b981" }} />
-                <span className="text-xs font-medium" style={{ color: "#10b981" }}>
-                  Registrado en AEAT · {new Date().toLocaleDateString("es-ES")} · Estado: CORRECTO
-                </span>
-              </div>
+              {i < FLOW_STEPS.length - 1 && (
+                <div className="flex items-center justify-center sm:mx-2 my-2 sm:my-0">
+                  <ArrowRight
+                    className="h-5 w-5 sm:block hidden"
+                    style={{ color: "rgba(13,148,136,0.5)" }}
+                  />
+                  <div
+                    className="h-6 w-0.5 sm:hidden"
+                    style={{ background: "rgba(13,148,136,0.3)" }}
+                  />
+                </div>
+              )}
             </div>
-          </motion.div>
+          ))}
+        </motion.div>
+
+        {/* 4 feature cards grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {POINTS.map((p, i) => {
+            const Icon = p.icon;
+            return (
+              <motion.div
+                key={p.title}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="rounded-xl p-5 border"
+                style={{
+                  background: "rgba(255,255,255,0.03)",
+                  borderColor: "rgba(255,255,255,0.08)",
+                }}
+              >
+                <Icon className="h-5 w-5 mb-3" style={{ color: p.color }} />
+                <p className="font-semibold text-sm mb-1.5 text-white">{p.title}</p>
+                <p className="text-xs leading-relaxed" style={{ color: "#64748b" }}>{p.desc}</p>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
