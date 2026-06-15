@@ -45,7 +45,7 @@ export function Header() {
   const { data: results = [], isFetching } = useSearch(query);
 
   const initials = user
-    ? `${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase() || user.email[0].toUpperCase()
+    ? (`${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase() || user.email?.[0]?.toUpperCase() || "?")
     : "?";
 
   useEffect(() => {
