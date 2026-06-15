@@ -35,13 +35,13 @@ function ParticleCanvas() {
     window.addEventListener("mousemove", onMouseMove);
 
     type P = { x: number; y: number; vx: number; vy: number; r: number; a: number };
-    const pts: P[] = Array.from({ length: 65 }, () => ({
+    const pts: P[] = Array.from({ length: 90 }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
       vx: (Math.random() - 0.5) * 0.5,
       vy: (Math.random() - 0.5) * 0.5,
-      r: Math.random() * 1.6 + 0.4,
-      a: Math.random() * 0.45 + 0.12,
+      r: Math.random() * 2.0 + 0.5,
+      a: Math.random() * 0.6 + 0.25,
     }));
 
     const LINK = 165, MOUSE_R = 140;
@@ -82,7 +82,7 @@ function ParticleCanvas() {
             ctx.beginPath();
             ctx.moveTo(pi.x, pi.y);
             ctx.lineTo(pj.x, pj.y);
-            ctx.strokeStyle = `rgba(13,148,136,${(1 - d / LINK) * 0.25})`;
+            ctx.strokeStyle = `rgba(13,148,136,${(1 - d / LINK) * 0.5})`;
             ctx.lineWidth = 0.8;
             ctx.stroke();
           }
@@ -104,7 +104,7 @@ function ParticleCanvas() {
     <canvas
       ref={canvasRef}
       className="absolute inset-0 w-full h-full pointer-events-none"
-      style={{ opacity: 0.6 }}
+      style={{ opacity: 1 }}
     />
   );
 }

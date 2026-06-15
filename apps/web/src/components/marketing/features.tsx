@@ -159,11 +159,11 @@ function FeatureCard({ feature, index, large }: FeatureCardProps) {
 }
 
 const BOKEH = [
-  { w: 520, h: 520, l: -6, t: 8,  c: "rgba(13,148,136,0.10)", dur: 22, dx: 38,  dy: -22, d: 0  },
-  { w: 420, h: 420, l: 58, t: -12, c: "rgba(99,102,241,0.08)", dur: 28, dx: -32, dy: 42,  d: 6  },
-  { w: 640, h: 640, l: 72, t: 38, c: "rgba(20,184,166,0.07)", dur: 20, dx: -28, dy: -32, d: 10 },
-  { w: 360, h: 360, l: 18, t: 68, c: "rgba(245,158,11,0.07)", dur: 26, dx: 42,  dy: 18,  d: 4  },
-  { w: 480, h: 480, l: 38, t: 52, c: "rgba(99,102,241,0.07)", dur: 32, dx: -22, dy: -38, d: 14 },
+  { w: 520, h: 520, l: -6, t: 8,  c: "rgba(13,148,136,0.28)", dur: 22, dx: 38,  dy: -22, d: 0  },
+  { w: 420, h: 420, l: 58, t: -12, c: "rgba(99,102,241,0.22)", dur: 28, dx: -32, dy: 42,  d: 6  },
+  { w: 640, h: 640, l: 72, t: 38, c: "rgba(20,184,166,0.20)", dur: 20, dx: -28, dy: -32, d: 10 },
+  { w: 360, h: 360, l: 18, t: 68, c: "rgba(245,158,11,0.20)", dur: 26, dx: 42,  dy: 18,  d: 4  },
+  { w: 480, h: 480, l: 38, t: 52, c: "rgba(99,102,241,0.20)", dur: 32, dx: -22, dy: -38, d: 14 },
 ];
 
 export function Features() {
@@ -191,7 +191,7 @@ export function Features() {
               left: `${orb.l}%`,
               top: `${orb.t}%`,
               background: `radial-gradient(circle, ${orb.c} 0%, transparent 70%)`,
-              filter: "blur(72px)",
+              filter: "blur(40px)",
             }}
             animate={{ x: [0, orb.dx, 0], y: [0, orb.dy, 0] }}
             transition={{ duration: orb.dur, repeat: Infinity, ease: "easeInOut", delay: orb.d }}
