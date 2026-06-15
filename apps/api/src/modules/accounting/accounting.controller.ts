@@ -4,6 +4,8 @@ import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
 import { AccountingService } from "./accounting.service";
 import { PlansService } from "../plans/plans.service";
+import { CreateJournalEntryDto } from "./dto/create-journal-entry.dto";
+import { CreateAccountDto } from "./dto/create-account.dto";
 import type { JwtPayload } from "@saas/types";
 
 @ApiTags("Accounting")
@@ -33,7 +35,7 @@ export class AccountingController {
   }
 
   @Post("journal-entries")
-  createJournalEntry(@CurrentUser() user: JwtPayload, @Body() body: any) {
+  createJournalEntry(@CurrentUser() user: JwtPayload, @Body() body: CreateJournalEntryDto) {
     return this.service.createJournalEntry(user.companyId, body);
   }
 
@@ -48,7 +50,7 @@ export class AccountingController {
   }
 
   @Post("accounts")
-  createAccount(@CurrentUser() user: JwtPayload, @Body() body: any) {
+  createAccount(@CurrentUser() user: JwtPayload, @Body() body: CreateAccountDto) {
     return this.service.createAccount(user.companyId, body);
   }
 }

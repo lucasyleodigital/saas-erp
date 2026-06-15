@@ -15,6 +15,8 @@ import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
 import { LeadsService } from "./leads.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
+import { CreateLeadDto } from "./dto/create-lead.dto";
+import { UpdateLeadDto } from "./dto/update-lead.dto";
 import type { JwtPayload } from "@saas/types";
 
 @ApiTags("Leads")
@@ -30,7 +32,7 @@ export class LeadsController {
   }
 
   @Post()
-  create(@CurrentUser() user: JwtPayload, @Body() body: any) {
+  create(@CurrentUser() user: JwtPayload, @Body() body: CreateLeadDto) {
     return this.leadsService.create(user.companyId, body);
   }
 
@@ -38,7 +40,7 @@ export class LeadsController {
   update(
     @CurrentUser() user: JwtPayload,
     @Param("id") id: string,
-    @Body() body: any
+    @Body() body: UpdateLeadDto
   ) {
     return this.leadsService.update(user.companyId, id, body);
   }

@@ -5,6 +5,8 @@ import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
 import { AutomationsService } from "./automations.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
+import { CreateAutomationDto } from "./dto/create-automation.dto";
+import { UpdateAutomationDto } from "./dto/update-automation.dto";
 import type { JwtPayload } from "@saas/types";
 
 @ApiTags("Automations")
@@ -30,7 +32,7 @@ export class AutomationsController {
   }
 
   @Post()
-  create(@CurrentUser() u: JwtPayload, @Body() body: any) {
+  create(@CurrentUser() u: JwtPayload, @Body() body: CreateAutomationDto) {
     return this.svc.create(u.companyId, body);
   }
 
@@ -41,7 +43,7 @@ export class AutomationsController {
   }
 
   @Patch(":id")
-  update(@CurrentUser() u: JwtPayload, @Param("id") id: string, @Body() body: any) {
+  update(@CurrentUser() u: JwtPayload, @Param("id") id: string, @Body() body: UpdateAutomationDto) {
     return this.svc.update(u.companyId, id, body);
   }
 

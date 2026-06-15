@@ -131,7 +131,8 @@ export class AuthController {
     const tokens = await this.authService.login(user.id, user.email);
     res.cookie(REFRESH_COOKIE, tokens.refreshToken, COOKIE_OPTIONS);
     res.cookie("auth_session", "1", SESSION_COOKIE_OPTIONS);
-    res.redirect(`${process.env.CLIENT_URL}/dashboard?token=${tokens.accessToken}`);
+    // Fragment (#) is never sent to the server or in Referer headers — safer than query param
+    res.redirect(`${process.env.CLIENT_URL}/dashboard#access_token=${tokens.accessToken}`);
   }
 
   // ─── INVITATIONS ──────────────────────────────────────────────────

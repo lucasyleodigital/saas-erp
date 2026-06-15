@@ -14,6 +14,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { CompaniesService } from "./companies.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
+import { UpdateCompanyDto } from "./dto/update-company.dto";
 import type { JwtPayload } from "@saas/types";
 
 function requireAdminOrOwner(role: string) {
@@ -34,7 +35,7 @@ export class CompaniesController {
   }
 
   @Put("me")
-  updateMyCompany(@CurrentUser() user: JwtPayload, @Body() body: any) {
+  updateMyCompany(@CurrentUser() user: JwtPayload, @Body() body: UpdateCompanyDto) {
     requireAdminOrOwner(user.role);
     return this.companiesService.update(user.companyId, body);
   }

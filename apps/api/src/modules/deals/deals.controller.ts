@@ -3,6 +3,8 @@ import { ApiTags } from "@nestjs/swagger";
 import { DealsService } from "./deals.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
+import { CreateDealDto } from "./dto/create-deal.dto";
+import { UpdateDealDto } from "./dto/update-deal.dto";
 import type { JwtPayload } from "@saas/types";
 
 @ApiTags("Deals")
@@ -17,7 +19,7 @@ export class DealsController {
   }
 
   @Post()
-  create(@CurrentUser() user: JwtPayload, @Body() body: any) {
+  create(@CurrentUser() user: JwtPayload, @Body() body: CreateDealDto) {
     return this.dealsService.create(user.companyId, body);
   }
 
@@ -27,7 +29,7 @@ export class DealsController {
   }
 
   @Put(":id")
-  update(@CurrentUser() user: JwtPayload, @Param("id") id: string, @Body() body: any) {
+  update(@CurrentUser() user: JwtPayload, @Param("id") id: string, @Body() body: UpdateDealDto) {
     return this.dealsService.update(user.companyId, id, body);
   }
 }

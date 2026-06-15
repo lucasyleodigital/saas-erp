@@ -4,6 +4,10 @@ import {
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
 import { InventoryService } from "./inventory.service";
+import { AddMovementDto } from "./dto/add-movement.dto";
+import { TransferStockDto } from "./dto/transfer-stock.dto";
+import { CreateWarehouseDto } from "./dto/create-warehouse.dto";
+import { UpdateWarehouseDto } from "./dto/update-warehouse.dto";
 import type { JwtPayload } from "@saas/types";
 
 @UseGuards(JwtAuthGuard)
@@ -58,13 +62,13 @@ export class InventoryController {
   }
 
   @Post("movements")
-  addMovement(@CurrentUser() user: JwtPayload, @Body() body: any) {
+  addMovement(@CurrentUser() user: JwtPayload, @Body() body: AddMovementDto) {
     return this.service.addMovement(user.companyId, body);
   }
 
   @Post("transfer")
   @HttpCode(200)
-  transferStock(@CurrentUser() user: JwtPayload, @Body() body: any) {
+  transferStock(@CurrentUser() user: JwtPayload, @Body() body: TransferStockDto) {
     return this.service.transferStock(user.companyId, body);
   }
 
@@ -82,12 +86,12 @@ export class InventoryController {
   }
 
   @Post("warehouses")
-  createWarehouse(@CurrentUser() user: JwtPayload, @Body() body: any) {
+  createWarehouse(@CurrentUser() user: JwtPayload, @Body() body: CreateWarehouseDto) {
     return this.service.createWarehouse(user.companyId, body);
   }
 
   @Put("warehouses/:id")
-  updateWarehouse(@CurrentUser() user: JwtPayload, @Param("id") id: string, @Body() body: any) {
+  updateWarehouse(@CurrentUser() user: JwtPayload, @Param("id") id: string, @Body() body: UpdateWarehouseDto) {
     return this.service.updateWarehouse(user.companyId, id, body);
   }
 
