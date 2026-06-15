@@ -1,88 +1,387 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { motion } from "framer-motion";
-import { ArrowRight, Shield, Zap, Globe } from "lucide-react";
+import Image from "next/image";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowRight, Shield, Zap, Globe, Star } from "lucide-react";
 
 export function Hero() {
+  const { scrollY } = useScroll();
+  const opacity = useTransform(scrollY, [0, 500], [1, 0]);
+  const y = useTransform(scrollY, [0, 500], [0, -80]);
+
   return (
-    <section className="relative overflow-hidden bg-background pt-24 pb-32">
-      {/* Gradient blobs */}
-      <div className="absolute inset-0 -z-10 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full bg-primary/5 blur-3xl" />
-        <div className="absolute top-32 right-1/4 w-[400px] h-[400px] rounded-full bg-violet-500/5 blur-3xl" />
+    <section
+      className="relative overflow-hidden"
+      style={{
+        minHeight: "100dvh",
+        background: "linear-gradient(135deg, #040c0a 0%, #061410 50%, #080f0c 100%)",
+      }}
+    >
+      {/* Animated blobs */}
+      <div aria-hidden="true" className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          className="absolute top-[-20%] left-[-12%] w-[700px] h-[700px] rounded-full"
+          style={{ background: "radial-gradient(circle, rgba(13,148,136,0.45) 0%, transparent 70%)" }}
+          animate={{ x: [0, 50, -25, 0], y: [0, -60, 35, 0], scale: [1, 1.12, 0.92, 1] }}
+          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute top-[15%] right-[-18%] w-[650px] h-[650px] rounded-full"
+          style={{ background: "radial-gradient(circle, rgba(245,158,11,0.22) 0%, transparent 70%)" }}
+          animate={{ x: [0, -60, 35, 0], y: [0, 50, -35, 0], scale: [1, 1.06, 0.96, 1] }}
+          transition={{ duration: 17, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+        />
+        <motion.div
+          className="absolute bottom-[0%] left-[20%] w-[550px] h-[550px] rounded-full"
+          style={{ background: "radial-gradient(circle, rgba(20,184,166,0.32) 0%, transparent 70%)" }}
+          animate={{ x: [0, 25, -45, 0], y: [0, -40, 25, 0], scale: [1, 1.09, 0.94, 1] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 7 }}
+        />
+        {/* Subtle grid */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(13,148,136,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(13,148,136,0.07) 1px, transparent 1px)",
+            backgroundSize: "64px 64px",
+          }}
+        />
       </div>
 
-      <div className="container mx-auto px-4 text-center">
+      {/* Hero content */}
+      <motion.div
+        style={{ opacity, y }}
+        className="container mx-auto px-4 text-center relative z-10 flex flex-col items-center justify-center pt-28 pb-16"
+      >
+        {/* VeriFactu badge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mb-6"
+          className="mb-8"
         >
-          <Badge variant="outline" className="gap-1.5 py-1 px-3">
-            <Shield className="h-3.5 w-3.5 text-primary" />
+          <div
+            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm"
+            style={{
+              border: "1px solid rgba(13,148,136,0.35)",
+              background: "rgba(13,148,136,0.12)",
+              color: "#5eead4",
+              backdropFilter: "blur(8px)",
+            }}
+          >
+            <Shield className="h-3.5 w-3.5" />
             VeriFactu certificado · Cumplimiento AEAT 2025
-          </Badge>
+            <span
+              className="h-2 w-2 rounded-full animate-pulse"
+              style={{ background: "#2dd4bf" }}
+            />
+          </div>
         </motion.div>
 
-        <motion.h1
-          className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6 max-w-4xl mx-auto leading-tight"
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.5 }}
+        {/* W logo tech */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.7 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.15, duration: 0.7, type: "spring", stiffness: 110, damping: 14 }}
+          className="mb-8"
         >
-          El ERP más moderno para{" "}
-          <span className="text-primary">pymes españolas</span>
+          <Image
+            src="/logo-tech.png"
+            alt="YouWhole"
+            width={120}
+            height={120}
+            priority
+            style={{ filter: "drop-shadow(0 0 45px rgba(13,148,136,0.7))" }}
+          />
+        </motion.div>
+
+        {/* Headline */}
+        <motion.h1
+          className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-tight text-white mb-6 max-w-4xl"
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25, duration: 0.55 }}
+        >
+          Todo en uno
+          <br />
+          <span
+            style={{
+              backgroundImage: "linear-gradient(135deg, #2dd4bf 0%, #14b8a6 40%, #f59e0b 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            para tu empresa
+          </span>
         </motion.h1>
 
+        {/* Subtitle */}
         <motion.p
-          className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed"
+          className="text-lg sm:text-xl leading-relaxed mb-10 max-w-2xl"
+          style={{ color: "#94a3b8" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.38 }}
         >
-          CRM, facturación electrónica, contabilidad y VeriFactu en una sola
-          plataforma. Diseñado para el mercado español desde el primer día.
+          CRM, facturación electrónica, VeriFactu, contabilidad y nóminas.
+          El ERP moderno diseñado desde cero para pymes españolas.
         </motion.p>
 
+        {/* CTAs */}
         <motion.div
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.48 }}
         >
-          <Button size="lg" asChild className="gap-2 text-base px-8 h-12">
-            <Link href="/registro">
-              Empieza gratis
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </Button>
-          <Button size="lg" variant="outline" asChild className="h-12">
-            <a href="#features">Ver funcionalidades</a>
-          </Button>
+          <Link
+            href="/registro"
+            className="inline-flex items-center gap-2 rounded-xl px-8 h-14 text-base font-semibold text-white transition-all duration-200 hover:scale-105 active:scale-95"
+            style={{
+              background: "linear-gradient(135deg, #0d9488 0%, #0f766e 100%)",
+              boxShadow: "0 0 35px rgba(13,148,136,0.5), 0 4px 24px rgba(0,0,0,0.5)",
+            }}
+          >
+            Empezar gratis
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+          <a
+            href="#features"
+            className="inline-flex items-center gap-2 rounded-xl px-8 h-14 text-base font-medium text-white transition-all duration-200 hover:bg-white/10"
+            style={{
+              border: "1px solid rgba(255,255,255,0.13)",
+              background: "rgba(255,255,255,0.05)",
+              backdropFilter: "blur(10px)",
+            }}
+          >
+            Ver funcionalidades
+          </a>
         </motion.div>
 
+        {/* Trust signals */}
         <motion.div
-          className="flex flex-wrap items-center justify-center gap-6 mt-12 text-sm text-muted-foreground"
+          className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-sm"
+          style={{ color: "#64748b" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
+          transition={{ delay: 0.58 }}
         >
           {[
-            { icon: Shield, text: "VeriFactu certificado" },
+            { icon: Shield, text: "VeriFactu AEAT" },
             { icon: Zap, text: "14 días gratis" },
             { icon: Globe, text: "Sin permanencia" },
+            { icon: Star, text: "Soporte en español" },
           ].map(({ icon: Icon, text }) => (
             <div key={text} className="flex items-center gap-1.5">
-              <Icon className="h-4 w-4 text-primary" />
+              <Icon className="h-4 w-4" style={{ color: "#0d9488" }} />
               <span>{text}</span>
             </div>
           ))}
         </motion.div>
-      </div>
+      </motion.div>
+
+      {/* Dashboard preview */}
+      <motion.div
+        className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6"
+        initial={{ opacity: 0, y: 80 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.72, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <div
+          className="rounded-2xl border overflow-hidden"
+          style={{
+            borderColor: "rgba(13,148,136,0.3)",
+            boxShadow: "0 40px 100px rgba(0,0,0,0.85), 0 0 80px rgba(13,148,136,0.1)",
+          }}
+        >
+          {/* Browser chrome */}
+          <div
+            className="flex items-center gap-2 px-4 py-3 border-b"
+            style={{ background: "rgba(3,9,8,0.98)", borderColor: "rgba(255,255,255,0.07)" }}
+          >
+            <div className="h-3 w-3 rounded-full" style={{ background: "#ef4444" }} />
+            <div className="h-3 w-3 rounded-full" style={{ background: "#f59e0b" }} />
+            <div className="h-3 w-3 rounded-full" style={{ background: "#22c55e" }} />
+            <div
+              className="ml-4 flex-1 max-w-xs rounded-md px-3 py-1 text-xs text-center mx-auto"
+              style={{ background: "rgba(255,255,255,0.06)", color: "#475569" }}
+            >
+              app.youwhole.es/dashboard
+            </div>
+          </div>
+
+          {/* Dashboard body */}
+          <div className="flex" style={{ background: "#060f0d", minHeight: 340 }}>
+            {/* Sidebar */}
+            <div
+              className="w-48 shrink-0 border-r p-4 hidden sm:flex flex-col"
+              style={{ borderColor: "rgba(255,255,255,0.06)", background: "rgba(0,0,0,0.25)" }}
+            >
+              <div
+                className="flex items-center gap-2 mb-5 pb-4 border-b"
+                style={{ borderColor: "rgba(255,255,255,0.07)" }}
+              >
+                <div
+                  className="w-6 h-6 rounded flex items-center justify-center text-white text-xs font-bold"
+                  style={{ background: "linear-gradient(135deg,#0d9488,#14b8a6)" }}
+                >
+                  Y
+                </div>
+                <span className="text-xs font-semibold" style={{ color: "#94a3b8" }}>YouWhole</span>
+              </div>
+              {[
+                { label: "Dashboard", active: true },
+                { label: "Facturas", active: false },
+                { label: "Clientes", active: false },
+                { label: "CRM / Deals", active: false },
+                { label: "Contabilidad", active: false },
+                { label: "Inventario", active: false },
+                { label: "Nóminas", active: false },
+              ].map(({ label, active }) => (
+                <div
+                  key={label}
+                  className="flex items-center gap-2 px-2 py-1.5 rounded-md text-xs mb-0.5"
+                  style={{
+                    background: active ? "rgba(13,148,136,0.15)" : "transparent",
+                    color: active ? "#2dd4bf" : "#475569",
+                  }}
+                >
+                  <div
+                    className="h-3.5 w-3.5 rounded-sm shrink-0"
+                    style={{ background: active ? "#0d9488" : "rgba(255,255,255,0.1)" }}
+                  />
+                  {label}
+                </div>
+              ))}
+            </div>
+
+            {/* Main content */}
+            <div className="flex-1 p-5 overflow-hidden">
+              {/* Stats row */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                {[
+                  { label: "Facturado", value: "48.250 €", delta: "+12%", color: "#0d9488" },
+                  { label: "Clientes", value: "124", delta: "+8", color: "#6366f1" },
+                  { label: "Por cobrar", value: "8.400 €", delta: "-3%", color: "#f59e0b" },
+                  { label: "Deals", value: "17", delta: "+5", color: "#ec4899" },
+                ].map((s) => (
+                  <div
+                    key={s.label}
+                    className="rounded-xl p-3 border"
+                    style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}
+                  >
+                    <div className="text-[9px] uppercase tracking-wide mb-1" style={{ color: "#475569" }}>{s.label}</div>
+                    <div className="text-sm font-bold mb-0.5" style={{ color: s.color }}>{s.value}</div>
+                    <div
+                      className="text-[9px]"
+                      style={{ color: s.delta.startsWith("+") ? "#22c55e" : "#f87171" }}
+                    >
+                      {s.delta} vs mes anterior
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Charts */}
+              <div className="grid grid-cols-3 gap-3">
+                {/* Bar chart */}
+                <div
+                  className="col-span-2 rounded-xl border p-4"
+                  style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.06)" }}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-[10px] font-medium" style={{ color: "#94a3b8" }}>
+                      Facturación mensual 2025
+                    </span>
+                    <span
+                      className="text-[9px] px-2 py-0.5 rounded-full"
+                      style={{ background: "rgba(13,148,136,0.15)", color: "#2dd4bf" }}
+                    >
+                      ↑ 18% anual
+                    </span>
+                  </div>
+                  <div className="flex items-end gap-1 h-20">
+                    {[28, 45, 35, 60, 50, 72, 62, 85, 68, 55, 78, 100].map((h, i) => (
+                      <div
+                        key={i}
+                        className="flex-1 rounded-t-sm"
+                        style={{
+                          height: `${h}%`,
+                          background:
+                            i === 11
+                              ? "linear-gradient(180deg, #2dd4bf, #0d9488)"
+                              : i >= 9
+                              ? "rgba(13,148,136,0.38)"
+                              : "rgba(13,148,136,0.18)",
+                        }}
+                      />
+                    ))}
+                  </div>
+                  <div className="flex justify-between mt-1.5">
+                    {["E", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"].map((m, i) => (
+                      <div key={i} className="flex-1 text-center" style={{ fontSize: 7, color: "#334155" }}>
+                        {m}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Donut chart */}
+                <div
+                  className="rounded-xl border p-4 flex flex-col items-center justify-center"
+                  style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.06)" }}
+                >
+                  <div className="text-[10px] font-medium mb-3" style={{ color: "#94a3b8" }}>
+                    Pipeline CRM
+                  </div>
+                  <svg viewBox="0 0 64 64" className="w-16 h-16 mb-3">
+                    <circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="9" />
+                    <circle
+                      cx="32" cy="32" r="24" fill="none" stroke="#0d9488" strokeWidth="9"
+                      strokeDasharray="75 75" strokeDashoffset="-3"
+                      strokeLinecap="round" transform="rotate(-90 32 32)"
+                    />
+                    <circle
+                      cx="32" cy="32" r="24" fill="none" stroke="#f59e0b" strokeWidth="9"
+                      strokeDasharray="32 118" strokeDashoffset="-78"
+                      strokeLinecap="round" transform="rotate(-90 32 32)"
+                    />
+                    <circle
+                      cx="32" cy="32" r="24" fill="none" stroke="#6366f1" strokeWidth="9"
+                      strokeDasharray="18 132" strokeDashoffset="-110"
+                      strokeLinecap="round" transform="rotate(-90 32 32)"
+                    />
+                  </svg>
+                  <div className="w-full space-y-1">
+                    {[
+                      { label: "Lead", pct: "50%", color: "#0d9488" },
+                      { label: "Propuesta", pct: "21%", color: "#f59e0b" },
+                      { label: "Negociación", pct: "12%", color: "#6366f1" },
+                    ].map((s) => (
+                      <div key={s.label} className="flex items-center justify-between" style={{ fontSize: 9 }}>
+                        <div className="flex items-center gap-1">
+                          <div className="w-1.5 h-1.5 rounded-full" style={{ background: s.color }} />
+                          <span style={{ color: "#64748b" }}>{s.label}</span>
+                        </div>
+                        <span style={{ color: "#94a3b8" }}>{s.pct}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Bottom gradient to bg */}
+      <div
+        aria-hidden="true"
+        className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none"
+        style={{ background: "linear-gradient(to top, hsl(var(--background)), transparent)" }}
+      />
     </section>
   );
 }
