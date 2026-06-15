@@ -16,6 +16,13 @@ const nextConfig: NextConfig = {
   experimental: {
     serverActions: { allowedOrigins: ["localhost:3000"] },
   },
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      // canvas is a native module required by @react-pdf/renderer — mark as external
+      config.externals = [...(config.externals ?? []), "canvas"];
+    }
+    return config;
+  },
 };
 
 export default withNextIntl(nextConfig);
