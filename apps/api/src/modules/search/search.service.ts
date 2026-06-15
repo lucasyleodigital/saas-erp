@@ -26,7 +26,7 @@ export class SearchService {
           OR: [
             { name: { contains: term, mode: "insensitive" } },
             { email: { contains: term, mode: "insensitive" } },
-            { nif: { contains: term, mode: "insensitive" } },
+            { cifNif: { contains: term, mode: "insensitive" } },
           ],
         },
         take: 5,
