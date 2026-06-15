@@ -8,6 +8,7 @@ import { Testimonials } from "@/components/marketing/testimonials";
 import { MarketingNav } from "@/components/marketing/nav";
 import { MarketingFooter } from "@/components/marketing/footer";
 import { PricingCards } from "@/components/billing/pricing-cards";
+import { PageBackground } from "@/components/marketing/page-background";
 import { DemoSection } from "@/components/marketing/demo-section";
 import { Faq } from "@/components/marketing/faq";
 import { ChatWidget } from "@/components/marketing/chat-widget";
@@ -24,6 +25,7 @@ export const metadata: Metadata = {
 export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col">
+      <PageBackground />
       <MarketingNav />
 
       <main className="flex-1">

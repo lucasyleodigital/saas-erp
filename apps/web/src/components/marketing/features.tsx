@@ -158,6 +158,14 @@ function FeatureCard({ feature, index, large }: FeatureCardProps) {
   );
 }
 
+const BOKEH = [
+  { w: 520, h: 520, l: -6, t: 8,  c: "rgba(13,148,136,0.10)", dur: 22, dx: 38,  dy: -22, d: 0  },
+  { w: 420, h: 420, l: 58, t: -12, c: "rgba(99,102,241,0.08)", dur: 28, dx: -32, dy: 42,  d: 6  },
+  { w: 640, h: 640, l: 72, t: 38, c: "rgba(20,184,166,0.07)", dur: 20, dx: -28, dy: -32, d: 10 },
+  { w: 360, h: 360, l: 18, t: 68, c: "rgba(245,158,11,0.07)", dur: 26, dx: 42,  dy: 18,  d: 4  },
+  { w: 480, h: 480, l: 38, t: 52, c: "rgba(99,102,241,0.07)", dur: 32, dx: -22, dy: -38, d: 14 },
+];
+
 export function Features() {
   const main = MAIN_FEATURES[0]!;
   const rest = MAIN_FEATURES.slice(1);
@@ -166,8 +174,40 @@ export function Features() {
   const fourthRow = rest.slice(6, 9);
 
   return (
-    <section id="features" className="py-24 bg-muted/20">
-      <div className="container mx-auto px-4">
+    <section
+      id="features"
+      className="py-24 relative overflow-hidden"
+      style={{ background: "linear-gradient(180deg, #060e0c 0%, #040c0a 55%, #060e0c 100%)" }}
+    >
+      {/* Bokeh orbs */}
+      <div aria-hidden="true" className="absolute inset-0 overflow-hidden pointer-events-none">
+        {BOKEH.map((orb, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full"
+            style={{
+              width: `${orb.w}px`,
+              height: `${orb.h}px`,
+              left: `${orb.l}%`,
+              top: `${orb.t}%`,
+              background: `radial-gradient(circle, ${orb.c} 0%, transparent 70%)`,
+              filter: "blur(72px)",
+            }}
+            animate={{ x: [0, orb.dx, 0], y: [0, orb.dy, 0] }}
+            transition={{ duration: orb.dur, repeat: Infinity, ease: "easeInOut", delay: orb.d }}
+          />
+        ))}
+        {/* Subtle dot grid */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: "radial-gradient(rgba(13,148,136,0.12) 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+          }}
+        />
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <motion.div
           className="text-center mb-16"
@@ -178,17 +218,17 @@ export function Features() {
           <div
             className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium mb-4 border"
             style={{
-              background: "rgba(13,148,136,0.08)",
-              borderColor: "rgba(13,148,136,0.25)",
-              color: "#0d9488",
+              background: "rgba(13,148,136,0.10)",
+              borderColor: "rgba(13,148,136,0.28)",
+              color: "#2dd4bf",
             }}
           >
             10 módulos incluidos
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-white">
             Todo lo que necesita tu empresa
           </h2>
-          <p className="text-muted-foreground max-w-xl mx-auto text-lg">
+          <p className="max-w-xl mx-auto text-lg" style={{ color: "#94a3b8" }}>
             Diseñado específicamente para el mercado español. Sin integraciones
             externas, sin suscripciones adicionales.
           </p>
