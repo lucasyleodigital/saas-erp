@@ -28,7 +28,7 @@ function AnimatedNumber({ target, suffix, prefix = "" }: { target: number; suffi
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !started.current) {
+        if (entry?.isIntersecting && !started.current) {
           started.current = true;
           const duration = 1600;
           const start = performance.now();
