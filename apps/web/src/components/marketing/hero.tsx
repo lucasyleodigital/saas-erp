@@ -33,18 +33,20 @@ function ParticleCanvas() {
     window.addEventListener("mousemove", onMouseMove);
 
     type P = { x: number; y: number; vx: number; vy: number; r: number; a: number; twinkle: number; twinkleDir: number };
-    const pts: P[] = Array.from({ length: 120 }, () => ({
+    const count = Math.min(300, Math.round((canvas.width * canvas.height) / 5500));
+    const baseR = canvas.width > 768 ? 1.8 : 1.0;
+    const pts: P[] = Array.from({ length: count }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
       vx: (Math.random() - 0.5) * 0.4,
       vy: (Math.random() - 0.5) * 0.4,
-      r: Math.random() * 2.5 + 1.0,
-      a: Math.random() * 0.4 + 0.6,
+      r: Math.random() * 2.5 + baseR,
+      a: Math.random() * 0.35 + 0.65,
       twinkle: Math.random(),
       twinkleDir: Math.random() > 0.5 ? 1 : -1,
     }));
 
-    const LINK = 180, MOUSE_R = 160;
+    const LINK = Math.max(160, canvas.width * 0.13), MOUSE_R = 160;
 
     const tick = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -58,7 +60,7 @@ function ParticleCanvas() {
           const dx = pi.x - pj.x, dy = pi.y - pj.y;
           const d = Math.hypot(dx, dy);
           if (d < LINK) {
-            const alpha = (1 - d / LINK) * 0.6;
+            const alpha = (1 - d / LINK) * 0.75;
             ctx.beginPath();
             ctx.moveTo(pi.x, pi.y);
             ctx.lineTo(pj.x, pj.y);
