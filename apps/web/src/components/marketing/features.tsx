@@ -159,7 +159,8 @@ function FeatureCard({ feature, index, large }: FeatureCardProps) {
 }
 
 export function Features() {
-  const [main, ...rest] = MAIN_FEATURES;
+  const main = MAIN_FEATURES[0]!;
+  const rest = MAIN_FEATURES.slice(1);
   const secondRow = rest.slice(0, 3);
   const thirdRow = rest.slice(3, 6);
   const fourthRow = rest.slice(6, 9);
