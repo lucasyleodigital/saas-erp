@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd ../.. && ./node_modules/.bin/prisma generate --schema=packages/database/prisma/schema.prisma && pnpm build:packages && cd apps/web && pnpm build",
+  "buildCommand": "cd ../.. && pnpm -C packages/database exec prisma generate && pnpm build:packages && cd apps/web && pnpm build",
   "outputDirectory": ".next",
   "installCommand": "cd ../.. && pnpm install --frozen-lockfile",
   "framework": "nextjs"
