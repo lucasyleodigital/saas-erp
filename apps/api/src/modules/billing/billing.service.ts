@@ -91,7 +91,10 @@ export class BillingService {
   }
 
   async handleWebhook(body: Buffer, signature: string) {
-    const secret = this.config.get<string>("STRIPE_WEBHOOK_SECRET", "");
+    const secret = this.config.get<string>("STRIPE_WEBHOOK_SECRET");
+    if (!secret) {
+      throw new BadRequestException("STRIPE_WEBHOOK_SECRET no configurado");
+    }
     let event: Stripe.Event;
 
     try {

@@ -37,6 +37,22 @@ class EnvironmentVariables {
 
   @IsString()
   @IsOptional()
+  STRIPE_WEBHOOK_SECRET?: string;
+
+  @IsString()
+  @IsOptional()
+  STRIPE_PRICE_STARTER?: string;
+
+  @IsString()
+  @IsOptional()
+  STRIPE_PRICE_PRO?: string;
+
+  @IsString()
+  @IsOptional()
+  STRIPE_PRICE_ENTERPRISE?: string;
+
+  @IsString()
+  @IsOptional()
   REDIS_URL?: string;
 }
 
