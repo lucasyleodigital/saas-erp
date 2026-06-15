@@ -8,6 +8,7 @@ import { Testimonials } from "@/components/marketing/testimonials";
 import { MarketingNav } from "@/components/marketing/nav";
 import { MarketingFooter } from "@/components/marketing/footer";
 import { PricingCards } from "@/components/billing/pricing-cards";
+import { DemoSection } from "@/components/marketing/demo-section";
 import { Faq } from "@/components/marketing/faq";
 import { ChatWidget } from "@/components/marketing/chat-widget";
 import Link from "next/link";
@@ -29,7 +30,10 @@ export default function LandingPage() {
         {/* 1 · Hero dark fullscreen + dashboard mockup */}
         <Hero />
 
-        {/* 2 · Animated stats */}
+        {/* 2 · Animated app demo */}
+        <DemoSection />
+
+        {/* 3 · Animated stats */}
         <StatsBar />
 
         {/* 3 · Bento features grid */}

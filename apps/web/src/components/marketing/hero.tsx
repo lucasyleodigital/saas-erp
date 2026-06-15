@@ -2,22 +2,163 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Shield, Zap, Globe, Star } from "lucide-react";
 
+function ParticleCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let rafId: number;
+    let mouseX = -9999, mouseY = -9999;
+
+    const resize = () => {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    };
+    resize();
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas);
+
+    const onMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
+    };
+    window.addEventListener("mousemove", onMouseMove);
+
+    type P = { x: number; y: number; vx: number; vy: number; r: number; a: number };
+    const pts: P[] = Array.from({ length: 65 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5,
+      r: Math.random() * 1.6 + 0.4,
+      a: Math.random() * 0.45 + 0.12,
+    }));
+
+    const LINK = 165, MOUSE_R = 140;
+
+    const tick = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (const p of pts) {
+        const dx = mouseX - p.x, dy = mouseY - p.y;
+        const d = Math.hypot(dx, dy);
+        if (d < MOUSE_R && d > 0) {
+          const f = ((MOUSE_R - d) / MOUSE_R) * 0.02;
+          p.vx -= (dx / d) * f;
+          p.vy -= (dy / d) * f;
+        }
+        const spd = Math.hypot(p.vx, p.vy);
+        if (spd > 1.5) { p.vx = (p.vx / spd) * 1.5; p.vy = (p.vy / spd) * 1.5; }
+        p.vx *= 0.99; p.vy *= 0.99;
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x += canvas.width;
+        if (p.x > canvas.width) p.x -= canvas.width;
+        if (p.y < 0) p.y += canvas.height;
+        if (p.y > canvas.height) p.y -= canvas.height;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(45,212,191,${p.a})`;
+        ctx.fill();
+      }
+
+      for (let i = 0; i < pts.length; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          const pi = pts[i]; const pj = pts[j];
+          if (!pi || !pj) continue;
+          const dx = pi.x - pj.x, dy = pi.y - pj.y;
+          const d = Math.hypot(dx, dy);
+          if (d < LINK) {
+            ctx.beginPath();
+            ctx.moveTo(pi.x, pi.y);
+            ctx.lineTo(pj.x, pj.y);
+            ctx.strokeStyle = `rgba(13,148,136,${(1 - d / LINK) * 0.25})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      }
+
+      rafId = requestAnimationFrame(tick);
+    };
+    tick();
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      ro.disconnect();
+      window.removeEventListener("mousemove", onMouseMove);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 w-full h-full pointer-events-none"
+      style={{ opacity: 0.6 }}
+    />
+  );
+}
+
 export function Hero() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [mouse, setMouse] = useState({ x: 0, y: 0, visible: false });
   const { scrollY } = useScroll();
-  const opacity = useTransform(scrollY, [0, 500], [1, 0]);
-  const y = useTransform(scrollY, [0, 500], [0, -80]);
+  // Only parallax Y — no opacity fade so buttons stay "encendidos" while in viewport
+  const y = useTransform(scrollY, [0, 600], [0, -70]);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const onMove = (e: MouseEvent) => {
+      const rect = section.getBoundingClientRect();
+      setMouse({ x: e.clientX - rect.left, y: e.clientY - rect.top, visible: true });
+    };
+    const onLeave = () => setMouse((m) => ({ ...m, visible: false }));
+    section.addEventListener("mousemove", onMove);
+    section.addEventListener("mouseleave", onLeave);
+    return () => {
+      section.removeEventListener("mousemove", onMove);
+      section.removeEventListener("mouseleave", onLeave);
+    };
+  }, []);
 
   return (
     <section
+      ref={sectionRef}
       className="relative overflow-hidden"
       style={{
         minHeight: "100dvh",
         background: "linear-gradient(135deg, #040c0a 0%, #061410 50%, #080f0c 100%)",
       }}
     >
+      {/* Mouse spotlight */}
+      <div
+        aria-hidden="true"
+        className="absolute pointer-events-none z-0"
+        style={{
+          left: 0,
+          top: 0,
+          width: 720,
+          height: 720,
+          background: "radial-gradient(circle, rgba(13,148,136,0.11) 0%, transparent 70%)",
+          borderRadius: "50%",
+          transform: `translate(${mouse.x - 360}px, ${mouse.y - 360}px)`,
+          opacity: mouse.visible ? 1 : 0,
+          transition: "opacity 0.4s",
+          willChange: "transform",
+        }}
+      />
+
       {/* Animated blobs */}
       <div aria-hidden="true" className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
@@ -47,11 +188,13 @@ export function Hero() {
             backgroundSize: "64px 64px",
           }}
         />
+        {/* Particle canvas */}
+        <ParticleCanvas />
       </div>
 
       {/* Hero content */}
       <motion.div
-        style={{ opacity, y }}
+        style={{ y }}
         className="container mx-auto px-4 text-center relative z-10 flex flex-col items-center justify-center pt-28 pb-16"
       >
         {/* VeriFactu badge */}
@@ -72,14 +215,11 @@ export function Hero() {
           >
             <Shield className="h-3.5 w-3.5" />
             VeriFactu certificado · Cumplimiento AEAT 2025
-            <span
-              className="h-2 w-2 rounded-full animate-pulse"
-              style={{ background: "#2dd4bf" }}
-            />
+            <span className="h-2 w-2 rounded-full animate-pulse" style={{ background: "#2dd4bf" }} />
           </div>
         </motion.div>
 
-        {/* W logo tech */}
+        {/* W logo */}
         <motion.div
           initial={{ opacity: 0, scale: 0.7 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -219,16 +359,8 @@ export function Hero() {
               className="w-48 shrink-0 border-r p-4 hidden sm:flex flex-col"
               style={{ borderColor: "rgba(255,255,255,0.06)", background: "rgba(0,0,0,0.25)" }}
             >
-              <div
-                className="flex items-center gap-2 mb-5 pb-4 border-b"
-                style={{ borderColor: "rgba(255,255,255,0.07)" }}
-              >
-                <div
-                  className="w-6 h-6 rounded flex items-center justify-center text-white text-xs font-bold"
-                  style={{ background: "linear-gradient(135deg,#0d9488,#14b8a6)" }}
-                >
-                  Y
-                </div>
+              <div className="flex items-center gap-2 mb-5 pb-4 border-b" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
+                <div className="w-6 h-6 rounded flex items-center justify-center text-white text-xs font-bold" style={{ background: "linear-gradient(135deg,#0d9488,#14b8a6)" }}>Y</div>
                 <span className="text-xs font-semibold" style={{ color: "#94a3b8" }}>YouWhole</span>
               </div>
               {[
@@ -243,15 +375,9 @@ export function Hero() {
                 <div
                   key={label}
                   className="flex items-center gap-2 px-2 py-1.5 rounded-md text-xs mb-0.5"
-                  style={{
-                    background: active ? "rgba(13,148,136,0.15)" : "transparent",
-                    color: active ? "#2dd4bf" : "#475569",
-                  }}
+                  style={{ background: active ? "rgba(13,148,136,0.15)" : "transparent", color: active ? "#2dd4bf" : "#475569" }}
                 >
-                  <div
-                    className="h-3.5 w-3.5 rounded-sm shrink-0"
-                    style={{ background: active ? "#0d9488" : "rgba(255,255,255,0.1)" }}
-                  />
+                  <div className="h-3.5 w-3.5 rounded-sm shrink-0" style={{ background: active ? "#0d9488" : "rgba(255,255,255,0.1)" }} />
                   {label}
                 </div>
               ))}
@@ -259,7 +385,6 @@ export function Hero() {
 
             {/* Main content */}
             <div className="flex-1 p-5 overflow-hidden">
-              {/* Stats row */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
                 {[
                   { label: "Facturado", value: "48.250 €", delta: "+12%", color: "#0d9488" },
@@ -267,99 +392,40 @@ export function Hero() {
                   { label: "Por cobrar", value: "8.400 €", delta: "-3%", color: "#f59e0b" },
                   { label: "Deals", value: "17", delta: "+5", color: "#ec4899" },
                 ].map((s) => (
-                  <div
-                    key={s.label}
-                    className="rounded-xl p-3 border"
-                    style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}
-                  >
+                  <div key={s.label} className="rounded-xl p-3 border" style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}>
                     <div className="text-[9px] uppercase tracking-wide mb-1" style={{ color: "#475569" }}>{s.label}</div>
                     <div className="text-sm font-bold mb-0.5" style={{ color: s.color }}>{s.value}</div>
-                    <div
-                      className="text-[9px]"
-                      style={{ color: s.delta.startsWith("+") ? "#22c55e" : "#f87171" }}
-                    >
-                      {s.delta} vs mes anterior
-                    </div>
+                    <div className="text-[9px]" style={{ color: s.delta.startsWith("+") ? "#22c55e" : "#f87171" }}>{s.delta} vs mes anterior</div>
                   </div>
                 ))}
               </div>
-
-              {/* Charts */}
               <div className="grid grid-cols-3 gap-3">
-                {/* Bar chart */}
-                <div
-                  className="col-span-2 rounded-xl border p-4"
-                  style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.06)" }}
-                >
+                <div className="col-span-2 rounded-xl border p-4" style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.06)" }}>
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] font-medium" style={{ color: "#94a3b8" }}>
-                      Facturación mensual 2025
-                    </span>
-                    <span
-                      className="text-[9px] px-2 py-0.5 rounded-full"
-                      style={{ background: "rgba(13,148,136,0.15)", color: "#2dd4bf" }}
-                    >
-                      ↑ 18% anual
-                    </span>
+                    <span className="text-[10px] font-medium" style={{ color: "#94a3b8" }}>Facturación mensual 2025</span>
+                    <span className="text-[9px] px-2 py-0.5 rounded-full" style={{ background: "rgba(13,148,136,0.15)", color: "#2dd4bf" }}>↑ 18% anual</span>
                   </div>
                   <div className="flex items-end gap-1 h-20">
                     {[28, 45, 35, 60, 50, 72, 62, 85, 68, 55, 78, 100].map((h, i) => (
-                      <div
-                        key={i}
-                        className="flex-1 rounded-t-sm"
-                        style={{
-                          height: `${h}%`,
-                          background:
-                            i === 11
-                              ? "linear-gradient(180deg, #2dd4bf, #0d9488)"
-                              : i >= 9
-                              ? "rgba(13,148,136,0.38)"
-                              : "rgba(13,148,136,0.18)",
-                        }}
-                      />
+                      <div key={i} className="flex-1 rounded-t-sm" style={{ height: `${h}%`, background: i === 11 ? "linear-gradient(180deg,#2dd4bf,#0d9488)" : i >= 9 ? "rgba(13,148,136,0.38)" : "rgba(13,148,136,0.18)" }} />
                     ))}
                   </div>
                   <div className="flex justify-between mt-1.5">
                     {["E", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"].map((m, i) => (
-                      <div key={i} className="flex-1 text-center" style={{ fontSize: 7, color: "#334155" }}>
-                        {m}
-                      </div>
+                      <div key={i} className="flex-1 text-center" style={{ fontSize: 7, color: "#334155" }}>{m}</div>
                     ))}
                   </div>
                 </div>
-
-                {/* Donut chart */}
-                <div
-                  className="rounded-xl border p-4 flex flex-col items-center justify-center"
-                  style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.06)" }}
-                >
-                  <div className="text-[10px] font-medium mb-3" style={{ color: "#94a3b8" }}>
-                    Pipeline CRM
-                  </div>
+                <div className="rounded-xl border p-4 flex flex-col items-center justify-center" style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.06)" }}>
+                  <div className="text-[10px] font-medium mb-3" style={{ color: "#94a3b8" }}>Pipeline CRM</div>
                   <svg viewBox="0 0 64 64" className="w-16 h-16 mb-3">
                     <circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="9" />
-                    <circle
-                      cx="32" cy="32" r="24" fill="none" stroke="#0d9488" strokeWidth="9"
-                      strokeDasharray="75 75" strokeDashoffset="-3"
-                      strokeLinecap="round" transform="rotate(-90 32 32)"
-                    />
-                    <circle
-                      cx="32" cy="32" r="24" fill="none" stroke="#f59e0b" strokeWidth="9"
-                      strokeDasharray="32 118" strokeDashoffset="-78"
-                      strokeLinecap="round" transform="rotate(-90 32 32)"
-                    />
-                    <circle
-                      cx="32" cy="32" r="24" fill="none" stroke="#6366f1" strokeWidth="9"
-                      strokeDasharray="18 132" strokeDashoffset="-110"
-                      strokeLinecap="round" transform="rotate(-90 32 32)"
-                    />
+                    <circle cx="32" cy="32" r="24" fill="none" stroke="#0d9488" strokeWidth="9" strokeDasharray="75 75" strokeDashoffset="-3" strokeLinecap="round" transform="rotate(-90 32 32)" />
+                    <circle cx="32" cy="32" r="24" fill="none" stroke="#f59e0b" strokeWidth="9" strokeDasharray="32 118" strokeDashoffset="-78" strokeLinecap="round" transform="rotate(-90 32 32)" />
+                    <circle cx="32" cy="32" r="24" fill="none" stroke="#6366f1" strokeWidth="9" strokeDasharray="18 132" strokeDashoffset="-110" strokeLinecap="round" transform="rotate(-90 32 32)" />
                   </svg>
                   <div className="w-full space-y-1">
-                    {[
-                      { label: "Lead", pct: "50%", color: "#0d9488" },
-                      { label: "Propuesta", pct: "21%", color: "#f59e0b" },
-                      { label: "Negociación", pct: "12%", color: "#6366f1" },
-                    ].map((s) => (
+                    {[{ label: "Lead", pct: "50%", color: "#0d9488" }, { label: "Propuesta", pct: "21%", color: "#f59e0b" }, { label: "Negociación", pct: "12%", color: "#6366f1" }].map((s) => (
                       <div key={s.label} className="flex items-center justify-between" style={{ fontSize: 9 }}>
                         <div className="flex items-center gap-1">
                           <div className="w-1.5 h-1.5 rounded-full" style={{ background: s.color }} />
@@ -376,7 +442,7 @@ export function Hero() {
         </div>
       </motion.div>
 
-      {/* Bottom gradient to bg */}
+      {/* Bottom gradient */}
       <div
         aria-hidden="true"
         className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none"
