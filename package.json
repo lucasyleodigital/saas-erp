@@ -26,11 +26,14 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@nestjs/core",
+      "@parcel/watcher",
       "@prisma/client",
       "@prisma/engines",
+      "@scarf/scarf",
+      "@swc/core",
+      "msgpackr-extract",
       "prisma",
       "sharp",
-      "msgpackr-extract",
       "unrs-resolver"
     ]
   }
