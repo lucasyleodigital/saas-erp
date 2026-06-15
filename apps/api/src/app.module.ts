@@ -28,6 +28,7 @@ import { AutomationsModule } from "./modules/automations/automations.module";
 import { SuppliersModule } from "./modules/suppliers/suppliers.module";
 import { OrdersModule } from "./modules/orders/orders.module";
 import { PurchaseOrdersModule } from "./modules/purchase-orders/purchase-orders.module";
+import { SearchModule } from "./modules/search/search.module";
 import { DatabaseModule } from "./database/database.module";
 import { validateEnv } from "./config/env.validation";
 
@@ -68,6 +69,7 @@ import { validateEnv } from "./config/env.validation";
     SuppliersModule,
     OrdersModule,
     PurchaseOrdersModule,
+    SearchModule,
   ],
   providers: [
     // Apply rate limiting globally to ALL routes
