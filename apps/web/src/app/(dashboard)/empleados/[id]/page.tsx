@@ -3,10 +3,11 @@ import { EmployeeDetailView } from "@/components/employees/employee-detail";
 
 export const metadata: Metadata = { title: "Ficha empleado — ERP SaaS" };
 
-export default function EmployeeDetailPage({
+export default async function EmployeeDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  return <EmployeeDetailView id={params.id} />;
+  const { id } = await params;
+  return <EmployeeDetailView id={id} />;
 }

@@ -3,10 +3,11 @@ import { DeliveryNoteDetailView } from "@/components/delivery-notes/delivery-not
 
 export const metadata: Metadata = { title: "Detalle albarán — ERP SaaS" };
 
-export default function DeliveryNoteDetailPage({
+export default async function DeliveryNoteDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  return <DeliveryNoteDetailView id={params.id} />;
+  const { id } = await params;
+  return <DeliveryNoteDetailView id={id} />;
 }

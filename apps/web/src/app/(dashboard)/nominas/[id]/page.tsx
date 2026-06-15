@@ -3,6 +3,11 @@ import { PayslipDetail } from "@/components/payroll/payslip-detail";
 
 export const metadata: Metadata = { title: "Detalle nómina — ERP SaaS" };
 
-export default function PayslipPage({ params }: { params: { id: string } }) {
-  return <PayslipDetail id={params.id} />;
+export default async function PayslipPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  return <PayslipDetail id={id} />;
 }

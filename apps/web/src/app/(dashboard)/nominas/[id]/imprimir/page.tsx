@@ -1,5 +1,6 @@
 "use client";
 
+import { use } from "react";
 import { usePayroll, MONTHS_ES } from "@/hooks/use-payroll";
 import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
@@ -8,8 +9,13 @@ function fmt(n: number | string) {
   return Number(n).toLocaleString("es-ES", { style: "currency", currency: "EUR" });
 }
 
-export default function PrintPayslipPage({ params }: { params: { id: string } }) {
-  const { data: p, isLoading } = usePayroll(params.id);
+export default function PrintPayslipPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = use(params);
+  const { data: p, isLoading } = usePayroll(id);
 
   if (isLoading) return <div className="p-8 text-center">Cargando...</div>;
   if (!p) return <div className="p-8 text-center">Nómina no encontrada.</div>;
