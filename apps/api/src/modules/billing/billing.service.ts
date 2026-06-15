@@ -28,7 +28,7 @@ export class BillingService {
 
   private get stripeClient(): Stripe {
     if (!this.stripe) {
-      throw new BadRequestException("Stripe no está configurado. Añade STRIPE_SECRET_KEY al .env");
+      throw new BadRequestException("YouWhole Billing: añade STRIPE_SECRET_KEY al entorno para activar pagos");
     }
     return this.stripe;
   }

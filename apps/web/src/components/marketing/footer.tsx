@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const FOOTER_LINKS = [
   {
@@ -15,7 +16,7 @@ const FOOTER_LINKS = [
     links: [
       { href: "/about", label: "Sobre nosotros" },
       { href: "/blog", label: "Blog" },
-      { href: "mailto:hola@tusaas.es", label: "Contacto" },
+      { href: "mailto:hola@youwhole.es", label: "Contacto" },
     ],
   },
   {
@@ -32,7 +33,7 @@ const FOOTER_LINKS = [
     links: [
       { href: "/ayuda", label: "Centro de ayuda" },
       { href: "/status", label: "Estado del servicio" },
-      { href: "mailto:soporte@tusaas.es", label: "Soporte técnico" },
+      { href: "mailto:soporte@youwhole.es", label: "Soporte técnico" },
     ],
   },
 ];
@@ -44,11 +45,8 @@ export function MarketingFooter() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <Link href="/" className="flex items-center gap-2 font-bold text-lg mb-4">
-              <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center text-primary-foreground text-sm font-bold">
-                E
-              </div>
-              ERP SaaS
+            <Link href="/" className="inline-block mb-4">
+              <Image src="/logo.png" alt="YouWhole" width={130} height={36} className="object-contain" />
             </Link>
             <p className="text-xs text-muted-foreground leading-relaxed">
               El ERP más moderno para pymes españolas. VeriFactu, CRM y
@@ -78,7 +76,7 @@ export function MarketingFooter() {
 
         <div className="border-t border-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
           <span>
-            © {new Date().getFullYear()} ERP SaaS. Todos los derechos
+            © {new Date().getFullYear()} YouWhole. Todos los derechos
             reservados.
           </span>
           <div className="flex items-center gap-4">

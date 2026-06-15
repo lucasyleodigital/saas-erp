@@ -13,7 +13,7 @@ export class EmailService {
     if (apiKey) {
       this.resend = new Resend(apiKey);
     }
-    this.from = config.get("EMAIL_FROM", "ERP SaaS <noreply@tusaas.es>");
+    this.from = config.get("EMAIL_FROM", "YouWhole <noreply@youwhole.es>");
     this.clientUrl = config.get("CLIENT_URL", "http://localhost:3000");
   }
 
@@ -33,7 +33,7 @@ export class EmailService {
   async sendWelcome(to: string, firstName: string, companyName: string) {
     await this.send(
       to,
-      `¡Bienvenido a ERP SaaS, ${firstName}!`,
+      `¡Bienvenido a YouWhole, ${firstName}!`,
       `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 560px; margin: 0 auto; padding: 40px 32px; color: #111827;">
         <div style="width: 40px; height: 40px; background: #6366f1; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
@@ -41,7 +41,7 @@ export class EmailService {
         </div>
         <h1 style="font-size: 24px; font-weight: 700; margin: 0 0 8px;">¡Bienvenido, ${firstName}!</h1>
         <p style="color: #6b7280; margin: 0 0 24px; line-height: 1.6;">
-          Tu empresa <strong style="color: #111827;">${companyName}</strong> ya está lista en ERP SaaS.
+          Tu empresa <strong style="color: #111827;">${companyName}</strong> ya está lista en YouWhole.
           Empieza creando tu primera factura o importando tus clientes.
         </p>
         <a href="${this.clientUrl}/dashboard"
@@ -129,7 +129,7 @@ export class EmailService {
     };
     await this.send(
       to,
-      `${inviterName} te invita a unirte a ${companyName} en ERP SaaS`,
+      `${inviterName} te invita a unirte a ${companyName} en YouWhole`,
       `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 560px; margin: 0 auto; padding: 40px 32px; color: #111827;">
         <div style="width: 40px; height: 40px; background: #6366f1; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">

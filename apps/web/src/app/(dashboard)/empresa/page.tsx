@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { CompanySettings } from "@/components/settings/company-settings";
 
-export const metadata: Metadata = { title: "Mi empresa — ERP SaaS" };
+export const metadata: Metadata = { title: "Mi empresa — YouWhole" };
 
 export default function CompanyPage() {
   return <CompanySettings />;

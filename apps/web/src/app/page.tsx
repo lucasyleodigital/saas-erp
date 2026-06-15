@@ -7,7 +7,7 @@ import { MarketingFooter } from "@/components/marketing/footer";
 import { PricingCards } from "@/components/billing/pricing-cards";
 
 export const metadata: Metadata = {
-  title: "ERP SaaS — Gestión empresarial para pymes españolas",
+  title: "YouWhole — Gestión empresarial para pymes españolas",
   description:
     "CRM, facturación electrónica, VeriFactu y contabilidad en una sola plataforma. Diseñado para el mercado español. Empieza gratis.",
   robots: { index: true, follow: true },
@@ -49,7 +49,7 @@ export default function LandingPage() {
               ¿Listo para modernizar tu empresa?
             </h2>
             <p className="text-primary-foreground/80 mb-8 max-w-md mx-auto">
-              Únete a las empresas que ya gestionan su negocio con ERP SaaS.
+              Únete a las empresas que ya gestionan su negocio con YouWhole.
               Sin tarjeta de crédito.
             </p>
             <a

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
@@ -12,11 +13,8 @@ export function MarketingNav() {
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 font-bold text-lg">
-          <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center text-primary-foreground text-sm font-bold">
-            E
-          </div>
-          ERP SaaS
+        <Link href="/" className="flex items-center">
+          <Image src="/logo.png" alt="YouWhole" width={130} height={36} className="object-contain" />
         </Link>
 
         {/* Desktop nav */}

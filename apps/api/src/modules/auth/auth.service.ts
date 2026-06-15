@@ -140,7 +140,7 @@ export class AuthService {
   }
 
   async setup2FA(userId: string) {
-    const secret = speakeasy.generateSecret({ name: "ERP SaaS" });
+    const secret = speakeasy.generateSecret({ name: "YouWhole" });
     await this.prisma.user.update({
       where: { id: userId },
       data: { twoFactorSecret: secret.base32 },

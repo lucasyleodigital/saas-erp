@@ -94,7 +94,7 @@ export function PricingCards({ currentPlan = "FREE", onUpgrade }: PricingCardsPr
 
   async function handleUpgrade(planKey: string) {
     if (planKey === "ENTERPRISE") {
-      window.open("mailto:ventas@tusaas.es?subject=Plan Enterprise", "_blank");
+      window.open("mailto:ventas@youwhole.es?subject=Plan Enterprise", "_blank");
       return;
     }
     setLoading(planKey);

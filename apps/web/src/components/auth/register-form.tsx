@@ -47,7 +47,7 @@ export function RegisterForm() {
       await registerAction(data);
       const { data: me } = await api.get("/auth/me");
       setUser(me);
-      toast.success("¡Cuenta creada! Bienvenido al ERP SaaS");
+      toast.success("¡Cuenta creada! Bienvenido al YouWhole");
       router.push(`/${locale}/dashboard`);
     } catch (err: any) {
       const msg = err.response?.data?.message ?? t("error");

@@ -15,35 +15,39 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
 });
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://tusaas.es";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.es";
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
   title: {
-    default: "ERP SaaS — Gestión empresarial inteligente",
-    template: "%s | ERP SaaS",
+    default: "YouWhole — Todo en uno para tu empresa",
+    template: "%s | YouWhole",
   },
   description:
-    "La plataforma de gestión empresarial más moderna para pymes españolas. CRM, facturación, VeriFactu, contabilidad y más.",
-  keywords: ["ERP", "CRM", "facturación", "VeriFactu", "contabilidad", "pymes", "gestión empresarial"],
+    "YouWhole: la plataforma de gestión empresarial todo en uno para pymes españolas. CRM, facturación, VeriFactu, nóminas, almacén y más.",
+  keywords: ["YouWhole", "ERP", "CRM", "facturación", "VeriFactu", "nóminas", "contabilidad", "pymes", "gestión empresarial"],
   authors: [{ name: "Lucas y Leo Digital" }],
   robots: { index: false, follow: true },
+  icons: {
+    icon: "/logo-icon.png",
+    apple: "/logo-icon.png",
+  },
   openGraph: {
     type: "website",
     locale: "es_ES",
     url: APP_URL,
-    siteName: "ERP SaaS",
-    title: "ERP SaaS — Gestión empresarial inteligente",
+    siteName: "YouWhole",
+    title: "YouWhole — Todo en uno para tu empresa",
     description:
-      "La plataforma de gestión empresarial más moderna para pymes españolas. CRM, facturación, VeriFactu, contabilidad y más.",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "ERP SaaS" }],
+      "La plataforma de gestión empresarial todo en uno para pymes españolas. CRM, facturación, VeriFactu, nóminas, almacén y más.",
+    images: [{ url: "/logo.png", width: 800, height: 200, alt: "YouWhole" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "ERP SaaS — Gestión empresarial inteligente",
+    title: "YouWhole — Todo en uno para tu empresa",
     description:
-      "La plataforma de gestión empresarial más moderna para pymes españolas.",
-    images: ["/og-image.png"],
+      "La plataforma de gestión empresarial todo en uno para pymes españolas.",
+    images: ["/logo.png"],
   },
 };
 

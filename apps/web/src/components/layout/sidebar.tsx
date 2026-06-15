@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
@@ -116,20 +117,28 @@ export function Sidebar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
-              className="flex items-center gap-2"
             >
-              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">
-                E
-              </div>
-              <span className="font-bold text-sidebar-foreground text-lg">
-                ERP SaaS
-              </span>
+              <Image
+                src="/logo.png"
+                alt="YouWhole"
+                width={140}
+                height={40}
+                className="object-contain"
+                priority
+              />
             </motion.div>
           )}
         </AnimatePresence>
         {collapsed && (
-          <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm mx-auto">
-            E
+          <div className="mx-auto">
+            <Image
+              src="/logo-icon.png"
+              alt="YouWhole"
+              width={36}
+              height={36}
+              className="object-contain"
+              priority
+            />
           </div>
         )}
       </div>

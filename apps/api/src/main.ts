@@ -49,7 +49,7 @@ async function bootstrap() {
   // Swagger
   if (process.env.NODE_ENV !== "production") {
     const config = new DocumentBuilder()
-      .setTitle("ERP SaaS API")
+      .setTitle("YouWhole API")
       .setDescription("API de gestión empresarial")
       .setVersion("1.0")
       .addBearerAuth()

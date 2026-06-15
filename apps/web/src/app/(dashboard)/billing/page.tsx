@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { PricingCards } from "@/components/billing/pricing-cards";
 
-export const metadata: Metadata = { title: "Planes y facturación — ERP SaaS" };
+export const metadata: Metadata = { title: "Planes y facturación — YouWhole" };
 
 export default function BillingPage() {
   return (
