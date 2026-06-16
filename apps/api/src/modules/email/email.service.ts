@@ -158,6 +158,62 @@ export class EmailService {
     );
   }
 
+  async sendContractEmail(params: {
+    clientEmail: string;
+    companyName: string;
+    cif: string | null;
+    plan: string;
+    price: number;
+    acceptedAt: Date;
+  }) {
+    const { clientEmail, companyName, cif, plan, price, acceptedAt } = params;
+    const dateStr = acceptedAt.toLocaleDateString("es-ES", { day: "2-digit", month: "long", year: "numeric" });
+    const planLabel: Record<string, string> = { STARTER: "Starter (29€/mes)", PRO: "Pro (79€/mes)", ENTERPRISE: "Enterprise (199€/mes)" };
+    const subject = `Contrato de servicios YouWhole ${plan} — ${companyName}`;
+    const html = `
+    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:640px;margin:0 auto;padding:40px 32px;color:#111827;">
+      <div style="background:#0d9488;width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;">
+        <span style="color:white;font-weight:700;font-size:20px;">Y</span>
+      </div>
+      <h1 style="font-size:22px;font-weight:700;margin:0 0 4px;">Contrato de Servicios YouWhole</h1>
+      <p style="color:#6b7280;margin:0 0 28px;">Plan <strong style="color:#0d9488;">${planLabel[plan] ?? plan}</strong> · Aceptado el ${dateStr}</p>
+
+      <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:20px 24px;margin-bottom:28px;font-size:13px;line-height:1.7;">
+        <p style="margin:0 0 12px;font-weight:600;color:#111827;">DATOS DE LA SUSCRIPCIÓN</p>
+        <table style="width:100%;border-collapse:collapse;">
+          <tr><td style="color:#6b7280;padding:3px 0;width:140px;">Empresa</td><td style="font-weight:500;">${companyName}</td></tr>
+          <tr><td style="color:#6b7280;padding:3px 0;">CIF/NIF</td><td style="font-weight:500;">${cif ?? "—"}</td></tr>
+          <tr><td style="color:#6b7280;padding:3px 0;">Plan</td><td style="font-weight:500;">${planLabel[plan] ?? plan}</td></tr>
+          <tr><td style="color:#6b7280;padding:3px 0;">Importe</td><td style="font-weight:500;">${price}€/mes (IVA incluido)</td></tr>
+          <tr><td style="color:#6b7280;padding:3px 0;">Fecha alta</td><td style="font-weight:500;">${dateStr}</td></tr>
+          <tr><td style="color:#6b7280;padding:3px 0;">Renovación</td><td style="font-weight:500;">Automática mensual · Sin permanencia</td></tr>
+        </table>
+      </div>
+
+      <div style="font-size:13px;color:#374151;line-height:1.8;space-y:12px;">
+        <p><strong>1. PARTES</strong><br/>Lucas y Leo Digital S.L. («YouWhole») y <strong>${companyName}</strong> (CIF: ${cif ?? "—"}) («Cliente»).</p>
+        <p><strong>2. OBJETO</strong><br/>Acceso a la plataforma SaaS YouWhole en modalidad ${plan}, incluyendo todos los módulos descritos en youwhole.es.</p>
+        <p><strong>3. PRECIO Y FACTURACIÓN</strong><br/>${price}€/mes (IVA incluido), con cargo automático mensual a la tarjeta facilitada.</p>
+        ${plan === "ENTERPRISE" ? `<p><strong>4. SLA</strong><br/>Disponibilidad garantizada del 99,5% mensual. Soporte prioritario L–V 9:00–19:00 con respuesta en 4 h laborables.</p>` : ""}
+        <p><strong>${plan === "ENTERPRISE" ? "5" : "4"}. CANCELACIÓN</strong><br/>Cancelación en cualquier momento sin penalización. La baja surte efecto al final del período en curso.</p>
+        <p><strong>${plan === "ENTERPRISE" ? "6" : "5"}. PROTECCIÓN DE DATOS</strong><br/>YouWhole actúa como Encargado del Tratamiento (RGPD). Datos alojados en la UE. Política completa en youwhole.es/privacidad.</p>
+        <p><strong>${plan === "ENTERPRISE" ? "7" : "6"}. JURISDICCIÓN</strong><br/>Legislación española. Juzgados y Tribunales de Barcelona.</p>
+      </div>
+
+      <hr style="border:none;border-top:1px solid #e5e7eb;margin:28px 0;"/>
+      <p style="font-size:12px;color:#9ca3af;margin:0;">
+        Este documento confirma la aceptación del contrato de servicios de YouWhole.<br/>
+        Para gestionar tu suscripción accede a <a href="https://youwhole.es/dashboard" style="color:#0d9488;">youwhole.es/dashboard</a>.<br/>
+        Contacto: ventas@youwhole.es · YouWhole es una marca de Lucas y Leo Digital S.L.
+      </p>
+    </div>`;
+
+    await Promise.all([
+      this.send(clientEmail, subject, html),
+      this.send("lucasyleodigital@gmail.com", `[COPIA] ${subject}`, html),
+    ]);
+  }
+
   async sendPaymentReminder(
     to: string,
     clientName: string,

@@ -2,6 +2,7 @@ import { Injectable, BadRequestException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import Stripe from "stripe";
 import { PrismaService } from "../../database/prisma.service";
+import { EmailService } from "../email/email.service";
 
 // These must be replaced with real Stripe price IDs from the Stripe dashboard
 const PRICE_IDS: Record<string, string> = {
@@ -16,7 +17,8 @@ export class BillingService {
 
   constructor(
     private config: ConfigService,
-    private prisma: PrismaService
+    private prisma: PrismaService,
+    private email: EmailService
   ) {
     const stripeKey = this.config.get<string>("STRIPE_SECRET_KEY");
     if (stripeKey && stripeKey.startsWith("sk_")) {
@@ -108,12 +110,21 @@ export class BillingService {
         const session = event.data.object as Stripe.Checkout.Session;
         const { companyId, plan } = session.metadata ?? {};
         if (companyId && plan) {
-          await this.prisma.company.update({
+          const company = await this.prisma.company.update({
             where: { id: companyId },
             data: {
               plan: plan as any,
               stripeSubId: session.subscription as string,
             },
+          });
+          const priceByPlan: Record<string, number> = { STARTER: 29, PRO: 79, ENTERPRISE: 199 };
+          await this.email.sendContractEmail({
+            clientEmail: company.email,
+            companyName: company.name,
+            cif: company.cif,
+            plan,
+            price: priceByPlan[plan] ?? 0,
+            acceptedAt: new Date(),
           });
         }
         break;
