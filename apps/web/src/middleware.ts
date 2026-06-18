@@ -5,7 +5,10 @@ import { type NextRequest, NextResponse } from "next/server";
 const intlMiddleware = createMiddleware(routing);
 
 // Paths that don't require authentication (without locale prefix)
-const PUBLIC_PATHS = ["/", "/login", "/registro", "/recuperar-password", "/auth/callback"];
+const PUBLIC_PATHS = [
+  "/", "/login", "/registro", "/recuperar-password", "/auth/callback",
+  "/privacidad", "/aviso-legal", "/terminos", "/cookies",
+];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
