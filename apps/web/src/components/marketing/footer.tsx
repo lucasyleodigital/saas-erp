@@ -22,10 +22,10 @@ const FOOTER_LINKS = [
   {
     title: "Legal",
     links: [
-      { href: "/privacidad", label: "Privacidad" },
-      { href: "/terminos", label: "Términos de uso" },
+      { href: "/aviso-legal", label: "Aviso legal" },
+      { href: "/privacidad", label: "Política de privacidad" },
+      { href: "/terminos", label: "Términos y condiciones" },
       { href: "/cookies", label: "Política de cookies" },
-      { href: "/rgpd", label: "RGPD" },
     ],
   },
   {

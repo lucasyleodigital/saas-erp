@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { CookieBanner } from "@/components/layout/cookie-banner";
 import { Toaster } from "sonner";
 import "./globals.css";
 
@@ -76,6 +77,7 @@ export default function RootLayout({
         >
           <QueryProvider>
             {children}
+            <CookieBanner />
             <Toaster richColors position="top-right" />
           </QueryProvider>
         </ThemeProvider>
