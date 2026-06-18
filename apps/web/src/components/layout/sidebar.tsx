@@ -31,6 +31,7 @@ import {
   Banknote,
   ShoppingCart,
   PackageCheck,
+  X,
 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -38,7 +39,7 @@ import { useUnreadCount } from "@/hooks/use-notifications";
 
 const LOCALES = ["es", "en", "fr", "de", "pt", "it"];
 
-export function Sidebar() {
+export function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const { data: unreadCount } = useUnreadCount();
@@ -110,6 +111,15 @@ export function Sidebar() {
     >
       {/* Logo */}
       <div className="flex h-16 items-center justify-between px-4 border-b border-sidebar-border">
+        {/* Mobile close button */}
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="absolute right-3 top-4 md:hidden p-1 rounded-md text-sidebar-foreground/60 hover:text-sidebar-foreground"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        )}
         <AnimatePresence mode="wait">
           {!collapsed && (
             <motion.div

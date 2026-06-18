@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Bell, Search, Sun, Moon, X, FileText, Users, Package, UserCheck, ClipboardList, Truck } from "lucide-react";
+import { Bell, Search, Sun, Moon, X, FileText, Users, Package, UserCheck, ClipboardList, Truck, Menu } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
@@ -30,7 +30,7 @@ const TYPE_LABEL: Record<string, string> = {
   "delivery-note": "Albarán",
 };
 
-export function Header() {
+export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
   const { theme, setTheme } = useTheme();
   const user = useAuthStore((s) => s.user);
   const { data: unreadCount = 0 } = useUnreadCount();
@@ -84,9 +84,18 @@ export function Header() {
   const showDropdown = open && query.trim().length >= 2;
 
   return (
-    <header className="flex h-16 items-center justify-between border-b border-border px-6 bg-background/80 backdrop-blur-sm sticky top-0 z-10">
-      {/* Search */}
-      <div ref={wrapperRef} className="relative w-72">
+    <header className="flex h-16 items-center justify-between border-b border-border px-3 md:px-6 bg-background/80 backdrop-blur-sm sticky top-0 z-10">
+      <div className="flex items-center gap-2 flex-1 min-w-0">
+        {/* Hamburger — solo móvil */}
+        <button
+          onClick={onMenuClick}
+          className="md:hidden p-2 rounded-lg text-muted-foreground hover:bg-muted transition-colors shrink-0"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+
+        {/* Search */}
+        <div ref={wrapperRef} className="relative w-full max-w-xs hidden sm:block">
         <div
           className="flex items-center gap-2 rounded-lg border border-border bg-muted/40 px-3 py-2 cursor-text"
           onClick={() => { inputRef.current?.focus(); setOpen(true); }}
@@ -136,10 +145,11 @@ export function Header() {
             })}
           </div>
         )}
+        </div>
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 md:gap-2 shrink-0">
         <LanguageSwitcher />
         <Button
           variant="ghost"
