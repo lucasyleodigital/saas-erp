@@ -47,6 +47,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  // Auth callback must bypass intl middleware (no locale prefix needed)
+  if (pathWithoutLocale === "/auth/callback") {
+    return NextResponse.next();
+  }
+
   // Let next-intl handle locale routing and detection
   return intlMiddleware(request);
 }
