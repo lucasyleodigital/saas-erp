@@ -125,6 +125,7 @@ export function PricingCards({ currentPlan = "FREE", onUpgrade }: PricingCardsPr
   }
 
   return (
+    <>
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {PLANS.map((plan) => {
         const isCurrent = plan.key === currentPlan;
@@ -270,5 +271,6 @@ export function PricingCards({ currentPlan = "FREE", onUpgrade }: PricingCardsPr
         </div>
       </DialogContent>
     </Dialog>
+    </>
   );
 }
