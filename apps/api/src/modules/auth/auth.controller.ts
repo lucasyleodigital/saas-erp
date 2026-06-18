@@ -132,7 +132,7 @@ export class AuthController {
     res.cookie(REFRESH_COOKIE, tokens.refreshToken, COOKIE_OPTIONS);
     res.cookie("auth_session", "1", SESSION_COOKIE_OPTIONS);
     // Fragment (#) is never sent to the server or in Referer headers — safer than query param
-    res.redirect(`${process.env.CLIENT_URL}/dashboard#access_token=${tokens.accessToken}`);
+    res.redirect(`${process.env.CLIENT_URL}/auth/callback#access_token=${tokens.accessToken}`);
   }
 
   // ─── INVITATIONS ──────────────────────────────────────────────────
