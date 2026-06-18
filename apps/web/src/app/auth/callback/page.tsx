@@ -20,6 +20,8 @@ export default function AuthCallbackPage() {
     }
 
     localStorage.setItem("access_token", token);
+    // auth_session cookie is what the Next.js middleware reads to protect routes
+    document.cookie = `auth_session=${token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
     window.history.replaceState(null, "", window.location.pathname);
 
     api.get("/auth/me")
@@ -29,6 +31,7 @@ export default function AuthCallbackPage() {
       })
       .catch(() => {
         localStorage.removeItem("access_token");
+        document.cookie = "auth_session=; path=/; max-age=0; SameSite=Lax";
         router.replace("/es/login");
       });
   }, [setUser, router]);
