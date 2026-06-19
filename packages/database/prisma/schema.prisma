@@ -304,6 +304,7 @@ model RefreshToken {
 
   user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
   @@map("refresh_tokens")
 }
 
@@ -628,6 +629,7 @@ model InvoiceItem {
   invoice     Invoice   @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
   product     Product?  @relation(fields: [productId], references: [id])
 
+  @@index([invoiceId])
   @@map("invoice_items")
 }
 
@@ -667,6 +669,7 @@ model Quote {
   deliveryNotes DeliveryNote[]
 
   @@unique([companyId, number])
+  @@index([companyId, status])
   @@map("quotes")
 }
 
@@ -698,6 +701,7 @@ model Payment {
 
   invoice     Invoice       @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
 
+  @@index([invoiceId])
   @@map("payments")
 }
 
@@ -827,6 +831,7 @@ model JournalEntry {
   items       JournalItem[]
 
   @@index([companyId])
+  @@index([companyId, entryDate])
   @@map("journal_entries")
 }
 
@@ -841,6 +846,7 @@ model JournalItem {
   entry        JournalEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
   account      Account      @relation(fields: [accountId], references: [id])
 
+  @@index([entryId])
   @@map("journal_items")
 }
 
@@ -857,6 +863,7 @@ model BankAccount {
   company    Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
   transactions BankTransaction[]
 
+  @@index([companyId])
   @@map("bank_accounts")
 }
 
@@ -911,6 +918,8 @@ model StockMovement {
   warehouse   Warehouse         @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
   product     Product           @relation(fields: [productId], references: [id])
 
+  @@index([productId])
+  @@index([warehouseId, createdAt])
   @@map("stock_movements")
 }
 

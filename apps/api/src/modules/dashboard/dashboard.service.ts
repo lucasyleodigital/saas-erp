@@ -79,44 +79,34 @@ export class DashboardService {
   }
 
   async getRevenueChart(companyId: string) {
-    const months = 6;
-    const results = [];
+    const now = new Date();
+    const monthRanges = Array.from({ length: 6 }, (_, idx) => {
+      const offset = 5 - idx;
+      const start = new Date(now.getFullYear(), now.getMonth() - offset, 1);
+      const end = new Date(now.getFullYear(), now.getMonth() - offset + 1, 0);
+      return { start, end };
+    });
 
-    for (let i = months - 1; i >= 0; i--) {
-      const now = new Date();
-      const start = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const end = new Date(now.getFullYear(), now.getMonth() - i + 1, 0);
+    return Promise.all(
+      monthRanges.map(async ({ start, end }) => {
+        const [revenue, expenseAgg] = await Promise.all([
+          this.prisma.invoice.aggregate({
+            where: { companyId, status: "PAID", issueDate: { gte: start, lte: end } },
+            _sum: { total: true },
+          }),
+          this.prisma.journalItem.aggregate({
+            where: { entry: { companyId, entryDate: { gte: start, lte: end } } },
+            _sum: { debit: true },
+          }),
+        ]);
 
-      const [revenue, expenses] = await Promise.all([
-        this.prisma.invoice.aggregate({
-          where: {
-            companyId,
-            status: "PAID",
-            issueDate: { gte: start, lte: end },
-          },
-          _sum: { total: true },
-        }),
-        this.prisma.journalEntry.findMany({
-          where: {
-            companyId,
-            entryDate: { gte: start, lte: end },
-          },
-          include: { items: true },
-        }),
-      ]);
-
-      const expenseTotal = expenses
-        .flatMap((e) => e.items)
-        .reduce((sum, item) => sum + Number(item.debit), 0);
-
-      results.push({
-        month: start.toLocaleString("es-ES", { month: "short" }),
-        revenue: Number(revenue._sum.total ?? 0),
-        expenses: expenseTotal,
-      });
-    }
-
-    return results;
+        return {
+          month: start.toLocaleString("es-ES", { month: "short" }),
+          revenue: Number(revenue._sum.total ?? 0),
+          expenses: Number(expenseAgg._sum.debit ?? 0),
+        };
+      }),
+    );
   }
 
   async getRecentInvoices(companyId: string) {
