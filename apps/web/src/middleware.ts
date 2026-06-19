@@ -7,7 +7,7 @@ const intlMiddleware = createMiddleware(routing);
 // Paths that don't require authentication (without locale prefix)
 const PUBLIC_PATHS = [
   "/", "/login", "/registro", "/recuperar-password", "/auth/callback",
-  "/privacidad", "/aviso-legal", "/terminos", "/cookies",
+  "/privacidad", "/aviso-legal", "/terminos", "/cookies", "/ayuda",
 ];
 
 export function middleware(request: NextRequest) {
@@ -51,7 +51,7 @@ export function middleware(request: NextRequest) {
   }
 
   // These pages live at root (no locale prefix) — bypass intl middleware
-  const NO_LOCALE_PATHS = ["/auth/callback", "/privacidad", "/aviso-legal", "/terminos", "/cookies"];
+  const NO_LOCALE_PATHS = ["/auth/callback", "/privacidad", "/aviso-legal", "/terminos", "/cookies", "/ayuda"];
   if (NO_LOCALE_PATHS.includes(pathWithoutLocale) || NO_LOCALE_PATHS.includes(pathname)) {
     return NextResponse.next();
   }

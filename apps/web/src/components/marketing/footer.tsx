@@ -8,15 +8,13 @@ const FOOTER_LINKS = [
       { href: "#features", label: "Funcionalidades" },
       { href: "#pricing", label: "Precios" },
       { href: "#verifactu", label: "VeriFactu" },
-      { href: "/changelog", label: "Novedades" },
     ],
   },
   {
     title: "Empresa",
     links: [
-      { href: "/about", label: "Sobre nosotros" },
-      { href: "/blog", label: "Blog" },
       { href: "mailto:hola@youwhole.es", label: "Contacto" },
+      { href: "mailto:hola@youwhole.es", label: "Sobre nosotros" },
     ],
   },
   {
@@ -32,7 +30,6 @@ const FOOTER_LINKS = [
     title: "Soporte",
     links: [
       { href: "/ayuda", label: "Centro de ayuda" },
-      { href: "/status", label: "Estado del servicio" },
       { href: "mailto:soporte@youwhole.es", label: "Soporte técnico" },
     ],
   },
