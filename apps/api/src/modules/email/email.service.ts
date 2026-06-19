@@ -13,7 +13,7 @@ export class EmailService {
     if (apiKey) {
       this.resend = new Resend(apiKey);
     }
-    this.from = config.get("EMAIL_FROM", "YouWhole <noreply@youwhole.es>");
+    this.from = config.get("EMAIL_FROM", "YouWhole <noreply@youwhole.com>");
     this.clientUrl = config.get("CLIENT_URL", "http://localhost:3000");
   }
 
@@ -192,19 +192,19 @@ export class EmailService {
 
       <div style="font-size:13px;color:#374151;line-height:1.8;space-y:12px;">
         <p><strong>1. PARTES</strong><br/>Lucas y Leo Digital S.L. («YouWhole») y <strong>${companyName}</strong> (CIF: ${cif ?? "—"}) («Cliente»).</p>
-        <p><strong>2. OBJETO</strong><br/>Acceso a la plataforma SaaS YouWhole en modalidad ${plan}, incluyendo todos los módulos descritos en youwhole.es.</p>
+        <p><strong>2. OBJETO</strong><br/>Acceso a la plataforma SaaS YouWhole en modalidad ${plan}, incluyendo todos los módulos descritos en youwhole.com.</p>
         <p><strong>3. PRECIO Y FACTURACIÓN</strong><br/>${price}€/mes (IVA incluido), con cargo automático mensual a la tarjeta facilitada.</p>
         ${plan === "ENTERPRISE" ? `<p><strong>4. SLA</strong><br/>Disponibilidad garantizada del 99,5% mensual. Soporte prioritario L–V 9:00–19:00 con respuesta en 4 h laborables.</p>` : ""}
         <p><strong>${plan === "ENTERPRISE" ? "5" : "4"}. CANCELACIÓN</strong><br/>Cancelación en cualquier momento sin penalización. La baja surte efecto al final del período en curso.</p>
-        <p><strong>${plan === "ENTERPRISE" ? "6" : "5"}. PROTECCIÓN DE DATOS</strong><br/>YouWhole actúa como Encargado del Tratamiento (RGPD). Datos alojados en la UE. Política completa en youwhole.es/privacidad.</p>
+        <p><strong>${plan === "ENTERPRISE" ? "6" : "5"}. PROTECCIÓN DE DATOS</strong><br/>YouWhole actúa como Encargado del Tratamiento (RGPD). Datos alojados en la UE. Política completa en youwhole.com/privacidad.</p>
         <p><strong>${plan === "ENTERPRISE" ? "7" : "6"}. JURISDICCIÓN</strong><br/>Legislación española. Juzgados y Tribunales de Barcelona.</p>
       </div>
 
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:28px 0;"/>
       <p style="font-size:12px;color:#9ca3af;margin:0;">
         Este documento confirma la aceptación del contrato de servicios de YouWhole.<br/>
-        Para gestionar tu suscripción accede a <a href="https://youwhole.es/dashboard" style="color:#0d9488;">youwhole.es/dashboard</a>.<br/>
-        Contacto: ventas@youwhole.es · YouWhole es una marca de Lucas y Leo Digital S.L.
+        Para gestionar tu suscripción accede a <a href="https://youwhole.com/dashboard" style="color:#0d9488;">youwhole.com/dashboard</a>.<br/>
+        Contacto: ventas@youwhole.com · YouWhole es una marca de Lucas y Leo Digital S.L.
       </p>
     </div>`;
 

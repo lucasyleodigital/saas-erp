@@ -214,7 +214,7 @@ export function PricingCards({ currentPlan = "FREE", onUpgrade }: PricingCardsPr
           <p className="font-semibold text-foreground">CONTRATO DE PRESTACIÓN DE SERVICIOS — YOUWHOLE ENTERPRISE</p>
 
           <p><strong>1. PARTES</strong><br />
-          De una parte, <strong>Lucas y Leo Digital S.L.</strong> (en adelante, «YouWhole» o «Prestador»), titular de la plataforma YouWhole accesible en youwhole.es.<br />
+          De una parte, <strong>Lucas y Leo Digital S.L.</strong> (en adelante, «YouWhole» o «Prestador»), titular de la plataforma YouWhole accesible en youwhole.com.<br />
           De otra parte, la empresa suscriptora identificada durante el proceso de registro (en adelante, «Cliente»).</p>
 
           <p><strong>2. OBJETO</strong><br />
@@ -228,10 +228,10 @@ export function PricingCards({ currentPlan = "FREE", onUpgrade }: PricingCardsPr
           Soporte prioritario disponible en <strong>horario 9:00–19:00 L–V (hora peninsular española)</strong> con tiempo de respuesta garantizado de <strong>4 horas laborables</strong>.</p>
 
           <p><strong>5. DURACIÓN Y CANCELACIÓN</strong><br />
-          El contrato es de duración indefinida con renovación mensual automática. El Cliente puede cancelar en cualquier momento desde el panel de control o enviando un email a ventas@youwhole.es. La cancelación surte efecto al final del período mensual en curso. No hay permanencia ni penalización por cancelación.</p>
+          El contrato es de duración indefinida con renovación mensual automática. El Cliente puede cancelar en cualquier momento desde el panel de control o enviando un email a ventas@youwhole.com. La cancelación surte efecto al final del período mensual en curso. No hay permanencia ni penalización por cancelación.</p>
 
           <p><strong>6. PROTECCIÓN DE DATOS (RGPD)</strong><br />
-          YouWhole actúa como Encargado del Tratamiento de los datos que el Cliente introduce en la plataforma. El Cliente es el Responsable del Tratamiento. Los datos se almacenan en servidores dentro de la Unión Europea. YouWhole no cederá datos a terceros salvo obligación legal. Para más información, consulta nuestra Política de Privacidad en youwhole.es/privacidad.</p>
+          YouWhole actúa como Encargado del Tratamiento de los datos que el Cliente introduce en la plataforma. El Cliente es el Responsable del Tratamiento. Los datos se almacenan en servidores dentro de la Unión Europea. YouWhole no cederá datos a terceros salvo obligación legal. Para más información, consulta nuestra Política de Privacidad en youwhole.com/privacidad.</p>
 
           <p><strong>7. PROPIEDAD INTELECTUAL</strong><br />
           La plataforma YouWhole y todos sus componentes son propiedad exclusiva de Lucas y Leo Digital S.L. El Cliente recibe una licencia de uso no exclusiva e intransferible durante la vigencia del contrato. Los datos introducidos por el Cliente son de su exclusiva propiedad.</p>

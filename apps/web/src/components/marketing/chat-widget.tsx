@@ -30,11 +30,11 @@ const BOT_RESPONSES: Record<string, string> = {
   "¿Cómo funciona VeriFactu?":
     "VeriFactu registra cada factura automáticamente en la AEAT con firma SHA256. No tienes que hacer nada — YouWhole lo gestiona solo para que siempre estés al día con Hacienda. ✅",
   "Quiero hablar con una persona":
-    "¡Claro! Escríbenos a hola@youwhole.es o llámanos al +34 900 000 000 (L-V 9-18h). Nuestro equipo en español te atenderá encantado. 🙌",
+    "¡Claro! Escríbenos a hola@youwhole.com o llámanos al +34 900 000 000 (L-V 9-18h). Nuestro equipo en español te atenderá encantado. 🙌",
 };
 
 const DEFAULT_RESPONSE =
-  "Gracias por tu mensaje. Un agente de nuestro equipo te responderá en breve. También puedes escribirnos directamente a hola@youwhole.es ✉️";
+  "Gracias por tu mensaje. Un agente de nuestro equipo te responderá en breve. También puedes escribirnos directamente a hola@youwhole.com ✉️";
 
 export function ChatWidget() {
   const [open, setOpen] = useState(false);

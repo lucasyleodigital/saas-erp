@@ -29,8 +29,8 @@ export default function AvisoLegalPage() {
               <li><strong className="text-foreground">Denominación social:</strong> [NOMBRE_EMPRESA]</li>
               <li><strong className="text-foreground">CIF:</strong> [PENDIENTE — CIF]</li>
               <li><strong className="text-foreground">Domicilio social:</strong> [PENDIENTE — DIRECCIÓN FISCAL]</li>
-              <li><strong className="text-foreground">Email:</strong> legal@youwhole.es</li>
-              <li><strong className="text-foreground">Sitio web:</strong> youwhole.es</li>
+              <li><strong className="text-foreground">Email:</strong> legal@youwhole.com</li>
+              <li><strong className="text-foreground">Sitio web:</strong> youwhole.com</li>
               <li><strong className="text-foreground">Registro Mercantil:</strong> [PENDIENTE — datos de inscripción]</li>
             </ul>
           </section>
@@ -38,7 +38,7 @@ export default function AvisoLegalPage() {
           <section>
             <h2 className="text-base font-semibold text-foreground mb-3">2. Objeto y ámbito de aplicación</h2>
             <p>
-              El presente Aviso Legal regula el acceso y uso del sitio web <strong className="text-foreground">youwhole.es</strong> y la plataforma SaaS YouWhole
+              El presente Aviso Legal regula el acceso y uso del sitio web <strong className="text-foreground">youwhole.com</strong> y la plataforma SaaS YouWhole
               (en adelante, «el Sitio»), titularidad de [NOMBRE_EMPRESA].
               El acceso al Sitio implica la aceptación plena de este Aviso Legal.
             </p>

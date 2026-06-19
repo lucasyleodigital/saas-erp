@@ -26,7 +26,7 @@ export default function PrivacidadPage() {
               <strong className="text-foreground">[NOMBRE_EMPRESA]</strong> (en adelante, «YouWhole» o «Responsable»)<br />
               CIF: <strong className="text-foreground">[PENDIENTE — CIF]</strong><br />
               Domicilio fiscal: <strong className="text-foreground">[PENDIENTE — DIRECCIÓN FISCAL]</strong><br />
-              Email de contacto: <strong className="text-foreground">legal@youwhole.es</strong>
+              Email de contacto: <strong className="text-foreground">legal@youwhole.com</strong>
             </p>
           </section>
 
@@ -95,7 +95,7 @@ export default function PrivacidadPage() {
 
           <section>
             <h2 className="text-base font-semibold text-foreground mb-3">6. Tus derechos</h2>
-            <p>Conforme al RGPD y la LOPDGDD puedes ejercer los siguientes derechos dirigiéndote a <strong className="text-foreground">legal@youwhole.es</strong>:</p>
+            <p>Conforme al RGPD y la LOPDGDD puedes ejercer los siguientes derechos dirigiéndote a <strong className="text-foreground">legal@youwhole.com</strong>:</p>
             <ul className="list-disc ml-5 mt-2 space-y-1">
               <li><strong className="text-foreground">Acceso:</strong> obtener confirmación de si tratamos tus datos y, en su caso, una copia.</li>
               <li><strong className="text-foreground">Rectificación:</strong> corregir datos inexactos o incompletos.</li>

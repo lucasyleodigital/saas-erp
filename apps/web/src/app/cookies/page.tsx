@@ -122,7 +122,7 @@ export default function CookiesPage() {
             <h2 className="text-base font-semibold text-foreground mb-3">6. Contacto</h2>
             <p>
               Para cualquier consulta sobre nuestra política de cookies:{" "}
-              <strong className="text-foreground">legal@youwhole.es</strong>
+              <strong className="text-foreground">legal@youwhole.com</strong>
             </p>
             <p className="mt-2">
               Más información en nuestra{" "}

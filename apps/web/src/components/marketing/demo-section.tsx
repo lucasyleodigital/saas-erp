@@ -415,7 +415,7 @@ export function DemoSection() {
                 className="ml-4 flex-1 max-w-[260px] rounded-md px-3 py-1 text-xs text-center mx-auto"
                 style={{ background: "rgba(255,255,255,0.05)", color: "#475569" }}
               >
-                app.youwhole.es/{activeTab}
+                app.youwhole.com/{activeTab}
               </div>
             </div>
 

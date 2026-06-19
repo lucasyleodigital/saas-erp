@@ -13,8 +13,8 @@ const FOOTER_LINKS = [
   {
     title: "Empresa",
     links: [
-      { href: "mailto:hola@youwhole.es", label: "Contacto" },
-      { href: "mailto:hola@youwhole.es", label: "Sobre nosotros" },
+      { href: "mailto:hola@youwhole.com", label: "Contacto" },
+      { href: "mailto:hola@youwhole.com", label: "Sobre nosotros" },
     ],
   },
   {
@@ -30,7 +30,7 @@ const FOOTER_LINKS = [
     title: "Soporte",
     links: [
       { href: "/ayuda", label: "Centro de ayuda" },
-      { href: "mailto:soporte@youwhole.es", label: "Soporte técnico" },
+      { href: "mailto:soporte@youwhole.com", label: "Soporte técnico" },
     ],
   },
 ];

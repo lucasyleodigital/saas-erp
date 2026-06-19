@@ -375,7 +375,7 @@ export function Hero() {
               className="ml-4 flex-1 max-w-xs rounded-md px-3 py-1 text-xs text-center mx-auto"
               style={{ background: "rgba(255,255,255,0.06)", color: "#475569" }}
             >
-              app.youwhole.es/dashboard
+              app.youwhole.com/dashboard
             </div>
           </div>
 

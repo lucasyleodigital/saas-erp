@@ -103,7 +103,7 @@ export default function TerminosPage() {
                 <strong className="text-foreground">Derecho de desistimiento:</strong> los consumidores (personas físicas) disponen de 14 días naturales desde la contratación para desistir del contrato,
                 salvo que el servicio haya comenzado a prestarse con el consentimiento expreso del usuario antes de ese plazo.
               </li>
-              <li>Para ejercer el desistimiento, contacta con <strong className="text-foreground">legal@youwhole.es</strong>.</li>
+              <li>Para ejercer el desistimiento, contacta con <strong className="text-foreground">legal@youwhole.com</strong>.</li>
             </ul>
           </section>
 
@@ -166,7 +166,7 @@ export default function TerminosPage() {
           <section>
             <h2 className="text-base font-semibold text-foreground mb-3">13. Contacto</h2>
             <p>
-              Para cualquier consulta sobre estos Términos: <strong className="text-foreground">legal@youwhole.es</strong>
+              Para cualquier consulta sobre estos Términos: <strong className="text-foreground">legal@youwhole.com</strong>
             </p>
           </section>
 

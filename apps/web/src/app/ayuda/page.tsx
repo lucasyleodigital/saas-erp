@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Centro de Ayuda — YouWhole" };
 const FAQS = [
   {
     q: "¿Cómo empiezo a usar YouWhole?",
-    a: "Crea tu cuenta gratuita en youwhole.es, configura tu empresa con tu CIF y logo, y empieza a emitir facturas. El asistente de bienvenida te guía en los primeros pasos.",
+    a: "Crea tu cuenta gratuita en youwhole.com, configura tu empresa con tu CIF y logo, y empieza a emitir facturas. El asistente de bienvenida te guía en los primeros pasos.",
   },
   {
     q: "¿Puedo importar mis datos desde otro programa?",
@@ -73,13 +73,13 @@ export default function AyudaPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a
-              href="mailto:soporte@youwhole.es"
+              href="mailto:soporte@youwhole.com"
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
             >
               Enviar un email
             </a>
             <a
-              href="mailto:hola@youwhole.es"
+              href="mailto:hola@youwhole.com"
               className="inline-flex items-center justify-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium hover:bg-muted/50 transition-colors"
             >
               Consulta comercial
@@ -87,12 +87,12 @@ export default function AyudaPage() {
           </div>
           <p className="mt-4 text-xs text-muted-foreground">
             Soporte técnico:{" "}
-            <a href="mailto:soporte@youwhole.es" className="hover:text-foreground">
-              soporte@youwhole.es
+            <a href="mailto:soporte@youwhole.com" className="hover:text-foreground">
+              soporte@youwhole.com
             </a>{" "}
             · Comercial:{" "}
-            <a href="mailto:hola@youwhole.es" className="hover:text-foreground">
-              hola@youwhole.es
+            <a href="mailto:hola@youwhole.com" className="hover:text-foreground">
+              hola@youwhole.com
             </a>
           </p>
         </section>

@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
 });
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.es";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
