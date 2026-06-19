@@ -78,6 +78,18 @@ export function MarketingFooter() {
           </span>
           <div className="flex items-center gap-4">
             <span>Hecho con ❤️ en España 🇪🇸</span>
+            <span className="hidden sm:inline text-border">·</span>
+            <span className="hidden sm:inline">
+              Diseñado y desarrollado por{" "}
+              <a
+                href="https://lucasyleodigital.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-foreground transition-colors"
+              >
+                Lucas y Leo Digital
+              </a>
+            </span>
           </div>
         </div>
       </div>
