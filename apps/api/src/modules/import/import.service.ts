@@ -14,13 +14,13 @@ export interface PreviewResult {
 
 // ── Alias tables ─────────────────────────────────────────────────────────────
 const CLIENT_FIELDS: FieldDef[] = [
-  { key: "name",       label: "Nombre",        required: true,  aliases: ["Nombre","nombre","name","nombre empresa","nombre_empresa","razon social","razon_social","razonsocial","denominacion","empresa","company","client","cliente","customer","customer name","client name","company name","full name","nombre completo"] },
+  { key: "name",       label: "Nombre",        required: true,  aliases: ["Nombre","nombre","name","nom","nombre empresa","nombre_empresa","razon social","razon_social","razonsocial","denominacion","empresa","company","client","cliente","customer","customer name","client name","company name","full name","nombre completo"] },
   { key: "email",      label: "Email",          required: false, aliases: ["Email","email","mail","e-mail","correo","correo electronico","correo_electronico","email address"] },
   { key: "phone",      label: "Teléfono",       required: false, aliases: ["Teléfono","Telefono","telefono","phone","tel","movil","móvil","mobile","tlf","telf","telefono1","phone1"] },
   { key: "cifNif",     label: "CIF/NIF",        required: false, aliases: ["CIF/NIF","CIF","NIF","DNI","cif","nif","dni","vat","vat number","tax id","tax_id","id fiscal","id_fiscal","rut","rfc"] },
-  { key: "address",    label: "Dirección",      required: false, aliases: ["Dirección","Direccion","direccion","address","calle","domicilio","via","street","direccion fiscal","domicilio social"] },
+  { key: "address",    label: "Dirección",      required: false, aliases: ["Dirección","Direccion","direccion","address","dir","calle","domicilio","via","street","direccion fiscal","domicilio social"] },
   { key: "city",       label: "Ciudad",         required: false, aliases: ["Ciudad","ciudad","city","poblacion","población","municipio","localidad"] },
-  { key: "province",   label: "Provincia",      required: false, aliases: ["Provincia","provincia","province","region","state","comunidad"] },
+  { key: "province",   label: "Provincia",      required: false, aliases: ["Provincia","provincia","province","prov","region","state","comunidad"] },
   { key: "postalCode", label: "Código postal",  required: false, aliases: ["Código postal","Codigo postal","codigo postal","codigopostal","postal","postalCode","zip","cp","zipcode"] },
   { key: "country",    label: "País",           required: false, aliases: ["País","Pais","pais","country","pais iso","iso"] },
   { key: "website",    label: "Web",            required: false, aliases: ["Web","web","website","url","URL","pagina web","página web","sitio web"] },
@@ -28,24 +28,24 @@ const CLIENT_FIELDS: FieldDef[] = [
 ];
 
 const PRODUCT_FIELDS: FieldDef[] = [
-  { key: "name",        label: "Nombre",       required: true,  aliases: ["Nombre","nombre","name","nombre producto","producto","product","servicio","service","articulo","artículo","titulo","title"] },
+  { key: "name",        label: "Nombre",       required: true,  aliases: ["Nombre","nombre","name","nom","nombre producto","producto","product","servicio","service","articulo","artículo","titulo","title"] },
   { key: "price",       label: "Precio",       required: true,  aliases: ["Precio","precio","price","pvp","PVP","importe","amount","valor","sale price","precio venta"] },
   { key: "sku",         label: "SKU",          required: false, aliases: ["SKU","sku","codigo","código","referencia","ref","codigo producto","product code","barcode"] },
-  { key: "description", label: "Descripción",  required: false, aliases: ["Descripción","Descripcion","descripcion","description","descripcion larga","detalle","detail","info"] },
+  { key: "description", label: "Descripción",  required: false, aliases: ["Descripción","Descripcion","descripcion","description","desc","descripcion larga","detalle","detail","info"] },
   { key: "cost",        label: "Coste",        required: false, aliases: ["Coste","coste","cost","coste unitario","precio coste","costo","purchase price"] },
-  { key: "type",        label: "Tipo",         required: false, aliases: ["Tipo","tipo","type","tipo producto","product type","categoria","categoría"] },
+  { key: "type",        label: "Tipo",         required: false, aliases: ["Tipo","tipo","type","tipo producto","product type","cat","categoria","categoría"] },
   { key: "trackStock",  label: "Control stock",required: false, aliases: ["Control stock","control_stock","controlstock","stock","track stock","inventario"] },
 ];
 
 const INVOICE_FIELDS: FieldDef[] = [
-  { key: "number",      label: "Número",           required: true,  aliases: ["Número","Numero","numero","number","num factura","num_factura","factura","invoice number","invoice","folio","ref","referencia","id factura","doc number"] },
-  { key: "clientName",  label: "Cliente",          required: true,  aliases: ["Cliente","cliente","client","nombre cliente","customer","razon social","empresa","company","bill to","receptor","destinatario"] },
+  { key: "number",      label: "Número",           required: true,  aliases: ["Número","Numero","numero","number","num","num factura","num_factura","factura","invoice number","invoice","folio","ref","referencia","id factura","doc number"] },
+  { key: "clientName",  label: "Cliente",          required: true,  aliases: ["Cliente","cliente","client","cliNom","clinom","nombre cliente","customer","razon social","empresa","company","bill to","receptor","destinatario"] },
   { key: "total",       label: "Total",            required: true,  aliases: ["Total","total","importe total","importe_total","amount","total amount","grand total","total factura","bruto","gross"] },
   { key: "issueDate",   label: "Fecha emisión",    required: false, aliases: ["Fecha emisión","Fecha emision","fecha emision","fecha_emision","fecha","date","issue date","invoice date","fecha factura","fecha expedicion","emision","created at"] },
-  { key: "dueDate",     label: "Fecha vencimiento",required: false, aliases: ["Fecha vencimiento","Fecha vencim","fecha vencimiento","fecha_vencimiento","dueDate","due date","vencimiento","expiry date","payment due"] },
+  { key: "dueDate",     label: "Fecha vencimiento",required: false, aliases: ["Fecha vencimiento","Fecha vencim","fecha vencimiento","fecha_vencimiento","dueDate","venc","due date","vencimiento","expiry date","payment due"] },
   { key: "subtotal",    label: "Base imponible",   required: false, aliases: ["Base","base","subtotal","Subtotal","base imponible","base_imponible","neto","net","net amount"] },
-  { key: "status",      label: "Estado",           required: false, aliases: ["Estado","estado","status","estado factura","payment status","situacion"] },
-  { key: "description", label: "Descripción",      required: false, aliases: ["Descripción","Descripcion","descripcion","description","concepto","detalle","linea","línea"] },
+  { key: "status",      label: "Estado",           required: false, aliases: ["Estado","estado","status","est","estado factura","payment status","situacion"] },
+  { key: "description", label: "Descripción",      required: false, aliases: ["Descripción","Descripcion","descripcion","description","desc","concepto","detalle","linea","línea"] },
   { key: "notes",       label: "Notas",            required: false, aliases: ["Notas","notas","notes","nota","observaciones","comentarios"] },
 ];
 
@@ -106,14 +106,34 @@ function parseDate(raw: string | Date | undefined): Date | undefined {
 export class ImportService {
   constructor(private prisma: PrismaService) {}
 
-  parseFile(buffer: Buffer): any[] {
+  parseFile(buffer: Buffer, entity?: string): any[] {
     const raw = buffer.toString("utf8").trimStart();
     if (raw.startsWith("[") || raw.startsWith("{")) {
       try {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed)) return parsed;
-        for (const key of ["clients","products","invoices","data","items","records","rows","clientes","productos","facturas"]) {
+
+        const ENTITY_KEYS: Record<string, string[]> = {
+          clients:  ["clientes", "clients"],
+          products: ["productos", "products"],
+          invoices: ["facturas", "invoices"],
+        };
+        const primaryKeys = entity ? (ENTITY_KEYS[entity] ?? []) : [];
+        const searchKeys = [...primaryKeys, "data", "items", "records", "rows",
+          "clientes", "clients", "productos", "products", "facturas", "invoices"];
+
+        // Top-level search
+        for (const key of searchKeys) {
           if (Array.isArray((parsed as any)[key])) return (parsed as any)[key];
+        }
+        // One level deeper (e.g. { datos: { clientes: [...] } })
+        for (const wrapperKey of Object.keys(parsed)) {
+          const wrapper = (parsed as any)[wrapperKey];
+          if (wrapper && typeof wrapper === "object" && !Array.isArray(wrapper)) {
+            for (const key of searchKeys) {
+              if (Array.isArray(wrapper[key])) return wrapper[key];
+            }
+          }
         }
         return [parsed];
       } catch { throw new BadRequestException("El JSON no es válido."); }
@@ -131,7 +151,7 @@ export class ImportService {
     const fields = ENTITY_FIELDS[entity];
     if (!fields) throw new BadRequestException("Entidad no válida");
 
-    const rows = this.parseFile(buffer);
+    const rows = this.parseFile(buffer, entity);
     if (!rows.length) return { columns: [], sample: [], suggestions: {}, fields };
 
     const columns = Object.keys(rows[0]);
@@ -150,7 +170,7 @@ export class ImportService {
 
   // ── Import clients ────────────────────────────────────────────────────────
   async importClients(companyId: string, buffer: Buffer, mapping: Record<string, string> = {}): Promise<ImportResult> {
-    const rows = this.parseFile(buffer);
+    const rows = this.parseFile(buffer, "clients");
     if (!rows.length) return { total: 0, inserted: 0, skipped: 0, errors: [] };
 
     let inserted = 0, skipped = 0;
@@ -193,7 +213,7 @@ export class ImportService {
 
   // ── Import products ───────────────────────────────────────────────────────
   async importProducts(companyId: string, buffer: Buffer, mapping: Record<string, string> = {}): Promise<ImportResult> {
-    const rows = this.parseFile(buffer);
+    const rows = this.parseFile(buffer, "products");
     if (!rows.length) return { total: 0, inserted: 0, skipped: 0, errors: [] };
 
     let inserted = 0, skipped = 0;
@@ -235,7 +255,7 @@ export class ImportService {
 
   // ── Import invoices ───────────────────────────────────────────────────────
   async importInvoices(companyId: string, buffer: Buffer, mapping: Record<string, string> = {}): Promise<ImportResult> {
-    const rows = this.parseFile(buffer);
+    const rows = this.parseFile(buffer, "invoices");
     if (!rows.length) return { total: 0, inserted: 0, skipped: 0, errors: [] };
 
     let inserted = 0, skipped = 0;
@@ -243,7 +263,7 @@ export class ImportService {
 
     const STATUS_MAP: Record<string, string> = {
       PAGADA:"PAID", PAID:"PAID", COBRADA:"PAID",
-      ENVIADA:"SENT", SENT:"SENT", EMITIDA:"SENT",
+      ENVIADA:"SENT", SENT:"SENT", EMITIDA:"SENT", PENDIENTE:"SENT",
       BORRADOR:"DRAFT", DRAFT:"DRAFT",
       VENCIDA:"OVERDUE", OVERDUE:"OVERDUE",
       PARCIAL:"PARTIAL", PARTIAL:"PARTIAL",
