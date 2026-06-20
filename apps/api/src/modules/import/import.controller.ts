@@ -23,6 +23,8 @@ const ALLOWED_MIME = [
   "text/csv",
   "application/csv",
   "text/plain",
+  "application/json",
+  "text/json",
 ];
 
 const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
@@ -61,10 +63,10 @@ export class ImportController {
   @UseInterceptors(FileInterceptor("file", {
     limits: { fileSize: MAX_SIZE },
     fileFilter: (_, file, cb) => {
-      if (ALLOWED_MIME.includes(file.mimetype) || file.originalname.match(/\.(xlsx|csv|xls)$/i)) {
+      if (ALLOWED_MIME.includes(file.mimetype) || file.originalname.match(/\.(xlsx|csv|xls|json)$/i)) {
         cb(null, true);
       } else {
-        cb(new BadRequestException("Solo se aceptan archivos .xlsx o .csv"), false);
+        cb(new BadRequestException("Solo se aceptan archivos .xlsx, .csv o .json"), false);
       }
     },
   }))
@@ -81,10 +83,10 @@ export class ImportController {
   @UseInterceptors(FileInterceptor("file", {
     limits: { fileSize: MAX_SIZE },
     fileFilter: (_, file, cb) => {
-      if (ALLOWED_MIME.includes(file.mimetype) || file.originalname.match(/\.(xlsx|csv|xls)$/i)) {
+      if (ALLOWED_MIME.includes(file.mimetype) || file.originalname.match(/\.(xlsx|csv|xls|json)$/i)) {
         cb(null, true);
       } else {
-        cb(new BadRequestException("Solo se aceptan archivos .xlsx o .csv"), false);
+        cb(new BadRequestException("Solo se aceptan archivos .xlsx, .csv o .json"), false);
       }
     },
   }))
@@ -101,10 +103,10 @@ export class ImportController {
   @UseInterceptors(FileInterceptor("file", {
     limits: { fileSize: MAX_SIZE },
     fileFilter: (_, file, cb) => {
-      if (ALLOWED_MIME.includes(file.mimetype) || file.originalname.match(/\.(xlsx|csv|xls)$/i)) {
+      if (ALLOWED_MIME.includes(file.mimetype) || file.originalname.match(/\.(xlsx|csv|xls|json)$/i)) {
         cb(null, true);
       } else {
-        cb(new BadRequestException("Solo se aceptan archivos .xlsx o .csv"), false);
+        cb(new BadRequestException("Solo se aceptan archivos .xlsx, .csv o .json"), false);
       }
     },
   }))

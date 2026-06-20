@@ -6,17 +6,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import {
-  Shield,
-  CheckCircle2,
-  Clock,
-  AlertCircle,
-  ExternalLink,
-  FileText,
-  Copy,
+  Shield, ShieldCheck, ShieldAlert,
+  CheckCircle2, Clock, AlertCircle,
+  ExternalLink, FileText, Copy, Settings,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import Link from "next/link";
+import { useCertificateInfo } from "@/hooks/use-verifactu";
 
 const _STATUS_MAP = {
   GENERATED: { label: "Generado",  variant: "secondary",    icon: Clock },
@@ -34,9 +31,12 @@ function getStatusConfig(status: string) {
 
 export function VerifactuView() {
   const { data, isLoading } = useVerifactuRecords();
+  const { data: certInfo } = useCertificateInfo();
 
   const records = data?.records ?? [];
   const stats = data?.stats;
+  const certOk = certInfo && !certInfo.isExpired;
+  const certExpiring = certInfo && !certInfo.isExpired && certInfo.daysLeft !== null && certInfo.daysLeft <= 30;
 
   return (
     <div className="space-y-6">
@@ -51,6 +51,12 @@ export function VerifactuView() {
             Registro de facturas conforme a la normativa AEAT 2025
           </p>
         </div>
+        <Button variant="outline" size="sm" asChild className="gap-2">
+          <Link href="/verifactu/certificado">
+            <Settings className="h-4 w-4" />
+            Certificado digital
+          </Link>
+        </Button>
       </div>
 
       {/* Stats */}
@@ -80,6 +86,78 @@ export function VerifactuView() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Certificate status banner */}
+      {!certInfo ? (
+        <Card className="border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/20">
+          <CardContent className="p-4 flex items-center gap-3 justify-between">
+            <div className="flex items-start gap-3">
+              <ShieldAlert className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
+              <div className="text-sm">
+                <p className="font-medium text-amber-700 dark:text-amber-300">Certificado digital no configurado</p>
+                <p className="text-amber-600 dark:text-amber-400 mt-0.5">
+                  Para que las facturas se firmen y envíen a AEAT necesitas subir tu certificado digital. Tarda menos de 5 minutos.
+                </p>
+              </div>
+            </div>
+            <Button size="sm" asChild className="shrink-0 gap-2">
+              <Link href="/verifactu/certificado">
+                Configurar ahora
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      ) : certInfo.isExpired ? (
+        <Card className="border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/20">
+          <CardContent className="p-4 flex items-center gap-3 justify-between">
+            <div className="flex items-start gap-3">
+              <ShieldAlert className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
+              <div className="text-sm">
+                <p className="font-medium text-red-700 dark:text-red-300">Certificado caducado</p>
+                <p className="text-red-600 dark:text-red-400 mt-0.5">
+                  Tu certificado caducó el {new Date(certInfo.expiresAt!).toLocaleDateString("es-ES")}. Renuévalo para seguir enviando a AEAT.
+                </p>
+              </div>
+            </div>
+            <Button size="sm" variant="destructive" asChild className="shrink-0">
+              <Link href="/verifactu/certificado">Renovar</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      ) : certExpiring ? (
+        <Card className="border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/20">
+          <CardContent className="p-4 flex items-center gap-3 justify-between">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
+              <div className="text-sm">
+                <p className="font-medium text-amber-700 dark:text-amber-300">
+                  Certificado caduca en {certInfo.daysLeft} días
+                </p>
+                <p className="text-amber-600 dark:text-amber-400 mt-0.5">
+                  Renuévalo antes del {new Date(certInfo.expiresAt!).toLocaleDateString("es-ES")} para no interrumpir el servicio.
+                </p>
+              </div>
+            </div>
+            <Button size="sm" variant="outline" asChild className="shrink-0">
+              <Link href="/verifactu/certificado">Ver certificado</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/20">
+          <CardContent className="p-4 flex items-center gap-3">
+            <ShieldCheck className="h-5 w-5 text-emerald-500 shrink-0" />
+            <div className="text-sm">
+              <p className="font-medium text-emerald-700 dark:text-emerald-300">
+                Certificado activo — {certInfo.subject}
+              </p>
+              <p className="text-emerald-600 dark:text-emerald-400 mt-0.5">
+                Válido hasta {new Date(certInfo.expiresAt!).toLocaleDateString("es-ES")} · Las facturas se firman automáticamente
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Info banner */}
       <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800">

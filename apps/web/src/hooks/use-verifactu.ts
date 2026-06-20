@@ -56,6 +56,58 @@ export function useVerifactuStatus(invoiceId: string | undefined) {
   });
 }
 
+export interface CertificateInfo {
+  subject: string;
+  nif: string;
+  expiresAt: string | null;
+  uploadedAt: string | null;
+  isExpired: boolean;
+  daysLeft: number | null;
+}
+
+export function useCertificateInfo() {
+  return useQuery<CertificateInfo | null>({
+    queryKey: ["verifactu", "certificate"],
+    queryFn: () => api.get("/verifactu/certificate").then((r) => r.data),
+    staleTime: 60_000,
+  });
+}
+
+export function useSaveCertificate() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: { file: File; password: string }) => {
+      const form = new FormData();
+      form.append("cert", payload.file);
+      form.append("password", payload.password);
+      return api.post("/verifactu/certificate", form, {
+        headers: { "Content-Type": "multipart/form-data" },
+      }).then((r) => r.data as CertificateInfo);
+    },
+    onSuccess: () => {
+      toast.success("Certificado guardado correctamente");
+      qc.invalidateQueries({ queryKey: ["verifactu", "certificate"] });
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message ?? "Error al guardar el certificado");
+    },
+  });
+}
+
+export function useDeleteCertificate() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => api.delete("/verifactu/certificate").then((r) => r.data),
+    onSuccess: () => {
+      toast.success("Certificado eliminado");
+      qc.invalidateQueries({ queryKey: ["verifactu", "certificate"] });
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message ?? "Error al eliminar el certificado");
+    },
+  });
+}
+
 export function useGenerateVerifactu() {
   const qc = useQueryClient();
   return useMutation({

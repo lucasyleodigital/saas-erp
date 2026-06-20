@@ -1,7 +1,9 @@
 import { Injectable, BadRequestException } from "@nestjs/common";
-import { createHash } from "crypto";
+import { createHash, createCipheriv, createDecipheriv, randomBytes } from "crypto";
 import { create } from "xmlbuilder2";
 import { PrismaService } from "../../database/prisma.service";
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const forge = require("node-forge") as typeof import("node-forge");
 
 @Injectable()
 export class VerifactuService {
@@ -146,6 +148,113 @@ export class VerifactuService {
       where: { companyId, invoiceId },
       include: { events: { orderBy: { createdAt: "desc" } } },
     });
+  }
+
+  // ── Certificate management ───────────────────────────────────────────────
+
+  private encKey(): Buffer {
+    const raw = process.env.CERT_ENCRYPTION_KEY ?? "youwhole-dev-key-change-in-production!!";
+    return createHash("sha256").update(raw).digest(); // always 32 bytes
+  }
+
+  private encrypt(plain: string): string {
+    const iv = randomBytes(16);
+    const cipher = createCipheriv("aes-256-cbc", this.encKey(), iv);
+    const enc = Buffer.concat([cipher.update(plain, "utf8"), cipher.final()]);
+    return iv.toString("hex") + ":" + enc.toString("base64");
+  }
+
+  private decrypt(blob: string): string {
+    const [ivHex, b64] = blob.split(":");
+    const decipher = createDecipheriv("aes-256-cbc", this.encKey(), Buffer.from(ivHex!, "hex"));
+    return Buffer.concat([decipher.update(Buffer.from(b64!, "base64")), decipher.final()]).toString("utf8");
+  }
+
+  async saveCertificate(companyId: string, certBuffer: Buffer, password: string) {
+    let certSubject = "";
+    let certNif = "";
+    let certExpiresAt: Date;
+
+    try {
+      const p12Der = certBuffer.toString("binary");
+      const p12Asn1 = forge.asn1.fromDer(p12Der);
+      const p12 = forge.pkcs12.pkcs12FromAsn1(p12Asn1, password);
+
+      const bags = p12.getBags({ bagType: forge.pki.oids.certBag });
+      const certBag = bags[forge.pki.oids.certBag]?.[0];
+      if (!certBag?.cert) throw new Error("Sin certificado en el archivo");
+
+      const cert = certBag.cert;
+      const cn: string = (cert.subject as any).getField("CN")?.value ?? "";
+      const org: string = (cert.subject as any).getField("O")?.value ?? "";
+      certSubject = org || cn;
+      certExpiresAt = cert.validity.notAfter;
+
+      // FNMT certs embed NIF/CIF after "NIF:" or "CIF:" in CN, or in SERIALNUMBER
+      const nifInCn = cn.match(/(?:NIF|CIF|DNI)[:\s]+([A-Z0-9]{9})/i);
+      if (nifInCn) {
+        certNif = nifInCn[1]!;
+      } else {
+        const serial: string = (cert.subject as any).getField("SERIALNUMBER")?.value ?? "";
+        if (serial) certNif = serial;
+      }
+    } catch {
+      throw new BadRequestException(
+        "No se pudo leer el certificado. Comprueba que el archivo .p12/.pfx y la contraseña son correctos."
+      );
+    }
+
+    const company = await this.prisma.company.findUniqueOrThrow({ where: { id: companyId } });
+    const current = (company.settings ?? {}) as Record<string, unknown>;
+
+    await this.prisma.company.update({
+      where: { id: companyId },
+      data: {
+        settings: {
+          ...current,
+          verifactuCert: {
+            data: this.encrypt(certBuffer.toString("base64")),
+            password: this.encrypt(password),
+            subject: certSubject,
+            nif: certNif,
+            expiresAt: certExpiresAt!.toISOString(),
+            uploadedAt: new Date().toISOString(),
+          },
+        },
+      },
+    });
+
+    return {
+      subject: certSubject,
+      nif: certNif,
+      expiresAt: certExpiresAt!.toISOString(),
+    };
+  }
+
+  async getCertificateInfo(companyId: string) {
+    const company = await this.prisma.company.findUnique({ where: { id: companyId } });
+    const s = (company?.settings ?? {}) as any;
+    const vc = s?.verifactuCert;
+    if (!vc?.data) return null;
+
+    const expiresAt = vc.expiresAt ? new Date(vc.expiresAt) : null;
+    return {
+      subject: vc.subject ?? "",
+      nif: vc.nif ?? "",
+      expiresAt: vc.expiresAt ?? null,
+      uploadedAt: vc.uploadedAt ?? null,
+      isExpired: expiresAt ? expiresAt < new Date() : false,
+      daysLeft: expiresAt
+        ? Math.ceil((expiresAt.getTime() - Date.now()) / 86_400_000)
+        : null,
+    };
+  }
+
+  async deleteCertificate(companyId: string) {
+    const company = await this.prisma.company.findUniqueOrThrow({ where: { id: companyId } });
+    const { verifactuCert: _removed, ...rest } = (company.settings ?? {}) as any;
+    await this.prisma.company.update({ where: { id: companyId }, data: { settings: rest } });
+    return { deleted: true };
   }
 
   async getAll(companyId: string) {

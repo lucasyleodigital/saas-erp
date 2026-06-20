@@ -20,13 +20,32 @@ export class ImportService {
   constructor(private prisma: PrismaService) {}
 
   private parseFile(buffer: Buffer): any[] {
+    const raw = buffer.toString("utf8").trimStart();
+
+    // Detect JSON (array or object)
+    if (raw.startsWith("[") || raw.startsWith("{")) {
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) return parsed;
+        // Support keyed objects: { clients: [...] }, { data: [...] }, etc.
+        for (const key of ["clients", "products", "invoices", "data", "items", "records", "rows"]) {
+          if (Array.isArray((parsed as any)[key])) return (parsed as any)[key];
+        }
+        // Single object → wrap
+        return [parsed];
+      } catch {
+        throw new BadRequestException("El JSON no es válido. Comprueba el formato del archivo.");
+      }
+    }
+
+    // Excel / CSV fallback
     try {
       const wb = XLSX.read(buffer, { type: "buffer", cellDates: true });
       const ws = wb.Sheets[wb.SheetNames[0]!];
       if (!ws) throw new Error("Hoja vacía");
       return XLSX.utils.sheet_to_json(ws, { defval: "" }) as any[];
     } catch {
-      throw new BadRequestException("No se pudo leer el archivo. Usa formato .xlsx o .csv");
+      throw new BadRequestException("No se pudo leer el archivo. Usa formato .xlsx, .csv o .json");
     }
   }
 

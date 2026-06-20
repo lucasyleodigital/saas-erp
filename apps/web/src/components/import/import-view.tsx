@@ -87,7 +87,7 @@ function DropZone({
       <input
         ref={inputRef}
         type="file"
-        accept=".xlsx,.xls,.csv"
+        accept=".xlsx,.xls,.csv,.json"
         className="hidden"
         onChange={(e) => {
           const file = e.target.files?.[0];
@@ -99,7 +99,7 @@ function DropZone({
         {isPending ? "Procesando archivo..." : "Arrastra tu archivo aquí o haz clic para seleccionar"}
       </p>
       <p className="text-xs text-muted-foreground mt-1">
-        Formatos admitidos: .xlsx, .xls, .csv — máximo 5 MB
+        Formatos admitidos: .xlsx, .xls, .csv, .json — máximo 5 MB
       </p>
     </div>
   );
@@ -212,7 +212,7 @@ export function ImportView() {
           Importar datos
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Migra tus datos desde otro software usando plantillas Excel
+          Migra tus datos desde otro software. Acepta Excel, CSV y JSON.
         </p>
       </div>
 
@@ -305,6 +305,8 @@ export function ImportView() {
               <li>Las fechas deben ir en formato AAAA-MM-DD (ej: 2024-01-15)</li>
               <li>Los precios usan punto como separador decimal (ej: 1210.00)</li>
               <li>Máximo 5 MB por archivo — divide en lotes si tienes muchos registros</li>
+              <li>Los archivos JSON deben ser un array <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">{"[{...}, {...}]"}</code> o un objeto con clave <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">data</code></li>
+              <li>En JSON los campos pueden llamarse igual que en la plantilla o en inglés (name, email, phone…)</li>
             </ul>
           </CardContent>
         </Card>
