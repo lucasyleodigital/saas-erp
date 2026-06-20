@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
 
@@ -32,6 +32,7 @@ export function usePreviewImport(entity: ImportEntity) {
 }
 
 export function useImportFile(entity: ImportEntity) {
+  const qc = useQueryClient();
   return useMutation<ImportResult, any, { file: File; mapping: Record<string, string> }>({
     mutationFn: ({ file, mapping }) => {
       const form = new FormData();
@@ -42,6 +43,8 @@ export function useImportFile(entity: ImportEntity) {
         .then((r) => r.data);
     },
     onSuccess: (result) => {
+      qc.invalidateQueries({ queryKey: [entity] });
+      qc.invalidateQueries({ queryKey: ["dashboard"] });
       if (result.errors.length === 0) {
         toast.success(`${result.inserted} registros importados correctamente`);
       } else {
