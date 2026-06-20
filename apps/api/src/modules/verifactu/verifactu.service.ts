@@ -7,7 +7,7 @@ import { PrismaService } from "../../database/prisma.service";
 export class VerifactuService {
   constructor(private prisma: PrismaService) {}
 
-  async generateForInvoice(companyId: string, invoiceId: string) {
+  async generateForInvoice(companyId: string, invoiceId: string, silent = false) {
     const invoice = await this.prisma.invoice.findFirst({
       where: { id: invoiceId, companyId },
       include: {
@@ -19,9 +19,20 @@ export class VerifactuService {
       },
     });
 
-    if (!invoice) throw new BadRequestException("Factura no encontrada");
-    if ((invoice as any).verifactu) throw new BadRequestException("VeriFactu ya generado para esta factura");
+    if (!invoice) {
+      if (silent) return null;
+      throw new BadRequestException("Factura no encontrada");
+    }
+    if (!invoice.company?.cif) {
+      if (silent) return null;
+      throw new BadRequestException("La empresa no tiene CIF/NIF configurado. Ve a Empresa → Configuración para añadirlo.");
+    }
+    if ((invoice as any).verifactu) {
+      if (silent) return (invoice as any).verifactu;
+      throw new BadRequestException("VeriFactu ya generado para esta factura");
+    }
     if (!["SENT", "PAID"].includes(invoice.status)) {
+      if (silent) return null;
       throw new BadRequestException("Solo se puede generar VeriFactu para facturas enviadas o pagadas");
     }
 
@@ -51,7 +62,16 @@ export class VerifactuService {
   }
 
   private buildXml(invoice: any, company: any): string {
-    const root = create({ version: "1.0", encoding: "UTF-8" })
+    const taxLines: { rate: number; base: number; amount: number }[] =
+      (invoice.taxes as any[])?.length > 0
+        ? (invoice.taxes as any[]).map((t) => ({
+            rate: Number(t.rate),
+            base: Number(t.base),
+            amount: Number(t.amount),
+          }))
+        : [{ rate: 21, base: Number(invoice.subtotal), amount: Number(invoice.taxAmount) }];
+
+    const desglose = create({ version: "1.0", encoding: "UTF-8" })
       .ele("soapenv:Envelope", {
         "xmlns:soapenv": "http://schemas.xmlsoap.org/soap/envelope/",
         "xmlns:sum": "https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd",
@@ -85,22 +105,23 @@ export class VerifactuService {
                   .ele("sum:NIF").txt(invoice.client.cifNif ?? "").up()
                 .up()
               .up()
-              .ele("sum:Desglose")
-                .ele("sum:DetalleIVA")
-                  .ele("sum:TipoImpositivo").txt("21.00").up()
-                  .ele("sum:BaseImponibleOImporteNoSujeto").txt(String(Number(invoice.subtotal).toFixed(2))).up()
-                  .ele("sum:CuotaRepercutida").txt(String(Number(invoice.taxAmount).toFixed(2))).up()
-                .up()
-              .up()
-              .ele("sum:CuotaTotal").txt(String(Number(invoice.taxAmount).toFixed(2))).up()
-              .ele("sum:ImporteTotal").txt(String(Number(invoice.total).toFixed(2))).up()
-            .up()
-          .up()
-        .up()
-      .up()
-    .up();
+              .ele("sum:Desglose");
 
-    return root.end({ prettyPrint: false });
+    for (const tax of taxLines) {
+      desglose
+        .ele("sum:DetalleIVA")
+          .ele("sum:TipoImpositivo").txt(tax.rate.toFixed(2)).up()
+          .ele("sum:BaseImponibleOImporteNoSujeto").txt(tax.base.toFixed(2)).up()
+          .ele("sum:CuotaRepercutida").txt(tax.amount.toFixed(2)).up()
+        .up();
+    }
+
+    desglose
+      .up() // back to RegistroAlta
+      .ele("sum:CuotaTotal").txt(Number(invoice.taxAmount).toFixed(2)).up()
+      .ele("sum:ImporteTotal").txt(Number(invoice.total).toFixed(2)).up();
+
+    return desglose.root().end({ prettyPrint: false });
   }
 
   private buildHashInput(invoice: any, previousHash?: string | null): string {

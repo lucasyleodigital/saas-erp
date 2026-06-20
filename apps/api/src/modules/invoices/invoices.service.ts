@@ -8,6 +8,7 @@ import { PlansService } from "../plans/plans.service";
 import { AutomationsService } from "../automations/automations.service";
 import { EmailService } from "../email/email.service";
 import { CreateInvoiceDto } from "./dto/create-invoice.dto";
+import { VerifactuService } from "../verifactu/verifactu.service";
 import type { PaginationParams } from "@saas/types";
 
 @Injectable()
@@ -17,6 +18,7 @@ export class InvoicesService {
     private plans: PlansService,
     private automations: AutomationsService,
     private email: EmailService,
+    private verifactu: VerifactuService,
   ) {}
 
   async findAll(companyId: string, params: PaginationParams & { status?: string }) {
@@ -152,10 +154,14 @@ export class InvoicesService {
 
   async updateStatus(companyId: string, id: string, status: string) {
     await this.findOne(companyId, id);
-    return this.prisma.invoice.update({
+    const updated = await this.prisma.invoice.update({
       where: { id },
       data: { status: status as any },
     });
+    if (status === "SENT" || status === "PAID") {
+      this.verifactu.generateForInvoice(companyId, id, true).catch(() => {});
+    }
+    return updated;
   }
 
   async registerPayment(companyId: string, id: string, amount: number, method: string) {
@@ -181,6 +187,7 @@ export class InvoicesService {
         total:         String(invoice.total),
         currency:      invoice.currency,
       }).catch(() => {});
+      this.verifactu.generateForInvoice(companyId, id, true).catch(() => {});
     }
 
     return payment;
@@ -201,6 +208,7 @@ export class InvoicesService {
     if (invoice.status === "DRAFT") {
       await this.prisma.invoice.update({ where: { id }, data: { status: "SENT" } });
     }
+    this.verifactu.generateForInvoice(companyId, id, true).catch(() => {});
     return { sent: true, to: clientEmail };
   }
 }
