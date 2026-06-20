@@ -15,6 +15,7 @@ import { api } from "@/lib/api";
 import { useState } from "react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
 
 interface Plan {
   key: string;
@@ -103,6 +104,12 @@ export function PricingCards({ currentPlan = "FREE", onUpgrade }: PricingCardsPr
 
   async function goToStripe(planKey: string) {
     setLoading(planKey);
+    const plan = PLANS.find((p) => p.key === planKey);
+    trackEvent("begin_checkout", {
+      plan: planKey,
+      value: plan?.price ?? 0,
+      currency: "EUR",
+    });
     try {
       const { data } = await api.post("/billing/checkout", {
         plan: planKey,

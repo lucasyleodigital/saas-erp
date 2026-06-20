@@ -13,6 +13,7 @@ import { useAuthStore } from "@/store/auth.store";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 const LOCALES = ["es", "en", "fr", "de", "pt", "it"];
 
@@ -47,6 +48,7 @@ export function RegisterForm() {
       await registerAction(data);
       const { data: me } = await api.get("/auth/me");
       setUser(me);
+      trackEvent("sign_up", { method: "email" });
       toast.success("¡Cuenta creada! Bienvenido al YouWhole");
       router.push(`/${locale}/dashboard`);
     } catch (err: any) {

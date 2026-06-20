@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Mail, Wrench, Phone, Clock, MapPin, CheckCircle } from "lucide-react";
 import { MarketingFooter } from "@/components/marketing/footer";
+import { trackEvent } from "@/lib/analytics";
 
 const CONTACT_INFO = [
   {
@@ -43,7 +44,12 @@ export function ContactoClient() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-      setStatus(res.ok ? "ok" : "error");
+      if (res.ok) {
+        trackEvent("generate_lead", { form_name: "contacto" });
+        setStatus("ok");
+      } else {
+        setStatus("error");
+      }
     } catch {
       setStatus("error");
     }
