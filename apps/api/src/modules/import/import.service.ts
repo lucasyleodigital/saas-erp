@@ -15,6 +15,31 @@ export interface ImportResult {
   errors: ImportError[];
 }
 
+// Normalize a key for fuzzy matching: lowercase, strip accents, collapse separators
+function n(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .replace(/[\s/_\-\.]+/g, "");
+}
+
+// Pick a value from a row by trying candidate field names (accent+case+separator insensitive)
+function pick(row: Record<string, any>, ...candidates: string[]): string {
+  // Build a normalized lookup once per row
+  const lookup: Record<string, any> = {};
+  for (const key of Object.keys(row)) {
+    lookup[n(key)] = row[key];
+  }
+  for (const c of candidates) {
+    const v = lookup[n(c)];
+    if (v !== undefined && v !== null && String(v).trim() !== "") {
+      return String(v).trim();
+    }
+  }
+  return "";
+}
+
 @Injectable()
 export class ImportService {
   constructor(private prisma: PrismaService) {}
@@ -61,13 +86,24 @@ export class ImportService {
       const row = rows[i]!;
       const rowNum = i + 2;
 
-      const name = String(row["Nombre"] ?? row["name"] ?? "").trim();
+      const name = pick(row,
+        "Nombre", "nombre", "name", "Name",
+        "nombre empresa", "nombre_empresa", "nombreempresa",
+        "razon social", "razon_social", "razonsocial", "denominacion social", "denominacion",
+        "empresa", "company", "client", "cliente", "customer",
+        "customer name", "client name", "company name", "full name", "fullname",
+        "nombre completo", "nombre_completo",
+      );
       if (!name) {
-        errors.push({ row: rowNum, field: "Nombre", message: "Campo obligatorio" });
+        errors.push({ row: rowNum, field: "Nombre", message: "Campo obligatorio (prueba: Nombre, nombre_empresa, razon_social, company...)" });
         continue;
       }
 
-      const email = String(row["Email"] ?? row["email"] ?? "").trim().toLowerCase() || undefined;
+      const email = pick(row,
+        "Email", "email", "mail", "e-mail", "e_mail",
+        "correo", "correo electronico", "correo_electronico", "correo-e",
+        "email address", "emailaddress",
+      ).toLowerCase() || undefined;
       if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         errors.push({ row: rowNum, field: "Email", message: "Formato de email inválido" });
         continue;
@@ -84,15 +120,46 @@ export class ImportService {
             companyId,
             name,
             email,
-            phone: String(row["Teléfono"] ?? row["telefono"] ?? row["phone"] ?? "").trim() || undefined,
-            cifNif: String(row["CIF/NIF"] ?? row["cif"] ?? row["nif"] ?? "").trim() || undefined,
-            address: String(row["Dirección"] ?? row["direccion"] ?? row["address"] ?? "").trim() || undefined,
-            city: String(row["Ciudad"] ?? row["city"] ?? "").trim() || undefined,
-            province: String(row["Provincia"] ?? row["province"] ?? "").trim() || undefined,
-            postalCode: String(row["Código postal"] ?? row["postal"] ?? "").trim() || undefined,
-            country: String(row["País"] ?? row["country"] ?? "").trim() || "ES",
-            website: String(row["Web"] ?? row["website"] ?? "").trim() || undefined,
-            notes: String(row["Notas"] ?? row["notes"] ?? "").trim() || undefined,
+            phone: pick(row,
+              "Teléfono", "Telefono", "telefono", "phone", "Phone", "tel", "Tel",
+              "movil", "móvil", "mobile", "tlf", "telf",
+              "telefono 1", "telefono1", "phone 1", "phone1",
+            ) || undefined,
+            cifNif: pick(row,
+              "CIF/NIF", "CIF", "NIF", "DNI", "cif", "nif", "dni",
+              "vat", "vat number", "vat_number", "tax id", "tax_id",
+              "id fiscal", "id_fiscal", "identificacion fiscal",
+              "rut", "rfc", "numero identificacion",
+            ) || undefined,
+            address: pick(row,
+              "Dirección", "Direccion", "direccion", "address", "Address",
+              "calle", "domicilio", "via", "street", "street address",
+              "direccion fiscal", "domicilio social",
+            ) || undefined,
+            city: pick(row,
+              "Ciudad", "ciudad", "city", "City",
+              "poblacion", "población", "municipio", "municipality", "localidad",
+            ) || undefined,
+            province: pick(row,
+              "Provincia", "provincia", "province", "Province",
+              "region", "state", "comunidad", "autonomous community",
+            ) || undefined,
+            postalCode: pick(row,
+              "Código postal", "Codigo postal", "codigo postal", "codigopostal",
+              "postal", "postalCode", "zip", "cp", "zipcode", "zip code",
+            ) || undefined,
+            country: pick(row,
+              "País", "Pais", "pais", "country", "Country",
+              "pais iso", "country code", "iso",
+            ) || "ES",
+            website: pick(row,
+              "Web", "web", "website", "Website", "url", "URL",
+              "web site", "pagina web", "página web", "sitio web",
+            ) || undefined,
+            notes: pick(row,
+              "Notas", "notas", "notes", "Notes", "nota",
+              "observaciones", "observacion", "comments", "comentarios", "remarks",
+            ) || undefined,
           },
         });
         inserted++;
@@ -116,20 +183,32 @@ export class ImportService {
       const row = rows[i]!;
       const rowNum = i + 2;
 
-      const name = String(row["Nombre"] ?? row["name"] ?? "").trim();
+      const name = pick(row,
+        "Nombre", "nombre", "name", "Name",
+        "nombre producto", "nombre_producto", "product name", "productname",
+        "producto", "product", "servicio", "service", "articulo", "artículo",
+        "descripcion corta", "titulo", "título", "title",
+      );
       if (!name) {
-        errors.push({ row: rowNum, field: "Nombre", message: "Campo obligatorio" });
+        errors.push({ row: rowNum, field: "Nombre", message: "Campo obligatorio (prueba: Nombre, product, servicio, titulo...)" });
         continue;
       }
 
-      const priceRaw = row["Precio"] ?? row["price"] ?? "";
-      const price = parseFloat(String(priceRaw).replace(",", "."));
+      const priceRaw = pick(row,
+        "Precio", "precio", "price", "Price",
+        "precio venta", "precio_venta", "pvp", "PVP",
+        "importe", "amount", "valor", "sale price",
+      );
+      const price = parseFloat(priceRaw.replace(",", "."));
       if (isNaN(price) || price < 0) {
         errors.push({ row: rowNum, field: "Precio", message: "Precio inválido o negativo" });
         continue;
       }
 
-      const typeRaw = String(row["Tipo"] ?? row["type"] ?? "SERVICE").trim().toUpperCase();
+      const typeRaw = pick(row,
+        "Tipo", "tipo", "type", "Type",
+        "tipo producto", "product type", "categoria", "categoría",
+      ).toUpperCase();
       const type = ["SERVICE", "DIGITAL", "PHYSICAL"].includes(typeRaw) ? typeRaw : "SERVICE";
 
       try {
@@ -138,8 +217,16 @@ export class ImportService {
         });
         if (existing) { skipped++; continue; }
 
-        const costRaw = row["Coste"] ?? row["cost"] ?? "";
-        const cost = parseFloat(String(costRaw).replace(",", "."));
+        const costRaw = pick(row,
+          "Coste", "coste", "cost", "Cost",
+          "coste unitario", "precio coste", "costo", "purchase price",
+        );
+        const cost = parseFloat(costRaw.replace(",", "."));
+
+        const stockRaw = pick(row,
+          "Control stock", "control_stock", "controlstock",
+          "stock", "track stock", "gestionar stock", "inventario",
+        ).toUpperCase();
 
         await this.prisma.product.create({
           data: {
@@ -147,12 +234,16 @@ export class ImportService {
             name,
             price,
             cost: isNaN(cost) ? undefined : cost,
-            sku: String(row["SKU"] ?? row["sku"] ?? "").trim() || undefined,
-            description: String(row["Descripción"] ?? row["descripcion"] ?? row["description"] ?? "").trim() || undefined,
+            sku: pick(row,
+              "SKU", "sku", "Sku", "codigo", "código",
+              "referencia", "ref", "codigo producto", "product code", "barcode",
+            ) || undefined,
+            description: pick(row,
+              "Descripción", "Descripcion", "descripcion", "description", "Description",
+              "descripcion larga", "detalle", "detail", "info", "observaciones",
+            ) || undefined,
             type: type as any,
-            trackStock: ["SI", "SÍ", "YES", "TRUE", "1"].includes(
-              String(row["Control stock"] ?? "NO").trim().toUpperCase()
-            ),
+            trackStock: ["SI", "SÍ", "YES", "TRUE", "1", "ACTIVO", "ACTIVE"].includes(stockRaw),
           },
         });
         inserted++;
@@ -176,20 +267,34 @@ export class ImportService {
       const row = rows[i]!;
       const rowNum = i + 2;
 
-      const number = String(row["Número"] ?? row["numero"] ?? row["number"] ?? "").trim();
+      const number = pick(row,
+        "Número", "Numero", "numero", "number", "Number",
+        "num factura", "num_factura", "factura", "invoice number", "invoice_number",
+        "invoice", "numero factura", "ref", "referencia", "serie", "id factura",
+        "invoice id", "doc number", "folio",
+      );
       if (!number) {
-        errors.push({ row: rowNum, field: "Número", message: "Campo obligatorio" });
+        errors.push({ row: rowNum, field: "Número", message: "Campo obligatorio (prueba: Número, invoice_number, factura, folio...)" });
         continue;
       }
 
-      const clientName = String(row["Cliente"] ?? row["client"] ?? "").trim();
+      const clientName = pick(row,
+        "Cliente", "cliente", "client", "Client",
+        "nombre cliente", "nombre_cliente", "customer", "customer name",
+        "razon social", "empresa", "company", "bill to", "billto",
+        "receptor", "destinatario",
+      );
       if (!clientName) {
-        errors.push({ row: rowNum, field: "Cliente", message: "Nombre de cliente obligatorio" });
+        errors.push({ row: rowNum, field: "Cliente", message: "Nombre de cliente obligatorio (prueba: Cliente, customer, empresa...)" });
         continue;
       }
 
-      const totalRaw = row["Total"] ?? row["total"] ?? "";
-      const total = parseFloat(String(totalRaw).replace(",", "."));
+      const totalRaw = pick(row,
+        "Total", "total", "importe total", "importe_total",
+        "amount", "total amount", "grand total", "total factura",
+        "total iva incluido", "bruto", "gross",
+      );
+      const total = parseFloat(totalRaw.replace(",", "."));
       if (isNaN(total) || total < 0) {
         errors.push({ row: rowNum, field: "Total", message: "Total inválido" });
         continue;
@@ -210,30 +315,73 @@ export class ImportService {
           });
         }
 
-        const issueDateRaw = row["Fecha emisión"] ?? row["fecha"] ?? row["issueDate"];
+        // Parse issue date — accept Date object, ISO string, DD/MM/YYYY, DD-MM-YYYY
+        const issueDateRaw = pick(row,
+          "Fecha emisión", "Fecha emision", "fecha emision", "fecha_emision",
+          "fecha", "date", "issue date", "invoice date", "fecha factura",
+          "fecha expedicion", "fecha_expedicion", "emision", "created at",
+        );
         let issueDate: Date;
-        if (issueDateRaw instanceof Date) {
-          issueDate = issueDateRaw;
+        const issueDateObj = (rows[i] as any)["Fecha emisión"] instanceof Date
+          ? (rows[i] as any)["Fecha emisión"]
+          : null;
+        if (issueDateObj) {
+          issueDate = issueDateObj;
+        } else if (issueDateRaw) {
+          // Try DD/MM/YYYY or DD-MM-YYYY
+          const dmY = issueDateRaw.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+          if (dmY) {
+            issueDate = new Date(`${dmY[3]}-${dmY[2]!.padStart(2, "0")}-${dmY[1]!.padStart(2, "0")}`);
+          } else {
+            const parsed = Date.parse(issueDateRaw);
+            issueDate = isNaN(parsed) ? new Date() : new Date(parsed);
+          }
         } else {
-          const parsed = Date.parse(String(issueDateRaw ?? ""));
-          issueDate = isNaN(parsed) ? new Date() : new Date(parsed);
+          issueDate = new Date();
         }
 
-        const dueDateRaw = row["Fecha vencimiento"] ?? row["dueDate"];
+        const dueDateRaw = pick(row,
+          "Fecha vencimiento", "Fecha vencim", "fecha vencimiento", "fecha_vencimiento",
+          "dueDate", "due date", "vencimiento", "expiry date", "payment due",
+        );
         let dueDate: Date | undefined;
-        if (dueDateRaw instanceof Date) {
-          dueDate = dueDateRaw;
-        } else if (dueDateRaw) {
-          const parsed = Date.parse(String(dueDateRaw));
-          dueDate = isNaN(parsed) ? undefined : new Date(parsed);
+        if (dueDateRaw) {
+          const dmY = dueDateRaw.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+          if (dmY) {
+            dueDate = new Date(`${dmY[3]}-${dmY[2]!.padStart(2, "0")}-${dmY[1]!.padStart(2, "0")}`);
+          } else {
+            const parsed = Date.parse(dueDateRaw);
+            dueDate = isNaN(parsed) ? undefined : new Date(parsed);
+          }
         }
 
-        const subtotal = total / 1.21;
+        // Use real base+tax if present, otherwise estimate 21% IVA
+        const subtotalRaw = parseFloat(pick(row,
+          "Base", "base", "subtotal", "Subtotal",
+          "base imponible", "base_imponible", "neto", "net", "net amount",
+        ).replace(",", "."));
+        const subtotal = isNaN(subtotalRaw) ? total / 1.21 : subtotalRaw;
         const taxAmount = total - subtotal;
 
-        const statusRaw = String(row["Estado"] ?? row["status"] ?? "PAID").trim().toUpperCase();
-        const validStatuses = ["DRAFT", "SENT", "PAID", "PARTIAL", "OVERDUE", "CANCELLED"];
-        const status = validStatuses.includes(statusRaw) ? statusRaw : "PAID";
+        const statusRaw = pick(row,
+          "Estado", "estado", "status", "Status",
+          "estado factura", "payment status", "situacion",
+        ).toUpperCase();
+        const STATUS_MAP: Record<string, string> = {
+          PAGADA: "PAID", PAID: "PAID", COBRADA: "PAID",
+          ENVIADA: "SENT", SENT: "SENT", EMITIDA: "SENT",
+          BORRADOR: "DRAFT", DRAFT: "DRAFT",
+          VENCIDA: "OVERDUE", OVERDUE: "OVERDUE",
+          PARCIAL: "PARTIAL", PARTIAL: "PARTIAL",
+          CANCELADA: "CANCELLED", CANCELLED: "CANCELLED", ANULADA: "CANCELLED",
+        };
+        const status = STATUS_MAP[statusRaw] ?? "PAID";
+
+        const description = pick(row,
+          "Descripción", "Descripcion", "descripcion", "description", "Description",
+          "concepto", "concepto factura", "detalle", "linea", "línea", "detail",
+          "item", "items", "producto", "servicio",
+        ) || "Importación histórica";
 
         await this.prisma.invoice.create({
           data: {
@@ -247,10 +395,13 @@ export class ImportService {
             taxAmount,
             total,
             paidAmount: status === "PAID" ? total : 0,
-            notes: String(row["Notas"] ?? row["notes"] ?? "").trim() || undefined,
+            notes: pick(row,
+              "Notas", "notas", "notes", "Notes",
+              "observaciones", "comentarios", "remarks",
+            ) || undefined,
             items: {
               create: [{
-                description: String(row["Descripción"] ?? row["descripcion"] ?? "Importación histórica").trim() || "Importación histórica",
+                description,
                 quantity: 1,
                 unitPrice: subtotal,
                 discount: 0,
