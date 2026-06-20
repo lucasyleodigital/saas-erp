@@ -1,0 +1,72 @@
+# YouWhole
+
+> ERP todo en uno para pymes españolas: facturación electrónica con VeriFactu, CRM, contabilidad PGC, nóminas e inventario en una sola plataforma.
+
+YouWhole es una plataforma de gestión empresarial (ERP) diseñada específicamente para autónomos y pequeñas y medianas empresas (pymes) en España. Ha sido desarrollada por Lucas y Leo Digital, una agencia de transformación digital con sede en Barcelona.
+
+## ¿Qué es YouWhole?
+
+YouWhole integra en una sola aplicación web todas las herramientas que una pyme española necesita para gestionar su negocio:
+
+- **Facturación electrónica** con VeriFactu certificado AEAT (cumplimiento obligatorio desde 2025)
+- **CRM** con pipeline Kanban para gestión de clientes y oportunidades comerciales
+- **Contabilidad** según el Plan General Contable español (PGC): libro diario, cuentas, balances
+- **Nóminas y RRHH**: gestión de empleados, contratos y nóminas mensuales
+- **Inventario y almacén**: control de stock, movimientos, transferencias entre almacenes
+- **Presupuestos y albaranes**
+- **Automatizaciones**: facturas recurrentes y recordatorios de cobro
+- **Dashboard en tiempo real** con métricas de facturación y rentabilidad
+
+## VeriFactu
+
+VeriFactu es el sistema de verificación de facturas de la Agencia Tributaria española (AEAT). Desde 2025, toda empresa española que use software de facturación está obligada por ley a usar sistemas certificados VeriFactu. YouWhole implementa VeriFactu de forma nativa: genera el hash SHA-256 en cadena, mantiene un registro inmutable y envía automáticamente los datos a la AEAT. No requiere configuración adicional.
+
+## Precios
+
+- **Plan Gratuito**: 0 €/mes. Hasta 5 clientes, 10 facturas/mes, 1 usuario.
+- **Plan Starter**: 29 €/mes (IVA incluido). Usuarios ilimitados (hasta 3), clientes y facturas ilimitadas, VeriFactu incluido.
+- **Plan Pro**: funcionalidades avanzadas para equipos más grandes (hasta 10 usuarios).
+- **Plan Enterprise**: usuarios ilimitados, soporte prioritario, demo personalizada.
+
+Sin permanencia. Sin costes de instalación. Cancela cuando quieras.
+
+## Empresa
+
+YouWhole es un proyecto de **Lucas y Leo Digital** (https://lucasyleodigital.com), agencia de transformación digital con base en Barcelona, España.
+
+- **Web**: https://youwhole.com
+- **Email comercial**: hola@youwhole.com
+- **Soporte técnico**: soporte@youwhole.com
+- **Teléfono / WhatsApp**: +34 624 029 617
+- **Horario de soporte**: lunes a viernes, 9:00–18:00 (hora española)
+
+## Preguntas frecuentes
+
+**¿VeriFactu es obligatorio?**
+Sí. Desde 2025 es obligatorio para todas las empresas que usen software de facturación en España. YouWhole lo incluye en todos los planes.
+
+**¿Hay período de prueba?**
+Sí, 14 días gratis sin tarjeta de crédito. Al terminar, si no introduces pago, pasas automáticamente al plan Gratuito.
+
+**¿Puedo importar datos desde Excel u otro programa?**
+Sí. YouWhole permite importar clientes, productos y facturas desde archivos Excel o CSV.
+
+**¿Es seguro?**
+Sí. Datos cifrados en servidores europeos, cumplimiento RGPD, backups diarios y autenticación de doble factor (2FA).
+
+**¿Funciona para cualquier sector?**
+Sí. Diseñado para autónomos y pymes de cualquier sector en España: servicios, comercio, construcción, tecnología, hostelería, etc.
+
+**¿Hay soporte en español?**
+Sí, siempre en español. Soporte por chat y email de lunes a viernes.
+
+## Páginas principales
+
+- Inicio: https://youwhole.com
+- Sobre nosotros: https://youwhole.com/sobre-nosotros
+- Contacto: https://youwhole.com/contacto
+- Centro de ayuda: https://youwhole.com/ayuda
+- Registro: https://youwhole.com/registro
+- Política de privacidad: https://youwhole.com/privacidad
+- Términos y condiciones: https://youwhole.com/terminos
+- Aviso legal: https://youwhole.com/aviso-legal

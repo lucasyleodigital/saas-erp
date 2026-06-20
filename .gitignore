@@ -21,6 +21,7 @@ build
 
 # Secrets / passwords (never commit)
 *.txt
+!apps/web/public/llms.txt
 password*
 *password*
 *secret*

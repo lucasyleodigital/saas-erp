@@ -6,7 +6,17 @@ import { MarketingFooter } from "@/components/marketing/footer";
 
 export const metadata: Metadata = {
   title: "Sobre nosotros — YouWhole",
-  description: "Conoce la historia detrás de YouWhole, el ERP todo en uno creado por y para pymes españolas.",
+  description:
+    "YouWhole es un proyecto de Lucas y Leo Digital, agencia de transformación digital en Barcelona. Creamos el ERP todo en uno que las pymes españolas merecen: simple, completo y honesto.",
+  robots: { index: true, follow: true },
+  alternates: { canonical: "https://youwhole.com/sobre-nosotros" },
+  openGraph: {
+    title: "Sobre nosotros — YouWhole",
+    description:
+      "Conoce la historia detrás de YouWhole. Creado por una pyme, para todas las pymes españolas. ERP con VeriFactu, CRM y contabilidad desde 29 €/mes.",
+    url: "https://youwhole.com/sobre-nosotros",
+    type: "website",
+  },
 };
 
 const VALUES = [

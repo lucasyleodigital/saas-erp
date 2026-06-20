@@ -3,7 +3,19 @@ import Link from "next/link";
 import Image from "next/image";
 import { MarketingFooter } from "@/components/marketing/footer";
 
-export const metadata: Metadata = { title: "Centro de Ayuda — YouWhole" };
+export const metadata: Metadata = {
+  title: "Centro de Ayuda — YouWhole",
+  description:
+    "Preguntas frecuentes y guías de uso de YouWhole: VeriFactu, facturación, importación de datos, suscripciones y más. Soporte en español.",
+  robots: { index: true, follow: true },
+  alternates: { canonical: "https://youwhole.com/ayuda" },
+  openGraph: {
+    title: "Centro de Ayuda — YouWhole",
+    description: "Resuelve tus dudas sobre YouWhole: VeriFactu, facturación, planes y soporte técnico en español.",
+    url: "https://youwhole.com/ayuda",
+    type: "website",
+  },
+};
 
 const FAQS = [
   {

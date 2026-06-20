@@ -21,14 +21,31 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.com";
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
   title: {
-    default: "YouWhole — Todo en uno para tu empresa",
+    default: "YouWhole — ERP todo en uno para pymes españolas",
     template: "%s | YouWhole",
   },
   description:
-    "YouWhole: la plataforma de gestión empresarial todo en uno para pymes españolas. CRM, facturación, VeriFactu, nóminas, almacén y más.",
-  keywords: ["YouWhole", "ERP", "CRM", "facturación", "VeriFactu", "nóminas", "contabilidad", "pymes", "gestión empresarial"],
-  authors: [{ name: "Lucas y Leo Digital" }],
-  robots: { index: false, follow: true },
+    "YouWhole: ERP todo en uno para pymes españolas. Facturación electrónica con VeriFactu, CRM, contabilidad PGC, nóminas e inventario. Desde 29 €/mes, sin permanencia.",
+  keywords: [
+    "ERP pymes España",
+    "software gestión empresarial",
+    "facturación electrónica España",
+    "VeriFactu certificado",
+    "CRM pymes",
+    "contabilidad PGC",
+    "nóminas online",
+    "software facturación España",
+    "ERP todo en uno",
+    "YouWhole",
+    "gestión empresarial pymes",
+    "software autónomos España",
+  ],
+  authors: [{ name: "Lucas y Leo Digital", url: "https://lucasyleodigital.com" }],
+  creator: "Lucas y Leo Digital",
+  publisher: "YouWhole",
+  applicationName: "YouWhole",
+  category: "Business Software",
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   icons: {
     icon: "/logo-icon.png",
     apple: "/logo-icon.png",
@@ -38,16 +55,23 @@ export const metadata: Metadata = {
     locale: "es_ES",
     url: APP_URL,
     siteName: "YouWhole",
-    title: "YouWhole — Todo en uno para tu empresa",
+    title: "YouWhole — ERP todo en uno para pymes españolas",
     description:
-      "La plataforma de gestión empresarial todo en uno para pymes españolas. CRM, facturación, VeriFactu, nóminas, almacén y más.",
-    images: [{ url: "/logo.png", width: 800, height: 200, alt: "YouWhole" }],
+      "Facturación electrónica con VeriFactu, CRM, contabilidad PGC, nóminas e inventario en una sola plataforma. Diseñado para el mercado español. Desde 29 €/mes.",
+    images: [
+      {
+        url: "/logo.png",
+        width: 800,
+        height: 200,
+        alt: "YouWhole — ERP todo en uno para pymes españolas",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "YouWhole — Todo en uno para tu empresa",
+    title: "YouWhole — ERP todo en uno para pymes españolas",
     description:
-      "La plataforma de gestión empresarial todo en uno para pymes españolas.",
+      "Facturación con VeriFactu, CRM, contabilidad y nóminas en una sola app. Diseñado para pymes españolas.",
     images: ["/logo.png"],
   },
 };

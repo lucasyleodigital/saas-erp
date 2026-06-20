@@ -7,7 +7,18 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/login", "/registro"],
+        allow: [
+          "/",
+          "/sobre-nosotros",
+          "/contacto",
+          "/ayuda",
+          "/registro",
+          "/login",
+          "/privacidad",
+          "/aviso-legal",
+          "/terminos",
+          "/cookies",
+        ],
         disallow: [
           "/dashboard/",
           "/facturas/",
@@ -32,9 +43,27 @@ export default function robots(): MetadataRoute.Robots {
           "/verifactu/",
           "/importacion/",
           "/invite/",
+          "/portal/",
+          "/api/",
         ],
+      },
+      {
+        userAgent: "GPTBot",
+        allow: ["/", "/sobre-nosotros", "/contacto", "/ayuda"],
+        disallow: ["/dashboard/", "/api/"],
+      },
+      {
+        userAgent: "ClaudeBot",
+        allow: ["/", "/sobre-nosotros", "/contacto", "/ayuda"],
+        disallow: ["/dashboard/", "/api/"],
+      },
+      {
+        userAgent: "PerplexityBot",
+        allow: ["/", "/sobre-nosotros", "/contacto", "/ayuda"],
+        disallow: ["/dashboard/", "/api/"],
       },
     ],
     sitemap: `${APP_URL}/sitemap.xml`,
+    host: APP_URL,
   };
 }
