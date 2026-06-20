@@ -3,6 +3,7 @@ import {
   Post,
   Get,
   Param,
+  Body,
   UseGuards,
   UseInterceptors,
   UploadedFile,
@@ -58,63 +59,70 @@ export class ImportController {
     res.send(buffer);
   }
 
+  // Shared file interceptor config
+  private static fileInterceptorOpts() {
+    return {
+      limits: { fileSize: MAX_SIZE },
+      fileFilter: (_: any, file: Express.Multer.File, cb: any) => {
+        if (ALLOWED_MIME.includes(file.mimetype) || file.originalname.match(/\.(xlsx|csv|xls|json)$/i)) {
+          cb(null, true);
+        } else {
+          cb(new BadRequestException("Solo se aceptan archivos .xlsx, .csv o .json"), false);
+        }
+      },
+    };
+  }
+
+  @Post("preview/:entity")
+  @ApiConsumes("multipart/form-data")
+  @UseInterceptors(FileInterceptor("file", { limits: { fileSize: MAX_SIZE } }))
+  previewImport(
+    @Param("entity") entity: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (!["clients", "products", "invoices"].includes(entity)) {
+      throw new BadRequestException("Entidad no válida");
+    }
+    if (!file) throw new BadRequestException("No se ha adjuntado ningún archivo");
+    return this.importService.previewImport(entity, file.buffer);
+  }
+
   @Post("clients")
   @ApiConsumes("multipart/form-data")
-  @UseInterceptors(FileInterceptor("file", {
-    limits: { fileSize: MAX_SIZE },
-    fileFilter: (_, file, cb) => {
-      if (ALLOWED_MIME.includes(file.mimetype) || file.originalname.match(/\.(xlsx|csv|xls|json)$/i)) {
-        cb(null, true);
-      } else {
-        cb(new BadRequestException("Solo se aceptan archivos .xlsx, .csv o .json"), false);
-      }
-    },
-  }))
+  @UseInterceptors(FileInterceptor("file", { limits: { fileSize: MAX_SIZE } }))
   importClients(
     @CurrentUser() u: JwtPayload,
     @UploadedFile() file: Express.Multer.File,
+    @Body("mapping") mappingJson?: string,
   ) {
     if (!file) throw new BadRequestException("No se ha adjuntado ningún archivo");
-    return this.importService.importClients(u.companyId, file.buffer);
+    const mapping = mappingJson ? JSON.parse(mappingJson) as Record<string, string> : {};
+    return this.importService.importClients(u.companyId, file.buffer, mapping);
   }
 
   @Post("products")
   @ApiConsumes("multipart/form-data")
-  @UseInterceptors(FileInterceptor("file", {
-    limits: { fileSize: MAX_SIZE },
-    fileFilter: (_, file, cb) => {
-      if (ALLOWED_MIME.includes(file.mimetype) || file.originalname.match(/\.(xlsx|csv|xls|json)$/i)) {
-        cb(null, true);
-      } else {
-        cb(new BadRequestException("Solo se aceptan archivos .xlsx, .csv o .json"), false);
-      }
-    },
-  }))
+  @UseInterceptors(FileInterceptor("file", { limits: { fileSize: MAX_SIZE } }))
   importProducts(
     @CurrentUser() u: JwtPayload,
     @UploadedFile() file: Express.Multer.File,
+    @Body("mapping") mappingJson?: string,
   ) {
     if (!file) throw new BadRequestException("No se ha adjuntado ningún archivo");
-    return this.importService.importProducts(u.companyId, file.buffer);
+    const mapping = mappingJson ? JSON.parse(mappingJson) as Record<string, string> : {};
+    return this.importService.importProducts(u.companyId, file.buffer, mapping);
   }
 
   @Post("invoices")
   @ApiConsumes("multipart/form-data")
-  @UseInterceptors(FileInterceptor("file", {
-    limits: { fileSize: MAX_SIZE },
-    fileFilter: (_, file, cb) => {
-      if (ALLOWED_MIME.includes(file.mimetype) || file.originalname.match(/\.(xlsx|csv|xls|json)$/i)) {
-        cb(null, true);
-      } else {
-        cb(new BadRequestException("Solo se aceptan archivos .xlsx, .csv o .json"), false);
-      }
-    },
-  }))
+  @UseInterceptors(FileInterceptor("file", { limits: { fileSize: MAX_SIZE } }))
   importInvoices(
     @CurrentUser() u: JwtPayload,
     @UploadedFile() file: Express.Multer.File,
+    @Body("mapping") mappingJson?: string,
   ) {
     if (!file) throw new BadRequestException("No se ha adjuntado ningún archivo");
-    return this.importService.importInvoices(u.companyId, file.buffer);
+    const mapping = mappingJson ? JSON.parse(mappingJson) as Record<string, string> : {};
+    return this.importService.importInvoices(u.companyId, file.buffer, mapping);
   }
 }
