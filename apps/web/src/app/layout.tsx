@@ -4,7 +4,10 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { CookieBanner } from "@/components/layout/cookie-banner";
 import { Toaster } from "sonner";
+import Script from "next/script";
 import "./globals.css";
+
+const GA_ID = "G-BMYELB3HTF";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -105,6 +108,19 @@ export default function RootLayout({
             <Toaster richColors position="top-right" />
           </QueryProvider>
         </ThemeProvider>
+
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_ID}');
+          `}
+        </Script>
       </body>
     </html>
   );
