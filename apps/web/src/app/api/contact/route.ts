@@ -38,7 +38,12 @@ export async function POST(req: NextRequest) {
   });
 
   if (!res.ok) {
-    return NextResponse.json({ error: "Error al enviar el mensaje" }, { status: 500 });
+    const body = await res.json().catch(() => ({}));
+    console.error("[contact] Resend error:", res.status, JSON.stringify(body));
+    return NextResponse.json(
+      { error: "Error al enviar el mensaje", detail: body },
+      { status: 500 },
+    );
   }
 
   return NextResponse.json({ ok: true });
