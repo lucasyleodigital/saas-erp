@@ -13,8 +13,8 @@ const FOOTER_LINKS = [
   {
     title: "Empresa",
     links: [
-      { href: "mailto:hola@youwhole.com", label: "Contacto" },
-      { href: "mailto:hola@youwhole.com", label: "Sobre nosotros" },
+      { href: "/sobre-nosotros", label: "Sobre nosotros" },
+      { href: "/contacto", label: "Contacto" },
     ],
   },
   {
