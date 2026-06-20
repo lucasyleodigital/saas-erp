@@ -3,7 +3,7 @@ import { createHash, createCipheriv, createDecipheriv, randomBytes } from "crypt
 import { create } from "xmlbuilder2";
 import { PrismaService } from "../../database/prisma.service";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const forge = require("node-forge") as typeof import("node-forge");
+const forge: any = require("node-forge");
 
 @Injectable()
 export class VerifactuService {
@@ -173,7 +173,7 @@ export class VerifactuService {
   async saveCertificate(companyId: string, certBuffer: Buffer, password: string) {
     let certSubject = "";
     let certNif = "";
-    let certExpiresAt: Date;
+    let certExpiresAt: Date = new Date(0);
 
     try {
       const p12Der = certBuffer.toString("binary");

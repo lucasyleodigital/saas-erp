@@ -35,7 +35,6 @@ export function VerifactuView() {
 
   const records = data?.records ?? [];
   const stats = data?.stats;
-  const certOk = certInfo && !certInfo.isExpired;
   const certExpiring = certInfo && !certInfo.isExpired && certInfo.daysLeft !== null && certInfo.daysLeft <= 30;
 
   return (
