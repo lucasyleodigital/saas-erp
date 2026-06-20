@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { Lightbulb, Target, Handshake, TrendingUp } from "lucide-react";
 import { MarketingFooter } from "@/components/marketing/footer";
 
 export const metadata: Metadata = {
@@ -10,25 +11,25 @@ export const metadata: Metadata = {
 
 const VALUES = [
   {
-    icon: "💡",
+    Icon: Lightbulb,
     title: "Nacido de la experiencia real",
     description:
       "YouWhole no lo diseñó alguien en un laboratorio. Lo construimos después de trabajar codo a codo con decenas de pymes que pagaban 5 o 6 suscripciones distintas para gestionar su negocio.",
   },
   {
-    icon: "🎯",
+    Icon: Target,
     title: "Simplicidad ante todo",
     description:
       "Creemos que la tecnología debe simplificar, no complicar. Por eso YouWhole tiene todo lo que necesitas y nada de lo que no necesitas. Sin tecnicismos, sin curvas de aprendizaje imposibles.",
   },
   {
-    icon: "🤝",
+    Icon: Handshake,
     title: "Honestidad y transparencia",
     description:
       "Sin comisiones ocultas, sin contratos de permanencia, sin letras pequeñas. Precio fijo, cancelación cuando quieras. Así de sencillo.",
   },
   {
-    icon: "🚀",
+    Icon: TrendingUp,
     title: "Resultados medibles",
     description:
       "No vendemos promesas. Vendemos herramientas que ahorran tiempo real: menos horas en papeleo, menos errores en facturas, menos dinero perdido en apps que no se hablan entre sí.",
@@ -129,11 +130,13 @@ export default function SobreNosotrosPage() {
           <div className="container mx-auto px-4 max-w-4xl">
             <h2 className="text-2xl font-bold text-center mb-12">Lo que nos define</h2>
             <div className="grid md:grid-cols-2 gap-6">
-              {VALUES.map((v) => (
-                <div key={v.title} className="bg-background border border-border rounded-xl p-6">
-                  <span className="text-2xl mb-3 block">{v.icon}</span>
-                  <h3 className="font-semibold text-foreground mb-2">{v.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{v.description}</p>
+              {VALUES.map(({ Icon, title, description }) => (
+                <div key={title} className="bg-background border border-border rounded-xl p-6">
+                  <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                    <Icon className="w-5 h-5 text-primary" />
+                  </div>
+                  <h3 className="font-semibold text-foreground mb-2">{title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
                 </div>
               ))}
             </div>

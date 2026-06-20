@@ -4,25 +4,26 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { Mail, Wrench, Phone, Clock, MapPin, CheckCircle } from "lucide-react";
 import { MarketingFooter } from "@/components/marketing/footer";
 
 const CONTACT_INFO = [
   {
-    icon: "✉️",
+    Icon: Mail,
     title: "Email comercial",
     value: "hola@youwhole.com",
     href: "mailto:hola@youwhole.com",
     description: "Planes, demos y consultas generales",
   },
   {
-    icon: "🛠️",
+    Icon: Wrench,
     title: "Soporte técnico",
     value: "soporte@youwhole.com",
     href: "mailto:soporte@youwhole.com",
     description: "Incidencias y ayuda con la plataforma",
   },
   {
-    icon: "📱",
+    Icon: Phone,
     title: "WhatsApp / Teléfono",
     value: "+34 624 029 617",
     href: "https://wa.me/34624029617",
@@ -92,7 +93,9 @@ export default function ContactoPage() {
                 rel="noopener noreferrer"
                 className="flex gap-4 p-5 border border-border rounded-xl hover:bg-muted/30 transition-colors group"
               >
-                <span className="text-2xl">{c.icon}</span>
+                <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                  <c.Icon className="w-5 h-5 text-primary" />
+                </div>
                 <div>
                   <p className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">
                     {c.title}
@@ -104,7 +107,7 @@ export default function ContactoPage() {
             ))}
 
             <div className="p-5 border border-border rounded-xl bg-muted/10">
-              <p className="font-medium text-sm text-foreground mb-1">⏱️ Tiempo de respuesta</p>
+              <p className="font-medium text-sm text-foreground mb-1 flex items-center gap-2"><Clock className="w-4 h-4 text-primary" /> Tiempo de respuesta</p>
               <p className="text-sm text-muted-foreground">
                 Respondemos todos los mensajes en un máximo de <strong className="text-foreground">24 horas</strong> en
                 días laborables. Para urgencias usa WhatsApp.
@@ -112,7 +115,7 @@ export default function ContactoPage() {
             </div>
 
             <div className="p-5 border border-border rounded-xl bg-muted/10">
-              <p className="font-medium text-sm text-foreground mb-1">📍 Ubicación</p>
+              <p className="font-medium text-sm text-foreground mb-1 flex items-center gap-2"><MapPin className="w-4 h-4 text-primary" /> Ubicación</p>
               <p className="text-sm text-muted-foreground">
                 Barcelona, España.
                 <br />
@@ -125,7 +128,9 @@ export default function ContactoPage() {
           <div className="md:col-span-3">
             {status === "ok" ? (
               <div className="h-full flex flex-col items-center justify-center text-center p-10 border border-border rounded-xl bg-muted/10">
-                <span className="text-4xl mb-4">✅</span>
+                <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-5">
+                  <CheckCircle className="w-8 h-8 text-primary" />
+                </div>
                 <h2 className="text-xl font-semibold mb-2">Mensaje enviado</h2>
                 <p className="text-sm text-muted-foreground mb-6">
                   Gracias por contactar con nosotros. Te responderemos en menos de 24 horas.

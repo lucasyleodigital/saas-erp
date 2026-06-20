@@ -77,7 +77,7 @@ export function MarketingFooter() {
             reservados.
           </span>
           <div className="flex items-center gap-4">
-            <span>Hecho con ❤️ en España 🇪🇸</span>
+            <span>Hecho en España</span>
             <span className="hidden sm:inline text-border">·</span>
             <span className="hidden sm:inline">
               Diseñado y desarrollado por{" "}
