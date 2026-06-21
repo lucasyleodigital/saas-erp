@@ -152,7 +152,10 @@ export class ImportService {
     if (!fields) throw new BadRequestException("Entidad no válida");
 
     const rows = this.parseFile(buffer, entity);
-    if (!rows.length) return { columns: [], sample: [], suggestions: {}, fields };
+    if (!rows.length) throw new BadRequestException(
+      "No se encontraron filas de datos en el archivo. " +
+      "Comprueba que el archivo tiene datos y que la primera fila contiene los nombres de columna."
+    );
 
     const columns = Object.keys(rows[0]);
     const sample = rows.slice(0, 3).map(r =>
