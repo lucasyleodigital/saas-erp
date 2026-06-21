@@ -6,6 +6,7 @@ import helmet from "helmet";
 import * as cookieParser from "cookie-parser";
 import * as compression from "compression";
 import { AppModule } from "./app.module";
+import { DecimalInterceptor } from "./decimal.interceptor";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -40,8 +41,11 @@ async function bootstrap() {
     })
   );
 
-  // Serialization
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+  // Serialization — DecimalInterceptor converts Prisma Decimal objects to JS numbers before JSON serialization
+  app.useGlobalInterceptors(
+    new ClassSerializerInterceptor(app.get(Reflector)),
+    new DecimalInterceptor(),
+  );
 
   // API prefix
   app.setGlobalPrefix("api/v1");
