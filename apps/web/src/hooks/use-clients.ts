@@ -13,6 +13,7 @@ export function useClients(params?: { page?: number; limit?: number; search?: st
     queryKey: clientKeys.list(params),
     queryFn: () =>
       api.get("/clients", { params }).then((r) => r.data),
+    refetchOnMount: true,
   });
 }
 

@@ -28,6 +28,7 @@ export function useSuppliers(params?: { search?: string; page?: number; limit?: 
       api
         .get("/suppliers", { params })
         .then((r) => r.data as { data: Supplier[]; total: number; page: number; totalPages: number }),
+    refetchOnMount: true,
   });
 }
 

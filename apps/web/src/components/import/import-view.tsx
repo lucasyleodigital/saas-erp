@@ -15,16 +15,17 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
   Upload, Download, Users, Package, FileText, Truck,
-  CheckCircle2, AlertCircle, SkipForward, X, FileSpreadsheet,
+  CheckCircle2, AlertCircle, SkipForward, X, FileSpreadsheet, ArrowRight,
 } from "lucide-react";
+import Link from "next/link";
 
 const ENTITIES: {
-  key: ImportEntity; label: string; icon: any; description: string; fields: string[];
+  key: ImportEntity; label: string; icon: any; description: string; fields: string[]; href: string;
 }[] = [
-  { key: "clients",   label: "Clientes",           icon: Users,    description: "Importa tu cartera de clientes desde otro CRM o ERP.",                             fields: ["Nombre*","Email","Teléfono","CIF/NIF","Dirección","Ciudad","Provincia","Código postal","País","Web","Notas"] },
-  { key: "products",  label: "Productos",           icon: Package,  description: "Importa tu catálogo de productos o servicios.",                                    fields: ["Nombre*","SKU","Descripción","Precio*","Coste","Tipo (SERVICE/DIGITAL/PHYSICAL)","Control stock (SI/NO)"] },
-  { key: "suppliers", label: "Proveedores",         icon: Truck,    description: "Importa tu directorio de proveedores y subcontratistas.",                          fields: ["Nombre*","Email","Teléfono","CIF/NIF","Persona contacto","Dirección","Ciudad","País","Web","IBAN / Cuenta","Notas"] },
-  { key: "invoices",  label: "Facturas históricas", icon: FileText, description: "Importa facturas de ejercicios anteriores para tener el historial completo.",       fields: ["Número*","Cliente*","Fecha emisión","Fecha vencimiento","Base imponible","Importe IVA","Importe IRPF","Total*","Estado (PAID/SENT/DRAFT)","Descripción","Notas"] },
+  { key: "clients",   label: "Clientes",           icon: Users,    href: "/clientes",  description: "Importa tu cartera de clientes desde otro CRM o ERP.",                             fields: ["Nombre*","Email","Teléfono","CIF/NIF","Dirección","Ciudad","Provincia","Código postal","País","Web","Notas"] },
+  { key: "products",  label: "Productos",           icon: Package,  href: "/productos", description: "Importa tu catálogo de productos o servicios.",                                    fields: ["Nombre*","SKU","Descripción","Precio*","Coste","Tipo (SERVICE/DIGITAL/PHYSICAL)","Control stock (SI/NO)"] },
+  { key: "suppliers", label: "Proveedores",         icon: Truck,    href: "/proveedores", description: "Importa tu directorio de proveedores y subcontratistas.",                       fields: ["Nombre*","Email","Teléfono","CIF/NIF","Persona contacto","Dirección","Ciudad","País","Web","IBAN / Cuenta","Notas"] },
+  { key: "invoices",  label: "Facturas históricas", icon: FileText, href: "/facturas",  description: "Importa facturas de ejercicios anteriores para tener el historial completo.",     fields: ["Número*","Cliente*","Fecha emisión","Fecha vencimiento","Base imponible","Importe IVA","Importe IRPF","Total*","Estado (PAID/SENT/DRAFT)","Descripción","Notas"] },
 ];
 
 type Step = "idle" | "previewing" | "mapping" | "importing" | "done";
@@ -49,8 +50,9 @@ function DropZone({ onFile, isPending }: { onFile: (f: File) => void; isPending:
   );
 }
 
-function ResultCard({ result, onClear }: { result: ImportResult; onClear: () => void }) {
+function ResultCard({ result, onClear, entityHref, entityLabel }: { result: ImportResult; onClear: () => void; entityHref: string; entityLabel: string }) {
   const hasErrors = result.errors.length > 0;
+  const totalVisible = result.inserted + result.skipped;
   return (
     <div className="space-y-3">
       <div className="grid grid-cols-3 gap-3">
@@ -79,7 +81,17 @@ function ResultCard({ result, onClear }: { result: ImportResult; onClear: () => 
           </CardContent>
         </Card>
       )}
-      <Button variant="outline" size="sm" onClick={onClear} className="gap-2"><X className="h-3 w-3" />Nueva importación</Button>
+      <div className="flex items-center gap-2">
+        {totalVisible > 0 && (
+          <Button asChild size="sm" className="gap-2">
+            <Link href={entityHref}>
+              <ArrowRight className="h-3.5 w-3.5" />
+              Ver {entityLabel.toLowerCase()}
+            </Link>
+          </Button>
+        )}
+        <Button variant="outline" size="sm" onClick={onClear} className="gap-2"><X className="h-3 w-3" />Nueva importación</Button>
+      </div>
     </div>
   );
 }
@@ -175,7 +187,7 @@ export function ImportView() {
           </CardHeader>
           <CardContent>
             {step === "done" && result ? (
-              <ResultCard result={result} onClear={reset} />
+              <ResultCard result={result} onClear={reset} entityHref={entity.href} entityLabel={entity.label} />
             ) : step === "mapping" && preview ? (
               <ColumnMapper
                 preview={preview}

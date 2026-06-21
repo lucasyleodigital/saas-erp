@@ -17,6 +17,7 @@ export function useInvoices(params?: {
   return useQuery({
     queryKey: invoiceKeys.list(params),
     queryFn: () => api.get("/invoices", { params }).then((r) => r.data),
+    refetchOnMount: true,
   });
 }
 

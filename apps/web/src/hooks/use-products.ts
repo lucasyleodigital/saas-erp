@@ -11,6 +11,7 @@ export function useProducts(params?: { search?: string }) {
   return useQuery({
     queryKey: productKeys.list(params),
     queryFn: () => api.get("/products", { params }).then((r) => r.data),
+    refetchOnMount: true,
   });
 }
 
