@@ -38,3 +38,15 @@ export function useUpdateProduct(id: string) {
     },
   });
 }
+
+export function useDeleteProduct() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => api.delete(`/products/${id}`).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: productKeys.all });
+      toast.success("Producto eliminado");
+    },
+    onError: () => toast.error("Error al eliminar el producto"),
+  });
+}

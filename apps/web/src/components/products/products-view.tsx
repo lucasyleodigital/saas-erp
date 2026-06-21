@@ -1,14 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { useProducts } from "@/hooks/use-products";
+import { useProducts, useDeleteProduct } from "@/hooks/use-products";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuSeparator, DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { ProductDialog } from "./product-dialog";
 import { formatCurrency } from "@/lib/utils";
-import { Search, Plus, Package, Settings, Boxes, Tag } from "lucide-react";
+import { Search, Plus, Package, Settings, Boxes, Tag, MoreHorizontal, Edit, Trash2 } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
@@ -28,6 +32,7 @@ export function ProductsView() {
 
   const { data, isLoading } = useProducts({ search: debouncedSearch || undefined });
   const products = data?.data ?? [];
+  const deleteProduct = useDeleteProduct();
 
   return (
     <div className="space-y-6">
@@ -85,24 +90,62 @@ export function ProductsView() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: i * 0.04 }}
               >
-                <Card
-                  className="hover:shadow-md transition-shadow cursor-pointer"
-                  onClick={() => { setEditingProduct(product); setDialogOpen(true); }}
-                >
+                <Card className="hover:shadow-md transition-shadow">
                   <CardContent className="p-4 space-y-3">
                     <div className="flex items-start justify-between">
-                      <div className={`p-2 rounded-lg ${config.color}`}>
+                      <div
+                        className={`p-2 rounded-lg cursor-pointer ${config.color}`}
+                        onClick={() => { setEditingProduct(product); setDialogOpen(true); }}
+                      >
                         <Icon className="h-4 w-4" />
                       </div>
-                      <Badge variant="secondary" className="text-xs">{config.label}</Badge>
+                      <div className="flex items-center gap-1">
+                        <Badge variant="secondary" className="text-xs">{config.label}</Badge>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-6 w-6"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <MoreHorizontal className="h-3.5 w-3.5" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => { setEditingProduct(product); setDialogOpen(true); }}>
+                              <Edit className="h-4 w-4 mr-2" />
+                              Editar
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              className="text-destructive focus:text-destructive"
+                              onClick={() => {
+                                if (confirm(`¿Eliminar "${product.name}"?`)) {
+                                  deleteProduct.mutate(product.id);
+                                }
+                              }}
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Eliminar
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
                     </div>
-                    <div>
+                    <div
+                      className="cursor-pointer"
+                      onClick={() => { setEditingProduct(product); setDialogOpen(true); }}
+                    >
                       <p className="font-medium text-sm line-clamp-2">{product.name}</p>
                       {product.sku && (
                         <p className="text-xs text-muted-foreground mt-0.5">SKU: {product.sku}</p>
                       )}
                     </div>
-                    <div className="flex items-center justify-between">
+                    <div
+                      className="flex items-center justify-between cursor-pointer"
+                      onClick={() => { setEditingProduct(product); setDialogOpen(true); }}
+                    >
                       <span className="text-lg font-bold">{formatCurrency(Number(product.price))}</span>
                       {product.tax && (
                         <span className="text-xs text-muted-foreground">+{Number(product.tax.rate)}% IVA</span>
