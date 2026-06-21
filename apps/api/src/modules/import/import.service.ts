@@ -49,10 +49,25 @@ const INVOICE_FIELDS: FieldDef[] = [
   { key: "notes",       label: "Notas",            required: false, aliases: ["Notas","notas","notes","nota","observaciones","comentarios"] },
 ];
 
+const SUPPLIER_FIELDS: FieldDef[] = [
+  { key: "name",        label: "Nombre",          required: true,  aliases: ["Nombre","nombre","name","nom","proveedor","supplier","razon social","razonsocial","empresa","company"] },
+  { key: "email",       label: "Email",            required: false, aliases: ["Email","email","mail","correo","correo electronico"] },
+  { key: "phone",       label: "Teléfono",         required: false, aliases: ["Teléfono","Telefono","telefono","phone","tel","movil","tlf"] },
+  { key: "cifNif",      label: "CIF/NIF",          required: false, aliases: ["CIF/NIF","CIF","NIF","cif","nif","nif","vat","tax id","id fiscal","rut","rfc"] },
+  { key: "contactName", label: "Persona contacto", required: false, aliases: ["Contacto","contacto","contact","contact name","persona contacto","persona_contacto","cont","responsable"] },
+  { key: "address",     label: "Dirección",        required: false, aliases: ["Dirección","Direccion","direccion","address","dir","calle","domicilio"] },
+  { key: "city",        label: "Ciudad",            required: false, aliases: ["Ciudad","ciudad","city","poblacion","municipio","localidad"] },
+  { key: "country",     label: "País",              required: false, aliases: ["País","Pais","pais","country"] },
+  { key: "website",     label: "Web",               required: false, aliases: ["Web","web","website","url","URL","web","pagina web"] },
+  { key: "bankAccount", label: "IBAN / Cuenta",    required: false, aliases: ["IBAN","iban","cuenta bancaria","cuenta","bank account","bankAccount","bank","cuenta_bancaria","ref"] },
+  { key: "notes",       label: "Notas",             required: false, aliases: ["Notas","notas","notes","nota","observaciones","comentarios"] },
+];
+
 const ENTITY_FIELDS: Record<string, FieldDef[]> = {
-  clients: CLIENT_FIELDS,
-  products: PRODUCT_FIELDS,
-  invoices: INVOICE_FIELDS,
+  clients:   CLIENT_FIELDS,
+  products:  PRODUCT_FIELDS,
+  invoices:  INVOICE_FIELDS,
+  suppliers: SUPPLIER_FIELDS,
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -114,13 +129,15 @@ export class ImportService {
         if (Array.isArray(parsed)) return parsed;
 
         const ENTITY_KEYS: Record<string, string[]> = {
-          clients:  ["clientes", "clients"],
-          products: ["productos", "products"],
-          invoices: ["facturas", "invoices"],
+          clients:   ["clientes", "clients"],
+          products:  ["productos", "products"],
+          invoices:  ["facturas", "invoices"],
+          suppliers: ["proveedoresDir", "proveedores", "suppliers"],
         };
         const primaryKeys = entity ? (ENTITY_KEYS[entity] ?? []) : [];
         const searchKeys = [...primaryKeys, "data", "items", "records", "rows",
-          "clientes", "clients", "productos", "products", "facturas", "invoices"];
+          "clientes", "clients", "productos", "products", "facturas", "invoices",
+          "proveedoresDir", "proveedores", "suppliers"];
 
         // Top-level search
         for (const key of searchKeys) {
@@ -319,12 +336,52 @@ export class ImportService {
     return { total: rows.length, inserted, skipped, errors };
   }
 
+  // ── Import suppliers ──────────────────────────────────────────────────────
+  async importSuppliers(companyId: string, buffer: Buffer, mapping: Record<string, string> = {}): Promise<ImportResult> {
+    const rows = this.parseFile(buffer, "suppliers");
+    if (!rows.length) return { total: 0, inserted: 0, skipped: 0, errors: [] };
+
+    let inserted = 0, skipped = 0;
+    const errors: ImportError[] = [];
+
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i]!;
+      const rowNum = i + 2;
+      const r = (key: string) => resolve(row, mapping, key, SUPPLIER_FIELDS.find(f => f.key === key)!.aliases);
+
+      const name = r("name");
+      if (!name) { errors.push({ row: rowNum, field: "Nombre", message: "Campo obligatorio" }); continue; }
+
+      try {
+        const existing = await this.prisma.supplier.findFirst({ where: { companyId, name: { equals: name, mode: "insensitive" } } });
+        if (existing) { skipped++; continue; }
+
+        await this.prisma.supplier.create({ data: {
+          companyId, name,
+          email:       r("email").toLowerCase() || undefined,
+          phone:       r("phone")       || undefined,
+          cifNif:      r("cifNif")      || undefined,
+          contactName: r("contactName") || undefined,
+          address:     r("address")     || undefined,
+          city:        r("city")        || undefined,
+          country:     r("country")     || "ES",
+          website:     r("website")     || undefined,
+          bankAccount: r("bankAccount") || undefined,
+          notes:       r("notes")       || undefined,
+        }});
+        inserted++;
+      } catch { errors.push({ row: rowNum, field: "—", message: "Error al insertar registro" }); }
+    }
+    return { total: rows.length, inserted, skipped, errors };
+  }
+
   // ── Template generator ────────────────────────────────────────────────────
-  generateTemplate(entity: "clients" | "products" | "invoices"): Buffer {
+  generateTemplate(entity: "clients" | "products" | "invoices" | "suppliers"): Buffer {
     const templates = {
-      clients:  { headers: ["Nombre","Email","Teléfono","CIF/NIF","Dirección","Ciudad","Provincia","Código postal","País","Web","Notas"],        example: ["Empresa Ejemplo S.L.","contacto@empresa.com","912345678","B12345678","Calle Mayor 1","Madrid","Madrid","28001","ES","www.empresa.com",""] },
-      products: { headers: ["Nombre","SKU","Descripción","Precio","Coste","Tipo","Control stock"],                                              example: ["Consultoría hora","CONS-001","Hora de consultoría","75.00","0","SERVICE","NO"] },
-      invoices: { headers: ["Número","Cliente","Fecha emisión","Fecha vencimiento","Total","Estado","Descripción","Notas"],                     example: ["FAC-2024-0001","Cliente Ejemplo S.L.","2024-01-15","2024-02-15","1210.00","PAID","Servicios enero",""] },
+      clients:   { headers: ["Nombre","Email","Teléfono","CIF/NIF","Dirección","Ciudad","Provincia","Código postal","País","Web","Notas"],    example: ["Empresa Ejemplo S.L.","contacto@empresa.com","912345678","B12345678","Calle Mayor 1","Madrid","Madrid","28001","ES","www.empresa.com",""] },
+      products:  { headers: ["Nombre","SKU","Descripción","Precio","Coste","Tipo","Control stock"],                                          example: ["Consultoría hora","CONS-001","Hora de consultoría","75.00","0","SERVICE","NO"] },
+      invoices:  { headers: ["Número","Cliente","Fecha emisión","Fecha vencimiento","Total","Estado","Descripción","Notas"],                 example: ["FAC-2024-0001","Cliente Ejemplo S.L.","2024-01-15","2024-02-15","1210.00","PAID","Servicios enero",""] },
+      suppliers: { headers: ["Nombre","Email","Teléfono","CIF/NIF","Persona contacto","Dirección","Ciudad","País","Web","IBAN / Cuenta","Notas"], example: ["Proveedor S.L.","proveedor@email.com","912345678","B87654321","Ana García","Calle Industria 5","Barcelona","ES","www.proveedor.com","ES12 1234 5678 90 1234567890",""] },
     };
     const tpl = templates[entity];
     const ws = XLSX.utils.aoa_to_sheet([tpl.headers, tpl.example]);

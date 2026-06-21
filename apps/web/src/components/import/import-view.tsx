@@ -14,16 +14,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
-  Upload, Download, Users, Package, FileText,
+  Upload, Download, Users, Package, FileText, Truck,
   CheckCircle2, AlertCircle, SkipForward, X, FileSpreadsheet,
 } from "lucide-react";
 
 const ENTITIES: {
   key: ImportEntity; label: string; icon: any; description: string; fields: string[];
 }[] = [
-  { key: "clients",  label: "Clientes",           icon: Users,    description: "Importa tu cartera de clientes desde otro CRM o ERP.",                              fields: ["Nombre*","Email","Teléfono","CIF/NIF","Dirección","Ciudad","Provincia","Código postal","País","Web","Notas"] },
-  { key: "products", label: "Productos",           icon: Package,  description: "Importa tu catálogo de productos o servicios.",                                     fields: ["Nombre*","SKU","Descripción","Precio*","Coste","Tipo (SERVICE/DIGITAL/PHYSICAL)","Control stock (SI/NO)"] },
-  { key: "invoices", label: "Facturas históricas", icon: FileText, description: "Importa facturas de ejercicios anteriores para tener el historial completo.",        fields: ["Número*","Cliente*","Fecha emisión","Fecha vencimiento","Total*","Estado (PAID/SENT/DRAFT)","Descripción","Notas"] },
+  { key: "clients",   label: "Clientes",           icon: Users,    description: "Importa tu cartera de clientes desde otro CRM o ERP.",                             fields: ["Nombre*","Email","Teléfono","CIF/NIF","Dirección","Ciudad","Provincia","Código postal","País","Web","Notas"] },
+  { key: "products",  label: "Productos",           icon: Package,  description: "Importa tu catálogo de productos o servicios.",                                    fields: ["Nombre*","SKU","Descripción","Precio*","Coste","Tipo (SERVICE/DIGITAL/PHYSICAL)","Control stock (SI/NO)"] },
+  { key: "suppliers", label: "Proveedores",         icon: Truck,    description: "Importa tu directorio de proveedores y subcontratistas.",                          fields: ["Nombre*","Email","Teléfono","CIF/NIF","Persona contacto","Dirección","Ciudad","País","Web","IBAN / Cuenta","Notas"] },
+  { key: "invoices",  label: "Facturas históricas", icon: FileText, description: "Importa facturas de ejercicios anteriores para tener el historial completo.",       fields: ["Número*","Cliente*","Fecha emisión","Fecha vencimiento","Total*","Estado (PAID/SENT/DRAFT)","Descripción","Notas"] },
 ];
 
 type Step = "idle" | "previewing" | "mapping" | "importing" | "done";

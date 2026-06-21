@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
 
-export type ImportEntity = "clients" | "products" | "invoices";
+export type ImportEntity = "clients" | "products" | "invoices" | "suppliers";
 
 export interface ImportError { row: number; field: string; message: string; }
 export interface ImportResult { total: number; inserted: number; skipped: number; errors: ImportError[]; }
@@ -43,8 +43,8 @@ export function useImportFile(entity: ImportEntity) {
         .then((r) => r.data);
     },
     onSuccess: (result) => {
-      qc.invalidateQueries({ queryKey: [entity] });
-      qc.invalidateQueries({ queryKey: ["dashboard"] });
+      qc.removeQueries({ queryKey: [entity] });
+      qc.removeQueries({ queryKey: ["dashboard"] });
       if (result.errors.length === 0) {
         toast.success(`${result.inserted} registros importados correctamente`);
       } else {
@@ -59,9 +59,10 @@ export function useImportFile(entity: ImportEntity) {
 
 export function downloadTemplate(entity: ImportEntity) {
   const names: Record<ImportEntity, string> = {
-    clients:  "plantilla_clientes.xlsx",
-    products: "plantilla_productos.xlsx",
-    invoices: "plantilla_facturas.xlsx",
+    clients:   "plantilla_clientes.xlsx",
+    products:  "plantilla_productos.xlsx",
+    invoices:  "plantilla_facturas.xlsx",
+    suppliers: "plantilla_proveedores.xlsx",
   };
   const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
   const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";

@@ -42,16 +42,17 @@ export class ImportController {
     @Param("entity") entity: string,
     @Res() res: Response,
   ) {
-    const valid = ["clients", "products", "invoices"];
+    const valid = ["clients", "products", "invoices", "suppliers"];
     if (!valid.includes(entity)) {
-      throw new BadRequestException("Entidad no válida. Usa: clients, products, invoices");
+      throw new BadRequestException("Entidad no válida. Usa: clients, products, invoices, suppliers");
     }
 
     const buffer = this.importService.generateTemplate(entity as any);
     const names: Record<string, string> = {
-      clients:  "plantilla_clientes.xlsx",
-      products: "plantilla_productos.xlsx",
-      invoices: "plantilla_facturas.xlsx",
+      clients:   "plantilla_clientes.xlsx",
+      products:  "plantilla_productos.xlsx",
+      invoices:  "plantilla_facturas.xlsx",
+      suppliers: "plantilla_proveedores.xlsx",
     };
 
     res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -80,7 +81,7 @@ export class ImportController {
     @Param("entity") entity: string,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    if (!["clients", "products", "invoices"].includes(entity)) {
+    if (!["clients", "products", "invoices", "suppliers"].includes(entity)) {
       throw new BadRequestException("Entidad no válida");
     }
     if (!file) throw new BadRequestException("No se ha adjuntado ningún archivo");
@@ -125,4 +126,18 @@ export class ImportController {
     const mapping = mappingJson ? JSON.parse(mappingJson) as Record<string, string> : {};
     return this.importService.importInvoices(u.companyId, file.buffer, mapping);
   }
+
+  @Post("suppliers")
+  @ApiConsumes("multipart/form-data")
+  @UseInterceptors(FileInterceptor("file", { limits: { fileSize: MAX_SIZE } }))
+  importSuppliers(
+    @CurrentUser() u: JwtPayload,
+    @UploadedFile() file: Express.Multer.File,
+    @Body("mapping") mappingJson?: string,
+  ) {
+    if (!file) throw new BadRequestException("No se ha adjuntado ningún archivo");
+    const mapping = mappingJson ? JSON.parse(mappingJson) as Record<string, string> : {};
+    return this.importService.importSuppliers(u.companyId, file.buffer, mapping);
+  }
+
 }
