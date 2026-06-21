@@ -44,6 +44,8 @@ const INVOICE_FIELDS: FieldDef[] = [
   { key: "issueDate",   label: "Fecha emisión",    required: false, aliases: ["Fecha emisión","Fecha emision","fecha emision","fecha_emision","fecha","date","issue date","invoice date","fecha factura","fecha expedicion","emision","created at"] },
   { key: "dueDate",     label: "Fecha vencimiento",required: false, aliases: ["Fecha vencimiento","Fecha vencim","fecha vencimiento","fecha_vencimiento","dueDate","venc","due date","vencimiento","expiry date","payment due"] },
   { key: "subtotal",    label: "Base imponible",   required: false, aliases: ["Base","base","subtotal","Subtotal","base imponible","base_imponible","neto","net","net amount"] },
+  { key: "ivaAmount",   label: "Importe IVA",      required: false, aliases: ["IVA","iva","ivaT","ivat","cuota iva","cuota_iva","iva total","tax amount","vat amount","impuesto","cuota"] },
+  { key: "irpfAmount",  label: "Importe IRPF",     required: false, aliases: ["IRPF","irpf","irpfT","irpft","retencion","retención","retención irpf","withholding","ret"] },
   { key: "status",      label: "Estado",           required: false, aliases: ["Estado","estado","status","est","estado factura","payment status","situacion"] },
   { key: "description", label: "Descripción",      required: false, aliases: ["Descripción","Descripcion","descripcion","description","desc","concepto","detalle","linea","línea"] },
   { key: "notes",       label: "Notas",            required: false, aliases: ["Notas","notas","notes","nota","observaciones","comentarios"] },
@@ -280,6 +282,24 @@ export class ImportService {
 
     let inserted = 0, skipped = 0;
     const errors: ImportError[] = [];
+    const affectedClientIds = new Set<string>();
+
+    // Cache Tax records to avoid repeated DB lookups
+    const taxCache = new Map<string, { id: string }>();
+    const getOrCreateTax = async (name: string, rate: number): Promise<{ id: string }> => {
+      const key = `${rate}`;
+      if (taxCache.has(key)) return taxCache.get(key)!;
+      let tax = await this.prisma.tax.findFirst({
+        where: { companyId, rate: { gte: rate - 0.01, lte: rate + 0.01 } },
+      });
+      if (!tax) {
+        tax = await this.prisma.tax.create({
+          data: { companyId, name, rate, isDefault: false },
+        });
+      }
+      taxCache.set(key, { id: tax.id });
+      return { id: tax.id };
+    };
 
     const STATUS_MAP: Record<string, string> = {
       PAGADA:"PAID", PAID:"PAID", COBRADA:"PAID",
@@ -316,13 +336,23 @@ export class ImportService {
 
         const subtotalRaw = parseFloat(r("subtotal").replace(",", "."));
         const subtotal    = isNaN(subtotalRaw) ? total / 1.21 : subtotalRaw;
-        const taxAmount   = total - subtotal;
+
+        // Parse explicit IVA/IRPF amounts from the source file (e.g. ivaT, irpfT fields)
+        const ivaGross  = parseFloat(r("ivaAmount").replace(",", "."));
+        const irpfGross = parseFloat(r("irpfAmount").replace(",", "."));
+        const hasIva    = !isNaN(ivaGross) && ivaGross > 0;
+        const hasIrpf   = !isNaN(irpfGross) && irpfGross > 0;
+
+        // taxAmount stored on invoice = net (IVA − IRPF) so total = subtotal + taxAmount holds
+        const taxAmount = hasIva
+          ? ivaGross - (hasIrpf ? irpfGross : 0)
+          : total - subtotal;
 
         const statusRaw = r("status").toUpperCase();
         const status = STATUS_MAP[statusRaw] ?? "PAID";
         const description = r("description") || "Importación histórica";
 
-        await this.prisma.invoice.create({ data: {
+        const invoice = await this.prisma.invoice.create({ data: {
           companyId, clientId: client.id, number,
           status: status as any, issueDate, dueDate,
           subtotal, taxAmount, total,
@@ -330,9 +360,49 @@ export class ImportService {
           notes: r("notes") || undefined,
           items: { create: [{ description, quantity: 1, unitPrice: subtotal, discount: 0, subtotal, order: 0 }] },
         }});
+
+        // Create InvoiceTax records for IVA and IRPF when amounts are available
+        if (hasIva) {
+          const ivaRate = Math.round((ivaGross / subtotal) * 100) || 21;
+          const ivaTax = await getOrCreateTax(`IVA ${ivaRate}%`, ivaRate);
+          await this.prisma.invoiceTax.create({
+            data: { invoiceId: invoice.id, taxId: ivaTax.id, rate: ivaRate, base: subtotal, amount: ivaGross },
+          });
+        }
+        if (hasIrpf) {
+          const irpfRate = Math.round((irpfGross / subtotal) * 100) || 15;
+          const irpfTax = await getOrCreateTax(`IRPF -${irpfRate}%`, -irpfRate);
+          await this.prisma.invoiceTax.create({
+            data: { invoiceId: invoice.id, taxId: irpfTax.id, rate: -irpfRate, base: subtotal, amount: -irpfGross },
+          });
+        }
+
+        affectedClientIds.add(client.id);
         inserted++;
       } catch { errors.push({ row: rowNum, field: "—", message: "Error al insertar registro" }); }
     }
+
+    // Update client.totalBilled and pendingBalance for all clients affected by this import
+    for (const clientId of affectedClientIds) {
+      const [billedAgg, pendingAgg] = await Promise.all([
+        this.prisma.invoice.aggregate({
+          where: { clientId, companyId, status: { in: ["PAID", "PARTIAL"] } },
+          _sum: { total: true },
+        }),
+        this.prisma.invoice.aggregate({
+          where: { clientId, companyId, status: { in: ["SENT", "OVERDUE"] } },
+          _sum: { total: true },
+        }),
+      ]);
+      await this.prisma.client.update({
+        where: { id: clientId },
+        data: {
+          totalBilled:    billedAgg._sum.total   ?? 0,
+          pendingBalance: pendingAgg._sum.total   ?? 0,
+        },
+      });
+    }
+
     return { total: rows.length, inserted, skipped, errors };
   }
 
@@ -380,7 +450,7 @@ export class ImportService {
     const templates = {
       clients:   { headers: ["Nombre","Email","Teléfono","CIF/NIF","Dirección","Ciudad","Provincia","Código postal","País","Web","Notas"],    example: ["Empresa Ejemplo S.L.","contacto@empresa.com","912345678","B12345678","Calle Mayor 1","Madrid","Madrid","28001","ES","www.empresa.com",""] },
       products:  { headers: ["Nombre","SKU","Descripción","Precio","Coste","Tipo","Control stock"],                                          example: ["Consultoría hora","CONS-001","Hora de consultoría","75.00","0","SERVICE","NO"] },
-      invoices:  { headers: ["Número","Cliente","Fecha emisión","Fecha vencimiento","Total","Estado","Descripción","Notas"],                 example: ["FAC-2024-0001","Cliente Ejemplo S.L.","2024-01-15","2024-02-15","1210.00","PAID","Servicios enero",""] },
+      invoices:  { headers: ["Número","Cliente","Fecha emisión","Fecha vencimiento","Base imponible","Importe IVA","Importe IRPF","Total","Estado","Descripción","Notas"], example: ["FAC-2024-0001","Cliente Ejemplo S.L.","2024-01-15","2024-02-15","1000.00","210.00","0","1210.00","PAID","Servicios enero",""] },
       suppliers: { headers: ["Nombre","Email","Teléfono","CIF/NIF","Persona contacto","Dirección","Ciudad","País","Web","IBAN / Cuenta","Notas"], example: ["Proveedor S.L.","proveedor@email.com","912345678","B87654321","Ana García","Calle Industria 5","Barcelona","ES","www.proveedor.com","ES12 1234 5678 90 1234567890",""] },
     };
     const tpl = templates[entity];
