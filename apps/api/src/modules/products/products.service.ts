@@ -10,7 +10,9 @@ export class ProductsService {
   ) {}
 
   async findAll(companyId: string, params: any) {
-    const { page = 1, limit = 50, search } = params;
+    const { search } = params;
+    const page = Number(params.page) || 1;
+    const limit = Number(params.limit) || 50;
     const where: any = {
       companyId,
       isActive: true,

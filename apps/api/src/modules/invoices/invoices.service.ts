@@ -22,7 +22,9 @@ export class InvoicesService {
   ) {}
 
   async findAll(companyId: string, params: PaginationParams & { status?: string }) {
-    const { page = 1, limit = 20, search, status, sortBy = "createdAt", sortOrder = "desc" } = params;
+    const { search, status, sortBy = "createdAt", sortOrder = "desc" } = params;
+    const page = Number(params.page) || 1;
+    const limit = Number(params.limit) || 20;
     const skip = (page - 1) * limit;
 
     const where: any = {

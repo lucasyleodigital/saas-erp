@@ -6,7 +6,9 @@ export class DeliveryNotesService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(companyId: string, params: any) {
-    const { page = 1, limit = 20, search, status } = params;
+    const { search, status } = params;
+    const page = Number(params.page) || 1;
+    const limit = Number(params.limit) || 20;
     const where: any = {
       companyId,
       ...(status && { status }),

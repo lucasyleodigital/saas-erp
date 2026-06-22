@@ -10,7 +10,9 @@ export class LeadsService {
   ) {}
 
   async findAll(companyId: string, params: any) {
-    const { page = 1, limit = 20, search } = params;
+    const { search } = params;
+    const page = Number(params.page) || 1;
+    const limit = Number(params.limit) || 20;
     const where: any = {
       companyId,
       isConverted: false,

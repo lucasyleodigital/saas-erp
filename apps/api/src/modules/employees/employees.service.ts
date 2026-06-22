@@ -8,7 +8,9 @@ export class EmployeesService {
   // ─── Employees ─────────────────────────────────────────────
 
   async findAll(companyId: string, params: any) {
-    const { page = 1, limit = 20, search, status, department } = params;
+    const { search, status, department } = params;
+    const page = Number(params.page) || 1;
+    const limit = Number(params.limit) || 20;
     const where: any = {
       companyId,
       ...(status && { status }),

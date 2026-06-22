@@ -130,7 +130,9 @@ export class AccountingService {
   // ─── Journal Entries ──────────────────────────────────────────────────────────
 
   async getJournalEntries(companyId: string, params: any = {}) {
-    const { page = 1, limit = 30, type, search } = params;
+    const { type, search } = params;
+    const page = Number(params.page) || 1;
+    const limit = Number(params.limit) || 30;
     const where: any = {
       companyId,
       ...(type && { type }),
