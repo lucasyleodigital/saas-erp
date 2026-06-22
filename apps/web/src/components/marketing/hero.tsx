@@ -292,8 +292,8 @@ export function Hero() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.38 }}
         >
-          CRM, facturación electrónica, VeriFactu, contabilidad y nóminas.
-          El ERP moderno diseñado desde cero para pymes españolas.
+          Facturacion con VeriFactu, IRPF automatico, Modelo 130/303, CRM y contabilidad.
+          Creado por autonomos para autonomos y pymes.
         </motion.p>
 
         {/* CTAs */}

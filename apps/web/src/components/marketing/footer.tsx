@@ -46,8 +46,8 @@ export function MarketingFooter() {
               <Image src="/logo.png" alt="YouWhole" width={130} height={36} className="object-contain" />
             </Link>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              El ERP más moderno para pymes españolas. VeriFactu, CRM y
-              facturación en una sola herramienta.
+              El ERP creado por autonomos para autonomos y pymes.
+              VeriFactu, IRPF, CRM y facturacion en una sola herramienta.
             </p>
           </div>
 

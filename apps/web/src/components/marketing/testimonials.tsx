@@ -47,7 +47,7 @@ export function Testimonials() {
             Lo que dicen nuestros clientes
           </h2>
           <p className="text-muted-foreground max-w-md mx-auto">
-            Pymes españolas que ya gestionan su negocio completo con YouWhole.
+            Autonomos y pymes que ya gestionan su negocio completo con YouWhole.
           </p>
         </motion.div>
 
