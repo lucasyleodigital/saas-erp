@@ -314,12 +314,16 @@ export class InvoicesService {
     const clientEmail = invoice.client?.email;
     if (!clientEmail) throw new BadRequestException("El cliente no tiene email registrado");
 
+    const { generateInvoicePdf } = await import("./invoice-pdf.generator");
+    const pdfBuffer = await generateInvoicePdf(invoice);
+
     await this.email.sendInvoice(
       clientEmail,
       invoice.client!.name,
       invoice.number,
       Number(invoice.total),
       invoice.company?.name ?? "",
+      pdfBuffer,
     );
     if (invoice.status === "DRAFT") {
       await this.prisma.invoice.update({ where: { id }, data: { status: "SENT" } });

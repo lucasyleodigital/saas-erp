@@ -21,13 +21,26 @@ export class EmailService {
     return this.send(to, subject, html);
   }
 
-  private async send(to: string, subject: string, html: string) {
+  private async send(
+    to: string,
+    subject: string,
+    html: string,
+    attachments?: Array<{ filename: string; content: Buffer }>,
+  ) {
     if (!this.resend) {
-      // In development, log instead of sending
-      console.log(`📧 [EMAIL SKIPPED] To: ${to} | Subject: ${subject}`);
+      console.log(`📧 [EMAIL SKIPPED] To: ${to} | Subject: ${subject}${attachments?.length ? ` | ${attachments.length} attachment(s)` : ""}`);
       return;
     }
-    await this.resend.emails.send({ from: this.from, to, subject, html });
+    await this.resend.emails.send({
+      from: this.from,
+      to,
+      subject,
+      html,
+      attachments: attachments?.map((a) => ({
+        filename: a.filename,
+        content: a.content,
+      })),
+    });
   }
 
   async sendWelcome(to: string, firstName: string, companyName: string) {
@@ -63,8 +76,10 @@ export class EmailService {
     clientName: string,
     invoiceNumber: string,
     amount: number,
-    companyName: string
+    companyName: string,
+    pdfBuffer?: Buffer,
   ) {
+    const fmt = new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(amount);
     await this.send(
       to,
       `Nueva factura de ${companyName}: ${invoiceNumber}`,
@@ -74,14 +89,14 @@ export class EmailService {
         <p style="color: #6b7280; margin: 0 0 24px;">Estimado/a ${clientName},</p>
         <p style="color: #374151; line-height: 1.6; margin-bottom: 24px;">
           Adjuntamos la factura <strong>${invoiceNumber}</strong> por un importe de
-          <strong>${new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(amount)}</strong>
-          emitida por <strong>${companyName}</strong>.
+          <strong>${fmt}</strong> emitida por <strong>${companyName}</strong>.
         </p>
         <p style="color: #9ca3af; font-size: 12px;">
           Para cualquier consulta, responde a este email.
         </p>
       </div>
-      `
+      `,
+      pdfBuffer ? [{ filename: `${invoiceNumber}.pdf`, content: pdfBuffer }] : undefined,
     );
   }
 
