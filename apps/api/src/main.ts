@@ -1,5 +1,5 @@
-import { NestFactory, Reflector } from "@nestjs/core";
-import { ValidationPipe, ClassSerializerInterceptor } from "@nestjs/common";
+import { NestFactory } from "@nestjs/core";
+import { ValidationPipe } from "@nestjs/common";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { ConfigService } from "@nestjs/config";
 import helmet from "helmet";
@@ -41,11 +41,8 @@ async function bootstrap() {
     })
   );
 
-  // Serialization — DecimalInterceptor converts Prisma Decimal objects to JS numbers before JSON serialization
-  app.useGlobalInterceptors(
-    new ClassSerializerInterceptor(app.get(Reflector)),
-    new DecimalInterceptor(),
-  );
+  // Serialization — DecimalInterceptor converts Prisma Decimal objects to JS numbers
+  app.useGlobalInterceptors(new DecimalInterceptor());
 
   // API prefix
   app.setGlobalPrefix("api/v1");
@@ -84,7 +81,7 @@ async function bootstrap() {
       res.json({
         status: "ok",
         counts: { clients, clientsActive, invoices, products, productsActive, suppliers },
-        version: "d5198ad+diag",
+        version: "a9e0ed3+fix500",
       });
     } catch (e: any) {
       res.status(500).json({ error: e.message });
