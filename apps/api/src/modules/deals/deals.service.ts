@@ -70,7 +70,14 @@ export class DealsService {
 
   async update(companyId: string, id: string, data: Partial<CreateDealDto>) {
     const deal = await this.prisma.deal.findFirst({ where: { id, companyId } });
-    if (!deal) throw new NotFoundException("Deal no encontrado");
+    if (!deal) throw new NotFoundException("Lead no encontrado");
     return this.prisma.deal.update({ where: { id }, data });
+  }
+
+  async remove(companyId: string, id: string) {
+    const deal = await this.prisma.deal.findFirst({ where: { id, companyId } });
+    if (!deal) throw new NotFoundException("Lead no encontrado");
+    await this.prisma.deal.delete({ where: { id } });
+    return { deleted: true };
   }
 }

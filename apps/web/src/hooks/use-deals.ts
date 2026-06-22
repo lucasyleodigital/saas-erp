@@ -16,9 +16,9 @@ export function useCreateDeal() {
       api.post("/deals", data).then((r) => r.data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["deals"] });
-      toast.success("Deal creado");
+      toast.success("Lead creado");
     },
-    onError: () => toast.error("Error al crear el deal"),
+    onError: () => toast.error("Error al crear el lead"),
   });
 }
 
@@ -28,7 +28,19 @@ export function useMoveDealStage() {
     mutationFn: ({ id, stageId }: { id: string; stageId: string }) =>
       api.put(`/deals/${id}/stage`, { stageId }).then((r) => r.data),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["deals"] }),
-    onError: () => toast.error("Error al mover el deal"),
+    onError: () => toast.error("Error al mover el lead"),
+  });
+}
+
+export function useDeleteDeal() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => api.delete(`/deals/${id}`).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["deals"] });
+      toast.success("Lead eliminado");
+    },
+    onError: () => toast.error("Error al eliminar el lead"),
   });
 }
 

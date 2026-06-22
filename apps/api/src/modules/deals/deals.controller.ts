@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Param, Body, UseGuards } from "@nestjs/common";
+import { Controller, Get, Post, Put, Delete, Param, Body, UseGuards } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { IsOptional, IsString } from "class-validator";
 import { DealsService } from "./deals.service";
@@ -43,5 +43,10 @@ export class DealsController {
   @Put(":id")
   update(@CurrentUser() user: JwtPayload, @Param("id") id: string, @Body() body: UpdateDealDto) {
     return this.dealsService.update(user.companyId, id, body);
+  }
+
+  @Delete(":id")
+  remove(@CurrentUser() user: JwtPayload, @Param("id") id: string) {
+    return this.dealsService.remove(user.companyId, id);
   }
 }

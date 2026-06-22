@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { usePipeline, useMoveDealStage, useCreateDeal, useCreatePipeline } from "@/hooks/use-deals";
+import { usePipeline, useMoveDealStage, useCreateDeal, useCreatePipeline, useDeleteDeal } from "@/hooks/use-deals";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { formatCurrency, getInitials } from "@/lib/utils";
-import { Plus, MoreHorizontal, GitBranch, CheckCircle2 } from "lucide-react";
+import { Plus, MoreHorizontal, GitBranch, CheckCircle2, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { DealDialog } from "./deal-dialog";
 import { useTranslations } from "next-intl";
@@ -24,6 +27,7 @@ export function PipelineView() {
   const t = useTranslations("pipeline");
   const { data: pipelines, isLoading } = usePipeline();
   const moveStage = useMoveDealStage();
+  const deleteDeal = useDeleteDeal();
   const createPipeline = useCreatePipeline();
   const [dragging, setDragging] = useState<{ dealId: string; fromStageId: string } | null>(null);
   const [dealDialogOpen, setDealDialogOpen] = useState(false);
@@ -189,7 +193,9 @@ export function PipelineView() {
                     draggable
                     onDragStart={() => handleDragStart(deal.id, stage.id)}
                   >
-                    <DealCard deal={deal} />
+                    <DealCard deal={deal} onDelete={() => {
+                      if (confirm(`Eliminar "${deal.title}"?`)) deleteDeal.mutate(deal.id);
+                    }} />
                   </motion.div>
                 ))}
               </div>
@@ -201,15 +207,25 @@ export function PipelineView() {
   );
 }
 
-function DealCard({ deal }: { deal: any }) {
+function DealCard({ deal, onDelete }: { deal: any; onDelete: () => void }) {
   return (
     <Card className="cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow border-border/60">
       <CardContent className="p-3 space-y-2">
         <div className="flex items-start justify-between gap-2">
           <p className="text-sm font-medium leading-tight line-clamp-2">{deal.title}</p>
-          <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0 -mr-1 -mt-0.5 text-muted-foreground">
-            <MoreHorizontal className="h-3.5 w-3.5" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0 -mr-1 -mt-0.5 text-muted-foreground">
+                <MoreHorizontal className="h-3.5 w-3.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={onDelete}>
+                <Trash2 className="h-4 w-4 mr-2" />
+                Eliminar
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         {deal.client && (
