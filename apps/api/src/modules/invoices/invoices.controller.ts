@@ -1,5 +1,5 @@
 import {
-  Controller, Get, Post, Param, Body, Query, Patch,
+  Controller, Get, Post, Delete, Param, Body, Query, Patch,
   UseGuards, HttpCode, HttpStatus,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
@@ -43,6 +43,11 @@ export class InvoicesController {
   @HttpCode(HttpStatus.OK)
   sendByEmail(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
     return this.svc.sendByEmail(u.companyId, id);
+  }
+
+  @Delete(":id")
+  remove(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
+    return this.svc.remove(u.companyId, id);
   }
 
   @Post(":id/payments")

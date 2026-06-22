@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useInvoices, useUpdateInvoiceStatus, useSendInvoiceEmail } from "@/hooks/use-invoices";
+import { useInvoices, useUpdateInvoiceStatus, useSendInvoiceEmail, useDeleteInvoice } from "@/hooks/use-invoices";
 import { downloadInvoicePdf } from "@/lib/pdf/download-pdf";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,6 +27,7 @@ import {
   FileText,
   Download,
   AlertCircle,
+  Trash2,
 } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { motion } from "framer-motion";
@@ -64,6 +65,7 @@ export function InvoicesView() {
   const debouncedSearch = useDebounce(search, 300);
   const updateStatus = useUpdateInvoiceStatus();
   const sendEmail = useSendInvoiceEmail();
+  const deleteInvoice = useDeleteInvoice();
 
   const { data, isLoading, isError, error } = useInvoices({
     search: debouncedSearch || undefined,
@@ -283,6 +285,18 @@ export function InvoicesView() {
                                   Cancelar
                                 </DropdownMenuItem>
                               )}
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                className="text-destructive focus:text-destructive"
+                                onClick={() => {
+                                  if (confirm(`Eliminar factura ${inv.number}? Esta accion no se puede deshacer.`)) {
+                                    deleteInvoice.mutate(inv.id);
+                                  }
+                                }}
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Eliminar
+                              </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </td>

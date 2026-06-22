@@ -195,6 +195,18 @@ export class InvoicesService {
     return payment;
   }
 
+  async remove(companyId: string, id: string) {
+    await this.findOne(companyId, id);
+    await this.prisma.$transaction([
+      this.prisma.invoiceTax.deleteMany({ where: { invoiceId: id } }),
+      this.prisma.invoiceItem.deleteMany({ where: { invoiceId: id } }),
+      this.prisma.payment.deleteMany({ where: { invoiceId: id } }),
+      this.prisma.verifactuRecord.deleteMany({ where: { invoiceId: id } }),
+      this.prisma.invoice.delete({ where: { id } }),
+    ]);
+    return { deleted: true };
+  }
+
   async sendByEmail(companyId: string, id: string) {
     const invoice = await this.findOne(companyId, id);
     const clientEmail = invoice.client?.email;
