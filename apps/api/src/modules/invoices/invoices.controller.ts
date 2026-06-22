@@ -73,6 +73,20 @@ export class InvoicesController {
     return this.billing.createInvoicePaymentLink(u.companyId, id, body.successUrl, body.cancelUrl);
   }
 
+  @Post(":id/duplicate")
+  duplicate(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
+    return this.svc.duplicate(u.companyId, id);
+  }
+
+  @Post("bulk/status")
+  @HttpCode(HttpStatus.OK)
+  bulkUpdateStatus(
+    @CurrentUser() u: JwtPayload,
+    @Body() body: { ids: string[]; status: string },
+  ) {
+    return this.svc.bulkUpdateStatus(u.companyId, body.ids, body.status);
+  }
+
   @Post(":id/payments")
   registerPayment(
     @CurrentUser() u: JwtPayload,

@@ -223,6 +223,77 @@ export class InvoicesService {
     return { deleted: true };
   }
 
+  async duplicate(companyId: string, id: string) {
+    const src = await this.findOne(companyId, id);
+
+    const series = src.seriesId
+      ? await this.prisma.invoiceSeries.findFirst({ where: { id: src.seriesId } })
+      : await this.prisma.invoiceSeries.findFirst({ where: { companyId, isDefault: true } });
+
+    if (!series) throw new BadRequestException("Serie no encontrada");
+    const number = `${series.prefix}${String(series.nextNumber).padStart(4, "0")}`;
+
+    const [invoice] = await this.prisma.$transaction([
+      this.prisma.invoice.create({
+        data: {
+          companyId,
+          clientId: src.clientId,
+          seriesId: series.id,
+          number,
+          status: "DRAFT",
+          issueDate: new Date(),
+          dueDate: src.dueDate
+            ? new Date(Date.now() + (src.dueDate.getTime() - src.issueDate.getTime()))
+            : undefined,
+          currency: src.currency,
+          subtotal: src.subtotal,
+          taxAmount: src.taxAmount,
+          total: src.total,
+          notes: src.notes,
+          terms: src.terms,
+          items: {
+            create: (src.items ?? []).map((item: any, i: number) => ({
+              productId: item.productId,
+              description: item.description,
+              quantity: item.quantity,
+              unitPrice: item.unitPrice,
+              discount: item.discount ?? 0,
+              subtotal: item.subtotal,
+              order: i,
+            })),
+          },
+          taxes: (src.taxes ?? []).length > 0
+            ? {
+                create: src.taxes!.map((t: any) => ({
+                  taxId: t.taxId,
+                  rate: t.rate,
+                  base: t.base,
+                  amount: t.amount,
+                })),
+              }
+            : undefined,
+        },
+        include: { items: true, taxes: true, client: true },
+      }),
+      this.prisma.invoiceSeries.update({
+        where: { id: series.id },
+        data: { nextNumber: { increment: 1 } },
+      }),
+    ]);
+    return invoice;
+  }
+
+  async bulkUpdateStatus(companyId: string, ids: string[], status: string) {
+    const valid = ["DRAFT", "SENT", "PAID", "CANCELLED"];
+    if (!valid.includes(status)) throw new BadRequestException("Estado no valido");
+
+    const result = await this.prisma.invoice.updateMany({
+      where: { id: { in: ids }, companyId },
+      data: { status: status as any },
+    });
+    return { updated: result.count };
+  }
+
   async setRecurring(companyId: string, id: string, isRecurring: boolean, interval?: string) {
     await this.findOne(companyId, id);
     const valid = ["WEEKLY", "BIWEEKLY", "MONTHLY", "QUARTERLY", "YEARLY"];

@@ -69,6 +69,31 @@ export function useSendInvoiceEmail() {
   });
 }
 
+export function useDuplicateInvoice() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => api.post(`/invoices/${id}/duplicate`).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: invoiceKeys.all });
+      toast.success("Factura duplicada como borrador");
+    },
+    onError: () => toast.error("Error al duplicar la factura"),
+  });
+}
+
+export function useBulkUpdateStatus() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ ids, status }: { ids: string[]; status: string }) =>
+      api.post("/invoices/bulk/status", { ids, status }).then((r) => r.data),
+    onSuccess: (data) => {
+      qc.invalidateQueries({ queryKey: invoiceKeys.all });
+      toast.success(`${data.updated} facturas actualizadas`);
+    },
+    onError: () => toast.error("Error al actualizar facturas"),
+  });
+}
+
 export function useSetRecurring() {
   const qc = useQueryClient();
   return useMutation({

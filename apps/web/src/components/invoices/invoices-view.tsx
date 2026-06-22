@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useInvoices, useUpdateInvoiceStatus, useSendInvoiceEmail, useDeleteInvoice, useCreatePaymentLink, useSetRecurring } from "@/hooks/use-invoices";
+import { useInvoices, useUpdateInvoiceStatus, useSendInvoiceEmail, useDeleteInvoice, useCreatePaymentLink, useSetRecurring, useDuplicateInvoice } from "@/hooks/use-invoices";
 import { downloadInvoicePdf } from "@/lib/pdf/download-pdf";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,6 +30,7 @@ import {
   Trash2,
   CreditCard,
   RefreshCw,
+  Copy,
 } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useExport } from "@/hooks/use-export";
@@ -71,6 +72,7 @@ export function InvoicesView() {
   const deleteInvoice = useDeleteInvoice();
   const paymentLink = useCreatePaymentLink();
   const setRecurring = useSetRecurring();
+  const duplicateInvoice = useDuplicateInvoice();
   const { exportData: exportInvoices, isPending: exporting } = useExport("invoices");
 
   const { data, isLoading, isError, error } = useInvoices({
@@ -257,6 +259,12 @@ export function InvoicesView() {
                               >
                                 <Download className="h-4 w-4 mr-2" />
                                 {pdfLoading === inv.id ? "Generando..." : "Descargar PDF"}
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => duplicateInvoice.mutate(inv.id)}
+                              >
+                                <Copy className="h-4 w-4 mr-2" />
+                                Duplicar
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => sendEmail.mutate(inv.id)}
