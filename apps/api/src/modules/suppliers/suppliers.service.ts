@@ -59,10 +59,12 @@ export class SuppliersService {
 
   async update(companyId: string, id: string, dto: any) {
     await this.findOne(companyId, id);
-    return this.prisma.supplier.update({
-      where: { id },
-      data: dto,
-    });
+    const allowed = ["name", "email", "phone", "cifNif", "contactName", "address", "city", "country", "website", "notes", "bankAccount", "isActive"];
+    const data: Record<string, any> = {};
+    for (const key of allowed) {
+      if (dto[key] !== undefined) data[key] = dto[key];
+    }
+    return this.prisma.supplier.update({ where: { id }, data });
   }
 
   async remove(companyId: string, id: string) {
