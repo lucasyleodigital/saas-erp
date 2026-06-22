@@ -19,6 +19,7 @@ import {
   Eye,
   Globe,
   AlertCircle,
+  Download,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -32,6 +33,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { useExport } from "@/hooks/use-export";
 
 export function ClientsView() {
   const t = useTranslations("clients");
@@ -49,6 +51,7 @@ export function ClientsView() {
 
   const deleteClient = useDeleteClient();
   const generatePortalToken = useGeneratePortalToken();
+  const { exportData: exportClients, isPending: exporting } = useExport("clients");
 
   async function handlePortalLink(clientId: string) {
     try {
@@ -83,10 +86,16 @@ export function ClientsView() {
           <h1 className="text-2xl font-bold">{t("title")}</h1>
           <p className="text-sm text-muted-foreground mt-1">{t("subtitle")}</p>
         </div>
-        <Button onClick={handleNew} className="gap-2">
-          <Plus className="h-4 w-4" />
-          {t("new")}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={exportClients} disabled={exporting} className="gap-2">
+            <Download className="h-4 w-4" />
+            {exporting ? "Exportando..." : "Excel"}
+          </Button>
+          <Button onClick={handleNew} className="gap-2">
+            <Plus className="h-4 w-4" />
+            {t("new")}
+          </Button>
+        </div>
       </div>
 
       {/* Search */}

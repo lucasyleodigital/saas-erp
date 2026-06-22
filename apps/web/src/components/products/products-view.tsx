@@ -12,8 +12,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ProductDialog } from "./product-dialog";
 import { formatCurrency } from "@/lib/utils";
-import { Search, Plus, Package, Settings, Boxes, Tag, MoreHorizontal, Edit, Trash2 } from "lucide-react";
+import { Search, Plus, Package, Settings, Boxes, Tag, MoreHorizontal, Edit, Trash2, Download } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
+import { useExport } from "@/hooks/use-export";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
@@ -33,6 +34,7 @@ export function ProductsView() {
   const { data, isLoading } = useProducts({ search: debouncedSearch || undefined });
   const products = data?.data ?? [];
   const deleteProduct = useDeleteProduct();
+  const { exportData: exportProducts, isPending: exporting } = useExport("products");
 
   return (
     <div className="space-y-6">
@@ -41,13 +43,19 @@ export function ProductsView() {
           <h1 className="text-2xl font-bold">{t("title")}</h1>
           <p className="text-sm text-muted-foreground mt-1">{t("subtitle")}</p>
         </div>
-        <Button
-          onClick={() => { setEditingProduct(null); setDialogOpen(true); }}
-          className="gap-2"
-        >
-          <Plus className="h-4 w-4" />
-          {t("new")}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={exportProducts} disabled={exporting} className="gap-2">
+            <Download className="h-4 w-4" />
+            {exporting ? "Exportando..." : "Excel"}
+          </Button>
+          <Button
+            onClick={() => { setEditingProduct(null); setDialogOpen(true); }}
+            className="gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            {t("new")}
+          </Button>
+        </div>
       </div>
 
       <div className="relative w-full max-w-sm">

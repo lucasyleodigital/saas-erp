@@ -30,6 +30,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
+import { useExport } from "@/hooks/use-export";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import Link from "next/link";
@@ -66,6 +67,7 @@ export function InvoicesView() {
   const updateStatus = useUpdateInvoiceStatus();
   const sendEmail = useSendInvoiceEmail();
   const deleteInvoice = useDeleteInvoice();
+  const { exportData: exportInvoices, isPending: exporting } = useExport("invoices");
 
   const { data, isLoading, isError, error } = useInvoices({
     search: debouncedSearch || undefined,
@@ -86,10 +88,16 @@ export function InvoicesView() {
           <h1 className="text-2xl font-bold">{t("title")}</h1>
           <p className="text-sm text-muted-foreground mt-1">{t("subtitle")}</p>
         </div>
-        <Button onClick={() => setDialogOpen(true)} className="gap-2">
-          <Plus className="h-4 w-4" />
-          {t("new")}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={exportInvoices} disabled={exporting} className="gap-2">
+            <Download className="h-4 w-4" />
+            {exporting ? "Exportando..." : "Excel"}
+          </Button>
+          <Button onClick={() => setDialogOpen(true)} className="gap-2">
+            <Plus className="h-4 w-4" />
+            {t("new")}
+          </Button>
+        </div>
       </div>
 
       {/* Tabs + Search */}

@@ -60,7 +60,14 @@ export class InvoicesService {
       where: { id, companyId },
       include: {
         client: true,
-        company: { select: { id: true, name: true, legalName: true, cif: true, address: true, email: true, phone: true } },
+        company: {
+        select: {
+          id: true, name: true, legalName: true, cif: true,
+          address: true, city: true, province: true, postalCode: true,
+          email: true, phone: true, logo: true, website: true, settings: true,
+          bankAccounts: { where: { isActive: true }, take: 1 },
+        },
+      },
         items: { include: { product: true }, orderBy: { order: "asc" } },
         taxes: { include: { tax: true } },
         payments: { orderBy: { paidAt: "desc" } },
