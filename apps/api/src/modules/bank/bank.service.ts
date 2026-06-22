@@ -19,6 +19,19 @@ export class BankService {
     });
   }
 
+  async createAccount(companyId: string, data: { name: string; iban?: string; bic?: string }) {
+    return this.prisma.bankAccount.create({
+      data: { companyId, name: data.name, iban: data.iban, bic: data.bic },
+    });
+  }
+
+  async deleteAccount(companyId: string, id: string) {
+    const account = await this.prisma.bankAccount.findFirst({ where: { id, companyId } });
+    if (!account) throw new BadRequestException("Cuenta no encontrada");
+    await this.prisma.bankAccount.update({ where: { id }, data: { isActive: false } });
+    return { deleted: true };
+  }
+
   async getTransactions(companyId: string, bankAccountId: string, params: any) {
     const page = Number(params.page) || 1;
     const limit = Number(params.limit) || 50;

@@ -1,5 +1,5 @@
 import {
-  Controller, Get, Post, Param, Query, UseGuards,
+  Controller, Get, Post, Delete, Param, Query, Body, UseGuards,
   UseInterceptors, UploadedFile, BadRequestException,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
@@ -19,6 +19,16 @@ export class BankController {
   @Get("accounts")
   getAccounts(@CurrentUser() u: JwtPayload) {
     return this.bankService.getAccounts(u.companyId);
+  }
+
+  @Post("accounts")
+  createAccount(@CurrentUser() u: JwtPayload, @Body() body: { name: string; iban?: string; bic?: string }) {
+    return this.bankService.createAccount(u.companyId, body);
+  }
+
+  @Delete("accounts/:accountId")
+  deleteAccount(@CurrentUser() u: JwtPayload, @Param("accountId") accountId: string) {
+    return this.bankService.deleteAccount(u.companyId, accountId);
   }
 
   @Get("accounts/:accountId/transactions")
