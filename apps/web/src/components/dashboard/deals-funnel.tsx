@@ -25,7 +25,7 @@ export function DealsFunnel() {
             <div className="flex items-center justify-between text-xs">
               <span className="font-medium">{stage.label}</span>
               <div className="flex items-center gap-2 text-muted-foreground">
-                <span>{stage.count} deals</span>
+                <span>{stage.count} oport.</span>
                 <span>·</span>
                 <span>{(stage.value / 1000).toFixed(0)}k €</span>
               </div>

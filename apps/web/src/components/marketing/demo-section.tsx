@@ -137,7 +137,7 @@ function CrmScreen() {
     <div className="p-5 h-full flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <h3 className="text-white font-semibold text-sm">Pipeline CRM</h3>
-        <span className="text-[9px]" style={{ color: "#64748b" }}>6 deals activos · 19.600€</span>
+        <span className="text-[9px]" style={{ color: "#64748b" }}>6 oportunidades · 19.600€</span>
       </div>
       <div className="flex gap-2.5 flex-1 overflow-hidden">
         {PIPELINE_COLS.map((col, ci) => (
@@ -196,7 +196,7 @@ function CrmScreen() {
             style={{ background: "rgba(34,197,94,0.08)", borderColor: "rgba(34,197,94,0.25)" }}
           >
             <Check className="h-3.5 w-3.5 shrink-0" style={{ color: "#22c55e" }} />
-            <p className="text-[10px] font-medium text-white">Deal avanzado — Constructora Bernal → Propuesta</p>
+            <p className="text-[10px] font-medium text-white">Oportunidad avanzada — Constructora Bernal → Propuesta</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -229,7 +229,7 @@ function AnaliticaScreen() {
         {[
           { label: "Facturado", value: "48.250€", delta: "+18%", color: "#0d9488" },
           { label: "Cobrado", value: "39.800€", delta: "+12%", color: "#22c55e" },
-          { label: "Pipeline", value: "22.800€", delta: "+5 deals", color: "#6366f1" },
+          { label: "Pipeline", value: "22.800€", delta: "+5 oport.", color: "#6366f1" },
         ].map((k) => (
           <div key={k.label} className="rounded-xl p-2.5 border" style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}>
             <div className="text-[8px] mb-1" style={{ color: "#475569" }}>{k.label}</div>

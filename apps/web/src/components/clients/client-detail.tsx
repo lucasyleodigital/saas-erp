@@ -126,7 +126,7 @@ export function ClientDetail({ id }: { id: string }) {
           </TabsTrigger>
           <TabsTrigger value="deals">
             <Briefcase className="h-4 w-4 mr-2" />
-            Deals
+            Oportunidades
           </TabsTrigger>
           <TabsTrigger value="datos">
             <Info className="h-4 w-4 mr-2" />
@@ -200,7 +200,7 @@ export function ClientDetail({ id }: { id: string }) {
           <Card>
             <CardContent className="p-4">
               {!client.deals || client.deals.length === 0 ? (
-                <p className="text-sm text-muted-foreground">Sin deals asociados</p>
+                <p className="text-sm text-muted-foreground">Sin oportunidades asociadas</p>
               ) : (
                 <div className="space-y-3">
                   {client.deals.map((deal: any) => (

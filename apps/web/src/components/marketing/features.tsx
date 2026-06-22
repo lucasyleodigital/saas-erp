@@ -46,7 +46,7 @@ const MAIN_FEATURES = [
   {
     icon: BarChart3,
     title: "Pipeline Kanban",
-    desc: "Drag & drop para mover oportunidades entre etapas. Cierra más deals con visibilidad total.",
+    desc: "Drag & drop para mover oportunidades entre etapas. Cierra mas oportunidades con visibilidad total.",
     color: "#ec4899",
     bg: "rgba(236,72,153,0.08)",
     border: "rgba(236,72,153,0.2)",

@@ -36,14 +36,14 @@ export function StatsCards() {
           change: data.clientsChange,
         },
         {
-          label: "Deals abiertos",
+          label: "Oportunidades",
           value: `${data.openDeals}`,
           change: 0,
           extra: formatCurrency(data.openDealsValue),
         },
       ]
     : Array.from({ length: 4 }, (_, i) => ({
-        label: ["Ingresos del mes", "Facturas pendientes", "Clientes activos", "Deals abiertos"][i] ?? "",
+        label: ["Ingresos del mes", "Facturas pendientes", "Clientes activos", "Oportunidades"][i] ?? "",
         value: "—",
         change: 0,
       }));

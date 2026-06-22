@@ -148,7 +148,7 @@ export function PipelineView() {
               <div className="flex flex-col gap-2 min-h-[120px] rounded-xl bg-muted/30 p-2 border-2 border-dashed border-transparent transition-colors data-[over=true]:border-primary/40 data-[over=true]:bg-primary/5">
                 {stage.deals.length === 0 && (
                   <div className="flex items-center justify-center h-20 text-xs text-muted-foreground">
-                    Arrastra deals aquí
+                    Arrastra oportunidades aqui
                   </div>
                 )}
                 {stage.deals.map((deal: any, i: number) => (

@@ -121,7 +121,7 @@
       "revenue": "Facturación",
       "clients": "Clientes",
       "invoices": "Facturas pendientes",
-      "deals": "Deals activos",
+      "deals": "Oportunidades activas",
       "thisMonth": "este mes",
       "vsLastMonth": "vs mes anterior"
     },
@@ -133,7 +133,7 @@
     "newInvoice": "Nueva factura",
     "newClient": "Nuevo cliente",
     "newQuote": "Nuevo presupuesto",
-    "newDeal": "Nuevo deal"
+    "newDeal": "Nueva oportunidad"
   },
   "clients": {
     "title": "Clientes",
@@ -234,7 +234,7 @@
   "pipeline": {
     "title": "Pipeline de ventas",
     "subtitle": "Gestiona tus oportunidades de venta",
-    "new": "Nuevo deal",
+    "new": "Nueva oportunidad",
     "stages": {
       "lead": "Lead",
       "qualified": "Calificado",
@@ -244,12 +244,12 @@
       "closed_lost": "Cerrado perdido"
     },
     "form": {
-      "name": "Nombre del deal",
+      "name": "Nombre de la oportunidad",
       "client": "Cliente",
       "value": "Valor estimado",
       "stage": "Etapa",
       "expectedClose": "Fecha estimada cierre",
-      "createSuccess": "Deal creado correctamente"
+      "createSuccess": "Oportunidad creada correctamente"
     }
   },
   "leads": {

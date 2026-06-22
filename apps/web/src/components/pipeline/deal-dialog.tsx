@@ -56,13 +56,13 @@ export function DealDialog({ open, onOpenChange, stages }: DealDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Nuevo deal</DialogTitle>
+          <DialogTitle>Nueva oportunidad</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-1.5">
             <Label>Título *</Label>
-            <Input {...register("title")} placeholder="Nombre del deal" />
+            <Input {...register("title")} placeholder="Nombre de la oportunidad" />
             {errors.title && <p className="text-xs text-destructive">{errors.title.message}</p>}
           </div>
 
@@ -108,7 +108,7 @@ export function DealDialog({ open, onOpenChange, stages }: DealDialogProps) {
             </Button>
             <Button type="submit" disabled={createDeal.isPending}>
               {createDeal.isPending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-              Crear deal
+              Crear oportunidad
             </Button>
           </DialogFooter>
         </form>
