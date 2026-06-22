@@ -127,6 +127,99 @@ export class AccountingService {
     };
   }
 
+  // ─── Modelo 347 (operaciones >3.005€ anuales) ─────────────────────────────────
+
+  async getModelo347(companyId: string, year: number) {
+    const start = new Date(year, 0, 1);
+    const end = new Date(year, 11, 31, 23, 59, 59);
+
+    const invoices = await this.prisma.invoice.findMany({
+      where: {
+        companyId,
+        issueDate: { gte: start, lte: end },
+        status: { notIn: ["DRAFT", "CANCELLED"] },
+      },
+      include: { client: { select: { id: true, name: true, cifNif: true } } },
+    });
+
+    const byClient = new Map<string, { name: string; cifNif: string; total: number; count: number }>();
+    for (const inv of invoices) {
+      const key = inv.clientId;
+      const existing = byClient.get(key) ?? { name: inv.client?.name ?? "", cifNif: inv.client?.cifNif ?? "", total: 0, count: 0 };
+      existing.total += Number(inv.total);
+      existing.count++;
+      byClient.set(key, existing);
+    }
+
+    const threshold = 3005.06;
+    const declarable = [...byClient.entries()]
+      .filter(([, v]) => v.total >= threshold)
+      .map(([clientId, v]) => ({
+        clientId,
+        name: v.name,
+        cifNif: v.cifNif,
+        totalOperations: Math.round(v.total * 100) / 100,
+        invoiceCount: v.count,
+      }))
+      .sort((a, b) => b.totalOperations - a.totalOperations);
+
+    return {
+      year,
+      threshold,
+      totalDeclarable: declarable.length,
+      totalAmount: declarable.reduce((s, d) => s + d.totalOperations, 0),
+      entries: declarable,
+    };
+  }
+
+  // ─── Modelo 111/190 (retenciones IRPF) ──────────────────────────────────────
+
+  async getRetencionesReport(companyId: string, year: number) {
+    const start = new Date(year, 0, 1);
+    const end = new Date(year, 11, 31, 23, 59, 59);
+
+    const invoiceTaxes = await this.prisma.invoiceTax.findMany({
+      where: {
+        invoice: {
+          companyId,
+          issueDate: { gte: start, lte: end },
+          status: { notIn: ["DRAFT", "CANCELLED"] },
+        },
+        rate: { lt: 0 },
+      },
+      include: {
+        invoice: { select: { issueDate: true, number: true, clientId: true, client: { select: { name: true, cifNif: true } } } },
+      },
+    });
+
+    const quarters = [0, 1, 2, 3].map((q) => {
+      const qTaxes = invoiceTaxes.filter((t) => {
+        const m = new Date(t.invoice.issueDate).getMonth();
+        return Math.floor(m / 3) === q;
+      });
+
+      const base = qTaxes.reduce((s, t) => s + Number(t.base), 0);
+      const retention = qTaxes.reduce((s, t) => s + Math.abs(Number(t.amount)), 0);
+
+      return {
+        quarter: q + 1,
+        label: QUARTER_LABELS[q],
+        base: Math.round(base * 100) / 100,
+        retention: Math.round(retention * 100) / 100,
+        count: qTaxes.length,
+      };
+    });
+
+    return {
+      year,
+      quarters,
+      totals: {
+        base: quarters.reduce((s, q) => s + q.base, 0),
+        retention: quarters.reduce((s, q) => s + q.retention, 0),
+      },
+    };
+  }
+
   // ─── Journal Entries ──────────────────────────────────────────────────────────
 
   async getJournalEntries(companyId: string, params: any = {}) {

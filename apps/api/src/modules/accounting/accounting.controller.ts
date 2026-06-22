@@ -29,6 +29,16 @@ export class AccountingController {
     return this.service.getVatReport(user.companyId, Number(year) || new Date().getFullYear());
   }
 
+  @Get("modelo-347")
+  getModelo347(@CurrentUser() user: JwtPayload, @Query("year") year: string) {
+    return this.service.getModelo347(user.companyId, Number(year) || new Date().getFullYear());
+  }
+
+  @Get("retenciones")
+  getRetenciones(@CurrentUser() user: JwtPayload, @Query("year") year: string) {
+    return this.service.getRetencionesReport(user.companyId, Number(year) || new Date().getFullYear());
+  }
+
   @Get("journal-entries")
   getJournalEntries(@CurrentUser() user: JwtPayload, @Query() query: any) {
     return this.service.getJournalEntries(user.companyId, query);
