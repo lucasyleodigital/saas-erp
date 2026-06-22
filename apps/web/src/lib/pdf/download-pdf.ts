@@ -16,8 +16,25 @@ export async function downloadInvoicePdf(invoiceId: string) {
   const { createElement } = await import("react");
   const { InvoicePdf }  = await import("./invoice-pdf");
 
-  const invoice = await api.get(`/invoices/${invoiceId}`).then((r) => r.data);
-  const blob    = await pdf(createElement(InvoicePdf, { invoice }) as any).toBlob();
+  const [invoice, company] = await Promise.all([
+    api.get(`/invoices/${invoiceId}`).then((r) => r.data),
+    api.get("/companies/me").then((r) => r.data),
+  ]);
+
+  if (company) {
+    invoice.company = {
+      ...invoice.company,
+      logo: company.logo ?? invoice.company?.logo,
+      settings: company.settings ?? invoice.company?.settings,
+      city: company.city ?? invoice.company?.city,
+      province: company.province ?? invoice.company?.province,
+      postalCode: company.postalCode ?? invoice.company?.postalCode,
+      website: company.website ?? invoice.company?.website,
+      bankAccounts: invoice.company?.bankAccounts ?? [],
+    };
+  }
+
+  const blob = await pdf(createElement(InvoicePdf, { invoice }) as any).toBlob();
   triggerDownload(blob, `${invoice.number}.pdf`);
 }
 
