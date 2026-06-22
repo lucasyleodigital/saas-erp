@@ -92,6 +92,59 @@ export class BillingService {
     return { url: session.url };
   }
 
+  async createInvoicePaymentLink(
+    companyId: string,
+    invoiceId: string,
+    successUrl: string,
+    cancelUrl: string,
+  ) {
+    const invoice = await this.prisma.invoice.findFirst({
+      where: { id: invoiceId, companyId },
+      include: { client: true, company: true },
+    });
+    if (!invoice) throw new BadRequestException("Factura no encontrada");
+    if (invoice.status === "PAID") throw new BadRequestException("La factura ya esta pagada");
+    if (invoice.status === "CANCELLED") throw new BadRequestException("La factura esta cancelada");
+
+    const remaining = Number(invoice.total) - Number(invoice.paidAmount);
+    if (remaining <= 0) throw new BadRequestException("No hay importe pendiente");
+
+    let customerId = invoice.company?.stripeCustomerId ?? undefined;
+    if (!customerId) {
+      const customer = await this.stripeClient.customers.create({
+        email: invoice.company?.email ?? undefined,
+        name: invoice.company?.legalName ?? invoice.company?.name,
+        metadata: { companyId },
+      });
+      customerId = customer.id;
+      await this.prisma.company.update({
+        where: { id: companyId },
+        data: { stripeCustomerId: customerId },
+      });
+    }
+
+    const session = await this.stripeClient.checkout.sessions.create({
+      mode: "payment",
+      customer_email: invoice.client?.email ?? undefined,
+      line_items: [{
+        price_data: {
+          currency: invoice.currency.toLowerCase(),
+          unit_amount: Math.round(remaining * 100),
+          product_data: {
+            name: `Factura ${invoice.number}`,
+            description: `${invoice.company?.name ?? ""}`,
+          },
+        },
+        quantity: 1,
+      }],
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+      metadata: { companyId, invoiceId, type: "invoice_payment" },
+    });
+
+    return { url: session.url, amount: remaining };
+  }
+
   async handleWebhook(body: Buffer, signature: string) {
     const secret = this.config.get<string>("STRIPE_WEBHOOK_SECRET");
     if (!secret) {
@@ -108,7 +161,27 @@ export class BillingService {
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
-        const { companyId, plan } = session.metadata ?? {};
+        const { companyId, plan, invoiceId, type } = session.metadata ?? {};
+
+        if (type === "invoice_payment" && invoiceId) {
+          const inv = await this.prisma.invoice.findUnique({ where: { id: invoiceId } });
+          if (inv) {
+            const paid = Number(session.amount_total ?? 0) / 100;
+            const newPaid = Number(inv.paidAmount) + paid;
+            const newStatus = newPaid >= Number(inv.total) ? "PAID" : "PARTIAL";
+            await this.prisma.$transaction([
+              this.prisma.payment.create({
+                data: { invoiceId, amount: paid, method: "STRIPE" as any },
+              }),
+              this.prisma.invoice.update({
+                where: { id: invoiceId },
+                data: { paidAmount: newPaid, status: newStatus as any },
+              }),
+            ]);
+          }
+          break;
+        }
+
         if (companyId && plan) {
           const company = await this.prisma.company.update({
             where: { id: companyId },

@@ -69,6 +69,40 @@ export function useSendInvoiceEmail() {
   });
 }
 
+export function useSetRecurring() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, isRecurring, interval }: { id: string; isRecurring: boolean; interval?: string }) =>
+      api.patch(`/invoices/${id}/recurring`, { isRecurring, interval }).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: invoiceKeys.all });
+      toast.success("Recurrencia actualizada");
+    },
+    onError: (err: any) => toast.error(err?.response?.data?.message ?? "Error al configurar recurrencia"),
+  });
+}
+
+export function useCreatePaymentLink() {
+  return useMutation({
+    mutationFn: (invoiceId: string) => {
+      const origin = typeof window !== "undefined" ? window.location.origin : "";
+      return api.post(`/invoices/${invoiceId}/payment-link`, {
+        successUrl: `${origin}/es/facturas?paid=${invoiceId}`,
+        cancelUrl: `${origin}/es/facturas`,
+      }).then((r) => r.data as { url: string; amount: number });
+    },
+    onSuccess: async (data) => {
+      if (data.url) {
+        await navigator.clipboard.writeText(data.url);
+        toast.success("Link de pago copiado al portapapeles");
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message ?? "Error al crear link de pago");
+    },
+  });
+}
+
 export function useDeleteInvoice() {
   const qc = useQueryClient();
   return useMutation({

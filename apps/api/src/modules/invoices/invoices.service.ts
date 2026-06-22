@@ -223,6 +223,21 @@ export class InvoicesService {
     return { deleted: true };
   }
 
+  async setRecurring(companyId: string, id: string, isRecurring: boolean, interval?: string) {
+    await this.findOne(companyId, id);
+    const valid = ["WEEKLY", "BIWEEKLY", "MONTHLY", "QUARTERLY", "YEARLY"];
+    if (isRecurring && (!interval || !valid.includes(interval))) {
+      throw new BadRequestException("Intervalo no valido. Usa: WEEKLY, BIWEEKLY, MONTHLY, QUARTERLY, YEARLY");
+    }
+    return this.prisma.invoice.update({
+      where: { id },
+      data: {
+        isRecurring,
+        recurringCron: isRecurring ? interval : null,
+      },
+    });
+  }
+
   async sendByEmail(companyId: string, id: string) {
     const invoice = await this.findOne(companyId, id);
     const clientEmail = invoice.client?.email;

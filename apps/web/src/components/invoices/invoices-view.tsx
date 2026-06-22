@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useInvoices, useUpdateInvoiceStatus, useSendInvoiceEmail, useDeleteInvoice } from "@/hooks/use-invoices";
+import { useInvoices, useUpdateInvoiceStatus, useSendInvoiceEmail, useDeleteInvoice, useCreatePaymentLink, useSetRecurring } from "@/hooks/use-invoices";
 import { downloadInvoicePdf } from "@/lib/pdf/download-pdf";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,6 +28,8 @@ import {
   Download,
   AlertCircle,
   Trash2,
+  CreditCard,
+  RefreshCw,
 } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useExport } from "@/hooks/use-export";
@@ -67,6 +69,8 @@ export function InvoicesView() {
   const updateStatus = useUpdateInvoiceStatus();
   const sendEmail = useSendInvoiceEmail();
   const deleteInvoice = useDeleteInvoice();
+  const paymentLink = useCreatePaymentLink();
+  const setRecurring = useSetRecurring();
   const { exportData: exportInvoices, isPending: exporting } = useExport("invoices");
 
   const { data, isLoading, isError, error } = useInvoices({
@@ -261,6 +265,33 @@ export function InvoicesView() {
                                 <Send className="h-4 w-4 mr-2" />
                                 Enviar por email
                               </DropdownMenuItem>
+                              {inv.status !== "PAID" && inv.status !== "CANCELLED" && inv.status !== "DRAFT" && (
+                                <DropdownMenuItem
+                                  onClick={() => paymentLink.mutate(inv.id)}
+                                  disabled={paymentLink.isPending}
+                                >
+                                  <CreditCard className="h-4 w-4 mr-2" />
+                                  {paymentLink.isPending ? "Generando..." : "Link de pago Stripe"}
+                                </DropdownMenuItem>
+                              )}
+                              {inv.isRecurring ? (
+                                <DropdownMenuItem
+                                  onClick={() => setRecurring.mutate({ id: inv.id, isRecurring: false })}
+                                >
+                                  <RefreshCw className="h-4 w-4 mr-2" />
+                                  Desactivar recurrencia
+                                </DropdownMenuItem>
+                              ) : inv.status === "PAID" && (
+                                <DropdownMenuItem
+                                  onClick={() => {
+                                    const interval = prompt("Intervalo de recurrencia:\nMONTHLY = Mensual\nQUARTERLY = Trimestral\nYEARLY = Anual\nWEEKLY = Semanal\nBIWEEKLY = Quincenal", "MONTHLY");
+                                    if (interval) setRecurring.mutate({ id: inv.id, isRecurring: true, interval: interval.toUpperCase() });
+                                  }}
+                                >
+                                  <RefreshCw className="h-4 w-4 mr-2" />
+                                  Hacer recurrente
+                                </DropdownMenuItem>
+                              )}
                               <DropdownMenuSeparator />
                               {inv.status === "DRAFT" && (
                                 <DropdownMenuItem

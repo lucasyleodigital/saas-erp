@@ -4,6 +4,7 @@ import {
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { InvoicesService } from "./invoices.service";
+import { BillingService } from "../billing/billing.service";
 import { CreateInvoiceDto } from "./dto/create-invoice.dto";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
@@ -13,7 +14,10 @@ import type { JwtPayload } from "@saas/types";
 @UseGuards(JwtAuthGuard)
 @Controller("invoices")
 export class InvoicesController {
-  constructor(private svc: InvoicesService) {}
+  constructor(
+    private svc: InvoicesService,
+    private billing: BillingService,
+  ) {}
 
   @Get()
   findAll(@CurrentUser() u: JwtPayload, @Query() params: any) {
@@ -48,6 +52,25 @@ export class InvoicesController {
   @Delete(":id")
   remove(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
     return this.svc.remove(u.companyId, id);
+  }
+
+  @Patch(":id/recurring")
+  setRecurring(
+    @CurrentUser() u: JwtPayload,
+    @Param("id") id: string,
+    @Body() body: { isRecurring: boolean; interval?: string },
+  ) {
+    return this.svc.setRecurring(u.companyId, id, body.isRecurring, body.interval);
+  }
+
+  @Post(":id/payment-link")
+  @HttpCode(HttpStatus.OK)
+  createPaymentLink(
+    @CurrentUser() u: JwtPayload,
+    @Param("id") id: string,
+    @Body() body: { successUrl: string; cancelUrl: string },
+  ) {
+    return this.billing.createInvoicePaymentLink(u.companyId, id, body.successUrl, body.cancelUrl);
   }
 
   @Post(":id/payments")

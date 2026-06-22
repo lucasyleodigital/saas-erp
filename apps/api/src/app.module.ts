@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 import { ConfigModule } from "@nestjs/config";
+import { ScheduleModule } from "@nestjs/schedule";
 import { ThrottlerModule, ThrottlerGuard } from "@nestjs/throttler";
 import { PlansModule } from "./modules/plans/plans.module";
 import { AuthModule } from "./modules/auth/auth.module";
@@ -39,6 +40,7 @@ import { validateEnv } from "./config/env.validation";
       isGlobal: true,
       validate: validateEnv,
     }),
+    ScheduleModule.forRoot(),
     ThrottlerModule.forRoot([
       { name: "short", ttl: 1000, limit: 20 },
       { name: "medium", ttl: 60000, limit: 200 },
