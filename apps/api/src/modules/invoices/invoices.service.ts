@@ -196,12 +196,21 @@ export class InvoicesService {
   }
 
   async remove(companyId: string, id: string) {
-    await this.findOne(companyId, id);
+    const invoice = await this.findOne(companyId, id);
+
+    const hasVerifactu = await this.prisma.verifactuRecord.count({ where: { invoiceId: id } });
+    const canDelete = invoice.status === "DRAFT" || (invoice.status === "CANCELLED" && hasVerifactu === 0);
+
+    if (!canDelete) {
+      throw new BadRequestException(
+        "No se puede eliminar una factura emitida (VeriFactu). Solo se pueden eliminar borradores o facturas canceladas sin registro fiscal."
+      );
+    }
+
     await this.prisma.$transaction([
       this.prisma.invoiceTax.deleteMany({ where: { invoiceId: id } }),
       this.prisma.invoiceItem.deleteMany({ where: { invoiceId: id } }),
       this.prisma.payment.deleteMany({ where: { invoiceId: id } }),
-      this.prisma.verifactuRecord.deleteMany({ where: { invoiceId: id } }),
       this.prisma.invoice.delete({ where: { id } }),
     ]);
     return { deleted: true };

@@ -285,18 +285,22 @@ export function InvoicesView() {
                                   Cancelar
                                 </DropdownMenuItem>
                               )}
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem
-                                className="text-destructive focus:text-destructive"
-                                onClick={() => {
-                                  if (confirm(`Eliminar factura ${inv.number}? Esta accion no se puede deshacer.`)) {
-                                    deleteInvoice.mutate(inv.id);
-                                  }
-                                }}
-                              >
-                                <Trash2 className="h-4 w-4 mr-2" />
-                                Eliminar
-                              </DropdownMenuItem>
+                              {(inv.status === "DRAFT" || inv.status === "CANCELLED") && (
+                                <>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem
+                                    className="text-destructive focus:text-destructive"
+                                    onClick={() => {
+                                      if (confirm(`Eliminar factura ${inv.number}? Esta accion no se puede deshacer.`)) {
+                                        deleteInvoice.mutate(inv.id);
+                                      }
+                                    }}
+                                  >
+                                    <Trash2 className="h-4 w-4 mr-2" />
+                                    Eliminar
+                                  </DropdownMenuItem>
+                                </>
+                              )}
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </td>
