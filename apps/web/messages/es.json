@@ -133,7 +133,7 @@
     "newInvoice": "Nueva factura",
     "newClient": "Nuevo cliente",
     "newQuote": "Nuevo presupuesto",
-    "newDeal": "Nueva oportunidad"
+    "newDeal": "Nuevo lead"
   },
   "clients": {
     "title": "Clientes",
@@ -234,7 +234,7 @@
   "pipeline": {
     "title": "Pipeline de ventas",
     "subtitle": "Gestiona tus oportunidades de venta",
-    "new": "Nueva oportunidad",
+    "new": "Nuevo lead",
     "stages": {
       "lead": "Lead",
       "qualified": "Calificado",
@@ -244,12 +244,12 @@
       "closed_lost": "Cerrado perdido"
     },
     "form": {
-      "name": "Nombre de la oportunidad",
+      "name": "Nombre del lead",
       "client": "Cliente",
       "value": "Valor estimado",
       "stage": "Etapa",
       "expectedClose": "Fecha estimada cierre",
-      "createSuccess": "Oportunidad creada correctamente"
+      "createSuccess": "Lead creado correctamente"
     }
   },
   "leads": {
