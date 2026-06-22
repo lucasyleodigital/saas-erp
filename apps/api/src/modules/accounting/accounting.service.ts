@@ -220,6 +220,84 @@ export class AccountingService {
     };
   }
 
+  // ─── Modelo 130 (pago fraccionado IRPF — autonomos) ──────────────────────────
+
+  async getModelo130(companyId: string, year: number, quarter: number) {
+    const qStart = new Date(year, (quarter - 1) * 3, 1);
+    const qEnd = new Date(year, quarter * 3, 0, 23, 59, 59);
+
+    const invoices = await this.prisma.invoice.findMany({
+      where: {
+        companyId,
+        issueDate: { gte: qStart, lte: qEnd },
+        status: { notIn: ["DRAFT", "CANCELLED"] },
+      },
+      select: { subtotal: true, taxAmount: true, total: true },
+    });
+
+    const expenses = await this.prisma.journalEntry.findMany({
+      where: {
+        companyId,
+        type: { in: ["MANUAL", "ADJUSTMENT"] },
+        entryDate: { gte: qStart, lte: qEnd },
+      },
+      include: { items: { include: { account: { select: { type: true } } } } },
+    });
+
+    const revenue = invoices.reduce((s, inv) => s + Number(inv.subtotal), 0);
+    const totalExpenses = expenses.reduce((sum, entry) => {
+      return sum + (entry as any).items
+        .filter((item: any) => Number(item.debit) > 0 && item.account?.type === "EXPENSE")
+        .reduce((s: number, item: any) => s + Number(item.debit), 0);
+    }, 0);
+
+    const netIncome = revenue - totalExpenses;
+    const pagoFraccionado = Math.max(0, netIncome * 0.20);
+
+    const prevQuarters = [];
+    for (let q = 1; q < quarter; q++) {
+      const pStart = new Date(year, (q - 1) * 3, 1);
+      const pEnd = new Date(year, q * 3, 0, 23, 59, 59);
+      const pInvoices = await this.prisma.invoice.findMany({
+        where: { companyId, issueDate: { gte: pStart, lte: pEnd }, status: { notIn: ["DRAFT", "CANCELLED"] } },
+        select: { subtotal: true },
+      });
+      const pExpenses = await this.prisma.journalEntry.findMany({
+        where: { companyId, type: { in: ["MANUAL", "ADJUSTMENT"] }, entryDate: { gte: pStart, lte: pEnd } },
+        include: { items: { include: { account: { select: { type: true } } } } },
+      });
+      const pRev = pInvoices.reduce((s, i) => s + Number(i.subtotal), 0);
+      const pExp = pExpenses.reduce((sum, e) => sum + (e as any).items.filter((i: any) => Number(i.debit) > 0 && i.account?.type === "EXPENSE").reduce((s: number, i: any) => s + Number(i.debit), 0), 0);
+      prevQuarters.push({ quarter: q, revenue: pRev, expenses: pExp, netIncome: pRev - pExp });
+    }
+
+    const ytdNetIncome = netIncome + prevQuarters.reduce((s, q) => s + q.netIncome, 0);
+    const ytdPagoFraccionado = Math.max(0, ytdNetIncome * 0.20);
+    const prevPagos = prevQuarters.reduce((s, q) => s + Math.max(0, q.netIncome * 0.20), 0);
+    const aIngresar = Math.max(0, ytdPagoFraccionado - prevPagos);
+
+    const retenciones = await this.prisma.invoiceTax.findMany({
+      where: {
+        invoice: { companyId, issueDate: { gte: qStart, lte: qEnd }, status: { notIn: ["DRAFT", "CANCELLED"] } },
+        rate: { lt: 0 },
+      },
+    });
+    const totalRetenciones = retenciones.reduce((s, t) => s + Math.abs(Number(t.amount)), 0);
+
+    return {
+      year,
+      quarter,
+      label: QUARTER_LABELS[quarter - 1],
+      revenue: Math.round(revenue * 100) / 100,
+      expenses: Math.round(totalExpenses * 100) / 100,
+      netIncome: Math.round(netIncome * 100) / 100,
+      pagoFraccionado20: Math.round(pagoFraccionado * 100) / 100,
+      retencionesYaPracticadas: Math.round(totalRetenciones * 100) / 100,
+      pagosAnteriores: Math.round(prevPagos * 100) / 100,
+      aIngresar: Math.round(Math.max(0, aIngresar - totalRetenciones) * 100) / 100,
+    };
+  }
+
   // ─── Journal Entries ──────────────────────────────────────────────────────────
 
   async getJournalEntries(companyId: string, params: any = {}) {

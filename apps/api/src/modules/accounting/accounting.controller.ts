@@ -29,6 +29,17 @@ export class AccountingController {
     return this.service.getVatReport(user.companyId, Number(year) || new Date().getFullYear());
   }
 
+  @Get("modelo-130")
+  getModelo130(
+    @CurrentUser() user: JwtPayload,
+    @Query("year") year: string,
+    @Query("quarter") quarter: string,
+  ) {
+    const q = Number(quarter);
+    if (!q || q < 1 || q > 4) return this.service.getModelo130(user.companyId, Number(year) || new Date().getFullYear(), Math.ceil((new Date().getMonth() + 1) / 3));
+    return this.service.getModelo130(user.companyId, Number(year) || new Date().getFullYear(), q);
+  }
+
   @Get("modelo-347")
   getModelo347(@CurrentUser() user: JwtPayload, @Query("year") year: string) {
     return this.service.getModelo347(user.companyId, Number(year) || new Date().getFullYear());

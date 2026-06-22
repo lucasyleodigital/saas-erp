@@ -99,7 +99,34 @@ export class InvoicesService {
       (sum, item) => sum + item.quantity * item.unitPrice * (1 - (item.discount ?? 0) / 100),
       0
     );
-    const taxAmount = dto.taxes?.reduce((sum, t) => sum + t.base * (t.rate / 100), 0) ?? 0;
+
+    const company = await this.prisma.company.findUnique({ where: { id: companyId }, select: { settings: true } });
+    const settings = (company?.settings as any) ?? {};
+    let taxesToCreate = dto.taxes ?? [];
+
+    if (settings.autoApplyIrpf && settings.companyType === "AUTONOMO" && settings.irpfRate) {
+      const hasIrpf = taxesToCreate.some((t) => t.rate < 0);
+      if (!hasIrpf) {
+        let irpfTaxId = "";
+        const existingIrpf = await this.prisma.tax.findFirst({
+          where: { companyId, name: { contains: "IRPF", mode: "insensitive" } },
+        });
+        if (existingIrpf) {
+          irpfTaxId = existingIrpf.id;
+        } else {
+          const newTax = await this.prisma.tax.create({
+            data: { companyId, name: `IRPF ${settings.irpfRate}%`, rate: -settings.irpfRate, isDefault: false },
+          });
+          irpfTaxId = newTax.id;
+        }
+        taxesToCreate = [
+          ...taxesToCreate,
+          { taxId: irpfTaxId, rate: -settings.irpfRate, base: subtotal },
+        ];
+      }
+    }
+
+    const taxAmount = taxesToCreate.reduce((sum, t) => sum + t.base * (t.rate / 100), 0);
     const total = subtotal + taxAmount;
 
     const [invoice] = await this.prisma.$transaction([
@@ -131,9 +158,9 @@ export class InvoicesService {
               order: i,
             })),
           },
-          taxes: dto.taxes
+          taxes: taxesToCreate.length > 0
             ? {
-                create: dto.taxes.map((t) => ({
+                create: taxesToCreate.map((t) => ({
                   taxId: t.taxId,
                   rate: t.rate,
                   base: t.base,

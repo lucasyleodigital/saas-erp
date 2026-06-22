@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Building2, CreditCard, Palette, Landmark, Plus, Trash2 } from "lucide-react";
+import { Loader2, Building2, CreditCard, Palette, Landmark, Plus, Trash2, Scale } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
 import { TeamSection } from "@/components/empresa/team-section";
@@ -50,9 +50,15 @@ export function CompanySettings() {
   const [invoiceColor, setInvoiceColor] = useState("#4f46e5");
   const [invoiceFooter, setInvoiceFooter] = useState("");
   const [invoiceTerms, setInvoiceTerms] = useState("");
+  const [companyType, setCompanyType] = useState("SL");
+  const [taxRegime, setTaxRegime] = useState("SIMPLIFICADA");
+  const [irpfRate, setIrpfRate] = useState(15);
+  const [autoApplyIrpf, setAutoApplyIrpf] = useState(false);
+  const [autonomoStartDate, setAutonomoStartDate] = useState("");
   const [bankAccounts, setBankAccounts] = useState<any[]>([]);
   const [newBank, setNewBank] = useState({ name: "", iban: "", bic: "" });
   const [savingAppearance, setSavingAppearance] = useState(false);
+  const [savingFiscal, setSavingFiscal] = useState(false);
   const [addingBank, setAddingBank] = useState(false);
 
   const {
@@ -82,12 +88,32 @@ export function CompanySettings() {
       setInvoiceColor(s.invoiceColor ?? "#4f46e5");
       setInvoiceFooter(s.invoiceFooter ?? "");
       setInvoiceTerms(s.invoiceTerms ?? "");
+      setCompanyType(s.companyType ?? "SL");
+      setTaxRegime(s.taxRegime ?? "SIMPLIFICADA");
+      setIrpfRate(s.irpfRate ?? 15);
+      setAutoApplyIrpf(s.autoApplyIrpf ?? false);
+      setAutonomoStartDate(s.autonomoStartDate ?? "");
     }
   }, [company, reset]);
 
   useEffect(() => {
     api.get("/bank/accounts").then((r) => setBankAccounts(r.data ?? [])).catch(() => {});
   }, []);
+
+  async function saveFiscal() {
+    setSavingFiscal(true);
+    try {
+      const currentSettings = (company as any)?.settings ?? {};
+      await api.put("/companies/me", {
+        settings: { ...currentSettings, companyType, taxRegime, irpfRate, autoApplyIrpf, autonomoStartDate: autonomoStartDate || undefined },
+      });
+      toast.success("Configuracion fiscal guardada");
+      refetch();
+    } catch {
+      toast.error("Error al guardar");
+    }
+    setSavingFiscal(false);
+  }
 
   async function saveAppearance() {
     setSavingAppearance(true);
@@ -236,6 +262,105 @@ export function CompanySettings() {
           </div>
         )}
       </form>
+
+      {/* Fiscal / Autonomo config */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm flex items-center gap-2">
+            <Scale className="h-4 w-4 text-muted-foreground" />
+            Configuracion fiscal
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label>Tipo de entidad</Label>
+              <select
+                value={companyType}
+                onChange={(e) => {
+                  setCompanyType(e.target.value);
+                  if (e.target.value === "AUTONOMO") setAutoApplyIrpf(true);
+                }}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <option value="AUTONOMO">Autonomo / Persona fisica</option>
+                <option value="SL">Sociedad Limitada (S.L.)</option>
+                <option value="SA">Sociedad Anonima (S.A.)</option>
+                <option value="COOPERATIVA">Cooperativa</option>
+                <option value="ASOCIACION">Asociacion</option>
+                <option value="COMUNIDAD_BIENES">Comunidad de bienes</option>
+              </select>
+            </div>
+
+            {companyType === "AUTONOMO" && (
+              <div className="space-y-1.5">
+                <Label>Regimen fiscal</Label>
+                <select
+                  value={taxRegime}
+                  onChange={(e) => setTaxRegime(e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <option value="SIMPLIFICADA">Estimacion directa simplificada</option>
+                  <option value="NORMAL">Estimacion directa normal</option>
+                  <option value="MODULOS">Estimacion objetiva (modulos)</option>
+                </select>
+              </div>
+            )}
+          </div>
+
+          {companyType === "AUTONOMO" && (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="space-y-1.5">
+                  <Label>Retencion IRPF (%)</Label>
+                  <select
+                    value={irpfRate}
+                    onChange={(e) => setIrpfRate(Number(e.target.value))}
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <option value={7}>7% (nuevos autonomos, primeros 3 anos)</option>
+                    <option value={15}>15% (tipo general)</option>
+                    <option value={1}>1% (modulos — actividades agricolas/ganaderas)</option>
+                    <option value={2}>2% (modulos — resto de actividades)</option>
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Fecha de alta como autonomo</Label>
+                  <Input
+                    type="date"
+                    value={autonomoStartDate}
+                    onChange={(e) => setAutonomoStartDate(e.target.value)}
+                  />
+                  <p className="text-xs text-muted-foreground">Para calcular si aplica el 7% de nuevos autonomos</p>
+                </div>
+                <div className="flex items-end pb-1">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoApplyIrpf}
+                      onChange={(e) => setAutoApplyIrpf(e.target.checked)}
+                      className="h-4 w-4 rounded border-input"
+                    />
+                    <span className="text-sm">Aplicar IRPF automaticamente en facturas</span>
+                  </label>
+                </div>
+              </div>
+              <div className="rounded-lg bg-blue-500/5 border border-blue-500/20 p-3">
+                <p className="text-xs text-blue-400">
+                  Al crear una factura, se anadira automaticamente una linea de retencion IRPF del {irpfRate}% sobre la base imponible. Esto es obligatorio cuando facturas a empresas o profesionales.
+                </p>
+              </div>
+            </>
+          )}
+
+          <div className="flex justify-end">
+            <Button onClick={saveFiscal} disabled={savingFiscal} variant="outline">
+              {savingFiscal && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+              Guardar configuracion fiscal
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Invoice appearance */}
       <Card>
