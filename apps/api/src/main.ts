@@ -68,6 +68,29 @@ async function bootstrap() {
     res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
   });
 
+  // Diagnostic endpoint — returns record counts per table (no sensitive data)
+  httpAdapter.get("/api/v1/debug/counts", async (_req: any, res: any) => {
+    try {
+      const { PrismaService } = await import("./database/prisma.service");
+      const prisma = app.get(PrismaService);
+      const [clients, clientsActive, invoices, products, productsActive, suppliers] = await Promise.all([
+        prisma.client.count(),
+        prisma.client.count({ where: { isActive: true } }),
+        prisma.invoice.count(),
+        prisma.product.count(),
+        prisma.product.count({ where: { isActive: true } }),
+        prisma.supplier.count(),
+      ]);
+      res.json({
+        status: "ok",
+        counts: { clients, clientsActive, invoices, products, productsActive, suppliers },
+        version: "d5198ad+diag",
+      });
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
   await app.listen(port);
   console.log(`🚀 API running on http://localhost:${port}/api/v1`);
   console.log(`📚 Docs available at http://localhost:${port}/docs`);

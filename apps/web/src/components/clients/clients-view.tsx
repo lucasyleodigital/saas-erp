@@ -18,6 +18,7 @@ import {
   Trash2,
   Eye,
   Globe,
+  AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -40,7 +41,7 @@ export function ClientsView() {
   const [editingClient, setEditingClient] = useState<any>(null);
   const debouncedSearch = useDebounce(search, 300);
 
-  const { data, isLoading } = useClients({
+  const { data, isLoading, isError, error } = useClients({
     search: debouncedSearch || undefined,
     page,
     limit: 20,
@@ -110,6 +111,22 @@ export function ClientsView() {
               {Array.from({ length: 8 }).map((_, i) => (
                 <div key={i} className="h-16 bg-muted/40 animate-pulse" />
               ))}
+            </div>
+          ) : isError ? (
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <div className="h-14 w-14 rounded-full bg-destructive/10 flex items-center justify-center mb-4">
+                <AlertCircle className="h-6 w-6 text-destructive" />
+              </div>
+              <p className="font-medium text-destructive">Error al cargar clientes</p>
+              <p className="text-sm text-muted-foreground mt-1 mb-2 max-w-md">
+                {(error as any)?.response?.status === 401
+                  ? "Sesion expirada — cierra sesion y vuelve a entrar"
+                  : (error as any)?.message ?? "No se pudo conectar con el servidor"}
+              </p>
+              <p className="text-xs text-muted-foreground font-mono">
+                {(error as any)?.response?.status && `HTTP ${(error as any).response.status}`}
+                {(error as any)?.config?.baseURL && ` — ${(error as any).config.baseURL}`}
+              </p>
             </div>
           ) : clients.length === 0 ? (
             <EmptyState onNew={handleNew} />

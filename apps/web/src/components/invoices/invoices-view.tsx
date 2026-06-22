@@ -26,6 +26,7 @@ import {
   XCircle,
   FileText,
   Download,
+  AlertCircle,
 } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { motion } from "framer-motion";
@@ -64,7 +65,7 @@ export function InvoicesView() {
   const updateStatus = useUpdateInvoiceStatus();
   const sendEmail = useSendInvoiceEmail();
 
-  const { data, isLoading } = useInvoices({
+  const { data, isLoading, isError, error } = useInvoices({
     search: debouncedSearch || undefined,
     status,
     page,
@@ -126,6 +127,22 @@ export function InvoicesView() {
               {Array.from({ length: 8 }).map((_, i) => (
                 <div key={i} className="h-16 bg-muted/40 animate-pulse" />
               ))}
+            </div>
+          ) : isError ? (
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <div className="h-14 w-14 rounded-full bg-destructive/10 flex items-center justify-center mb-4">
+                <AlertCircle className="h-6 w-6 text-destructive" />
+              </div>
+              <p className="font-medium text-destructive">Error al cargar facturas</p>
+              <p className="text-sm text-muted-foreground mt-1 mb-2 max-w-md">
+                {(error as any)?.response?.status === 401
+                  ? "Sesion expirada — cierra sesion y vuelve a entrar"
+                  : (error as any)?.message ?? "No se pudo conectar con el servidor"}
+              </p>
+              <p className="text-xs text-muted-foreground font-mono">
+                {(error as any)?.response?.status && `HTTP ${(error as any).response.status}`}
+                {(error as any)?.config?.baseURL && ` — ${(error as any).config.baseURL}`}
+              </p>
             </div>
           ) : invoices.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
