@@ -29,7 +29,8 @@ export function PipelineView() {
   const [dealDialogOpen, setDealDialogOpen] = useState(false);
   const [pipelineName, setPipelineName] = useState("Pipeline de ventas");
 
-  const pipeline = pipelines?.[0];
+  const [activePipelineIdx, setActivePipelineIdx] = useState(0);
+  const pipeline = pipelines?.[activePipelineIdx] ?? pipelines?.[0];
   const stages = pipeline?.stages ?? [];
 
   function handleDragStart(dealId: string, fromStageId: string) {
@@ -105,11 +106,39 @@ export function PipelineView() {
           <h1 className="text-2xl font-bold">{t("title")}</h1>
           <p className="text-sm text-muted-foreground mt-1">{t("subtitle")}</p>
         </div>
-        <Button className="gap-2" onClick={() => setDealDialogOpen(true)}>
-          <Plus className="h-4 w-4" />
-          {t("new")}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={() => {
+            const name = prompt("Nombre del nuevo pipeline:", "Pipeline de ventas");
+            if (name) createPipeline.mutate(name);
+          }}>
+            <Plus className="h-4 w-4 mr-1" />
+            Nuevo pipeline
+          </Button>
+          <Button className="gap-2" onClick={() => setDealDialogOpen(true)}>
+            <Plus className="h-4 w-4" />
+            {t("new")}
+          </Button>
+        </div>
       </div>
+
+      {/* Pipeline selector */}
+      {pipelines && pipelines.length > 1 && (
+        <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg w-fit">
+          {pipelines.map((p: any, i: number) => (
+            <button
+              key={p.id}
+              onClick={() => setActivePipelineIdx(i)}
+              className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
+                activePipelineIdx === i
+                  ? "bg-background text-foreground shadow-sm font-medium"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {p.name}
+            </button>
+          ))}
+        </div>
+      )}
 
       <DealDialog open={dealDialogOpen} onOpenChange={setDealDialogOpen} stages={stages} />
 
