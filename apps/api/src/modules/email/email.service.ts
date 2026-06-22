@@ -219,22 +219,31 @@ export class EmailService {
     clientName: string,
     invoiceNumber: string,
     amount: number,
-    dueDate: string
+    companyName: string,
+    daysOverdue: number,
   ) {
+    const fmt = new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(amount);
+    const urgency = daysOverdue > 15
+      ? `Lleva <strong>${daysOverdue} dias</strong> de retraso.`
+      : `El pago lleva <strong>${daysOverdue} dias</strong> vencido.`;
+
     await this.send(
       to,
-      `Recordatorio de pago: Factura ${invoiceNumber}`,
+      `Recordatorio de pago: Factura ${invoiceNumber} — ${companyName}`,
       `
       <div style="font-family: -apple-system, sans-serif; max-width: 560px; margin: 0 auto; padding: 40px 32px; color: #111827;">
         <h1 style="font-size: 22px; font-weight: 700; margin: 0 0 8px;">Recordatorio de pago</h1>
         <p style="color: #6b7280;">Estimado/a ${clientName},</p>
         <p style="color: #374151; line-height: 1.6;">
           Le recordamos que tiene pendiente el pago de la factura <strong>${invoiceNumber}</strong>
-          por importe de <strong>${new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(amount)}</strong>
-          con vencimiento el <strong>${dueDate}</strong>.
+          por importe de <strong>${fmt}</strong>. ${urgency}
+        </p>
+        <p style="color: #374151; line-height: 1.6;">
+          Le rogamos proceda al pago a la mayor brevedad posible.
         </p>
         <p style="color: #9ca3af; font-size: 12px; margin-top: 32px;">
-          Si ya ha realizado el pago, por favor ignore este mensaje.
+          Si ya ha realizado el pago, por favor ignore este mensaje.<br/>
+          ${companyName}
         </p>
       </div>
       `
