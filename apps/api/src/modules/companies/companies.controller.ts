@@ -18,7 +18,7 @@ import { UpdateCompanyDto } from "./dto/update-company.dto";
 import type { JwtPayload } from "@saas/types";
 
 function requireAdminOrOwner(role: string) {
-  if (!["OWNER", "ADMIN"].includes(role)) {
+  if (!["OWNER", "ADMIN", "SUPER_ADMIN"].includes(role)) {
     throw new ForbiddenException("Se requiere rol de Administrador o Propietario");
   }
 }

@@ -8,7 +8,7 @@ import { PayrollService } from "./payroll.service";
 import { ForbiddenException } from "@nestjs/common";
 
 function requireAdminOrOwner(role: string) {
-  if (role !== "OWNER" && role !== "ADMIN" && role !== "ACCOUNTANT") {
+  if (role !== "OWNER" && role !== "ADMIN" && role !== "ACCOUNTANT" && role !== "SUPER_ADMIN") {
     throw new ForbiddenException("Se requiere rol de Administrador o Contable");
   }
 }
