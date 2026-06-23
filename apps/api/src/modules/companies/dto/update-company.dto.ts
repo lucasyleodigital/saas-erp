@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsEmail, IsUrl, IsObject, MaxLength } from "class-validator";
+import { IsString, IsOptional, IsEmail, MaxLength } from "class-validator";
 
 export class UpdateCompanyDto {
   @IsOptional() @IsString() @MaxLength(200) name?: string;
@@ -13,6 +13,6 @@ export class UpdateCompanyDto {
   @IsOptional() @IsString() @MaxLength(10) postalCode?: string;
   @IsOptional() @IsString() @MaxLength(2) country?: string;
   @IsOptional() @IsString() logo?: string;
-  @IsOptional() @IsUrl() website?: string;
-  @IsOptional() @IsObject() settings?: Record<string, any>;
+  @IsOptional() @IsString() website?: string;
+  @IsOptional() settings?: Record<string, any>;
 }

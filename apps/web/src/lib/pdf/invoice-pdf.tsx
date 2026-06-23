@@ -61,7 +61,15 @@ const fmtDate = (d: string | Date) =>
 export function InvoicePdf({ invoice }: { invoice: any }) {
   const co       = invoice.company ?? {};
   const cl       = invoice.client  ?? {};
-  const items    = invoice.items   ?? [];
+  const rawItems = invoice.items ?? [];
+  const items = rawItems.length > 0 ? rawItems : [{
+    description: invoice.notes || "Importacion historica",
+    quantity: 1,
+    unitPrice: Number(invoice.subtotal ?? invoice.total ?? 0),
+    discount: 0,
+    taxRate: 0,
+    subtotal: Number(invoice.subtotal ?? invoice.total ?? 0),
+  }];
   const taxes    = invoice.taxes   ?? [];
   const cur      = invoice.currency ?? "EUR";
   const settings = co.settings ?? {};
