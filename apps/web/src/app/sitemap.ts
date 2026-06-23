@@ -1,36 +1,21 @@
 import type { MetadataRoute } from "next";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.com";
-const LOCALES = ["es", "en", "fr", "de", "pt", "it"];
-const DEFAULT_LOCALE = "es";
-
-const pages = [
-  { path: "", changeFrequency: "weekly" as const, priority: 1 },
-  { path: "/sobre-nosotros", changeFrequency: "monthly" as const, priority: 0.8 },
-  { path: "/contacto", changeFrequency: "monthly" as const, priority: 0.8 },
-  { path: "/ayuda", changeFrequency: "monthly" as const, priority: 0.7 },
-  { path: "/registro", changeFrequency: "monthly" as const, priority: 0.9 },
-  { path: "/login", changeFrequency: "yearly" as const, priority: 0.5 },
-  { path: "/privacidad", changeFrequency: "yearly" as const, priority: 0.3 },
-  { path: "/aviso-legal", changeFrequency: "yearly" as const, priority: 0.3 },
-  { path: "/terminos", changeFrequency: "yearly" as const, priority: 0.3 },
-  { path: "/cookies", changeFrequency: "yearly" as const, priority: 0.2 },
-];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
-  return pages.flatMap((page) =>
-    LOCALES.map((locale) => ({
-      url: `${APP_URL}/${locale}${page.path}`,
-      lastModified: now,
-      changeFrequency: page.changeFrequency,
-      priority: locale === DEFAULT_LOCALE ? page.priority : page.priority * 0.8,
-      alternates: {
-        languages: Object.fromEntries(
-          LOCALES.map((l) => [l, `${APP_URL}/${l}${page.path}`]),
-        ),
-      },
-    })),
-  );
+  return [
+    { url: `${APP_URL}`, lastModified: now, changeFrequency: "weekly", priority: 1 },
+    { url: `${APP_URL}/es`, lastModified: now, changeFrequency: "weekly", priority: 1 },
+    { url: `${APP_URL}/sobre-nosotros`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${APP_URL}/contacto`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${APP_URL}/ayuda`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${APP_URL}/es/registro`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${APP_URL}/es/login`, lastModified: now, changeFrequency: "yearly", priority: 0.5 },
+    { url: `${APP_URL}/privacidad`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${APP_URL}/aviso-legal`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${APP_URL}/terminos`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${APP_URL}/cookies`, lastModified: now, changeFrequency: "yearly", priority: 0.2 },
+  ];
 }

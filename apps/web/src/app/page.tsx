@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description:
     "ERP creado por autonomos para autonomos y pymes. Facturacion con VeriFactu, IRPF automatico, Modelo 130/303, CRM, contabilidad y nominas. 14 dias gratis, sin tarjeta.",
   robots: { index: true, follow: true },
-  alternates: { canonical: "https://youwhole.com/es" },
+  alternates: { canonical: "https://youwhole.com" },
   openGraph: {
     title: "YouWhole — ERP para autonomos y pymes españolas",
     description:
