@@ -29,6 +29,12 @@ export async function generateInvoicePdf(invoice: any): Promise<Buffer> {
     const primary = settings.invoiceColor || DEFAULT_COLOR;
     const bank = co.bankAccounts?.[0];
 
+    const ivaTaxes = taxes.filter((t: any) => Number(t.rate) > 0);
+    const irpfTaxes = taxes.filter((t: any) => Number(t.rate) < 0);
+    const hasIrpf = irpfTaxes.length > 0;
+    const irpfRate = hasIrpf ? Math.abs(Number(irpfTaxes[0].rate)) : 0;
+    const ivaRate = ivaTaxes.length > 0 ? Number(ivaTaxes[0].rate) : 0;
+
     const doc = new PDFDocument({ size: "A4", margin: 50 });
     const chunks: Buffer[] = [];
     doc.on("data", (c: Buffer) => chunks.push(c));
@@ -74,12 +80,13 @@ export async function generateInvoicePdf(invoice: any): Promise<Buffer> {
     let tableY = boxY + 85;
     doc.roundedRect(50, tableY, 495, 20, 3).fill(primary);
     doc.fontSize(7).fillColor("#ffffff");
-    doc.text("CONCEPTO", 58, tableY + 6, { width: 200 });
-    doc.text("CANT.", 260, tableY + 6, { width: 40, align: "center" });
-    doc.text("PRECIO", 305, tableY + 6, { width: 65, align: "right" });
-    doc.text("DTO%", 375, tableY + 6, { width: 40, align: "center" });
-    doc.text("IVA%", 420, tableY + 6, { width: 40, align: "center" });
-    doc.text("TOTAL", 465, tableY + 6, { width: 75, align: "right" });
+    doc.text("CONCEPTO / SERVICIO", 58, tableY + 6, { width: 170 });
+    doc.text("CANT.", 230, tableY + 6, { width: 35, align: "center" });
+    doc.text("PRECIO UNIT.", 268, tableY + 6, { width: 60, align: "right" });
+    doc.text("DTO.", 332, tableY + 6, { width: 35, align: "center" });
+    if (ivaRate > 0) doc.text("IVA", 370, tableY + 6, { width: 30, align: "center" });
+    if (hasIrpf) doc.text("IRPF", 403, tableY + 6, { width: 30, align: "center" });
+    doc.text("IMPORTE", 438, tableY + 6, { width: 100, align: "right" });
 
     // Items rows
     tableY += 22;
@@ -87,12 +94,13 @@ export async function generateInvoicePdf(invoice: any): Promise<Buffer> {
       const item = items[i];
       if (i % 2 === 1) doc.rect(50, tableY, 495, 18).fill("#f9fafb");
       doc.fontSize(8.5).fillColor("#374151");
-      doc.text(item.description ?? "", 58, tableY + 4, { width: 195 });
-      doc.text(String(Number(item.quantity)), 260, tableY + 4, { width: 40, align: "center" });
-      doc.text(fmt(Number(item.unitPrice), cur), 305, tableY + 4, { width: 65, align: "right" });
-      doc.text(Number(item.discount) > 0 ? `${item.discount}%` : "--", 375, tableY + 4, { width: 40, align: "center" });
-      doc.text(Number(item.taxRate) > 0 ? `${item.taxRate}%` : "--", 420, tableY + 4, { width: 40, align: "center" });
-      doc.fillColor("#111827").text(fmt(Number(item.subtotal), cur), 465, tableY + 4, { width: 75, align: "right" });
+      doc.text(item.description ?? "", 58, tableY + 4, { width: 165 });
+      doc.text(String(Number(item.quantity)), 230, tableY + 4, { width: 35, align: "center" });
+      doc.text(fmt(Number(item.unitPrice), cur), 268, tableY + 4, { width: 60, align: "right" });
+      doc.text(Number(item.discount) > 0 ? `-${item.discount}%` : "--", 332, tableY + 4, { width: 35, align: "center" });
+      if (ivaRate > 0) doc.text(`${ivaRate}%`, 370, tableY + 4, { width: 30, align: "center" });
+      if (hasIrpf) doc.text(`${irpfRate}%`, 403, tableY + 4, { width: 30, align: "center" });
+      doc.fillColor("#111827").text(fmt(Number(item.subtotal), cur), 438, tableY + 4, { width: 100, align: "right" });
       tableY += 18;
     }
 
@@ -103,15 +111,21 @@ export async function generateInvoicePdf(invoice: any): Promise<Buffer> {
     doc.fillColor("#111827").text(fmt(Number(invoice.subtotal), cur), 465, tableY, { width: 75, align: "right" });
     tableY += 16;
 
-    if (taxes.length > 0) {
-      for (const t of taxes) {
-        doc.fillColor("#6b7280").text(t.tax?.name ?? `IVA ${t.rate}%`, totX, tableY);
+    if (ivaTaxes.length > 0) {
+      for (const t of ivaTaxes) {
+        doc.fillColor("#6b7280").text(`IVA ${t.rate}% (s/${fmt(Number(t.base ?? invoice.subtotal), cur)})`, totX, tableY);
         doc.fillColor("#111827").text(fmt(Number(t.amount), cur), 465, tableY, { width: 75, align: "right" });
         tableY += 16;
       }
-    } else if (Number(invoice.taxAmount) > 0) {
+    } else if (Number(invoice.taxAmount) > 0 && !hasIrpf) {
       doc.fillColor("#6b7280").text("IVA", totX, tableY);
       doc.fillColor("#111827").text(fmt(Number(invoice.taxAmount), cur), 465, tableY, { width: 75, align: "right" });
+      tableY += 16;
+    }
+
+    for (const t of irpfTaxes) {
+      doc.fillColor("#dc2626").text(`Retencion IRPF ${Math.abs(Number(t.rate))}%`, totX, tableY);
+      doc.fillColor("#dc2626").text(fmt(Number(t.amount), cur), 465, tableY, { width: 75, align: "right" });
       tableY += 16;
     }
 

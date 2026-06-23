@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { ArrowLeft, Download, Send, CheckCircle, Shield, ExternalLink, Copy } from "lucide-react";
+import { downloadInvoicePdf } from "@/lib/pdf/download-pdf";
 import Link from "next/link";
 import { toast } from "sonner";
 
@@ -65,7 +66,18 @@ export function InvoiceDetail({ id }: { id: string }) {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2"
+            onClick={async () => {
+              try {
+                await downloadInvoicePdf(id);
+              } catch {
+                toast.error("Error al descargar el PDF");
+              }
+            }}
+          >
             <Download className="h-4 w-4" />
             PDF
           </Button>
@@ -151,82 +163,106 @@ export function InvoiceDetail({ id }: { id: string }) {
               </div>
 
               {/* Line items */}
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm mb-6">
-                  <thead>
-                    <tr className="border-b border-border text-muted-foreground">
-                      <th className="text-left py-2 pr-4 font-medium">Descripción</th>
-                      <th className="text-right py-2 px-2 font-medium">Cant.</th>
-                      <th className="text-right py-2 px-2 font-medium">Precio</th>
-                      <th className="text-right py-2 px-2 font-medium">Dto.</th>
-                      <th className="text-right py-2 pl-2 font-medium">Importe</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {invoice.items?.map((item: any) => (
-                      <tr key={item.id} className="border-b border-border/50">
-                        <td className="py-2.5 pr-4">{item.description}</td>
-                        <td className="py-2.5 px-2 text-right">
-                          {Number(item.quantity)}
-                        </td>
-                        <td className="py-2.5 px-2 text-right">
-                          {formatCurrency(Number(item.unitPrice))}
-                        </td>
-                        <td className="py-2.5 px-2 text-right text-muted-foreground">
-                          {Number(item.discount) > 0 ? `${Number(item.discount)}%` : "—"}
-                        </td>
-                        <td className="py-2.5 pl-2 text-right font-medium">
-                          {formatCurrency(Number(item.subtotal))}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              {(() => {
+                const ivaTaxes = (invoice.taxes ?? []).filter((t: any) => Number(t.rate) > 0);
+                const irpfTaxes = (invoice.taxes ?? []).filter((t: any) => Number(t.rate) < 0);
+                const hasIrpf = irpfTaxes.length > 0;
+                const irpfRate = hasIrpf ? Math.abs(Number(irpfTaxes[0].rate)) : 0;
+                const ivaRate = ivaTaxes.length > 0 ? Number(ivaTaxes[0].rate) : 0;
 
-              {/* Totals */}
-              <div className="flex justify-end">
-                <div className="w-64 space-y-1.5 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Subtotal</span>
-                    <span>{formatCurrency(Number(invoice.subtotal))}</span>
-                  </div>
-                  {invoice.taxes?.map((t: any) => (
-                    <div key={t.id} className="flex justify-between">
-                      <span className="text-muted-foreground">
-                        {t.tax?.name ?? `IVA ${t.rate}%`}
-                      </span>
-                      <span>{formatCurrency(Number(t.amount))}</span>
+                return (
+                  <>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm mb-6">
+                        <thead>
+                          <tr className="border-b border-border text-muted-foreground">
+                            <th className="text-left py-2 pr-4 font-medium">Descripcion</th>
+                            <th className="text-right py-2 px-2 font-medium">Cant.</th>
+                            <th className="text-right py-2 px-2 font-medium">Precio</th>
+                            <th className="text-right py-2 px-2 font-medium">Dto.</th>
+                            {ivaRate > 0 && <th className="text-right py-2 px-2 font-medium">IVA</th>}
+                            {hasIrpf && <th className="text-right py-2 px-2 font-medium">IRPF</th>}
+                            <th className="text-right py-2 pl-2 font-medium">Importe</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {invoice.items?.map((item: any) => (
+                            <tr key={item.id} className="border-b border-border/50">
+                              <td className="py-2.5 pr-4">{item.description}</td>
+                              <td className="py-2.5 px-2 text-right">
+                                {Number(item.quantity)}
+                              </td>
+                              <td className="py-2.5 px-2 text-right">
+                                {formatCurrency(Number(item.unitPrice))}
+                              </td>
+                              <td className="py-2.5 px-2 text-right text-muted-foreground">
+                                {Number(item.discount) > 0 ? `${Number(item.discount)}%` : "—"}
+                              </td>
+                              {ivaRate > 0 && (
+                                <td className="py-2.5 px-2 text-right text-muted-foreground">{ivaRate}%</td>
+                              )}
+                              {hasIrpf && (
+                                <td className="py-2.5 px-2 text-right text-muted-foreground">{irpfRate}%</td>
+                              )}
+                              <td className="py-2.5 pl-2 text-right font-medium">
+                                {formatCurrency(Number(item.subtotal))}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
-                  ))}
-                  {/* Fallback if no tax breakdown */}
-                  {(!invoice.taxes || invoice.taxes.length === 0) &&
-                    Number(invoice.taxAmount) > 0 && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">IVA</span>
-                        <span>{formatCurrency(Number(invoice.taxAmount))}</span>
-                      </div>
-                    )}
-                  <div className="flex justify-between font-bold text-base border-t border-border pt-2 mt-2">
-                    <span>Total</span>
-                    <span>{formatCurrency(Number(invoice.total))}</span>
-                  </div>
-                  {Number(invoice.paidAmount ?? 0) > 0 && (
-                    <>
-                      <div className="flex justify-between text-emerald-600 text-xs">
-                        <span>Cobrado</span>
-                        <span>{formatCurrency(Number(invoice.paidAmount))}</span>
-                      </div>
-                      {pendingAmount > 0 && (
-                        <div className="flex justify-between font-semibold text-amber-600 text-xs">
-                          <span>Pendiente</span>
-                          <span>{formatCurrency(pendingAmount)}</span>
+
+                    {/* Totals */}
+                    <div className="flex justify-end">
+                      <div className="w-72 space-y-1.5 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Base imponible</span>
+                          <span>{formatCurrency(Number(invoice.subtotal))}</span>
                         </div>
-                      )}
-                    </>
-                  )}
-                </div>
-              </div>
+                        {ivaTaxes.map((t: any) => (
+                          <div key={t.id} className="flex justify-between">
+                            <span className="text-muted-foreground">
+                              {t.tax?.name ?? `IVA ${t.rate}%`} (s/{formatCurrency(Number(t.base ?? invoice.subtotal))})
+                            </span>
+                            <span>{formatCurrency(Number(t.amount))}</span>
+                          </div>
+                        ))}
+                        {ivaTaxes.length === 0 && Number(invoice.taxAmount) > 0 && (
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">IVA</span>
+                            <span>{formatCurrency(Number(invoice.taxAmount))}</span>
+                          </div>
+                        )}
+                        {irpfTaxes.map((t: any) => (
+                          <div key={t.id} className="flex justify-between text-red-600">
+                            <span>Retencion {t.tax?.name ?? `IRPF ${Math.abs(Number(t.rate))}%`}</span>
+                            <span>{formatCurrency(Number(t.amount))}</span>
+                          </div>
+                        ))}
+                        <div className="flex justify-between font-bold text-base border-t border-border pt-2 mt-2">
+                          <span>Total factura</span>
+                          <span>{formatCurrency(Number(invoice.total))}</span>
+                        </div>
+                        {Number(invoice.paidAmount ?? 0) > 0 && (
+                          <>
+                            <div className="flex justify-between text-emerald-600 text-xs">
+                              <span>Cobrado</span>
+                              <span>{formatCurrency(Number(invoice.paidAmount))}</span>
+                            </div>
+                            {pendingAmount > 0 && (
+                              <div className="flex justify-between font-semibold text-amber-600 text-xs">
+                                <span>Pendiente</span>
+                                <span>{formatCurrency(pendingAmount)}</span>
+                              </div>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                );
+              })()}
 
               {invoice.notes && (
                 <div className="mt-6 pt-4 border-t border-border">

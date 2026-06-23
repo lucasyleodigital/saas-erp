@@ -71,6 +71,11 @@ export function InvoicePdf({ invoice }: { invoice: any }) {
     subtotal: Number(invoice.subtotal ?? invoice.total ?? 0),
   }];
   const taxes    = invoice.taxes   ?? [];
+  const ivaTaxes  = taxes.filter((t: any) => Number(t.rate) > 0);
+  const irpfTaxes = taxes.filter((t: any) => Number(t.rate) < 0);
+  const hasIrpf   = irpfTaxes.length > 0;
+  const irpfRate  = hasIrpf ? Math.abs(Number(irpfTaxes[0].rate)) : 0;
+  const ivaRate   = ivaTaxes.length > 0 ? Number(ivaTaxes[0].rate) : 0;
   const cur      = invoice.currency ?? "EUR";
   const settings = co.settings ?? {};
   const bank     = co.bankAccounts?.[0];
@@ -132,20 +137,22 @@ export function InvoicePdf({ invoice }: { invoice: any }) {
         {/* Items */}
         <View>
           <View style={s.th}>
-            <Text style={[s.thCell, s.cDesc]}>Concepto</Text>
+            <Text style={[s.thCell, s.cDesc]}>Concepto / Servicio</Text>
             <Text style={[s.thCell, s.cQty]}>Cant.</Text>
-            <Text style={[s.thCell, s.cPrice]}>Precio u.</Text>
-            <Text style={[s.thCell, s.cDisc]}>Dto%</Text>
-            <Text style={[s.thCell, s.cIva]}>IVA%</Text>
-            <Text style={[s.thCell, s.cTotal]}>Total</Text>
+            <Text style={[s.thCell, s.cPrice]}>Precio unit.</Text>
+            <Text style={[s.thCell, s.cDisc]}>Dto.</Text>
+            {ivaRate > 0 && <Text style={[s.thCell, s.cIva]}>IVA</Text>}
+            {hasIrpf && <Text style={[s.thCell, s.cIva]}>IRPF</Text>}
+            <Text style={[s.thCell, s.cTotal]}>Importe</Text>
           </View>
           {items.map((item: any, i: number) => (
             <View key={i} style={[s.tr, i % 2 === 1 ? s.trAlt : {}]}>
               <Text style={[s.td, s.cDesc]}>{item.description}</Text>
               <Text style={[s.td, s.cQty]}>{Number(item.quantity).toLocaleString("es-ES")}</Text>
               <Text style={[s.td, s.cPrice]}>{fmt(Number(item.unitPrice), cur)}</Text>
-              <Text style={[s.td, s.cDisc]}>{Number(item.discount) > 0 ? `${item.discount}%` : "—"}</Text>
-              <Text style={[s.td, s.cIva]}>{Number(item.taxRate) > 0 ? `${item.taxRate}%` : "—"}</Text>
+              <Text style={[s.td, s.cDisc]}>{Number(item.discount) > 0 ? `-${item.discount}%` : "—"}</Text>
+              {ivaRate > 0 && <Text style={[s.td, s.cIva]}>{ivaRate}%</Text>}
+              {hasIrpf && <Text style={[s.td, s.cIva]}>{irpfRate}%</Text>}
               <Text style={[s.td, s.cTotal, { fontFamily: "Helvetica-Bold" }]}>
                 {fmt(Number(item.subtotal), cur)}
               </Text>
@@ -159,21 +166,31 @@ export function InvoicePdf({ invoice }: { invoice: any }) {
             <Text style={s.tLbl}>Base imponible</Text>
             <Text style={s.tVal}>{fmt(Number(invoice.subtotal), cur)}</Text>
           </View>
-          {taxes.length > 0
-            ? taxes.map((t: any, i: number) => (
+          {ivaTaxes.length > 0
+            ? ivaTaxes.map((t: any, i: number) => (
                 <View key={i} style={s.tRow}>
-                  <Text style={s.tLbl}>{t.tax?.name ?? `IVA ${t.rate}%`}</Text>
+                  <Text style={s.tLbl}>
+                    IVA {t.rate}% (s/{fmt(Number(t.base ?? invoice.subtotal), cur)})
+                  </Text>
                   <Text style={s.tVal}>{fmt(Number(t.amount), cur)}</Text>
                 </View>
               ))
-            : Number(invoice.taxAmount) > 0 && (
+            : Number(invoice.taxAmount) > 0 && !hasIrpf && (
                 <View style={s.tRow}>
                   <Text style={s.tLbl}>IVA</Text>
                   <Text style={s.tVal}>{fmt(Number(invoice.taxAmount), cur)}</Text>
                 </View>
               )}
+          {irpfTaxes.map((t: any, i: number) => (
+            <View key={`irpf-${i}`} style={s.tRow}>
+              <Text style={[s.tLbl, { color: "#dc2626" }]}>
+                Retencion IRPF {Math.abs(Number(t.rate))}%
+              </Text>
+              <Text style={[s.tVal, { color: "#dc2626" }]}>{fmt(Number(t.amount), cur)}</Text>
+            </View>
+          ))}
           <View style={s.tRowFinal}>
-            <Text style={s.tLblFinal}>TOTAL</Text>
+            <Text style={s.tLblFinal}>TOTAL FACTURA</Text>
             <Text style={s.tValFinal}>{fmt(Number(invoice.total), cur)}</Text>
           </View>
           {Number(invoice.paidAmount) > 0 && (
