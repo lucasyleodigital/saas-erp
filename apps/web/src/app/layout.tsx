@@ -53,6 +53,7 @@ export const metadata: Metadata = {
   publisher: "YouWhole",
   applicationName: "YouWhole",
   category: "Business Software",
+  manifest: "/manifest.json",
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   icons: {
     icon: "/logo-icon.png",

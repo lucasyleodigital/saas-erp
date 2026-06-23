@@ -21,7 +21,7 @@ export class InvoicesService {
     private verifactu: VerifactuService,
   ) {}
 
-  async findAll(companyId: string, params: PaginationParams & { status?: string }) {
+  async findAll(companyId: string, params: PaginationParams & { status?: string; dateFrom?: string; dateTo?: string; amountMin?: string; amountMax?: string; clientId?: string }) {
     const { search, status, sortBy = "createdAt", sortOrder = "desc" } = params;
     const page = Number(params.page) || 1;
     const limit = Number(params.limit) || 20;
@@ -30,6 +30,7 @@ export class InvoicesService {
     const where: any = {
       companyId,
       ...(status && { status }),
+      ...(params.clientId && { clientId: params.clientId }),
       ...(search && {
         OR: [
           { number: { contains: search, mode: "insensitive" } },
@@ -37,6 +38,16 @@ export class InvoicesService {
         ],
       }),
     };
+    if (params.dateFrom || params.dateTo) {
+      where.issueDate = {};
+      if (params.dateFrom) where.issueDate.gte = new Date(params.dateFrom);
+      if (params.dateTo) where.issueDate.lte = new Date(params.dateTo + "T23:59:59");
+    }
+    if (params.amountMin || params.amountMax) {
+      where.total = {};
+      if (params.amountMin) where.total.gte = Number(params.amountMin);
+      if (params.amountMax) where.total.lte = Number(params.amountMax);
+    }
 
     const [data, total] = await Promise.all([
       this.prisma.invoice.findMany({

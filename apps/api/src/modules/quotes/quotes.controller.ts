@@ -41,6 +41,11 @@ export class QuotesController {
     return this.svc.sendByEmail(u.companyId, id);
   }
 
+  @Post(":id/duplicate")
+  duplicate(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
+    return this.svc.duplicate(u.companyId, id);
+  }
+
   @Post(":id/convert")
   @HttpCode(HttpStatus.CREATED)
   convertToInvoice(@CurrentUser() u: JwtPayload, @Param("id") id: string) {

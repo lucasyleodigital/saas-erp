@@ -50,6 +50,11 @@ export class AccountingController {
     return this.service.getRetencionesReport(user.companyId, Number(year) || new Date().getFullYear());
   }
 
+  @Get("libro-facturas")
+  getLibroFacturas(@CurrentUser() user: JwtPayload, @Query("year") year: string, @Query("type") type: string) {
+    return this.service.getLibroFacturas(user.companyId, Number(year) || new Date().getFullYear(), type === "recibidas" ? "recibidas" : "emitidas");
+  }
+
   @Get("journal-entries")
   getJournalEntries(@CurrentUser() user: JwtPayload, @Query() query: any) {
     return this.service.getJournalEntries(user.companyId, query);

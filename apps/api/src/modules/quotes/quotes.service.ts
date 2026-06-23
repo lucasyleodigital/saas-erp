@@ -197,6 +197,43 @@ export class QuotesService {
     return { sent: true, to: clientEmail };
   }
 
+  async duplicate(companyId: string, id: string) {
+    const src = await this.findOne(companyId, id);
+    const count = await this.prisma.quote.count({ where: { companyId } });
+    const year = new Date().getFullYear();
+    const number = `P-${year}-${String(count + 1).padStart(4, "0")}`;
+
+    return this.prisma.quote.create({
+      data: {
+        companyId,
+        clientId: src.clientId,
+        number,
+        status: "DRAFT",
+        issueDate: new Date(),
+        validUntil: src.validUntil
+          ? new Date(Date.now() + (src.validUntil.getTime() - src.issueDate.getTime()))
+          : undefined,
+        currency: src.currency,
+        subtotal: src.subtotal,
+        taxAmount: src.taxAmount,
+        total: src.total,
+        notes: src.notes,
+        items: {
+          create: (src.items ?? []).map((item: any, i: number) => ({
+            productId: item.productId ?? undefined,
+            description: item.description,
+            quantity: item.quantity,
+            unitPrice: item.unitPrice,
+            discount: item.discount ?? 0,
+            subtotal: item.subtotal,
+            order: i,
+          })),
+        },
+      },
+      include: { items: true, client: { select: { id: true, name: true } } },
+    });
+  }
+
   async remove(companyId: string, id: string) {
     await this.findOne(companyId, id);
     return this.prisma.quote.delete({ where: { id } });

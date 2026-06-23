@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Res, UseGuards, BadRequestException } from "@nestjs/common";
+import { Controller, Get, Param, Query, Res, UseGuards, BadRequestException } from "@nestjs/common";
 import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
 import { Response } from "express";
 import { ExportService } from "./export.service";
@@ -24,6 +24,7 @@ export class ExportController {
   async exportEntity(
     @CurrentUser() u: JwtPayload,
     @Param("entity") entity: string,
+    @Query() filters: any,
     @Res() res: Response,
   ) {
     if (!FILE_NAMES[entity]) {
@@ -33,7 +34,7 @@ export class ExportController {
     const methods: Record<string, () => Promise<Buffer>> = {
       clients:   () => this.exportService.exportClients(u.companyId),
       products:  () => this.exportService.exportProducts(u.companyId),
-      invoices:  () => this.exportService.exportInvoices(u.companyId),
+      invoices:  () => this.exportService.exportInvoices(u.companyId, filters),
       suppliers: () => this.exportService.exportSuppliers(u.companyId),
     };
 

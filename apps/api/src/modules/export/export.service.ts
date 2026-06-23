@@ -50,9 +50,17 @@ export class ExportService {
     return this.toXlsx(rows, "Productos");
   }
 
-  async exportInvoices(companyId: string): Promise<Buffer> {
+  async exportInvoices(companyId: string, filters?: { status?: string; dateFrom?: string; dateTo?: string }): Promise<Buffer> {
+    const where: any = { companyId };
+    if (filters?.status) where.status = filters.status;
+    if (filters?.dateFrom || filters?.dateTo) {
+      where.issueDate = {};
+      if (filters?.dateFrom) where.issueDate.gte = new Date(filters.dateFrom);
+      if (filters?.dateTo) where.issueDate.lte = new Date(filters.dateTo + "T23:59:59");
+    }
+
     const invoices = await this.prisma.invoice.findMany({
-      where: { companyId },
+      where,
       include: { client: { select: { name: true, cifNif: true } } },
       orderBy: { issueDate: "desc" },
     });

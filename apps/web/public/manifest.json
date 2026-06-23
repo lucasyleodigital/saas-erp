@@ -1,0 +1,17 @@
+{
+  "name": "YouWhole — ERP para autonomos y pymes",
+  "short_name": "YouWhole",
+  "description": "Facturacion, CRM, contabilidad y nominas. Creado por autonomos para autonomos y pymes.",
+  "start_url": "/es/dashboard",
+  "display": "standalone",
+  "background_color": "#040c0a",
+  "theme_color": "#0d9488",
+  "orientation": "any",
+  "icons": [
+    { "src": "/logo-icon.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/logo-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "categories": ["business", "finance", "productivity"],
+  "lang": "es",
+  "dir": "ltr"
+}

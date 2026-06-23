@@ -220,6 +220,62 @@ export class AccountingService {
     };
   }
 
+  // ─── Libro de facturas emitidas/recibidas (AEAT) ─────────────────────────────
+
+  async getLibroFacturas(companyId: string, year: number, type: "emitidas" | "recibidas") {
+    const start = new Date(year, 0, 1);
+    const end = new Date(year, 11, 31, 23, 59, 59);
+
+    if (type === "emitidas") {
+      const invoices = await this.prisma.invoice.findMany({
+        where: { companyId, issueDate: { gte: start, lte: end }, status: { notIn: ["DRAFT"] } },
+        include: {
+          client: { select: { name: true, cifNif: true } },
+          taxes: { include: { tax: true } },
+        },
+        orderBy: { issueDate: "asc" },
+      });
+
+      return {
+        year,
+        type: "emitidas",
+        total: invoices.length,
+        entries: invoices.map((inv) => ({
+          numero: inv.number,
+          fecha: inv.issueDate.toISOString().slice(0, 10),
+          cliente: inv.client?.name ?? "",
+          cifNif: inv.client?.cifNif ?? "",
+          baseImponible: Number(inv.subtotal),
+          tipoIva: inv.taxes?.[0] ? Number(inv.taxes[0].rate) : 21,
+          cuotaIva: Number(inv.taxAmount),
+          retencion: inv.taxes?.filter((t: any) => Number(t.rate) < 0).reduce((s: number, t: any) => s + Math.abs(Number(t.amount)), 0) ?? 0,
+          total: Number(inv.total),
+          estado: inv.status,
+        })),
+      };
+    }
+
+    const expenses = await this.prisma.journalEntry.findMany({
+      where: { companyId, type: { in: ["MANUAL", "ADJUSTMENT"] }, entryDate: { gte: start, lte: end } },
+      include: { items: { include: { account: { select: { code: true, name: true, type: true } } } } },
+      orderBy: { entryDate: "asc" },
+    });
+
+    return {
+      year,
+      type: "recibidas",
+      total: expenses.length,
+      entries: expenses.map((e) => ({
+        numero: e.reference ?? e.id.slice(0, 8),
+        fecha: e.entryDate.toISOString().slice(0, 10),
+        concepto: e.description,
+        base: (e as any).items.filter((i: any) => Number(i.debit) > 0).reduce((s: number, i: any) => s + Number(i.debit), 0),
+        iva: 0,
+        total: (e as any).items.filter((i: any) => Number(i.debit) > 0).reduce((s: number, i: any) => s + Number(i.debit), 0),
+      })),
+    };
+  }
+
   // ─── Modelo 130 (pago fraccionado IRPF — autonomos) ──────────────────────────
 
   async getModelo130(companyId: string, year: number, quarter: number) {
