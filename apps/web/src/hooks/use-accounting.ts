@@ -54,3 +54,31 @@ export function useAccounts() {
     staleTime: 10 * 60 * 1000, // accounts change rarely
   });
 }
+
+export function useLibroFacturas(year: number) {
+  return useQuery({
+    queryKey: ["accounting", "libro-facturas", year],
+    queryFn: () => api.get("/accounting/libro-facturas", { params: { year } }).then((r) => r.data),
+  });
+}
+
+export function useModelo130(year: number) {
+  return useQuery({
+    queryKey: ["accounting", "modelo-130", year],
+    queryFn: () => api.get("/accounting/modelo-130", { params: { year } }).then((r) => r.data),
+  });
+}
+
+export function useModelo347(year: number) {
+  return useQuery({
+    queryKey: ["accounting", "modelo-347", year],
+    queryFn: () => api.get("/accounting/modelo-347", { params: { year } }).then((r) => r.data),
+  });
+}
+
+export function useRetenciones(year: number) {
+  return useQuery({
+    queryKey: ["accounting", "retenciones", year],
+    queryFn: () => api.get("/accounting/retenciones", { params: { year } }).then((r) => r.data),
+  });
+}

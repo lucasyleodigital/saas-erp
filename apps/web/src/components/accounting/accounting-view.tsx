@@ -7,6 +7,7 @@ import { z } from "zod";
 import {
   useProfitAndLoss, useVatReport, useJournalEntries,
   useCreateJournalEntry, useDeleteJournalEntry, useAccounts,
+  useLibroFacturas, useModelo130, useModelo347, useRetenciones,
 } from "@/hooks/use-accounting";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,7 +20,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend,
 } from "recharts";
 import { cn, formatCurrency } from "@/lib/utils";
-import { Plus, Trash2, Loader2, BookOpen, Receipt, TrendingUp, Calculator } from "lucide-react";
+import { Plus, Trash2, Loader2, BookOpen, Receipt, TrendingUp, Calculator, FileText, Users as UsersIcon } from "lucide-react";
 import { motion } from "framer-motion";
 
 // ---- Journal entry dialog ----
@@ -172,7 +173,7 @@ function JournalEntryDialog({
 
 // ---- Main view ----
 export function AccountingView() {
-  const [tab, setTab] = useState<"pyl" | "vat" | "journal" | "accounts">("pyl");
+  const [tab, setTab] = useState<"pyl" | "vat" | "journal" | "accounts" | "libro" | "modelo130" | "modelo347" | "retenciones">("pyl");
   const [year, setYear] = useState(new Date().getFullYear());
   const [entryDialogOpen, setEntryDialogOpen] = useState(false);
 
@@ -181,6 +182,11 @@ export function AccountingView() {
   const { data: journalData, isLoading: journalLoading } = useJournalEntries({});
   const deleteEntry = useDeleteJournalEntry();
   const { data: accountsData } = useAccounts();
+
+  const { data: libro, isLoading: libroLoading } = useLibroFacturas(year);
+  const { data: modelo130, isLoading: m130Loading } = useModelo130(year);
+  const { data: modelo347, isLoading: m347Loading } = useModelo347(year);
+  const { data: retenciones, isLoading: retLoading } = useRetenciones(year);
 
   const accounts: any[] = accountsData ?? [];
   const entries: any[] = journalData?.data ?? [];
@@ -227,6 +233,10 @@ export function AccountingView() {
           { key: "vat", label: "IVA Trimestral", icon: Calculator },
           { key: "journal", label: "Libro Diario", icon: BookOpen },
           { key: "accounts", label: "Plan de Cuentas", icon: Receipt },
+          { key: "libro", label: "Libro Facturas", icon: FileText },
+          { key: "modelo130", label: "Modelo 130", icon: Calculator },
+          { key: "modelo347", label: "Modelo 347", icon: UsersIcon },
+          { key: "retenciones", label: "Retenciones IRPF", icon: Receipt },
         ].map((t) => (
           <button
             key={t.key}
@@ -477,6 +487,286 @@ export function AccountingView() {
             )}
           </CardContent>
         </Card>
+      )}
+
+      {/* Libro Facturas tab */}
+      {tab === "libro" && (
+        <div className="space-y-4">
+          <Card>
+            <CardHeader><CardTitle className="text-base">Facturas Emitidas</CardTitle></CardHeader>
+            <CardContent className="p-0">
+              {libroLoading ? (
+                <div className="h-32 animate-pulse bg-muted m-4 rounded-lg" />
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b bg-muted/30">
+                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Numero</th>
+                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Fecha</th>
+                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Cliente</th>
+                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">CIF/NIF</th>
+                        <th className="text-right px-4 py-3 font-medium text-muted-foreground">Base</th>
+                        <th className="text-right px-4 py-3 font-medium text-muted-foreground">IVA</th>
+                        <th className="text-right px-4 py-3 font-medium text-muted-foreground">Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(libro?.emitidas ?? []).map((inv: any) => (
+                        <tr key={inv.id} className="border-b last:border-0 hover:bg-muted/20">
+                          <td className="px-4 py-3 font-mono text-xs">{inv.number}</td>
+                          <td className="px-4 py-3 text-muted-foreground">{new Date(inv.issueDate).toLocaleDateString("es-ES")}</td>
+                          <td className="px-4 py-3 font-medium">{inv.clientName}</td>
+                          <td className="px-4 py-3 text-muted-foreground">{inv.clientCif ?? "—"}</td>
+                          <td className="px-4 py-3 text-right">{formatCurrency(inv.subtotal)}</td>
+                          <td className="px-4 py-3 text-right">{formatCurrency(inv.taxAmount)}</td>
+                          <td className="px-4 py-3 text-right font-semibold">{formatCurrency(inv.total)}</td>
+                        </tr>
+                      ))}
+                      {(libro?.emitidas ?? []).length === 0 && (
+                        <tr><td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">Sin facturas emitidas en {year}</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader><CardTitle className="text-base">Facturas Recibidas</CardTitle></CardHeader>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b bg-muted/30">
+                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Numero</th>
+                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Fecha</th>
+                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Proveedor</th>
+                      <th className="text-right px-4 py-3 font-medium text-muted-foreground">Base</th>
+                      <th className="text-right px-4 py-3 font-medium text-muted-foreground">IVA</th>
+                      <th className="text-right px-4 py-3 font-medium text-muted-foreground">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(libro?.recibidas ?? []).map((inv: any, i: number) => (
+                      <tr key={i} className="border-b last:border-0 hover:bg-muted/20">
+                        <td className="px-4 py-3 font-mono text-xs">{inv.number ?? "—"}</td>
+                        <td className="px-4 py-3 text-muted-foreground">{new Date(inv.date).toLocaleDateString("es-ES")}</td>
+                        <td className="px-4 py-3 font-medium">{inv.supplierName}</td>
+                        <td className="px-4 py-3 text-right">{formatCurrency(inv.subtotal)}</td>
+                        <td className="px-4 py-3 text-right">{formatCurrency(inv.taxAmount)}</td>
+                        <td className="px-4 py-3 text-right font-semibold">{formatCurrency(inv.total)}</td>
+                      </tr>
+                    ))}
+                    {(libro?.recibidas ?? []).length === 0 && (
+                      <tr><td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">Sin facturas recibidas en {year}</td></tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Modelo 130 tab */}
+      {tab === "modelo130" && (
+        <div className="space-y-4">
+          <Card className="border-amber-500/30 bg-amber-500/5">
+            <CardContent className="p-5">
+              <p className="text-sm font-medium">Modelo 130 — Pago fraccionado IRPF</p>
+              <p className="text-xs text-muted-foreground mt-1">Estimacion directa simplificada. Autonomos obligados a presentar trimestralmente.</p>
+            </CardContent>
+          </Card>
+          {m130Loading ? (
+            <div className="grid grid-cols-4 gap-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="h-40 bg-muted rounded-xl animate-pulse" />
+              ))}
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {(modelo130?.quarters ?? []).map((q: any) => (
+                  <Card key={q.quarter}>
+                    <CardContent className="p-5">
+                      <p className="text-sm font-semibold text-muted-foreground mb-3">{q.quarter} {year}</p>
+                      <div className="space-y-1.5 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Ingresos</span>
+                          <span>{formatCurrency(q.revenue ?? 0)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Gastos</span>
+                          <span>{formatCurrency(q.expenses ?? 0)}</span>
+                        </div>
+                        <div className="flex justify-between border-t pt-1">
+                          <span className="text-muted-foreground">Rto. neto</span>
+                          <span className="font-medium">{formatCurrency(q.netIncome ?? 0)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">IRPF ({q.irpfRate ?? 20}%)</span>
+                          <span className="text-amber-600 font-medium">{formatCurrency(q.irpfAmount ?? 0)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Pagos ant.</span>
+                          <span>{formatCurrency(q.previousPayments ?? 0)}</span>
+                        </div>
+                        <div className="flex justify-between border-t pt-1.5 font-bold">
+                          <span>A ingresar</span>
+                          <span className="text-primary">{formatCurrency(q.toPay ?? 0)}</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+              <Card className="border-primary/30 bg-primary/5">
+                <CardContent className="p-5 flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold">Total Modelo 130 — {year}</p>
+                    <p className="text-sm text-muted-foreground mt-0.5">Pagos fraccionados IRPF acumulados</p>
+                  </div>
+                  <p className="text-2xl font-bold text-primary">{formatCurrency(modelo130?.yearTotal?.toPay ?? 0)}</p>
+                </CardContent>
+              </Card>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Modelo 347 tab */}
+      {tab === "modelo347" && (
+        <div className="space-y-4">
+          <Card className="border-blue-500/30 bg-blue-500/5">
+            <CardContent className="p-5">
+              <p className="text-sm font-medium">Modelo 347 — Operaciones con terceros</p>
+              <p className="text-xs text-muted-foreground mt-1">Declaracion anual de operaciones superiores a 3.005,06 EUR con un mismo cliente o proveedor.</p>
+            </CardContent>
+          </Card>
+          {m347Loading ? (
+            <div className="h-40 bg-muted rounded-xl animate-pulse" />
+          ) : (
+            <>
+              <Card>
+                <CardHeader><CardTitle className="text-base">Clientes ({modelo347?.clients?.length ?? 0})</CardTitle></CardHeader>
+                <CardContent className="p-0">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b bg-muted/30">
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Cliente</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">CIF/NIF</th>
+                          <th className="text-right px-4 py-3 font-medium text-muted-foreground">Total operaciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(modelo347?.clients ?? []).map((c: any) => (
+                          <tr key={c.id} className="border-b last:border-0 hover:bg-muted/20">
+                            <td className="px-4 py-3 font-medium">{c.name}</td>
+                            <td className="px-4 py-3 text-muted-foreground">{c.cifNif ?? "—"}</td>
+                            <td className="px-4 py-3 text-right font-semibold">{formatCurrency(c.total)}</td>
+                          </tr>
+                        ))}
+                        {(modelo347?.clients ?? []).length === 0 && (
+                          <tr><td colSpan={3} className="px-4 py-8 text-center text-muted-foreground">Ningun cliente supera los 3.005,06 EUR en {year}</td></tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader><CardTitle className="text-base">Proveedores ({modelo347?.suppliers?.length ?? 0})</CardTitle></CardHeader>
+                <CardContent className="p-0">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b bg-muted/30">
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Proveedor</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">CIF/NIF</th>
+                          <th className="text-right px-4 py-3 font-medium text-muted-foreground">Total operaciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(modelo347?.suppliers ?? []).map((s: any) => (
+                          <tr key={s.id} className="border-b last:border-0 hover:bg-muted/20">
+                            <td className="px-4 py-3 font-medium">{s.name}</td>
+                            <td className="px-4 py-3 text-muted-foreground">{s.cifNif ?? "—"}</td>
+                            <td className="px-4 py-3 text-right font-semibold">{formatCurrency(s.total)}</td>
+                          </tr>
+                        ))}
+                        {(modelo347?.suppliers ?? []).length === 0 && (
+                          <tr><td colSpan={3} className="px-4 py-8 text-center text-muted-foreground">Ningun proveedor supera los 3.005,06 EUR en {year}</td></tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Retenciones IRPF tab */}
+      {tab === "retenciones" && (
+        <div className="space-y-4">
+          <Card className="border-red-500/30 bg-red-500/5">
+            <CardContent className="p-5">
+              <p className="text-sm font-medium">Retenciones IRPF practicadas</p>
+              <p className="text-xs text-muted-foreground mt-1">Resumen de retenciones aplicadas en facturas emitidas. Util para el Modelo 190.</p>
+            </CardContent>
+          </Card>
+          {retLoading ? (
+            <div className="h-40 bg-muted rounded-xl animate-pulse" />
+          ) : (
+            <>
+              <Card>
+                <CardContent className="p-0">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b bg-muted/30">
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Cliente</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">CIF/NIF</th>
+                          <th className="text-right px-4 py-3 font-medium text-muted-foreground">Base</th>
+                          <th className="text-right px-4 py-3 font-medium text-muted-foreground">% IRPF</th>
+                          <th className="text-right px-4 py-3 font-medium text-muted-foreground">Retencion</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(retenciones?.retentions ?? []).map((r: any, i: number) => (
+                          <tr key={i} className="border-b last:border-0 hover:bg-muted/20">
+                            <td className="px-4 py-3 font-medium">{r.clientName}</td>
+                            <td className="px-4 py-3 text-muted-foreground">{r.cifNif ?? "—"}</td>
+                            <td className="px-4 py-3 text-right">{formatCurrency(r.base)}</td>
+                            <td className="px-4 py-3 text-right text-muted-foreground">{r.rate}%</td>
+                            <td className="px-4 py-3 text-right font-semibold text-red-600">{formatCurrency(r.amount)}</td>
+                          </tr>
+                        ))}
+                        {(retenciones?.retentions ?? []).length === 0 && (
+                          <tr><td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">Sin retenciones IRPF en {year}</td></tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+              {retenciones?.total && (
+                <Card className="border-primary/30 bg-primary/5">
+                  <CardContent className="p-5 flex items-center justify-between">
+                    <div>
+                      <p className="font-semibold">Total retenciones {year}</p>
+                      <p className="text-sm text-muted-foreground mt-0.5">Base: {formatCurrency(retenciones.total.base ?? 0)}</p>
+                    </div>
+                    <p className="text-2xl font-bold text-red-600">{formatCurrency(retenciones.total.amount ?? 0)}</p>
+                  </CardContent>
+                </Card>
+              )}
+            </>
+          )}
+        </div>
       )}
 
       <JournalEntryDialog

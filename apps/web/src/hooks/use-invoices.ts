@@ -13,6 +13,11 @@ export function useInvoices(params?: {
   limit?: number;
   search?: string;
   status?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  amountMin?: string;
+  amountMax?: string;
+  client?: string;
 }) {
   return useQuery({
     queryKey: invoiceKeys.list(params),

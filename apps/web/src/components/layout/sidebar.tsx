@@ -32,6 +32,9 @@ import {
   ShoppingCart,
   PackageCheck,
   X,
+  CalendarDays,
+  Landmark,
+  Webhook,
 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -78,6 +81,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         { href: "/facturas",     label: t("invoices"),   icon: FileText },
         { href: "/presupuestos", label: t("quotes"),     icon: ClipboardList },
         { href: "/albaranes",   label: t("deliveryNotes"), icon: Truck },
+        { href: "/calendario",  label: "Calendario",    icon: CalendarDays },
         { href: "/productos",    label: t("products"),   icon: Package },
         { href: "/verifactu",    label: t("verifactu"),  icon: Shield },
       ],
@@ -86,6 +90,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
       group: t("accounting"),
       items: [
         { href: "/contabilidad", label: t("accounting"),    icon: Calculator },
+        { href: "/banco",        label: "Banco",            icon: Landmark },
         { href: "/inventario",   label: t("inventory"),     icon: Warehouse },
         { href: "/proveedores",  label: t("suppliers"),     icon: Truck },
         { href: "/pedidos",      label: t("orders"),        icon: ShoppingCart },
@@ -99,6 +104,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         { href: "/empresa",         label: t("company"),       icon: Building2 },
         { href: "/billing",         label: t("billing"),       icon: CreditCard },
         { href: "/automatizaciones",label: t("automations"),   icon: Zap },
+        { href: "/webhooks",        label: "Webhooks",         icon: Webhook },
         { href: "/notificaciones",  label: t("notifications"), icon: Bell },
         { href: "/configuracion",   label: t("settings"),      icon: Settings },
       ],

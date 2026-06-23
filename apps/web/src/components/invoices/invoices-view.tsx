@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useInvoices, useUpdateInvoiceStatus, useSendInvoiceEmail, useDeleteInvoice, useCreatePaymentLink, useSetRecurring, useDuplicateInvoice } from "@/hooks/use-invoices";
+import { useInvoices, useUpdateInvoiceStatus, useSendInvoiceEmail, useDeleteInvoice, useCreatePaymentLink, useSetRecurring, useDuplicateInvoice, useBulkUpdateStatus } from "@/hooks/use-invoices";
 import { downloadInvoicePdf } from "@/lib/pdf/download-pdf";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,7 +32,9 @@ import {
   RefreshCw,
   Copy,
   Bell,
+  Filter,
 } from "lucide-react";
+import { Label } from "@/components/ui/label";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useExport } from "@/hooks/use-export";
 import { motion } from "framer-motion";
@@ -67,6 +69,13 @@ export function InvoicesView() {
   const [page, setPage] = useState(1);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [pdfLoading, setPdfLoading] = useState<string | null>(null);
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [amountMin, setAmountMin] = useState("");
+  const [amountMax, setAmountMax] = useState("");
+  const [clientFilter, setClientFilter] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
   const debouncedSearch = useDebounce(search, 300);
   const updateStatus = useUpdateInvoiceStatus();
   const sendEmail = useSendInvoiceEmail();
@@ -74,6 +83,7 @@ export function InvoicesView() {
   const paymentLink = useCreatePaymentLink();
   const setRecurring = useSetRecurring();
   const duplicateInvoice = useDuplicateInvoice();
+  const bulkUpdate = useBulkUpdateStatus();
   const { exportData: exportInvoices, isPending: exporting } = useExport("invoices");
 
   const { data, isLoading, isError, error } = useInvoices({
@@ -81,6 +91,11 @@ export function InvoicesView() {
     status,
     page,
     limit: 20,
+    ...(dateFrom ? { dateFrom } : {}),
+    ...(dateTo ? { dateTo } : {}),
+    ...(amountMin ? { amountMin } : {}),
+    ...(amountMax ? { amountMax } : {}),
+    ...(clientFilter ? { client: clientFilter } : {}),
   });
 
   const invoices = data?.data ?? [];
@@ -107,33 +122,122 @@ export function InvoicesView() {
         </div>
       </div>
 
-      {/* Tabs + Search */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-        <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg">
-          {STATUS_TABS.map((tab) => (
-            <button
-              key={tab.label}
-              onClick={() => { setStatus(tab.key); setPage(1); }}
-              className={cn(
-                "px-3 py-1.5 text-sm rounded-md transition-colors",
-                status === tab.key
-                  ? "bg-background text-foreground shadow-sm font-medium"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {tab.label}
-            </button>
-          ))}
+      {/* Tabs + Search + Filters */}
+      <div className="space-y-3">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg">
+            {STATUS_TABS.map((tab) => (
+              <button
+                key={tab.label}
+                onClick={() => { setStatus(tab.key); setPage(1); }}
+                className={cn(
+                  "px-3 py-1.5 text-sm rounded-md transition-colors",
+                  status === tab.key
+                    ? "bg-background text-foreground shadow-sm font-medium"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar facturas..."
+              className="pl-9"
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            />
+          </div>
+          <Button
+            variant={showFilters ? "secondary" : "outline"}
+            size="sm"
+            onClick={() => setShowFilters((v) => !v)}
+            className="gap-2"
+          >
+            <Filter className="h-4 w-4" />
+            Filtros
+          </Button>
         </div>
-        <div className="relative w-full sm:w-64">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Buscar facturas..."
-            className="pl-9"
-            value={search}
-            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-          />
-        </div>
+
+        {/* Advanced Filters Panel */}
+        {showFilters && (
+          <Card>
+            <CardContent className="pt-4 pb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+                <div className="space-y-1.5">
+                  <Label htmlFor="filter-date-from">Desde</Label>
+                  <Input
+                    id="filter-date-from"
+                    type="date"
+                    value={dateFrom}
+                    onChange={(e) => { setDateFrom(e.target.value); setPage(1); }}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="filter-date-to">Hasta</Label>
+                  <Input
+                    id="filter-date-to"
+                    type="date"
+                    value={dateTo}
+                    onChange={(e) => { setDateTo(e.target.value); setPage(1); }}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="filter-amount-min">Importe min</Label>
+                  <Input
+                    id="filter-amount-min"
+                    type="number"
+                    placeholder="0"
+                    min="0"
+                    step="0.01"
+                    value={amountMin}
+                    onChange={(e) => { setAmountMin(e.target.value); setPage(1); }}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="filter-amount-max">Importe max</Label>
+                  <Input
+                    id="filter-amount-max"
+                    type="number"
+                    placeholder="0"
+                    min="0"
+                    step="0.01"
+                    value={amountMax}
+                    onChange={(e) => { setAmountMax(e.target.value); setPage(1); }}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="filter-client">Cliente</Label>
+                  <Input
+                    id="filter-client"
+                    type="text"
+                    placeholder="Nombre del cliente..."
+                    value={clientFilter}
+                    onChange={(e) => { setClientFilter(e.target.value); setPage(1); }}
+                  />
+                </div>
+              </div>
+              <div className="mt-3 flex justify-end">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setDateFrom("");
+                    setDateTo("");
+                    setAmountMin("");
+                    setAmountMax("");
+                    setClientFilter("");
+                    setPage(1);
+                  }}
+                >
+                  Limpiar filtros
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {/* Table */}
@@ -178,6 +282,17 @@ export function InvoicesView() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border">
+                    <th className="w-10 px-4 py-3">
+                      <input
+                        type="checkbox"
+                        className="rounded border-border"
+                        checked={selected.size === invoices.length && invoices.length > 0}
+                        onChange={(e) => {
+                          if (e.target.checked) setSelected(new Set(invoices.map((i: any) => i.id)));
+                          else setSelected(new Set());
+                        }}
+                      />
+                    </th>
                     <th className="text-left font-medium text-muted-foreground px-4 py-3">Número</th>
                     <th className="text-left font-medium text-muted-foreground px-4 py-3">Cliente</th>
                     <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">Fecha</th>
@@ -198,6 +313,19 @@ export function InvoicesView() {
                         transition={{ delay: i * 0.03 }}
                         className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors"
                       >
+                        <td className="px-4 py-3">
+                          <input
+                            type="checkbox"
+                            className="rounded border-border"
+                            checked={selected.has(inv.id)}
+                            onChange={(e) => {
+                              const next = new Set(selected);
+                              if (e.target.checked) next.add(inv.id);
+                              else next.delete(inv.id);
+                              setSelected(next);
+                            }}
+                          />
+                        </td>
                         <td className="px-4 py-3 font-mono text-xs font-medium text-primary">
                           {inv.number}
                         </td>
@@ -379,6 +507,53 @@ export function InvoicesView() {
               Siguiente
             </Button>
           </div>
+        </div>
+      )}
+
+      {/* Bulk Actions Bar */}
+      {selected.size > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-background border shadow-lg rounded-xl px-5 py-3">
+          <span className="text-sm font-medium">{selected.size} seleccionadas</span>
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={bulkUpdate.isPending}
+            onClick={() => {
+              bulkUpdate.mutate(
+                { ids: Array.from(selected), status: "PAID" },
+                { onSettled: () => setSelected(new Set()) }
+              );
+            }}
+          >
+            <CheckCircle className="h-4 w-4 mr-1" /> Pagadas
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={bulkUpdate.isPending}
+            onClick={() => {
+              bulkUpdate.mutate(
+                { ids: Array.from(selected), status: "SENT" },
+                { onSettled: () => setSelected(new Set()) }
+              );
+            }}
+          >
+            <Send className="h-4 w-4 mr-1" /> Enviadas
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            className="text-destructive"
+            disabled={bulkUpdate.isPending}
+            onClick={() => {
+              bulkUpdate.mutate(
+                { ids: Array.from(selected), status: "CANCELLED" },
+                { onSettled: () => setSelected(new Set()) }
+              );
+            }}
+          >
+            <XCircle className="h-4 w-4 mr-1" /> Cancelar
+          </Button>
         </div>
       )}
 
