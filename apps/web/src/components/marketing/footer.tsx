@@ -30,7 +30,7 @@ const FOOTER_LINKS = [
     title: "Soporte",
     links: [
       { href: "/ayuda", label: "Centro de ayuda" },
-      { href: "mailto:soporte@youwhole.com", label: "Soporte técnico" },
+      { href: "mailto:hola@youwhole.com", label: "Soporte tecnico" },
     ],
   },
 ];

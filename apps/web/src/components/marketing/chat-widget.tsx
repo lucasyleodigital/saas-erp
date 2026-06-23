@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Bot } from "lucide-react";
+import { MessageCircle, X, Send, Bot, Search } from "lucide-react";
 
 interface Message {
   id: number;
@@ -10,31 +10,177 @@ interface Message {
   text: string;
 }
 
+const QA: { q: string; a: string; keywords: string[] }[] = [
+  // -- Plan y precios --
+  {
+    q: "Que incluye el plan gratuito?",
+    a: "El plan Gratuito incluye hasta 5 clientes, 10 facturas al mes, 1 usuario y 1 GB de almacenamiento. Perfecto para empezar sin compromiso.",
+    keywords: ["gratis", "gratuito", "free", "plan", "precio", "coste", "cuesta"],
+  },
+  {
+    q: "Cuanto cuesta YouWhole?",
+    a: "Tenemos 4 planes:\n- Gratuito: 0 EUR/mes (5 clientes, 10 facturas)\n- Starter: 29 EUR/mes (3 usuarios, ilimitado)\n- Pro: 79 EUR/mes (10 usuarios, soporte prioritario)\n- Enterprise: personalizado (usuarios ilimitados)\n\nTodos incluyen 14 dias de prueba gratis del plan Pro, sin tarjeta.",
+    keywords: ["precio", "cuesta", "plan", "tarifa", "pagar", "suscripcion", "starter", "pro", "enterprise"],
+  },
+  {
+    q: "Puedo cancelar cuando quiera?",
+    a: "Si, sin permanencia ni penalizaciones. Si cancelas, sigues teniendo acceso hasta el final del periodo ya pagado. Despues, tu cuenta pasa al plan Gratuito y conservas todos tus datos.",
+    keywords: ["cancelar", "baja", "permanencia", "devolucion"],
+  },
+  // -- VeriFactu --
+  {
+    q: "Como funciona VeriFactu?",
+    a: "VeriFactu registra cada factura automaticamente en la AEAT con firma SHA256 encadenada. YouWhole genera el XML certificado, el codigo QR de verificacion y lo envia directamente al sistema VERI*FACTU de Hacienda. No tienes que hacer nada -- es automatico desde el primer dia.",
+    keywords: ["verifactu", "aeat", "hacienda", "sha256", "factura electronica", "ley antifraude", "cumplimiento"],
+  },
+  // -- Facturacion --
+  {
+    q: "Como creo una factura?",
+    a: "Desde Facturacion > Facturas > Nueva factura:\n1. Selecciona el cliente\n2. Anade las lineas (concepto, cantidad, precio)\n3. El IVA y el IRPF (si eres autonomo) se calculan automaticamente\n4. Guarda como borrador o envia por email al cliente\n\nEl PDF se genera con tu logo y datos de empresa.",
+    keywords: ["factura", "facturar", "crear factura", "emitir"],
+  },
+  {
+    q: "Puedo facturar en otros idiomas?",
+    a: "Si. Al crear una factura, puedes seleccionar el idioma del documento. El PDF se genera con todas las etiquetas traducidas. Idiomas disponibles: Espanol, English, Francais, Deutsch, Portugues, Italiano y Catala.",
+    keywords: ["idioma", "ingles", "frances", "traducir", "multi-idioma", "catala"],
+  },
+  {
+    q: "Puedo facturar en otra moneda?",
+    a: "Si. Puedes facturar en EUR, USD, GBP, CHF y muchas mas monedas. El sistema muestra el tipo de cambio actual del BCE (Banco Central Europeo) y calcula el equivalente en euros como referencia.",
+    keywords: ["moneda", "divisa", "dolar", "libra", "cambio", "multi-divisa", "usd", "gbp"],
+  },
+  {
+    q: "Como funcionan las facturas recurrentes?",
+    a: "Al crear una factura, activa la opcion 'Recurrente' y selecciona la frecuencia (semanal, mensual, trimestral o anual). El sistema generara automaticamente una nueva factura cada periodo a las 7:00 AM. Se crean como borrador para que puedas revisarlas antes de enviar.",
+    keywords: ["recurrente", "automatica", "periodicidad", "repetir", "suscripcion"],
+  },
+  {
+    q: "Como genero un link de pago?",
+    a: "Si tienes Stripe configurado, puedes generar un enlace de pago desde el menu de cada factura. El cliente recibe un link seguro donde pagar con tarjeta. Cuando pague, la factura se marca automaticamente como pagada.",
+    keywords: ["pago", "stripe", "cobrar", "tarjeta", "link", "pasarela"],
+  },
+  // -- IRPF y modelos --
+  {
+    q: "Como funciona el IRPF para autonomos?",
+    a: "Si configuras tu empresa como AUTONOMO, al crear facturas se resta automaticamente la retencion IRPF (normalmente 15%, o 7% si eres nuevo autonomo). El calculo es: Total = Base + IVA - IRPF. Ademas, en Contabilidad tienes el Modelo 130 con el pago fraccionado trimestral calculado automaticamente.",
+    keywords: ["irpf", "autonomo", "retencion", "modelo 130", "trimestral", "hacienda"],
+  },
+  {
+    q: "Que modelos fiscales calcula YouWhole?",
+    a: "YouWhole calcula automaticamente:\n- Modelo 130: pago fraccionado IRPF (trimestral, para autonomos)\n- Modelo 303: IVA trimestral\n- Modelo 347: operaciones con terceros > 3.005,06 EUR\n- Libro de Facturas emitidas y recibidas (formato AEAT)\n- Retenciones IRPF por cliente\n\nUsas estos datos como referencia para presentar en la AEAT.",
+    keywords: ["modelo", "303", "130", "347", "fiscal", "impuesto", "iva", "trimestre"],
+  },
+  // -- CRM --
+  {
+    q: "Que incluye el CRM?",
+    a: "El CRM de YouWhole incluye:\n- Gestion de clientes con fichas completas\n- Leads y pipeline Kanban (drag & drop)\n- Proyectos con control de rentabilidad\n- Empleados y nominas\n- Control horario con seguimiento por proyecto\n- Etiquetas y filtros avanzados\n- Portal del cliente con acceso a facturas",
+    keywords: ["crm", "cliente", "lead", "pipeline", "oportunidad", "ventas"],
+  },
+  // -- Proyectos --
+  {
+    q: "Como funciona la gestion de proyectos?",
+    a: "En Proyectos puedes crear proyectos con presupuesto, tarifa/hora y cliente asignado. Cada proyecto muestra:\n- Ingresos reales (facturas vinculadas)\n- Horas registradas por empleados\n- Porcentaje de presupuesto usado\n- Margen de rentabilidad\n\nPuedes vincular facturas y horas para ver la rentabilidad real.",
+    keywords: ["proyecto", "rentabilidad", "presupuesto", "margen"],
+  },
+  // -- Contabilidad --
+  {
+    q: "Que incluye la contabilidad?",
+    a: "La contabilidad de YouWhole incluye:\n- Perdidas y Ganancias con grafico mensual\n- IVA Trimestral (Modelo 303)\n- Libro Diario con asientos manuales y automaticos\n- Plan de Cuentas PGC espanol\n- Conciliacion bancaria (importa CSV del banco)\n- Control de inventario y stock\n- Gestion de proveedores y pedidos de compra",
+    keywords: ["contabilidad", "pgc", "asiento", "libro diario", "balance", "cuentas"],
+  },
+  // -- Nominas y RRHH --
+  {
+    q: "Puedo gestionar nominas con YouWhole?",
+    a: "Si. En Nominas puedes gestionar empleados, contratos y nominas mensuales. El sistema calcula automaticamente las retenciones de IRPF y Seguridad Social. Tambien incluye control horario con registro de horas por proyecto y empleado.",
+    keywords: ["nomina", "empleado", "rrhh", "contrato", "seguridad social", "horario"],
+  },
+  // -- Importar / Exportar --
+  {
+    q: "Puedo importar mis datos existentes?",
+    a: "Si. Puedes importar clientes, productos y facturas historicas desde archivos Excel (.xlsx) o CSV. El sistema detecta las columnas automaticamente y te pide confirmar antes de importar. Tambien puedes exportar cualquier listado a Excel.",
+    keywords: ["importar", "excel", "csv", "migrar", "exportar", "datos"],
+  },
+  {
+    q: "Puedo hacer backup de mis datos?",
+    a: "Si. En la seccion Backup puedes descargar un archivo JSON con TODOS los datos de tu empresa: clientes, facturas, presupuestos, productos, empleados, asientos contables, proyectos y mas. Util para tener una copia de seguridad local.",
+    keywords: ["backup", "copia", "seguridad", "descargar", "exportar todo"],
+  },
+  // -- Seguridad --
+  {
+    q: "Son seguros mis datos?",
+    a: "Si. Todos tus datos se almacenan cifrados en servidores europeos con cumplimiento RGPD. Incluimos backups automaticos, acceso protegido con autenticacion segura y registro de auditoria de todas las acciones. Jamas compartimos tus datos con terceros.",
+    keywords: ["seguro", "seguridad", "rgpd", "cifrado", "privacidad", "datos"],
+  },
+  // -- Funcionalidades nuevas --
+  {
+    q: "Que son los campos personalizados?",
+    a: "Los campos personalizados te permiten anadir informacion extra a tus entidades (clientes, facturas, productos, proyectos). Puedes crear campos de tipo texto, numero, fecha, seleccion o si/no. Util para adaptar YouWhole a las necesidades de tu sector.",
+    keywords: ["campo", "personalizado", "custom", "adaptar", "flexible"],
+  },
+  {
+    q: "Tiene registro de auditoria?",
+    a: "Si. En Auditoria puedes ver un historial de todas las acciones: quien hizo que, cuando y que datos se cambiaron (antes/despues). Filtrable por entidad y tipo de accion. Cumple con los requisitos de trazabilidad de la AEAT.",
+    keywords: ["auditoria", "historial", "registro", "trazabilidad", "log"],
+  },
+  // -- Soporte y contacto --
+  {
+    q: "Como puedo contactar con soporte?",
+    a: "Puedes contactarnos por:\n- Email: hola@youwhole.com\n- Telefono: +34 624 029 617\n- Horario: Lunes a Viernes, 9:00 a 18:00 (hora espanola)\n\nLos clientes Pro y Enterprise tienen soporte prioritario.",
+    keywords: ["contacto", "soporte", "ayuda", "telefono", "email", "hablar", "persona", "llamar"],
+  },
+  // -- General --
+  {
+    q: "Funciona en el movil?",
+    a: "Si. YouWhole es una PWA (Progressive Web App) que puedes instalar en tu movil como una app nativa. Abre la web en el navegador, pulsa 'Anadir a pantalla de inicio' y listo. Tendras acceso a todas las funciones con interfaz adaptada.",
+    keywords: ["movil", "app", "android", "iphone", "ios", "pwa", "telefono", "tablet"],
+  },
+  {
+    q: "Para que tipo de empresa funciona?",
+    a: "YouWhole esta disenado para autonomos y pymes espanolas de cualquier sector: servicios, comercio, construccion, tecnologia, hosteleria, consultoria... Si tienes necesidades especificas, escribenos a hola@youwhole.com y te ayudamos.",
+    keywords: ["empresa", "sector", "autonomo", "pyme", "quien", "tipo"],
+  },
+];
+
+function findBestAnswer(input: string): string {
+  const term = input.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+
+  let bestScore = 0;
+  let bestAnswer = "";
+
+  for (const item of QA) {
+    let score = 0;
+    for (const kw of item.keywords) {
+      if (term.includes(kw)) score += 3;
+    }
+    const qNorm = item.q.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+    const words = term.split(/\s+/);
+    for (const w of words) {
+      if (w.length > 2 && qNorm.includes(w)) score += 1;
+    }
+    if (score > bestScore) {
+      bestScore = score;
+      bestAnswer = item.a;
+    }
+  }
+
+  if (bestScore >= 2) return bestAnswer;
+  return "No tengo una respuesta exacta para eso. Puedes escribirnos a hola@youwhole.com o llamar al +34 624 029 617 (L-V 9-18h) y te ayudamos personalmente.";
+}
+
 const INITIAL_MESSAGES: Message[] = [
   {
     id: 1,
     from: "bot",
-    text: "¡Hola! 👋 Soy el asistente de YouWhole. ¿En qué te puedo ayudar hoy?",
+    text: "Hola, soy el asistente de YouWhole. Preguntame sobre funcionalidades, precios, facturacion, VeriFactu o cualquier otra duda.",
   },
 ];
 
 const QUICK_REPLIES = [
-  "¿Qué incluye el plan gratuito?",
-  "¿Cómo funciona VeriFactu?",
-  "Quiero hablar con una persona",
+  "Cuanto cuesta YouWhole?",
+  "Como funciona VeriFactu?",
+  "Que incluye el CRM?",
+  "Como puedo contactar con soporte?",
 ];
-
-const BOT_RESPONSES: Record<string, string> = {
-  "¿Qué incluye el plan gratuito?":
-    "El plan Gratuito incluye hasta 5 clientes, 10 facturas al mes, 1 usuario y 1 GB de almacenamiento. Perfecto para empezar sin compromiso. 🎉",
-  "¿Cómo funciona VeriFactu?":
-    "VeriFactu registra cada factura automáticamente en la AEAT con firma SHA256. No tienes que hacer nada — YouWhole lo gestiona solo para que siempre estés al día con Hacienda. ✅",
-  "Quiero hablar con una persona":
-    "¡Claro! Escríbenos a hola@youwhole.com o llámanos al +34 900 000 000 (L-V 9-18h). Nuestro equipo en español te atenderá encantado. 🙌",
-};
-
-const DEFAULT_RESPONSE =
-  "Gracias por tu mensaje. Un agente de nuestro equipo te responderá en breve. También puedes escribirnos directamente a hola@youwhole.com ✉️";
 
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -58,10 +204,10 @@ export function ChatWidget() {
     setTyping(true);
 
     setTimeout(() => {
-      const botText = BOT_RESPONSES[text] ?? DEFAULT_RESPONSE;
+      const botText = findBestAnswer(text);
       setMessages((prev) => [...prev, { id: nextId.current++, from: "bot", text: botText }]);
       setTyping(false);
-    }, 900);
+    }, 700);
   };
 
   return (
@@ -74,8 +220,8 @@ export function ChatWidget() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed bottom-24 right-4 sm:right-6 z-50 w-[340px] rounded-2xl border border-border bg-background shadow-2xl overflow-hidden flex flex-col"
-            style={{ maxHeight: "min(520px, 80dvh)" }}
+            className="fixed bottom-24 right-4 sm:right-6 z-50 w-[360px] rounded-2xl border border-border bg-background shadow-2xl overflow-hidden flex flex-col"
+            style={{ maxHeight: "min(560px, 80dvh)" }}
           >
             {/* Header */}
             <div
@@ -86,10 +232,10 @@ export function ChatWidget() {
                 <Bot className="h-5 w-5 text-white" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-semibold text-white">Soporte YouWhole</p>
+                <p className="text-sm font-semibold text-white">Asistente YouWhole</p>
                 <div className="flex items-center gap-1.5">
                   <span className="h-2 w-2 rounded-full bg-emerald-300 animate-pulse" />
-                  <span className="text-xs text-white/70">En línea · responde en minutos</span>
+                  <span className="text-xs text-white/70">Disponible 24/7</span>
                 </div>
               </div>
               <button
@@ -109,7 +255,7 @@ export function ChatWidget() {
                   className={`flex ${msg.from === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className="max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed"
+                    className="max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-line"
                     style={
                       msg.from === "bot"
                         ? { background: "hsl(var(--muted))", color: "hsl(var(--foreground))" }

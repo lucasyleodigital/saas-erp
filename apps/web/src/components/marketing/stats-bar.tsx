@@ -11,10 +11,10 @@ interface Stat {
 }
 
 const STATS: Stat[] = [
-  { value: 1200, suffix: "+", label: "Empresas activas" },
-  { value: 50000, suffix: "+", label: "Facturas generadas", prefix: "" },
+  { value: 15, suffix: "+", label: "Modulos integrados" },
+  { value: 7, suffix: "", label: "Idiomas para documentos" },
   { value: 99.9, suffix: "%", label: "Disponibilidad garantizada" },
-  { value: 4.8, suffix: "/5", label: "Valoración media" },
+  { value: 14, suffix: " dias", label: "Prueba gratis sin tarjeta" },
 ];
 
 function AnimatedNumber({ target, suffix, prefix = "" }: { target: number; suffix: string; prefix?: string }) {

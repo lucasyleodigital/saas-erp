@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Shield, Lock, FileCheck, CheckCircle, ArrowRight } from "lucide-react";
+import { Shield, Lock, FileCheck, CheckCircle, ArrowRight, Building2, Zap, Landmark } from "lucide-react";
 
 const POINTS = [
   {
@@ -34,7 +34,7 @@ const FLOW_STEPS = [
   {
     label: "Tu empresa",
     sublabel: "Emites la factura",
-    icon: "🏢",
+    Icon: Building2,
     color: "#0d9488",
     border: "rgba(13,148,136,0.4)",
     bg: "rgba(13,148,136,0.12)",
@@ -42,7 +42,7 @@ const FLOW_STEPS = [
   {
     label: "YouWhole",
     sublabel: "Firma SHA256 y procesa",
-    icon: "⚡",
+    Icon: Zap,
     color: "#6366f1",
     border: "rgba(99,102,241,0.4)",
     bg: "rgba(99,102,241,0.12)",
@@ -50,7 +50,7 @@ const FLOW_STEPS = [
   {
     label: "AEAT",
     sublabel: "Registra y confirma",
-    icon: "🏛️",
+    Icon: Landmark,
     color: "#f59e0b",
     border: "rgba(245,158,11,0.4)",
     bg: "rgba(245,158,11,0.12)",
@@ -58,7 +58,7 @@ const FLOW_STEPS = [
   {
     label: "Cumplimiento",
     sublabel: "100% legal garantizado",
-    icon: "✅",
+    Icon: CheckCircle,
     color: "#10b981",
     border: "rgba(16,185,129,0.4)",
     bg: "rgba(16,185,129,0.12)",
@@ -129,7 +129,7 @@ export function VerifactuSection() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.12 }}
               >
-                <span className="text-3xl mb-2">{step.icon}</span>
+                <step.Icon className="h-7 w-7 mb-2" style={{ color: step.color }} />
                 <span className="font-bold text-white text-sm mb-0.5">{step.label}</span>
                 <span className="text-xs" style={{ color: step.color }}>{step.sublabel}</span>
               </motion.div>

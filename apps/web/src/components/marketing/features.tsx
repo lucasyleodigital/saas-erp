@@ -12,6 +12,11 @@ import {
   Bell,
   TrendingUp,
   ClipboardList,
+  FolderKanban,
+  Timer,
+  Globe,
+  Landmark,
+  HardDrive,
 } from "lucide-react";
 
 const MAIN_FEATURES = [
@@ -106,6 +111,51 @@ const MAIN_FEATURES = [
     border: "rgba(20,184,166,0.2)",
     glow: "rgba(20,184,166,0.12)",
   },
+  {
+    icon: FolderKanban,
+    title: "Proyectos y rentabilidad",
+    desc: "Control de presupuesto, horas y margen por proyecto. Vincula facturas y horas para ver la rentabilidad real.",
+    color: "#a855f7",
+    bg: "rgba(168,85,247,0.08)",
+    border: "rgba(168,85,247,0.2)",
+    glow: "rgba(168,85,247,0.12)",
+  },
+  {
+    icon: Timer,
+    title: "Control horario",
+    desc: "Registro de horas por empleado y proyecto. Calculo automatico de jornada, descansos y horas extra.",
+    color: "#e11d48",
+    bg: "rgba(225,29,72,0.08)",
+    border: "rgba(225,29,72,0.2)",
+    glow: "rgba(225,29,72,0.12)",
+  },
+  {
+    icon: Globe,
+    title: "Multi-idioma y multi-divisa",
+    desc: "Genera PDFs en 7 idiomas y factura en cualquier moneda con tipos de cambio del BCE en tiempo real.",
+    color: "#0ea5e9",
+    bg: "rgba(14,165,233,0.08)",
+    border: "rgba(14,165,233,0.2)",
+    glow: "rgba(14,165,233,0.12)",
+  },
+  {
+    icon: Landmark,
+    title: "Conciliacion bancaria",
+    desc: "Importa extractos CSV de tu banco y concilia automaticamente con facturas pendientes de cobro.",
+    color: "#84cc16",
+    bg: "rgba(132,204,22,0.08)",
+    border: "rgba(132,204,22,0.2)",
+    glow: "rgba(132,204,22,0.12)",
+  },
+  {
+    icon: HardDrive,
+    title: "Backup y auditoria",
+    desc: "Descarga todos tus datos en un clic. Registro de auditoria con historial de quien hizo que y cuando.",
+    color: "#64748b",
+    bg: "rgba(100,116,139,0.08)",
+    border: "rgba(100,116,139,0.2)",
+    glow: "rgba(100,116,139,0.12)",
+  },
 ];
 
 interface FeatureCardProps {
@@ -172,6 +222,8 @@ export function Features() {
   const secondRow = rest.slice(0, 3);
   const thirdRow = rest.slice(3, 6);
   const fourthRow = rest.slice(6, 9);
+  const fifthRow = rest.slice(9, 12);
+  const sixthRow = rest.slice(12);
 
   return (
     <section
@@ -223,7 +275,7 @@ export function Features() {
               color: "#2dd4bf",
             }}
           >
-            10 módulos incluidos
+            15 modulos incluidos
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-white">
             Todo lo que necesita tu empresa
@@ -254,11 +306,27 @@ export function Features() {
         </div>
 
         {/* Row 3: 3 equal */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-5">
           {fourthRow.map((f, i) => (
             <FeatureCard key={f.title} feature={f} index={i + 7} />
           ))}
         </div>
+
+        {/* Row 4: 3 equal */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-5">
+          {fifthRow.map((f, i) => (
+            <FeatureCard key={f.title} feature={f} index={i + 10} />
+          ))}
+        </div>
+
+        {/* Row 5: remaining */}
+        {sixthRow.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            {sixthRow.map((f, i) => (
+              <FeatureCard key={f.title} feature={f} index={i + 13} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
