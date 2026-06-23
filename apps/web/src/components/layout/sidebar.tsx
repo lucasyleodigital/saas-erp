@@ -36,6 +36,7 @@ import {
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useUnreadCount } from "@/hooks/use-notifications";
+import { useUser } from "@/hooks/use-user";
 
 const LOCALES = ["es", "en", "fr", "de", "pt", "it"];
 
@@ -43,6 +44,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const { data: unreadCount } = useUnreadCount();
+  const { data: currentUser } = useUser();
   const t = useTranslations("nav");
 
   // Extract locale from URL path (e.g. /es/dashboard → "es")
@@ -101,6 +103,12 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         { href: "/configuracion",   label: t("settings"),      icon: Settings },
       ],
     },
+    ...(currentUser?.role === "SUPER_ADMIN" ? [{
+      group: "ADMIN",
+      items: [
+        { href: "/admin", label: "Panel admin", icon: Shield },
+      ],
+    }] : []),
   ];
 
   return (

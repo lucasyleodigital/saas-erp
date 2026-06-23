@@ -33,6 +33,7 @@ import { SearchModule } from "./modules/search/search.module";
 import { ExportModule } from "./modules/export/export.module";
 import { BankModule } from "./modules/bank/bank.module";
 import { WebhooksModule } from "./modules/webhooks/webhooks.module";
+import { AdminModule } from "./modules/admin/admin.module";
 import { DatabaseModule } from "./database/database.module";
 import { validateEnv } from "./config/env.validation";
 
@@ -78,6 +79,7 @@ import { validateEnv } from "./config/env.validation";
     ExportModule,
     BankModule,
     WebhooksModule,
+    AdminModule,
   ],
   providers: [
     // Apply rate limiting globally to ALL routes
