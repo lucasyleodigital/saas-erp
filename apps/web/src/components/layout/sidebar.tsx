@@ -35,6 +35,9 @@ import {
   CalendarDays,
   Landmark,
   Webhook,
+  FolderKanban,
+  Timer,
+  HardDrive,
 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -71,7 +74,9 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         { href: "/clientes",  label: t("clients"),   icon: Users },
         { href: "/leads",     label: t("leads"),     icon: UserPlus },
         { href: "/pipeline",  label: t("pipeline"),  icon: BarChart3 },
+        { href: "/proyectos", label: "Proyectos",    icon: FolderKanban },
         { href: "/empleados", label: t("employees"), icon: UserCheck },
+        { href: "/control-horario", label: "Control horario", icon: Timer },
         { href: "/nominas",   label: t("payroll"),   icon: Banknote },
       ],
     },
@@ -105,6 +110,8 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         { href: "/billing",         label: t("billing"),       icon: CreditCard },
         { href: "/automatizaciones",label: t("automations"),   icon: Zap },
         { href: "/webhooks",        label: "Webhooks",         icon: Webhook },
+        { href: "/auditoria",       label: "Auditoria",        icon: Shield },
+        { href: "/backup",          label: "Backup",           icon: HardDrive },
         { href: "/notificaciones",  label: t("notifications"), icon: Bell },
         { href: "/configuracion",   label: t("settings"),      icon: Settings },
       ],

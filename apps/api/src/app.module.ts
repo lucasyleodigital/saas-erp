@@ -34,6 +34,12 @@ import { ExportModule } from "./modules/export/export.module";
 import { BankModule } from "./modules/bank/bank.module";
 import { WebhooksModule } from "./modules/webhooks/webhooks.module";
 import { AdminModule } from "./modules/admin/admin.module";
+import { ProjectsModule } from "./modules/projects/projects.module";
+import { CustomFieldsModule } from "./modules/custom-fields/custom-fields.module";
+import { BackupModule } from "./modules/backup/backup.module";
+import { AssistantModule } from "./modules/assistant/assistant.module";
+import { CurrencyModule } from "./modules/currency/currency.module";
+import { AuditModule } from "./modules/audit/audit.module";
 import { DatabaseModule } from "./database/database.module";
 import { validateEnv } from "./config/env.validation";
 
@@ -80,6 +86,12 @@ import { validateEnv } from "./config/env.validation";
     BankModule,
     WebhooksModule,
     AdminModule,
+    ProjectsModule,
+    CustomFieldsModule,
+    BackupModule,
+    AssistantModule,
+    CurrencyModule,
+    AuditModule,
   ],
   providers: [
     // Apply rate limiting globally to ALL routes
