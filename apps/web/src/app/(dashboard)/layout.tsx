@@ -4,6 +4,8 @@ import { ApiKeepalive } from "@/components/layout/api-keepalive";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { AssistantWidget } from "@/components/assistant/assistant-widget";
 
+export const dynamic = "force-dynamic";
+
 export default function DashboardLayout({
   children,
 }: {
