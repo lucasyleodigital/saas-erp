@@ -7,6 +7,7 @@ import {
   useConvertQuoteToInvoice,
   useDeleteQuote,
   useSendQuoteEmail,
+  useDuplicateQuote,
 } from "@/hooks/use-quotes";
 import { downloadQuotePdf } from "@/lib/pdf/download-pdf";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,7 @@ import {
   Trash2,
   ArrowRight,
   Download,
+  Copy,
 } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { motion } from "framer-motion";
@@ -70,6 +72,7 @@ export function QuotesView() {
   const convertToInvoice = useConvertQuoteToInvoice();
   const deleteQuote = useDeleteQuote();
   const sendEmail = useSendQuoteEmail();
+  const duplicateQuote = useDuplicateQuote();
 
   const { data, isLoading } = useQuotes({
     search: debouncedSearch || undefined,
@@ -251,6 +254,12 @@ export function QuotesView() {
                               >
                                 <Send className="h-4 w-4 mr-2" />
                                 Enviar por email
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => duplicateQuote.mutate(q.id)}
+                              >
+                                <Copy className="h-4 w-4 mr-2" />
+                                Duplicar
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               {q.status === "DRAFT" && (

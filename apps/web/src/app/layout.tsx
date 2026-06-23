@@ -127,6 +127,13 @@ export default function RootLayout({
             gtag('config', '${GA_ID}');
           `}
         </Script>
+        <Script id="sw-register" strategy="afterInteractive">
+          {`
+            if ('serviceWorker' in navigator) {
+              navigator.serviceWorker.register('/sw.js').catch(function(){});
+            }
+          `}
+        </Script>
       </body>
     </html>
   );

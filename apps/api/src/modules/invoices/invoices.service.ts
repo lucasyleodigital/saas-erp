@@ -240,19 +240,22 @@ export class InvoicesService {
     return payment;
   }
 
-  async remove(companyId: string, id: string) {
+  async remove(companyId: string, id: string, role?: string) {
     const invoice = await this.findOne(companyId, id);
 
-    const hasVerifactu = await this.prisma.verifactuRecord.count({ where: { invoiceId: id } });
-    const canDelete = invoice.status === "DRAFT" || (invoice.status === "CANCELLED" && hasVerifactu === 0);
+    if (role !== "SUPER_ADMIN") {
+      const hasVerifactu = await this.prisma.verifactuRecord.count({ where: { invoiceId: id } });
+      const canDelete = invoice.status === "DRAFT" || (invoice.status === "CANCELLED" && hasVerifactu === 0);
 
-    if (!canDelete) {
-      throw new BadRequestException(
-        "No se puede eliminar una factura emitida (VeriFactu). Solo se pueden eliminar borradores o facturas canceladas sin registro fiscal."
-      );
+      if (!canDelete) {
+        throw new BadRequestException(
+          "No se puede eliminar una factura emitida (VeriFactu). Solo se pueden eliminar borradores o facturas canceladas sin registro fiscal."
+        );
+      }
     }
 
     await this.prisma.$transaction([
+      this.prisma.verifactuRecord.deleteMany({ where: { invoiceId: id } }),
       this.prisma.invoiceTax.deleteMany({ where: { invoiceId: id } }),
       this.prisma.invoiceItem.deleteMany({ where: { invoiceId: id } }),
       this.prisma.payment.deleteMany({ where: { invoiceId: id } }),
@@ -261,7 +264,7 @@ export class InvoicesService {
     return { deleted: true };
   }
 
-  async duplicate(companyId: string, id: string) {
+  async duplicate(companyId: string, id: string, newClientId?: string) {
     const src = await this.findOne(companyId, id);
 
     const series = src.seriesId
@@ -271,42 +274,47 @@ export class InvoicesService {
     if (!series) throw new BadRequestException("Serie no encontrada");
     const number = `${series.prefix}${String(series.nextNumber).padStart(4, "0")}`;
 
+    const srcIssue = new Date(src.issueDate);
+    const srcDue = src.dueDate ? new Date(src.dueDate) : null;
+    const daysDiff = srcDue ? Math.round((srcDue.getTime() - srcIssue.getTime()) / 86400000) : 0;
+    const newDue = srcDue ? new Date(Date.now() + daysDiff * 86400000) : undefined;
+
+    const validTaxes = (src.taxes ?? []).filter((t: any) => t.taxId);
+
     const [invoice] = await this.prisma.$transaction([
       this.prisma.invoice.create({
         data: {
           companyId,
-          clientId: src.clientId,
+          clientId: newClientId || src.clientId,
           seriesId: series.id,
           number,
           status: "DRAFT",
           issueDate: new Date(),
-          dueDate: src.dueDate
-            ? new Date(Date.now() + (src.dueDate.getTime() - src.issueDate.getTime()))
-            : undefined,
+          dueDate: newDue,
           currency: src.currency,
-          subtotal: src.subtotal,
-          taxAmount: src.taxAmount,
-          total: src.total,
+          subtotal: Number(src.subtotal),
+          taxAmount: Number(src.taxAmount),
+          total: Number(src.total),
           notes: src.notes,
           terms: src.terms,
           items: {
             create: (src.items ?? []).map((item: any, i: number) => ({
               productId: item.productId,
               description: item.description,
-              quantity: item.quantity,
-              unitPrice: item.unitPrice,
-              discount: item.discount ?? 0,
-              subtotal: item.subtotal,
+              quantity: Number(item.quantity),
+              unitPrice: Number(item.unitPrice),
+              discount: Number(item.discount ?? 0),
+              subtotal: Number(item.subtotal),
               order: i,
             })),
           },
-          taxes: (src.taxes ?? []).length > 0
+          taxes: validTaxes.length > 0
             ? {
-                create: src.taxes!.map((t: any) => ({
+                create: validTaxes.map((t: any) => ({
                   taxId: t.taxId,
-                  rate: t.rate,
-                  base: t.base,
-                  amount: t.amount,
+                  rate: Number(t.rate),
+                  base: Number(t.base),
+                  amount: Number(t.amount),
                 })),
               }
             : undefined,

@@ -31,6 +31,7 @@ import {
   CreditCard,
   RefreshCw,
   Copy,
+  Bell,
 } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useExport } from "@/hooks/use-export";
@@ -321,6 +322,15 @@ export function InvoicesView() {
                                   Marcar como pagada
                                 </DropdownMenuItem>
                               )}
+                              {["SENT", "OVERDUE", "PARTIAL"].includes(inv.status) && (
+                                <DropdownMenuItem
+                                  onClick={() => sendEmail.mutate(inv.id)}
+                                  disabled={sendEmail.isPending}
+                                >
+                                  <Bell className="h-4 w-4 mr-2" />
+                                  Enviar recordatorio de pago
+                                </DropdownMenuItem>
+                              )}
                               {inv.status !== "CANCELLED" && (
                                 <DropdownMenuItem
                                   className="text-destructive focus:text-destructive"
@@ -332,22 +342,18 @@ export function InvoicesView() {
                                   Cancelar
                                 </DropdownMenuItem>
                               )}
-                              {(inv.status === "DRAFT" || inv.status === "CANCELLED") && (
-                                <>
-                                  <DropdownMenuSeparator />
-                                  <DropdownMenuItem
-                                    className="text-destructive focus:text-destructive"
-                                    onClick={() => {
-                                      if (confirm(`Eliminar factura ${inv.number}? Esta accion no se puede deshacer.`)) {
-                                        deleteInvoice.mutate(inv.id);
-                                      }
-                                    }}
-                                  >
-                                    <Trash2 className="h-4 w-4 mr-2" />
-                                    Eliminar
-                                  </DropdownMenuItem>
-                                </>
-                              )}
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                className="text-destructive focus:text-destructive"
+                                onClick={() => {
+                                  if (confirm(`Eliminar factura ${inv.number}? Esta accion no se puede deshacer.`)) {
+                                    deleteInvoice.mutate(inv.id);
+                                  }
+                                }}
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Eliminar
+                              </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </td>

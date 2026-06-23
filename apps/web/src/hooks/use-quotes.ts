@@ -76,6 +76,18 @@ export function useConvertQuoteToInvoice() {
   });
 }
 
+export function useDuplicateQuote() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => api.post(`/quotes/${id}/duplicate`).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["quotes"] });
+      toast.success("Presupuesto duplicado como borrador");
+    },
+    onError: () => toast.error("Error al duplicar el presupuesto"),
+  });
+}
+
 export function useDeleteQuote() {
   const qc = useQueryClient();
   return useMutation({

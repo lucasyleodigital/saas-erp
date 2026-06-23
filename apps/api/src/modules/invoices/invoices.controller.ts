@@ -51,7 +51,7 @@ export class InvoicesController {
 
   @Delete(":id")
   remove(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
-    return this.svc.remove(u.companyId, id);
+    return this.svc.remove(u.companyId, id, u.role);
   }
 
   @Patch(":id/recurring")
@@ -74,8 +74,12 @@ export class InvoicesController {
   }
 
   @Post(":id/duplicate")
-  duplicate(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
-    return this.svc.duplicate(u.companyId, id);
+  duplicate(
+    @CurrentUser() u: JwtPayload,
+    @Param("id") id: string,
+    @Body() body?: { clientId?: string },
+  ) {
+    return this.svc.duplicate(u.companyId, id, body?.clientId);
   }
 
   @Post("bulk/status")
