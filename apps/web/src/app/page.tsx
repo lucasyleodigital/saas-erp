@@ -14,15 +14,15 @@ import { ChatWidget } from "@/components/marketing/chat-widget";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "YouWhole — ERP y facturación electrónica para pymes españolas",
+  title: "YouWhole — ERP para autonomos y pymes españolas",
   description:
-    "ERP todo en uno para pymes españolas: facturación electrónica con VeriFactu, CRM, contabilidad PGC, nóminas e inventario. 14 días gratis, sin tarjeta, sin permanencia.",
+    "ERP creado por autonomos para autonomos y pymes. Facturacion con VeriFactu, IRPF automatico, Modelo 130/303, CRM, contabilidad y nominas. 14 dias gratis, sin tarjeta.",
   robots: { index: true, follow: true },
-  alternates: { canonical: "https://youwhole.com" },
+  alternates: { canonical: "https://youwhole.com/es" },
   openGraph: {
-    title: "YouWhole — ERP todo en uno para pymes españolas",
+    title: "YouWhole — ERP para autonomos y pymes españolas",
     description:
-      "Facturación con VeriFactu, CRM, contabilidad PGC y nóminas en una sola plataforma. Diseñado para el mercado español. Desde 29 €/mes.",
+      "Creado por autonomos para autonomos y pymes. VeriFactu, IRPF, Modelo 130/303, CRM y contabilidad. Desde 29 EUR/mes.",
     url: "https://youwhole.com",
     type: "website",
   },
@@ -35,7 +35,7 @@ const JSONLD_ORGANIZATION = {
   url: "https://youwhole.com",
   logo: "https://youwhole.com/logo.png",
   description:
-    "YouWhole es un ERP todo en uno para pymes españolas que integra facturación electrónica con VeriFactu, CRM, contabilidad PGC, nóminas e inventario en una sola plataforma.",
+    "YouWhole es un ERP creado por autonomos para autonomos y pymes españolas. Facturacion con VeriFactu, IRPF automatico, Modelo 130/303/347, CRM, contabilidad PGC y nominas.",
   founder: { "@type": "Organization", name: "Lucas y Leo Digital", url: "https://lucasyleodigital.com" },
   foundingLocation: { "@type": "Place", addressLocality: "Barcelona", addressCountry: "ES" },
   contactPoint: {
@@ -58,7 +58,7 @@ const JSONLD_SOFTWARE = {
   operatingSystem: "Web, iOS, Android",
   url: "https://youwhole.com",
   description:
-    "ERP todo en uno para pymes españolas: facturación electrónica con VeriFactu certificado AEAT, CRM con pipeline Kanban, contabilidad PGC, nóminas, inventario y más.",
+    "ERP para autonomos y pymes: facturacion con VeriFactu, IRPF automatico, Modelo 130/303/347, CRM, contabilidad PGC, nominas e inventario.",
   featureList: [
     "Facturación electrónica con VeriFactu certificado AEAT",
     "CRM integrado con pipeline Kanban",
@@ -67,9 +67,13 @@ const JSONLD_SOFTWARE = {
     "Control de inventario y almacén",
     "Presupuestos y albaranes",
     "Automatizaciones y facturas recurrentes",
+    "IRPF automatico para autonomos",
+    "Modelo 130 y 303 integrados",
     "Dashboard en tiempo real",
-    "Importación desde Excel y CSV",
+    "Importacion y exportacion Excel/CSV",
     "Multi-usuario con control de roles",
+    "Recordatorios automaticos de impago",
+    "Conciliacion bancaria automatica",
   ],
   offers: [
     {
