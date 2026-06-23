@@ -17,8 +17,11 @@ import { Label } from "@/components/ui/label";
 import { useCreateInvoice } from "@/hooks/use-invoices";
 import { useClients } from "@/hooks/use-clients";
 import { useProducts } from "@/hooks/use-products";
+import { useProjects } from "@/hooks/use-projects";
 import { formatCurrency } from "@/lib/utils";
 import { Plus, Trash2, Loader2 } from "lucide-react";
+import { CurrencySelector } from "./currency-selector";
+import { LanguageSelector } from "./language-selector";
 
 const lineSchema = z.object({
   productId: z.string().optional(),
@@ -47,8 +50,14 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
   const createInvoice = useCreateInvoice();
   const { data: clientsData } = useClients({ limit: 200 } as any);
   const { data: productsData } = useProducts();
+  const { data: projectsData } = useProjects({});
   const clients = clientsData?.data ?? [];
   const products = productsData?.data ?? [];
+  const projects = projectsData?.data ?? projectsData ?? [];
+
+  const [currency, setCurrency] = useState("EUR");
+  const [language, setLanguage] = useState("es");
+  const [projectId, setProjectId] = useState("");
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -72,7 +81,12 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
   const items = watch("items");
 
   useEffect(() => {
-    if (open) reset({ issueDate: today, items: [{ description: "", quantity: 1, unitPrice: 0 }] });
+    if (open) {
+      reset({ issueDate: today, items: [{ description: "", quantity: 1, unitPrice: 0 }] });
+      setCurrency("EUR");
+      setLanguage("es");
+      setProjectId("");
+    }
   }, [open, reset, today]);
 
   function handleProductChange(index: number, productId: string) {
@@ -96,6 +110,9 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
   async function onSubmit(data: FormData) {
     await createInvoice.mutateAsync({
       ...data,
+      currency,
+      language,
+      projectId: projectId || undefined,
       taxes: [{ taxId: "iva-21", rate: 21, base: subtotal }],
     } as any);
     onOpenChange(false);
@@ -133,6 +150,32 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
             <div className="space-y-1.5">
               <Label>Fecha vencimiento</Label>
               <Input type="date" {...register("dueDate")} />
+            </div>
+          </div>
+
+          {/* Moneda, idioma y proyecto */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <CurrencySelector
+              value={currency}
+              onChange={setCurrency}
+              amount={total}
+            />
+            <LanguageSelector
+              value={language}
+              onChange={setLanguage}
+            />
+            <div className="space-y-1.5">
+              <Label>Proyecto</Label>
+              <select
+                value={projectId}
+                onChange={(e) => setProjectId(e.target.value)}
+                className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              >
+                <option value="">Sin proyecto</option>
+                {(Array.isArray(projects) ? projects : []).map((p: any) => (
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -238,15 +281,15 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
             <div className="w-full max-w-xs space-y-1.5 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span>{formatCurrency(subtotal)}</span>
+                <span>{formatCurrency(subtotal, currency)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">IVA 21%</span>
-                <span>{formatCurrency(iva)}</span>
+                <span>{formatCurrency(iva, currency)}</span>
               </div>
               <div className="flex justify-between font-semibold text-base border-t border-border pt-1.5">
                 <span>Total</span>
-                <span>{formatCurrency(total)}</span>
+                <span>{formatCurrency(total, currency)}</span>
               </div>
             </div>
           </div>
