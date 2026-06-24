@@ -193,11 +193,16 @@ export class AutomationsService {
         break;
 
       case "UPDATE_DEAL_STAGE":
-        if (ctx.dealId && config.stage) {
-          await this.prisma.deal.update({
-            where: { id: ctx.dealId },
-            data: { stage: config.stage },
+        if (ctx.dealId && config.stage && automation.companyId) {
+          const deal = await this.prisma.deal.findFirst({
+            where: { id: ctx.dealId, companyId: automation.companyId },
           });
+          if (deal) {
+            await this.prisma.deal.update({
+              where: { id: ctx.dealId },
+              data: { stage: config.stage },
+            });
+          }
         }
         break;
 

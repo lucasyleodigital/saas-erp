@@ -7,6 +7,9 @@ import * as cookieParser from "cookie-parser";
 import * as compression from "compression";
 import { AppModule } from "./app.module";
 import { DecimalInterceptor } from "./decimal.interceptor";
+import { SanitizePipe } from "./common/pipes/sanitize.pipe";
+import { TenantInterceptor } from "./database/tenant.interceptor";
+import { PrismaService } from "./database/prisma.service";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -18,8 +21,14 @@ async function bootstrap() {
   const port = configService.get<number>("PORT", 3001);
   const clientUrl = configService.get<string>("CLIENT_URL", "http://localhost:3000");
 
-  // Security
-  app.use(helmet({ contentSecurityPolicy: false }));
+  // Security headers
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+      crossOriginEmbedderPolicy: false,
+      hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
+    })
+  );
   app.use(cookieParser());
   app.use(compression());
 
@@ -31,8 +40,9 @@ async function bootstrap() {
     allowedHeaders: ["Content-Type", "Authorization"],
   });
 
-  // Validation
+  // Validation + sanitization
   app.useGlobalPipes(
+    new SanitizePipe(),
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
@@ -41,8 +51,12 @@ async function bootstrap() {
     })
   );
 
-  // Serialization — DecimalInterceptor converts Prisma Decimal objects to JS numbers
-  app.useGlobalInterceptors(new DecimalInterceptor());
+  // Interceptors: tenant isolation (RLS) + Decimal conversion
+  const prisma = app.get(PrismaService);
+  app.useGlobalInterceptors(
+    new TenantInterceptor(prisma),
+    new DecimalInterceptor(),
+  );
 
   // API prefix
   app.setGlobalPrefix("api/v1");

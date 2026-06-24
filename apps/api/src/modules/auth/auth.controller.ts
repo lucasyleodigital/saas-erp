@@ -76,6 +76,7 @@ export class AuthController {
     return { accessToken: tokens.accessToken };
   }
 
+  @Throttle({ short: { ttl: 60000, limit: 10 } })
   @Post("refresh")
   @HttpCode(HttpStatus.OK)
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {

@@ -65,6 +65,10 @@ export class DealsService {
   async moveStage(companyId: string, id: string, stageId: string) {
     const deal = await this.prisma.deal.findFirst({ where: { id, companyId } });
     if (!deal) throw new NotFoundException("Deal no encontrado");
+    const stage = await this.prisma.pipelineStage.findFirst({
+      where: { id: stageId, pipeline: { companyId } },
+    });
+    if (!stage) throw new NotFoundException("Etapa no encontrada");
     return this.prisma.deal.update({ where: { id }, data: { stageId } });
   }
 

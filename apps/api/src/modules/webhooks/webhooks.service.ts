@@ -14,6 +14,30 @@ export class WebhooksService {
 
   constructor(private prisma: PrismaService) {}
 
+  private isSafeUrl(url: string): boolean {
+    try {
+      const parsed = new URL(url);
+      if (!["https:", "http:"].includes(parsed.protocol)) return false;
+      const host = parsed.hostname.toLowerCase();
+      if (
+        host === "localhost" ||
+        host === "127.0.0.1" ||
+        host === "0.0.0.0" ||
+        host.startsWith("10.") ||
+        host.startsWith("172.") ||
+        host.startsWith("192.168.") ||
+        host === "169.254.169.254" ||
+        host.endsWith(".internal") ||
+        host.endsWith(".local")
+      ) {
+        return false;
+      }
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   async getEndpoints(companyId: string) {
     const company = await this.prisma.company.findUnique({ where: { id: companyId }, select: { settings: true } });
     const settings = (company?.settings as any) ?? {};
@@ -44,8 +68,9 @@ export class WebhooksService {
         companyId,
       };
 
+      const safe = matching.filter((ep: any) => this.isSafeUrl(ep.url));
       const results = await Promise.allSettled(
-        matching.map((ep: any) =>
+        safe.map((ep: any) =>
           fetch(ep.url, {
             method: "POST",
             headers: { "Content-Type": "application/json", "X-Webhook-Event": event },

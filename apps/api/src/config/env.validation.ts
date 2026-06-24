@@ -54,6 +54,14 @@ class EnvironmentVariables {
   @IsString()
   @IsOptional()
   REDIS_URL?: string;
+
+  @IsString()
+  @IsOptional()
+  CERT_ENCRYPTION_KEY?: string;
+
+  @IsString()
+  @IsOptional()
+  PLATFORM_ADMIN_EMAILS?: string;
 }
 
 export function validateEnv(config: Record<string, unknown>) {

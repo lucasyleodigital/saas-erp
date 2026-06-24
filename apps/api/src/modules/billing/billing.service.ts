@@ -163,8 +163,8 @@ export class BillingService {
         const session = event.data.object as Stripe.Checkout.Session;
         const { companyId, plan, invoiceId, type } = session.metadata ?? {};
 
-        if (type === "invoice_payment" && invoiceId) {
-          const inv = await this.prisma.invoice.findUnique({ where: { id: invoiceId } });
+        if (type === "invoice_payment" && invoiceId && companyId) {
+          const inv = await this.prisma.invoice.findFirst({ where: { id: invoiceId, companyId } });
           if (inv) {
             const paid = Number(session.amount_total ?? 0) / 100;
             const newPaid = Number(inv.paidAmount) + paid;

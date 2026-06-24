@@ -153,7 +153,8 @@ export class VerifactuService {
   // ── Certificate management ───────────────────────────────────────────────
 
   private encKey(): Buffer {
-    const raw = process.env.CERT_ENCRYPTION_KEY ?? "youwhole-dev-key-change-in-production!!";
+    const raw = process.env.CERT_ENCRYPTION_KEY;
+    if (!raw) throw new Error("CERT_ENCRYPTION_KEY env var is required for certificate encryption");
     return createHash("sha256").update(raw).digest(); // always 32 bytes
   }
 

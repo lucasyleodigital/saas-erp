@@ -88,7 +88,13 @@ export class AuthService {
     return user;
   }
 
-  private readonly PLATFORM_ADMINS = ["lucasyleodigital@gmail.com"];
+  private get platformAdmins(): string[] {
+    const raw = this.config.get<string>("PLATFORM_ADMIN_EMAILS", "");
+    return raw
+      .split(",")
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean);
+  }
 
   async login(userId: string, email: string, companyId?: string) {
     const userCompany = companyId
@@ -102,7 +108,7 @@ export class AuthService {
     if (!userCompany) throw new UnauthorizedException("Sin empresa asociada");
 
     let role = userCompany.role;
-    if (this.PLATFORM_ADMINS.includes(email.toLowerCase()) && role !== "SUPER_ADMIN") {
+    if (this.platformAdmins.includes(email.toLowerCase()) && role !== "SUPER_ADMIN") {
       await this.prisma.userCompany.update({
         where: { id: userCompany.id },
         data: { role: "SUPER_ADMIN" },

@@ -44,6 +44,8 @@ export class InventoryService {
   }
 
   async setDefaultWarehouse(companyId: string, id: string) {
+    const wh = await this.prisma.warehouse.findFirst({ where: { id, companyId } });
+    if (!wh) throw new NotFoundException("Almacen no encontrado");
     await this.prisma.warehouse.updateMany({ where: { companyId }, data: { isDefault: false } });
     return this.prisma.warehouse.update({ where: { id }, data: { isDefault: true } });
   }
