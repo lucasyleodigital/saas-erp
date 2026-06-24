@@ -61,10 +61,11 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
   const [language, setLanguage] = useState("es");
   const [projectId, setProjectId] = useState("");
   const [applyIrpf, setApplyIrpf] = useState(false);
+  const [irpfRate, setIrpfRate] = useState(15);
 
   const settings = (company?.settings ?? {}) as any;
   const isAutonomo = settings.companyType === "AUTONOMO";
-  const irpfRate = Number(settings.irpfRate) || 15;
+  const defaultIrpfRate = Number(settings.irpfRate) || 15;
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -100,6 +101,7 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
       setLanguage("es");
       setProjectId("");
       setApplyIrpf(false);
+      setIrpfRate(defaultIrpfRate);
     }
   }, [open, reset, today]);
 
@@ -221,14 +223,28 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
                 onChange={(e) => setApplyIrpf(e.target.checked)}
                 className="h-4 w-4 rounded border-input"
               />
-              <label htmlFor="apply-irpf" className="text-sm cursor-pointer">
-                Aplicar retencion IRPF {irpfRate}%
+              <label htmlFor="apply-irpf" className="text-sm cursor-pointer flex-1">
+                Aplicar retencion IRPF
                 {selectedClient?.clientType === "PARTICULAR" && (
                   <span className="text-xs text-muted-foreground ml-2">
                     (no aplica a particulares)
                   </span>
                 )}
               </label>
+              {applyIrpf && (
+                <div className="flex items-center gap-1.5">
+                  <Input
+                    type="number"
+                    min="1"
+                    max="25"
+                    step="1"
+                    value={irpfRate}
+                    onChange={(e) => setIrpfRate(Number(e.target.value) || defaultIrpfRate)}
+                    className="w-16 h-8 text-center text-sm"
+                  />
+                  <span className="text-sm text-muted-foreground">%</span>
+                </div>
+              )}
             </div>
           )}
 

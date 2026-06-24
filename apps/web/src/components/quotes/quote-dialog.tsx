@@ -57,6 +57,7 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
   const irpfRate = Number(settings.irpfRate) || 15;
 
   const [applyIrpf, setApplyIrpf] = useState(false);
+  const [irpfRateLocal, setIrpfRateLocal] = useState(irpfRate);
 
   const today = new Date().toISOString().split("T")[0]!;
   const thirtyDaysLater = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
@@ -97,8 +98,9 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
         items: [{ description: "", quantity: 1, unitPrice: 0 }],
       });
       setApplyIrpf(false);
+      setIrpfRateLocal(irpfRate);
     }
-  }, [open, reset, today, thirtyDaysLater]);
+  }, [open, reset, today, thirtyDaysLater, irpfRate]);
 
   useEffect(() => {
     if (!isAutonomo || !settings.autoApplyIrpf) {
@@ -125,13 +127,13 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
     return sum + qty * price * (1 - disc / 100);
   }, 0);
   const iva = subtotal * 0.21;
-  const irpfAmount = applyIrpf ? subtotal * (irpfRate / 100) : 0;
+  const irpfAmount = applyIrpf ? subtotal * (irpfRateLocal / 100) : 0;
   const total = subtotal + iva - irpfAmount;
 
   async function onSubmit(data: FormData) {
     const taxes: any[] = [{ rate: 21, base: subtotal }];
     if (applyIrpf) {
-      taxes.push({ rate: -irpfRate, base: subtotal });
+      taxes.push({ rate: -irpfRateLocal, base: subtotal });
     }
 
     await createQuote.mutateAsync({
@@ -191,14 +193,28 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
                 onChange={(e) => setApplyIrpf(e.target.checked)}
                 className="h-4 w-4 rounded border-input"
               />
-              <label htmlFor="quote-apply-irpf" className="text-sm cursor-pointer">
-                Incluir retencion IRPF {irpfRate}%
+              <label htmlFor="quote-apply-irpf" className="text-sm cursor-pointer flex-1">
+                Incluir retencion IRPF
                 {selectedClient?.clientType === "PARTICULAR" && (
                   <span className="text-xs text-muted-foreground ml-2">
                     (no aplica a particulares)
                   </span>
                 )}
               </label>
+              {applyIrpf && (
+                <div className="flex items-center gap-1.5">
+                  <input
+                    type="number"
+                    min="1"
+                    max="25"
+                    step="1"
+                    value={irpfRateLocal}
+                    onChange={(e) => setIrpfRateLocal(Number(e.target.value) || irpfRate)}
+                    className="w-16 h-8 text-center text-sm rounded-lg border border-input bg-background"
+                  />
+                  <span className="text-sm text-muted-foreground">%</span>
+                </div>
+              )}
             </div>
           )}
 
@@ -315,7 +331,7 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
               </div>
               {applyIrpf && (
                 <div className="flex justify-between text-red-500">
-                  <span>IRPF -{irpfRate}%</span>
+                  <span>IRPF -{irpfRateLocal}%</span>
                   <span>-{formatCurrency(irpfAmount)}</span>
                 </div>
               )}
