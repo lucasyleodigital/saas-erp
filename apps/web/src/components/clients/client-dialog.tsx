@@ -21,7 +21,8 @@ const schema = z.object({
   name: z.string().min(1, "El nombre es obligatorio"),
   legalName: z.string().optional(),
   cifNif: z.string().optional(),
-  email: z.string().email("Email inválido").optional().or(z.literal("")),
+  clientType: z.enum(["EMPRESA", "AUTONOMO", "PARTICULAR"]).optional(),
+  email: z.string().email("Email invalido").optional().or(z.literal("")),
   phone: z.string().optional(),
   mobile: z.string().optional(),
   address: z.string().optional(),
@@ -60,6 +61,7 @@ export function ClientDialog({ open, onOpenChange, client }: ClientDialogProps) 
               name: client.name ?? "",
               legalName: client.legalName ?? "",
               cifNif: client.cifNif ?? "",
+              clientType: client.clientType ?? "EMPRESA",
               email: client.email ?? "",
               phone: client.phone ?? "",
               mobile: client.mobile ?? "",
@@ -70,7 +72,7 @@ export function ClientDialog({ open, onOpenChange, client }: ClientDialogProps) 
               country: client.country ?? "ES",
               notes: client.notes ?? "",
             }
-          : { country: "ES" }
+          : { country: "ES", clientType: "EMPRESA" }
       );
     }
   }, [open, client, reset]);
@@ -112,8 +114,20 @@ export function ClientDialog({ open, onOpenChange, client }: ClientDialogProps) 
             </div>
           </div>
 
-          {/* CIF + Email */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Tipo + CIF + Email */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="clientType">Tipo de cliente</Label>
+              <select
+                id="clientType"
+                {...register("clientType")}
+                className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              >
+                <option value="EMPRESA">Empresa (SL, SA...)</option>
+                <option value="AUTONOMO">Autonomo</option>
+                <option value="PARTICULAR">Particular</option>
+              </select>
+            </div>
             <div className="space-y-1.5">
               <Label htmlFor="cifNif">CIF / NIF</Label>
               <Input id="cifNif" {...register("cifNif")} placeholder="B12345678" />

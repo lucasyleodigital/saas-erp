@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -18,6 +18,7 @@ import { useCreateInvoice } from "@/hooks/use-invoices";
 import { useClients } from "@/hooks/use-clients";
 import { useProducts } from "@/hooks/use-products";
 import { useProjects } from "@/hooks/use-projects";
+import { useMyCompany } from "@/hooks/use-company";
 import { formatCurrency } from "@/lib/utils";
 import { Plus, Trash2, Loader2 } from "lucide-react";
 import { CurrencySelector } from "./currency-selector";
@@ -25,7 +26,7 @@ import { LanguageSelector } from "./language-selector";
 
 const lineSchema = z.object({
   productId: z.string().optional(),
-  description: z.string().min(1, "Descripción requerida"),
+  description: z.string().min(1, "Descripcion requerida"),
   quantity: z.coerce.number().min(0.001),
   unitPrice: z.coerce.number().min(0),
   discount: z.coerce.number().min(0).max(100).optional(),
@@ -35,7 +36,7 @@ const schema = z.object({
   clientId: z.string().min(1, "Selecciona un cliente"),
   issueDate: z.string(),
   dueDate: z.string().optional(),
-  items: z.array(lineSchema).min(1, "Añade al menos una línea"),
+  items: z.array(lineSchema).min(1, "Anade al menos una linea"),
   notes: z.string().optional(),
 });
 
@@ -51,6 +52,7 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
   const { data: clientsData } = useClients({ limit: 200 } as any);
   const { data: productsData } = useProducts();
   const { data: projectsData } = useProjects({});
+  const { data: company } = useMyCompany();
   const clients = clientsData?.data ?? [];
   const products = productsData?.data ?? [];
   const projects = projectsData?.data ?? projectsData ?? [];
@@ -58,6 +60,11 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
   const [currency, setCurrency] = useState("EUR");
   const [language, setLanguage] = useState("es");
   const [projectId, setProjectId] = useState("");
+  const [applyIrpf, setApplyIrpf] = useState(false);
+
+  const settings = (company?.settings ?? {}) as any;
+  const isAutonomo = settings.companyType === "AUTONOMO";
+  const irpfRate = Number(settings.irpfRate) || 15;
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -79,6 +86,12 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
 
   const { fields, append, remove } = useFieldArray({ control, name: "items" });
   const items = watch("items");
+  const selectedClientId = watch("clientId");
+
+  const selectedClient = useMemo(
+    () => clients.find((c: any) => c.id === selectedClientId),
+    [clients, selectedClientId],
+  );
 
   useEffect(() => {
     if (open) {
@@ -86,8 +99,18 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
       setCurrency("EUR");
       setLanguage("es");
       setProjectId("");
+      setApplyIrpf(false);
     }
   }, [open, reset, today]);
+
+  useEffect(() => {
+    if (!isAutonomo || !settings.autoApplyIrpf) {
+      setApplyIrpf(false);
+      return;
+    }
+    const clientType = selectedClient?.clientType;
+    setApplyIrpf(clientType !== "PARTICULAR");
+  }, [selectedClientId, selectedClient, isAutonomo, settings.autoApplyIrpf]);
 
   function handleProductChange(index: number, productId: string) {
     const product = products.find((p: any) => p.id === productId);
@@ -105,15 +128,21 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
     return sum + qty * price * (1 - disc / 100);
   }, 0);
   const iva = subtotal * 0.21;
-  const total = subtotal + iva;
+  const irpfAmount = applyIrpf ? subtotal * (irpfRate / 100) : 0;
+  const total = subtotal + iva - irpfAmount;
 
   async function onSubmit(data: FormData) {
+    const taxes: any[] = [{ taxId: "iva-21", rate: 21, base: subtotal }];
+    if (applyIrpf) {
+      taxes.push({ taxId: `irpf-${irpfRate}`, rate: -irpfRate, base: subtotal });
+    }
+
     await createInvoice.mutateAsync({
       ...data,
       currency,
       language,
       projectId: projectId || undefined,
-      taxes: [{ taxId: "iva-21", rate: 21, base: subtotal }],
+      taxes,
     } as any);
     onOpenChange(false);
   }
@@ -136,7 +165,10 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
               >
                 <option value="">Seleccionar cliente...</option>
                 {clients.map((c: any) => (
-                  <option key={c.id} value={c.id}>{c.name}</option>
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                    {c.clientType === "PARTICULAR" ? " (particular)" : ""}
+                  </option>
                 ))}
               </select>
               {errors.clientId && (
@@ -144,7 +176,7 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
               )}
             </div>
             <div className="space-y-1.5">
-              <Label>Fecha emisión</Label>
+              <Label>Fecha emision</Label>
               <Input type="date" {...register("issueDate")} />
             </div>
             <div className="space-y-1.5">
@@ -179,10 +211,31 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
             </div>
           </div>
 
-          {/* Líneas */}
+          {/* IRPF toggle para autonomos */}
+          {isAutonomo && (
+            <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg border border-border bg-muted/30">
+              <input
+                type="checkbox"
+                id="apply-irpf"
+                checked={applyIrpf}
+                onChange={(e) => setApplyIrpf(e.target.checked)}
+                className="h-4 w-4 rounded border-input"
+              />
+              <label htmlFor="apply-irpf" className="text-sm cursor-pointer">
+                Aplicar retencion IRPF {irpfRate}%
+                {selectedClient?.clientType === "PARTICULAR" && (
+                  <span className="text-xs text-muted-foreground ml-2">
+                    (no aplica a particulares)
+                  </span>
+                )}
+              </label>
+            </div>
+          )}
+
+          {/* Lineas */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label>Líneas de factura</Label>
+              <Label>Lineas de factura</Label>
               <Button
                 type="button"
                 variant="outline"
@@ -190,13 +243,13 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
                 onClick={() => append({ description: "", quantity: 1, unitPrice: 0 })}
               >
                 <Plus className="h-3 w-3 mr-1" />
-                Añadir línea
+                Anadir linea
               </Button>
             </div>
 
             {/* Header */}
             <div className="grid grid-cols-12 gap-2 px-1 text-xs font-medium text-muted-foreground hidden sm:grid">
-              <div className="col-span-4">Descripción</div>
+              <div className="col-span-4">Descripcion</div>
               <div className="col-span-2">Producto</div>
               <div className="col-span-2 text-right">Cantidad</div>
               <div className="col-span-2 text-right">Precio</div>
@@ -209,7 +262,7 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
                 <div className="col-span-12 sm:col-span-4">
                   <Input
                     {...register(`items.${index}.description`)}
-                    placeholder="Descripción del servicio"
+                    placeholder="Descripcion del servicio"
                   />
                   {errors.items?.[index]?.description && (
                     <p className="text-xs text-destructive mt-0.5">
@@ -223,7 +276,7 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
                     onChange={(e) => handleProductChange(index, e.target.value)}
                     defaultValue=""
                   >
-                    <option value="">— Producto</option>
+                    <option value="">-- Producto</option>
                     {products.map((p: any) => (
                       <option key={p.id} value={p.id}>{p.name}</option>
                     ))}
@@ -287,6 +340,12 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
                 <span className="text-muted-foreground">IVA 21%</span>
                 <span>{formatCurrency(iva, currency)}</span>
               </div>
+              {applyIrpf && (
+                <div className="flex justify-between text-red-500">
+                  <span>IRPF -{irpfRate}%</span>
+                  <span>-{formatCurrency(irpfAmount, currency)}</span>
+                </div>
+              )}
               <div className="flex justify-between font-semibold text-base border-t border-border pt-1.5">
                 <span>Total</span>
                 <span>{formatCurrency(total, currency)}</span>

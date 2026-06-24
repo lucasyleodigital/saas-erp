@@ -338,12 +338,19 @@ model Invitation {
 // CRM
 // ============================================================
 
+enum ClientType {
+  EMPRESA
+  AUTONOMO
+  PARTICULAR
+}
+
 model Client {
-  id             String    @id @default(uuid())
+  id             String     @id @default(uuid())
   companyId      String
   name           String
   legalName      String?
   cifNif         String?
+  clientType     ClientType @default(EMPRESA)
   email          String?
   phone          String?
   mobile         String?

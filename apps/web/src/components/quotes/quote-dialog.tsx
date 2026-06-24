@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -17,12 +17,13 @@ import { Label } from "@/components/ui/label";
 import { useCreateQuote } from "@/hooks/use-quotes";
 import { useClients } from "@/hooks/use-clients";
 import { useProducts } from "@/hooks/use-products";
+import { useMyCompany } from "@/hooks/use-company";
 import { formatCurrency } from "@/lib/utils";
 import { Plus, Trash2, Loader2 } from "lucide-react";
 
 const lineSchema = z.object({
   productId: z.string().optional(),
-  description: z.string().min(1, "Descripción requerida"),
+  description: z.string().min(1, "Descripcion requerida"),
   quantity: z.coerce.number().min(0.001),
   unitPrice: z.coerce.number().min(0),
   discount: z.coerce.number().min(0).max(100).optional(),
@@ -32,7 +33,7 @@ const schema = z.object({
   clientId: z.string().min(1, "Selecciona un cliente"),
   issueDate: z.string(),
   validUntil: z.string().optional(),
-  items: z.array(lineSchema).min(1, "Añade al menos una línea"),
+  items: z.array(lineSchema).min(1, "Anade al menos una linea"),
   notes: z.string().optional(),
 });
 
@@ -47,8 +48,15 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
   const createQuote = useCreateQuote();
   const { data: clientsData } = useClients({ limit: 200 } as any);
   const { data: productsData } = useProducts();
+  const { data: company } = useMyCompany();
   const clients = clientsData?.data ?? [];
   const products = productsData?.data ?? [];
+
+  const settings = (company?.settings ?? {}) as any;
+  const isAutonomo = settings.companyType === "AUTONOMO";
+  const irpfRate = Number(settings.irpfRate) || 15;
+
+  const [applyIrpf, setApplyIrpf] = useState(false);
 
   const today = new Date().toISOString().split("T")[0]!;
   const thirtyDaysLater = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
@@ -74,6 +82,12 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
 
   const { fields, append, remove } = useFieldArray({ control, name: "items" });
   const items = watch("items");
+  const selectedClientId = watch("clientId");
+
+  const selectedClient = useMemo(
+    () => clients.find((c: any) => c.id === selectedClientId),
+    [clients, selectedClientId],
+  );
 
   useEffect(() => {
     if (open) {
@@ -82,8 +96,18 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
         validUntil: thirtyDaysLater,
         items: [{ description: "", quantity: 1, unitPrice: 0 }],
       });
+      setApplyIrpf(false);
     }
   }, [open, reset, today, thirtyDaysLater]);
+
+  useEffect(() => {
+    if (!isAutonomo || !settings.autoApplyIrpf) {
+      setApplyIrpf(false);
+      return;
+    }
+    const clientType = selectedClient?.clientType;
+    setApplyIrpf(clientType !== "PARTICULAR");
+  }, [selectedClientId, selectedClient, isAutonomo, settings.autoApplyIrpf]);
 
   function handleProductChange(index: number, productId: string) {
     const product = products.find((p: any) => p.id === productId);
@@ -101,12 +125,18 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
     return sum + qty * price * (1 - disc / 100);
   }, 0);
   const iva = subtotal * 0.21;
-  const total = subtotal + iva;
+  const irpfAmount = applyIrpf ? subtotal * (irpfRate / 100) : 0;
+  const total = subtotal + iva - irpfAmount;
 
   async function onSubmit(data: FormData) {
+    const taxes: any[] = [{ rate: 21, base: subtotal }];
+    if (applyIrpf) {
+      taxes.push({ rate: -irpfRate, base: subtotal });
+    }
+
     await createQuote.mutateAsync({
       ...data,
-      taxes: [{ rate: 21, base: subtotal }],
+      taxes,
     } as any);
     onOpenChange(false);
   }
@@ -131,6 +161,7 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
                 {clients.map((c: any) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
+                    {c.clientType === "PARTICULAR" ? " (particular)" : ""}
                   </option>
                 ))}
               </select>
@@ -141,19 +172,40 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
               )}
             </div>
             <div className="space-y-1.5">
-              <Label>Fecha emisión</Label>
+              <Label>Fecha emision</Label>
               <Input type="date" {...register("issueDate")} />
             </div>
             <div className="space-y-1.5">
-              <Label>Válido hasta</Label>
+              <Label>Valido hasta</Label>
               <Input type="date" {...register("validUntil")} />
             </div>
           </div>
 
-          {/* Líneas */}
+          {/* IRPF toggle para autonomos */}
+          {isAutonomo && (
+            <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg border border-border bg-muted/30">
+              <input
+                type="checkbox"
+                id="quote-apply-irpf"
+                checked={applyIrpf}
+                onChange={(e) => setApplyIrpf(e.target.checked)}
+                className="h-4 w-4 rounded border-input"
+              />
+              <label htmlFor="quote-apply-irpf" className="text-sm cursor-pointer">
+                Incluir retencion IRPF {irpfRate}%
+                {selectedClient?.clientType === "PARTICULAR" && (
+                  <span className="text-xs text-muted-foreground ml-2">
+                    (no aplica a particulares)
+                  </span>
+                )}
+              </label>
+            </div>
+          )}
+
+          {/* Lineas */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label>Líneas del presupuesto</Label>
+              <Label>Lineas del presupuesto</Label>
               <Button
                 type="button"
                 variant="outline"
@@ -163,13 +215,12 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
                 }
               >
                 <Plus className="h-3 w-3 mr-1" />
-                Añadir línea
+                Anadir linea
               </Button>
             </div>
 
-            {/* Header */}
             <div className="grid grid-cols-12 gap-2 px-1 text-xs font-medium text-muted-foreground hidden sm:grid">
-              <div className="col-span-4">Descripción</div>
+              <div className="col-span-4">Descripcion</div>
               <div className="col-span-2">Producto</div>
               <div className="col-span-2 text-right">Cantidad</div>
               <div className="col-span-2 text-right">Precio</div>
@@ -182,7 +233,7 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
                 <div className="col-span-12 sm:col-span-4">
                   <Input
                     {...register(`items.${index}.description`)}
-                    placeholder="Descripción del servicio"
+                    placeholder="Descripcion del servicio"
                   />
                   {errors.items?.[index]?.description && (
                     <p className="text-xs text-destructive mt-0.5">
@@ -196,7 +247,7 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
                     onChange={(e) => handleProductChange(index, e.target.value)}
                     defaultValue=""
                   >
-                    <option value="">— Producto</option>
+                    <option value="">-- Producto</option>
                     {products.map((p: any) => (
                       <option key={p.id} value={p.id}>
                         {p.name}
@@ -262,6 +313,12 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
                 <span className="text-muted-foreground">IVA 21%</span>
                 <span>{formatCurrency(iva)}</span>
               </div>
+              {applyIrpf && (
+                <div className="flex justify-between text-red-500">
+                  <span>IRPF -{irpfRate}%</span>
+                  <span>-{formatCurrency(irpfAmount)}</span>
+                </div>
+              )}
               <div className="flex justify-between font-semibold text-base border-t border-border pt-1.5">
                 <span>Total</span>
                 <span>{formatCurrency(total)}</span>
@@ -274,7 +331,7 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
             <Label>Notas internas</Label>
             <textarea
               {...register("notes")}
-              placeholder="Condiciones, observaciones, información adicional..."
+              placeholder="Condiciones, observaciones, informacion adicional..."
               rows={2}
               className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-none placeholder:text-muted-foreground"
             />

@@ -73,7 +73,12 @@ export class QuotesService {
         s + Number(i.quantity) * Number(i.unitPrice) * (1 - (Number(i.discount ?? 0) / 100)),
       0
     );
-    const taxAmount = subtotal * 0.21;
+
+    const taxes = dto.taxes ?? [{ rate: 21, base: subtotal }];
+    const taxAmount = taxes.reduce(
+      (sum: number, t: any) => sum + subtotal * (Number(t.rate) / 100),
+      0,
+    );
 
     const newQuote = await this.prisma.quote.create({
       data: {
@@ -132,6 +137,33 @@ export class QuotesService {
 
     const number = `${series.prefix}${String(series.nextNumber).padStart(4, "0")}`;
 
+    const company = await this.prisma.company.findUnique({ where: { id: companyId }, select: { settings: true } });
+    const settings = (company?.settings as any) ?? {};
+    const client = await this.prisma.client.findFirst({ where: { id: quote.clientId, companyId }, select: { clientType: true } });
+
+    let invoiceSubtotal = Number(quote.subtotal);
+    let ivaTax = invoiceSubtotal * 0.21;
+    let irpfTax = 0;
+    const taxesCreate: any[] = [];
+
+    const defaultIvaTax = await this.prisma.tax.findFirst({ where: { companyId, rate: 21 } });
+    if (defaultIvaTax) {
+      taxesCreate.push({ taxId: defaultIvaTax.id, rate: 21, base: invoiceSubtotal, amount: ivaTax });
+    }
+
+    if (settings.companyType === "AUTONOMO" && settings.autoApplyIrpf && settings.irpfRate && client?.clientType !== "PARTICULAR") {
+      const irpfRate = Number(settings.irpfRate);
+      irpfTax = invoiceSubtotal * (irpfRate / 100);
+      let irpfTaxRecord = await this.prisma.tax.findFirst({ where: { companyId, name: { contains: "IRPF", mode: "insensitive" } } });
+      if (!irpfTaxRecord) {
+        irpfTaxRecord = await this.prisma.tax.create({ data: { companyId, name: `IRPF ${irpfRate}%`, rate: -irpfRate, isDefault: false } });
+      }
+      taxesCreate.push({ taxId: irpfTaxRecord.id, rate: -irpfRate, base: invoiceSubtotal, amount: -irpfTax });
+    }
+
+    const totalTaxAmount = ivaTax - irpfTax;
+    const invoiceTotal = invoiceSubtotal + totalTaxAmount;
+
     const [invoice] = await this.prisma.$transaction([
       this.prisma.invoice.create({
         data: {
@@ -139,9 +171,10 @@ export class QuotesService {
           clientId: quote.clientId,
           seriesId: series.id,
           number,
-          subtotal: quote.subtotal,
-          taxAmount: quote.taxAmount,
-          total: quote.total,
+          subtotal: invoiceSubtotal,
+          taxAmount: totalTaxAmount,
+          total: invoiceTotal,
+          ...(taxesCreate.length > 0 && { taxes: { create: taxesCreate } }),
           notes: quote.notes ?? undefined,
           items: {
             create: quote.items.map((item: any, i: number) => ({
