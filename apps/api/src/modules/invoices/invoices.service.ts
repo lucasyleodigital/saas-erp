@@ -7,6 +7,8 @@ import { PrismaService } from "../../database/prisma.service";
 import { PlansService } from "../plans/plans.service";
 import { AutomationsService } from "../automations/automations.service";
 import { EmailService } from "../email/email.service";
+import { NotificationsService } from "../notifications/notifications.service";
+import { AuditService } from "../audit/audit.service";
 import { CreateInvoiceDto } from "./dto/create-invoice.dto";
 import { VerifactuService } from "../verifactu/verifactu.service";
 import type { PaginationParams } from "@saas/types";
@@ -19,6 +21,8 @@ export class InvoicesService {
     private automations: AutomationsService,
     private email: EmailService,
     private verifactu: VerifactuService,
+    private notifications: NotificationsService,
+    private audit: AuditService,
   ) {}
 
   async findAll(companyId: string, params: PaginationParams & { status?: string; dateFrom?: string; dateTo?: string; amountMin?: string; amountMax?: string; clientId?: string }) {
@@ -196,6 +200,19 @@ export class InvoicesService {
       currency:      invoice.currency,
     }).catch(() => {});
 
+    this.notifications.create(companyId, {
+      title: "Factura creada",
+      body: `Factura ${invoice.number} creada para ${(invoice as any).client?.name ?? "cliente"} por ${Number(invoice.total).toFixed(2)} ${invoice.currency}`,
+    }).catch(() => {});
+
+    this.audit.log({
+      companyId,
+      action: "CREATE",
+      entity: "Invoice",
+      entityId: invoice.id,
+      newData: { number: invoice.number, total: invoice.total, clientId: dto.clientId },
+    }).catch(() => {});
+
     return invoice;
   }
 
@@ -225,6 +242,20 @@ export class InvoicesService {
         data: { paidAmount: newPaid, status: newStatus as any },
       }),
     ]);
+
+    this.notifications.create(companyId, {
+      title: newStatus === "PAID" ? "Factura cobrada" : "Pago parcial registrado",
+      body: `${newStatus === "PAID" ? "Cobrada" : "Pago parcial en"} factura ${invoice.number} — ${amount.toFixed(2)} ${invoice.currency}`,
+    }).catch(() => {});
+
+    this.audit.log({
+      companyId,
+      action: "UPDATE",
+      entity: "Invoice",
+      entityId: id,
+      oldData: { status: invoice.status, paidAmount: invoice.paidAmount },
+      newData: { status: newStatus, paidAmount: newPaid },
+    }).catch(() => {});
 
     if (newStatus === "PAID") {
       this.automations.trigger(companyId, "INVOICE_PAID", {

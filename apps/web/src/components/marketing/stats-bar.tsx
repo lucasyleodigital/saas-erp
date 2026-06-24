@@ -12,7 +12,7 @@ interface Stat {
 
 const STATS: Stat[] = [
   { value: 15, suffix: "+", label: "Modulos integrados" },
-  { value: 7, suffix: "", label: "Idiomas para documentos" },
+  { value: 5, suffix: "", label: "Idiomas oficiales de Espana" },
   { value: 99.9, suffix: "%", label: "Disponibilidad garantizada" },
   { value: 14, suffix: " dias", label: "Prueba gratis sin tarjeta" },
 ];

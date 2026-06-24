@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
 import { PlansService } from "../plans/plans.service";
 import { AutomationsService } from "../automations/automations.service";
+import { NotificationsService } from "../notifications/notifications.service";
+import { AuditService } from "../audit/audit.service";
 import { CreateClientDto } from "./dto/create-client.dto";
 import { UpdateClientDto } from "./dto/update-client.dto";
 import type { PaginationParams } from "@saas/types";
@@ -12,6 +14,8 @@ export class ClientsService {
     private prisma: PrismaService,
     private plans: PlansService,
     private automations: AutomationsService,
+    private notifications: NotificationsService,
+    private audit: AuditService,
   ) {}
 
   async findAll(companyId: string, params: PaginationParams) {
@@ -67,6 +71,14 @@ export class ClientsService {
       clientId:    client.id,
       clientName:  client.name,
       clientEmail: client.email ?? "",
+    }).catch(() => {});
+    this.notifications.create(companyId, {
+      title: "Nuevo cliente",
+      body: `Cliente "${client.name}" creado`,
+    }).catch(() => {});
+    this.audit.log({
+      companyId, action: "CREATE", entity: "Client", entityId: client.id,
+      newData: { name: client.name, email: client.email },
     }).catch(() => {});
     return client;
   }

@@ -6,13 +6,18 @@ export class AuditService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(companyId: string, params: any) {
-    const { entity, action, userId, page = 1, limit = 50 } = params;
+    const { entity, action, userId, from, to, page = 1, limit = 50 } = params;
     const p = Number(page);
     const l = Number(limit);
     const where: any = { companyId };
     if (entity) where.entity = entity;
     if (action) where.action = action;
     if (userId) where.userId = userId;
+    if (from || to) {
+      where.createdAt = {};
+      if (from) where.createdAt.gte = new Date(from);
+      if (to) where.createdAt.lte = new Date(to + "T23:59:59.999Z");
+    }
 
     const [data, total] = await Promise.all([
       this.prisma.auditLog.findMany({

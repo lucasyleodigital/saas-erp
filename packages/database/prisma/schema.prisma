@@ -782,6 +782,7 @@ model DeliveryNote {
   issueDate            DateTime           @default(now())
   deliveryDate         DateTime?
   notes                String?
+  attachments          Json?
   subtotal             Decimal            @db.Decimal(12, 2)
   taxAmount            Decimal            @db.Decimal(12, 2)
   total                Decimal            @db.Decimal(12, 2)

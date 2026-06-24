@@ -132,7 +132,7 @@ const MAIN_FEATURES = [
   {
     icon: Globe,
     title: "Multi-idioma y multi-divisa",
-    desc: "Genera PDFs en 7 idiomas y factura en cualquier moneda con tipos de cambio del BCE en tiempo real.",
+    desc: "Interfaz y PDFs en castellano, catalan, euskera, gallego e ingles. Factura en 20+ divisas con tipos de cambio del BCE.",
     color: "#0ea5e9",
     bg: "rgba(14,165,233,0.08)",
     border: "rgba(14,165,233,0.2)",

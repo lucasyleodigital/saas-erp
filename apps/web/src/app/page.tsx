@@ -77,7 +77,7 @@ const JSONLD_SOFTWARE = {
     "Proyectos con control de rentabilidad",
     "Control horario por empleado y proyecto",
     "Facturacion multi-divisa con tipos de cambio BCE",
-    "PDFs multi-idioma (7 idiomas)",
+    "Interfaz y PDFs en castellano, catalan, euskera, gallego e ingles",
     "Campos personalizados por entidad",
     "Backup descargable completo",
     "Registro de auditoria",
