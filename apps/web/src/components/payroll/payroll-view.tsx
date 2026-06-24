@@ -69,8 +69,8 @@ export function PayrollView() {
   };
 
   const handleSepa = () => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
-    const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api/v1";
+    const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
     const url = `${apiUrl}/payrolls/sepa?year=${year}&month=${month}`;
     fetch(url, { headers: { Authorization: `Bearer ${token}` } })
       .then(r => r.blob())

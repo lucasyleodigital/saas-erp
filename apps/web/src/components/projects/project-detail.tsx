@@ -18,6 +18,7 @@ import {
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useLocale } from "@/hooks/use-locale";
 
 const STATUS_BADGE: Record<string, { label: string; variant: "success" | "warning" | "info" | "destructive" }> = {
   ACTIVE:    { label: "Activo",     variant: "success" },
@@ -28,6 +29,7 @@ const STATUS_BADGE: Record<string, { label: string; variant: "success" | "warnin
 
 export function ProjectDetail({ id }: { id: string }) {
   const router = useRouter();
+  const locale = useLocale();
   const { data: project, isLoading, isError } = useProject(id);
   const { data: profitability } = useProjectProfitability(id);
   const deleteProject = useDeleteProject();
@@ -98,7 +100,7 @@ export function ProjectDetail({ id }: { id: string }) {
           onClick={() => {
             if (confirm(`Eliminar "${project.name}"?`)) {
               deleteProject.mutate(project.id, {
-                onSuccess: () => router.push("/proyectos"),
+                onSuccess: () => router.push(`/${locale}/proyectos`),
               });
             }
           }}

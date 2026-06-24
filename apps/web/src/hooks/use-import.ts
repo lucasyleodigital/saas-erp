@@ -65,7 +65,7 @@ export function downloadTemplate(entity: ImportEntity) {
     suppliers: "plantilla_proveedores.xlsx",
   };
   const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api/v1";
   const url = `${baseUrl}/import/template/${entity}`;
   fetch(url, { headers: { Authorization: `Bearer ${token}` } })
     .then((r) => r.blob())

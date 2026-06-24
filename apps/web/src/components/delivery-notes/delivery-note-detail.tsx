@@ -7,6 +7,7 @@ import {
   useDeleteDeliveryNote,
   getDNStatusConfig,
 } from "@/hooks/use-delivery-notes";
+import { useLocale } from "@/hooks/use-locale";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -39,6 +40,7 @@ export function DeliveryNoteDetailView({ id }: { id: string }) {
   const convertToInvoice = useConvertDeliveryNoteToInvoice();
   const deleteNote = useDeleteDeliveryNote();
   const router = useRouter();
+  const locale = useLocale();
 
   if (isLoading) {
     return (
@@ -65,13 +67,13 @@ export function DeliveryNoteDetailView({ id }: { id: string }) {
   async function handleDelete() {
     if (!confirm(`¿Eliminar el albarán ${note!.number}?`)) return;
     await deleteNote.mutateAsync(id);
-    router.push("/albaranes");
+    router.push(`/${locale}/albaranes`);
   }
 
   async function handleConvert() {
     if (!confirm(`¿Convertir el albarán ${note!.number} a factura?`)) return;
     const invoice = await convertToInvoice.mutateAsync(id) as any;
-    router.push(`/facturas/${invoice.id}`);
+    router.push(`/${locale}/facturas/${invoice.id}`);
   }
 
   return (
@@ -80,7 +82,7 @@ export function DeliveryNoteDetailView({ id }: { id: string }) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" asChild>
-            <Link href="/albaranes">
+            <Link href={`/${locale}/albaranes`}>
               <ArrowLeft className="h-4 w-4" />
             </Link>
           </Button>

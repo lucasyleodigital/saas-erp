@@ -2,6 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 
 const RESEND_URL = "https://api.resend.com/emails";
 
+function esc(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 async function sendEmail(payload: object) {
   return fetch(RESEND_URL, {
     method: "POST",
@@ -14,9 +23,13 @@ async function sendEmail(payload: object) {
 }
 
 export async function POST(req: NextRequest) {
-  const { name, email, subject, message } = await req.json();
+  const raw = await req.json();
+  const name = esc(String(raw.name ?? ""));
+  const email = esc(String(raw.email ?? ""));
+  const subject = esc(String(raw.subject ?? ""));
+  const message = esc(String(raw.message ?? ""));
 
-  if (!name || !email || !message) {
+  if (!raw.name || !raw.email || !raw.message) {
     return NextResponse.json({ error: "Faltan campos obligatorios" }, { status: 400 });
   }
 

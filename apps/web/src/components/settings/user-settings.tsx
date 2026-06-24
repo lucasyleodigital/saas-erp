@@ -201,7 +201,11 @@ export function UserSettings() {
                   Añade una capa extra de seguridad usando una app como Google
                   Authenticator o Authy.
                 </p>
-                <Button size="sm" variant="outline">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => toast.info("La autenticacion en dos pasos estara disponible proximamente")}
+                >
                   Configurar 2FA
                 </Button>
               </CardContent>
@@ -217,9 +221,9 @@ export function UserSettings() {
             </CardHeader>
             <CardContent className="space-y-4">
               {[
-                { label: "Facturas vencidas", description: "Aviso cuando una factura lleva más de X días sin pagar" },
-                { label: "Nuevos leads", description: "Notificación cuando se asigna un lead al equipo" },
-                { label: "Pagos recibidos", description: "Confirmación al registrar un pago en una factura" },
+                { label: "Facturas vencidas", description: "Aviso cuando una factura lleva mas de X dias sin pagar" },
+                { label: "Nuevos leads", description: "Notificacion cuando se asigna un lead al equipo" },
+                { label: "Pagos recibidos", description: "Confirmacion al registrar un pago en una factura" },
                 { label: "Resumen semanal", description: "Email con el resumen de actividad de la semana" },
               ].map((item) => (
                 <div key={item.label} className="flex items-center justify-between py-2 border-b border-border last:border-0">
@@ -227,13 +231,17 @@ export function UserSettings() {
                     <p className="text-sm font-medium">{item.label}</p>
                     <p className="text-xs text-muted-foreground">{item.description}</p>
                   </div>
-                  <div className="h-5 w-9 rounded-full bg-primary/20 flex items-center justify-end px-0.5 cursor-pointer">
+                  <button
+                    type="button"
+                    onClick={() => toast.info("Las preferencias de notificaciones estaran disponibles proximamente")}
+                    className="h-5 w-9 rounded-full bg-primary/20 flex items-center justify-end px-0.5 cursor-pointer border-none"
+                  >
                     <div className="h-4 w-4 rounded-full bg-primary" />
-                  </div>
+                  </button>
                 </div>
               ))}
               <p className="text-xs text-muted-foreground pt-2">
-                Las preferencias detalladas estarán disponibles próximamente.
+                Las preferencias detalladas estaran disponibles proximamente.
               </p>
             </CardContent>
           </Card>

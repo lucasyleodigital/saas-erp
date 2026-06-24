@@ -1,6 +1,5 @@
 "use client";
 
-import type { Metadata } from "next";
 import { PricingCards } from "@/components/billing/pricing-cards";
 import { useMyCompany } from "@/hooks/use-company";
 import { useCustomerPortal } from "@/hooks/use-billing";
