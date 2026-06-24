@@ -11,13 +11,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Globe } from "lucide-react";
 
-const LOCALE_LABELS: Record<string, { label: string; flag: string }> = {
-  es: { label: "Español", flag: "🇪🇸" },
-  en: { label: "English", flag: "🇬🇧" },
-  fr: { label: "Français", flag: "🇫🇷" },
-  de: { label: "Deutsch", flag: "🇩🇪" },
-  pt: { label: "Português", flag: "🇵🇹" },
-  it: { label: "Italiano", flag: "🇮🇹" },
+const LOCALE_LABELS: Record<string, string> = {
+  es: "Castellano",
+  ca: "Catala",
+  eu: "Euskara",
+  gl: "Galego",
+  en: "English",
 };
 
 export function LanguageSwitcher() {
@@ -39,30 +38,26 @@ export function LanguageSwitcher() {
     router.refresh();
   };
 
-  const current = LOCALE_LABELS[locale] ?? LOCALE_LABELS["es"]!;
+  const currentLabel = LOCALE_LABELS[locale] ?? "Castellano";
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="gap-1.5 h-8 px-2">
           <Globe className="h-4 w-4" />
-          <span className="text-xs font-medium">{current.flag} {locale.toUpperCase()}</span>
+          <span className="text-xs font-medium">{locale.toUpperCase()}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-40">
-        {routing.locales.map((loc) => {
-          const info = LOCALE_LABELS[loc] ?? { flag: "🌐", label: loc.toUpperCase() };
-          return (
-            <DropdownMenuItem
-              key={loc}
-              onClick={() => handleLocaleChange(loc)}
-              className={locale === loc ? "bg-accent" : ""}
-            >
-              <span className="mr-2">{info.flag}</span>
-              {info.label}
-            </DropdownMenuItem>
-          );
-        })}
+        {routing.locales.map((loc) => (
+          <DropdownMenuItem
+            key={loc}
+            onClick={() => handleLocaleChange(loc)}
+            className={locale === loc ? "bg-accent" : ""}
+          >
+            {LOCALE_LABELS[loc] ?? loc.toUpperCase()}
+          </DropdownMenuItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

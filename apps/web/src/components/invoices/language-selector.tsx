@@ -4,13 +4,11 @@ import { Label } from "@/components/ui/label";
 import { Languages } from "lucide-react";
 
 const DOCUMENT_LANGUAGES = [
-  { code: "es", label: "Espanol" },
-  { code: "en", label: "English" },
-  { code: "fr", label: "Francais" },
-  { code: "de", label: "Deutsch" },
-  { code: "pt", label: "Portugues" },
-  { code: "it", label: "Italiano" },
+  { code: "es", label: "Castellano" },
   { code: "ca", label: "Catala" },
+  { code: "eu", label: "Euskara" },
+  { code: "gl", label: "Galego" },
+  { code: "en", label: "English" },
 ] as const;
 
 interface LanguageSelectorProps {

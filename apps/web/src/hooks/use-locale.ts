@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
-const LOCALES = ["es", "en", "fr", "de", "pt", "it"];
+const LOCALES = ["es", "ca", "eu", "gl", "en"];
 
 export function useLocale(): string {
   const pathname = usePathname();
