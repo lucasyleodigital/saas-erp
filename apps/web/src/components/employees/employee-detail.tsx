@@ -45,7 +45,7 @@ import {
   Mail,
   CreditCard,
 } from "lucide-react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/locale-link";
 
 const TABS = ["Ficha", "Horario", "Ausencias"] as const;
 type Tab = typeof TABS[number];

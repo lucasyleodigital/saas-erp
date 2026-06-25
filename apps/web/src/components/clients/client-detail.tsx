@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate, getInitials } from "@/lib/utils";
 import { ArrowLeft, Edit, FileText, Briefcase, Info } from "lucide-react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/locale-link";
 import { ClientDialog } from "./client-dialog";
 
 const STATUS_CONFIG: Record<string, { label: string; variant: string }> = {

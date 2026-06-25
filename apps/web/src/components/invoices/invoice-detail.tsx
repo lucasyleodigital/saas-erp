@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { ArrowLeft, Download, Send, CheckCircle, Shield, ExternalLink, Copy } from "lucide-react";
 import { downloadInvoicePdf } from "@/lib/pdf/download-pdf";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/locale-link";
 import { toast } from "sonner";
 
 const STATUS_CONFIG: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info" }> = {

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { LocaleLink } from "@/components/ui/locale-link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
@@ -428,10 +429,10 @@ function PlanUpgradeWall() {
       </p>
       <div className="flex gap-3">
         <Button asChild variant="outline">
-          <a href="/billing">Ver planes</a>
+          <LocaleLink href="/billing">Ver planes</LocaleLink>
         </Button>
         <Button asChild>
-          <a href="/billing?upgrade=starter">Actualizar a Starter</a>
+          <LocaleLink href="/billing">Actualizar a Starter</LocaleLink>
         </Button>
       </div>
     </div>

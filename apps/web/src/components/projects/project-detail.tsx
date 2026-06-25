@@ -16,7 +16,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/locale-link";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/hooks/use-locale";
 

@@ -17,7 +17,7 @@ import {
   Upload, Download, Users, Package, FileText, Truck,
   CheckCircle2, AlertCircle, SkipForward, X, FileSpreadsheet, ArrowRight,
 } from "lucide-react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/locale-link";
 
 const ENTITIES: {
   key: ImportEntity; label: string; icon: any; description: string; fields: string[]; href: string;

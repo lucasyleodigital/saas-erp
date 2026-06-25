@@ -40,7 +40,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDebounce } from "@/hooks/use-debounce";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/locale-link";
 import { useTranslations } from "next-intl";
 
 const STATUS_TABS = [

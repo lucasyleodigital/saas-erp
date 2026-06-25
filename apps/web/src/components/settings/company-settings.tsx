@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Building2, CreditCard, Palette, Landmark, Plus, Trash2, Scale } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/locale-link";
 import { TeamSection } from "@/components/empresa/team-section";
 import { toast } from "sonner";
 

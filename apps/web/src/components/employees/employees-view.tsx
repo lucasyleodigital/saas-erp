@@ -33,7 +33,7 @@ import {
 import { useDebounce } from "@/hooks/use-debounce";
 import { motion } from "framer-motion";
 import { EmployeeDialog } from "./employee-dialog";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/locale-link";
 import { useTranslations } from "next-intl";
 
 const STATUS_TABS = [

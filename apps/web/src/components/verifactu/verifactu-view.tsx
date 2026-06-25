@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/locale-link";
 import { useCertificateInfo } from "@/hooks/use-verifactu";
 
 const _STATUS_MAP = {

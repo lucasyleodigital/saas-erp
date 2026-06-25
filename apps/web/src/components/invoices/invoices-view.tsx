@@ -39,7 +39,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { useExport } from "@/hooks/use-export";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/locale-link";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 
