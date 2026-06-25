@@ -92,33 +92,42 @@ export class AccountingService {
     const start = new Date(year, 0, 1);
     const end = new Date(year, 11, 31, 23, 59, 59);
 
-    const invoiceTaxes = await this.prisma.invoiceTax.findMany({
+    // Get all non-draft invoices for the year with their tax records
+    const invoices = await this.prisma.invoice.findMany({
       where: {
-        invoice: {
-          companyId,
-          issueDate: { gte: start, lte: end },
-          status: { notIn: ["DRAFT", "CANCELLED"] },
-        },
-        rate: { gt: 0 },
+        companyId,
+        issueDate: { gte: start, lte: end },
+        status: { notIn: ["DRAFT", "CANCELLED"] },
       },
-      include: {
-        invoice: { select: { issueDate: true, subtotal: true } },
-      },
+      include: { taxes: true },
     });
 
     const quarters = [0, 1, 2, 3].map((q) => {
-      const qTaxes = invoiceTaxes.filter((t) => {
-        const m = new Date(t.invoice.issueDate).getMonth();
+      const qInvoices = invoices.filter((inv) => {
+        const m = new Date(inv.issueDate).getMonth();
         return Math.floor(m / 3) === q;
       });
 
-      const base = qTaxes.reduce((s, t) => s + Number(t.base), 0);
-      const vat = qTaxes.reduce((s, t) => s + Number(t.amount), 0);
+      let base = 0;
+      let vat = 0;
+
+      for (const inv of qInvoices) {
+        const ivaTaxes = (inv.taxes ?? []).filter((t: any) => Number(t.rate) > 0);
+        if (ivaTaxes.length > 0) {
+          base += ivaTaxes.reduce((s: number, t: any) => s + Number(t.base), 0);
+          vat += ivaTaxes.reduce((s: number, t: any) => s + Number(t.amount), 0);
+        } else {
+          // Fallback: invoices without InvoiceTax records - estimate IVA from stored values
+          const invSubtotal = Number(inv.subtotal);
+          base += invSubtotal;
+          vat += invSubtotal * 0.21;
+        }
+      }
 
       return {
         quarter: q + 1,
         label: QUARTER_LABELS[q],
-        invoiceCount: qTaxes.length,
+        invoiceCount: qInvoices.length,
         base: Math.round(base * 100) / 100,
         vat: Math.round(vat * 100) / 100,
         total: Math.round((base + vat) * 100) / 100,
@@ -189,40 +198,36 @@ export class AccountingService {
     const start = new Date(year, 0, 1);
     const end = new Date(year, 11, 31, 23, 59, 59);
 
-    const invoiceTaxes = await this.prisma.invoiceTax.findMany({
+    // Get invoices with their taxes and client info
+    const invoices = await this.prisma.invoice.findMany({
       where: {
-        invoice: {
-          companyId,
-          issueDate: { gte: start, lte: end },
-          status: { notIn: ["DRAFT", "CANCELLED"] },
-        },
-        rate: { lt: 0 },
+        companyId,
+        issueDate: { gte: start, lte: end },
+        status: { notIn: ["DRAFT", "CANCELLED"] },
       },
       include: {
-        invoice: {
-          select: {
-            issueDate: true,
-            number: true,
-            clientId: true,
-            client: { select: { name: true, cifNif: true } },
-          },
-        },
+        taxes: true,
+        client: { select: { id: true, name: true, cifNif: true } },
       },
     });
 
     const byClient = new Map<string, { clientName: string; cifNif: string; base: number; amount: number; rate: number; count: number }>();
-    for (const t of invoiceTaxes) {
-      const key = t.invoice.clientId;
+
+    for (const inv of invoices) {
+      const irpfTaxes = (inv.taxes ?? []).filter((t: any) => Number(t.rate) < 0);
+      if (irpfTaxes.length === 0) continue;
+
+      const key = inv.clientId;
       const existing = byClient.get(key) ?? {
-        clientName: t.invoice.client?.name ?? "",
-        cifNif: t.invoice.client?.cifNif ?? "",
+        clientName: inv.client?.name ?? "",
+        cifNif: inv.client?.cifNif ?? "",
         base: 0,
         amount: 0,
-        rate: Math.abs(Number(t.rate)),
+        rate: Math.abs(Number(irpfTaxes[0]!.rate)),
         count: 0,
       };
-      existing.base += Number(t.base);
-      existing.amount += Math.abs(Number(t.amount));
+      existing.base += irpfTaxes.reduce((s: number, t: any) => s + Number(t.base), 0);
+      existing.amount += irpfTaxes.reduce((s: number, t: any) => s + Math.abs(Number(t.amount)), 0);
       existing.count++;
       byClient.set(key, existing);
     }
@@ -239,13 +244,19 @@ export class AccountingService {
       .sort((a, b) => b.amount - a.amount);
 
     const quarters = [0, 1, 2, 3].map((q) => {
-      const qTaxes = invoiceTaxes.filter((t) => {
-        const m = new Date(t.invoice.issueDate).getMonth();
-        return Math.floor(m / 3) === q;
-      });
-      const base = qTaxes.reduce((s, t) => s + Number(t.base), 0);
-      const retention = qTaxes.reduce((s, t) => s + Math.abs(Number(t.amount)), 0);
-      return { quarter: q + 1, label: QUARTER_LABELS[q], base: Math.round(base * 100) / 100, retention: Math.round(retention * 100) / 100, count: qTaxes.length };
+      const qInvoices = invoices.filter((inv) => Math.floor(new Date(inv.issueDate).getMonth() / 3) === q);
+      let base = 0;
+      let retention = 0;
+      let count = 0;
+      for (const inv of qInvoices) {
+        const irpfTaxes = (inv.taxes ?? []).filter((t: any) => Number(t.rate) < 0);
+        if (irpfTaxes.length > 0) {
+          base += irpfTaxes.reduce((s: number, t: any) => s + Number(t.base), 0);
+          retention += irpfTaxes.reduce((s: number, t: any) => s + Math.abs(Number(t.amount)), 0);
+          count++;
+        }
+      }
+      return { quarter: q + 1, label: QUARTER_LABELS[q], base: Math.round(base * 100) / 100, retention: Math.round(retention * 100) / 100, count };
     });
 
     return {
@@ -485,6 +496,52 @@ export class AccountingService {
     const hasEntries = await this.prisma.journalItem.count({ where: { accountId: id } });
     if (hasEntries > 0) throw new NotFoundException("La cuenta tiene asientos y no se puede eliminar");
     return this.prisma.account.delete({ where: { id } });
+  }
+
+  async backfillInvoiceTaxes(companyId: string) {
+    const invoices = await this.prisma.invoice.findMany({
+      where: { companyId },
+      include: { taxes: true },
+    });
+
+    let ivaTax = await this.prisma.tax.findFirst({ where: { companyId, rate: 21 } });
+    if (!ivaTax) {
+      ivaTax = await this.prisma.tax.create({
+        data: { companyId, name: "IVA 21%", rate: 21, isDefault: true },
+      });
+    }
+
+    let fixed = 0;
+    for (const inv of invoices) {
+      if (inv.taxes && inv.taxes.length > 0) continue;
+
+      const subtotal = Number(inv.subtotal);
+      if (subtotal <= 0) continue;
+
+      const ivaAmount = subtotal * 0.21;
+
+      await this.prisma.invoiceTax.create({
+        data: {
+          invoiceId: inv.id,
+          taxId: ivaTax.id,
+          rate: 21,
+          base: subtotal,
+          amount: ivaAmount,
+        },
+      });
+
+      const correctTotal = subtotal + ivaAmount;
+      if (Math.abs(Number(inv.total) - correctTotal) > 0.01 || Math.abs(Number(inv.taxAmount) - ivaAmount) > 0.01) {
+        await this.prisma.invoice.update({
+          where: { id: inv.id },
+          data: { taxAmount: ivaAmount, total: correctTotal },
+        });
+      }
+
+      fixed++;
+    }
+
+    return { message: `${fixed} facturas corregidas con registros de IVA`, fixed, total: invoices.length };
   }
 
   private async seedDefaultAccounts(companyId: string) {

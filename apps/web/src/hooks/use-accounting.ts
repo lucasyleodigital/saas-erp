@@ -82,3 +82,40 @@ export function useRetenciones(year: number) {
     queryFn: () => api.get("/accounting/retenciones", { params: { year } }).then((r) => r.data),
   });
 }
+
+export function useBackfillTaxes() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => api.post("/accounting/backfill-taxes").then((r) => r.data),
+    onSuccess: (data: any) => {
+      qc.invalidateQueries({ queryKey: ["accounting"] });
+      toast.success(`${data.fixed} facturas corregidas`);
+    },
+    onError: () => toast.error("Error al corregir impuestos"),
+  });
+}
+
+export function useUpdateAccount() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: any }) =>
+      api.put(`/accounting/accounts/${id}`, data).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["accounting", "accounts"] });
+      toast.success("Cuenta actualizada");
+    },
+    onError: () => toast.error("Error al actualizar"),
+  });
+}
+
+export function useDeleteAccount() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => api.delete(`/accounting/accounts/${id}`).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["accounting", "accounts"] });
+      toast.success("Cuenta eliminada");
+    },
+    onError: () => toast.error("No se puede eliminar (tiene asientos asociados)"),
+  });
+}

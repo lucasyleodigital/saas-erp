@@ -117,28 +117,58 @@ export class InvoicesService {
 
     const company = await this.prisma.company.findUnique({ where: { id: companyId }, select: { settings: true } });
     const settings = (company?.settings as any) ?? {};
-    let taxesToCreate = dto.taxes ?? [];
+    let rawTaxes = dto.taxes ?? [];
 
+    // Resolve tax IDs - find or create Tax records for each tax entry
+    const taxesToCreate: Array<{ taxId: string; rate: number; base: number }> = [];
+    for (const t of rawTaxes) {
+      let resolvedTaxId = t.taxId;
+      const existingTax = await this.prisma.tax.findFirst({ where: { id: t.taxId, companyId } });
+      if (!existingTax) {
+        const taxName = t.rate > 0 ? `IVA ${t.rate}%` : `IRPF ${Math.abs(t.rate)}%`;
+        const found = await this.prisma.tax.findFirst({
+          where: { companyId, rate: t.rate },
+        });
+        if (found) {
+          resolvedTaxId = found.id;
+        } else {
+          const created = await this.prisma.tax.create({
+            data: { companyId, name: taxName, rate: t.rate, isDefault: t.rate > 0 },
+          });
+          resolvedTaxId = created.id;
+        }
+      }
+      taxesToCreate.push({ taxId: resolvedTaxId, rate: t.rate, base: t.base ?? subtotal });
+    }
+
+    // Auto-apply IRPF for autonomos if not already included
     if (settings.autoApplyIrpf && settings.companyType === "AUTONOMO" && settings.irpfRate) {
       const hasIrpf = taxesToCreate.some((t) => t.rate < 0);
       if (!hasIrpf) {
-        let irpfTaxId = "";
-        const existingIrpf = await this.prisma.tax.findFirst({
+        const irpfRate = Number(settings.irpfRate);
+        let irpfTax = await this.prisma.tax.findFirst({
           where: { companyId, name: { contains: "IRPF", mode: "insensitive" } },
         });
-        if (existingIrpf) {
-          irpfTaxId = existingIrpf.id;
-        } else {
-          const newTax = await this.prisma.tax.create({
-            data: { companyId, name: `IRPF ${settings.irpfRate}%`, rate: -settings.irpfRate, isDefault: false },
+        if (!irpfTax) {
+          irpfTax = await this.prisma.tax.create({
+            data: { companyId, name: `IRPF ${irpfRate}%`, rate: -irpfRate, isDefault: false },
           });
-          irpfTaxId = newTax.id;
         }
-        taxesToCreate = [
-          ...taxesToCreate,
-          { taxId: irpfTaxId, rate: -settings.irpfRate, base: subtotal },
-        ];
+        taxesToCreate.push({ taxId: irpfTax.id, rate: -irpfRate, base: subtotal });
       }
+    }
+
+    // If no taxes at all, create default IVA 21%
+    if (taxesToCreate.length === 0) {
+      let ivaTax = await this.prisma.tax.findFirst({
+        where: { companyId, rate: 21 },
+      });
+      if (!ivaTax) {
+        ivaTax = await this.prisma.tax.create({
+          data: { companyId, name: "IVA 21%", rate: 21, isDefault: true },
+        });
+      }
+      taxesToCreate.push({ taxId: ivaTax.id, rate: 21, base: subtotal });
     }
 
     const taxAmount = taxesToCreate.reduce((sum, t) => sum + t.base * (t.rate / 100), 0);

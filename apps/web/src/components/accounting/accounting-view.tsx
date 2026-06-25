@@ -8,6 +8,7 @@ import {
   useProfitAndLoss, useVatReport, useJournalEntries,
   useCreateJournalEntry, useDeleteJournalEntry, useAccounts,
   useLibroFacturas, useModelo130, useModelo347, useRetenciones,
+  useBackfillTaxes, useDeleteAccount,
 } from "@/hooks/use-accounting";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -184,6 +185,8 @@ export function AccountingView() {
   const { data: journalData, isLoading: journalLoading } = useJournalEntries({});
   const deleteEntry = useDeleteJournalEntry();
   const { data: accountsData } = useAccounts();
+  const backfillTaxes = useBackfillTaxes();
+  const deleteAccount = useDeleteAccount();
 
   const { data: libro, isLoading: libroLoading } = useLibroFacturas(year);
   const { data: modelo130, isLoading: m130Loading } = useModelo130(year);
@@ -311,6 +314,21 @@ export function AccountingView() {
       {/* VAT tab */}
       {tab === "vat" && (
         <div className="space-y-4">
+          <Card className="border-amber-500/20 bg-amber-500/5">
+            <CardContent className="p-4 flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium">Si el IVA sale a 0 con facturas existentes, pulsa "Reparar" para crear los registros de impuestos que faltan.</p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => backfillTaxes.mutate()}
+                disabled={backfillTaxes.isPending}
+              >
+                {backfillTaxes.isPending ? "Reparando..." : "Reparar impuestos"}
+              </Button>
+            </CardContent>
+          </Card>
           {vatLoading ? (
             <div className="grid grid-cols-4 gap-4">
               {Array.from({ length: 4 }).map((_, i) => (
@@ -450,9 +468,9 @@ export function AccountingView() {
             {accounts.length === 0 ? (
               <div className="flex flex-col items-center py-14 text-center">
                 <Receipt className="h-10 w-10 text-muted-foreground mb-3" />
-                <p className="font-medium">Plan de cuentas vacío</p>
+                <p className="font-medium">Plan de cuentas vacio</p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  El plan de cuentas PGC español se crea automáticamente al registrar el primer asiento
+                  El plan de cuentas PGC se crea automaticamente. Ve a Libro Diario y crea un asiento para inicializarlo.
                 </p>
               </div>
             ) : (
@@ -460,10 +478,11 @@ export function AccountingView() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b">
-                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">Código</th>
+                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">Codigo</th>
                       <th className="text-left p-4 text-xs font-medium text-muted-foreground">Nombre</th>
                       <th className="text-left p-4 text-xs font-medium text-muted-foreground">Tipo</th>
                       <th className="text-left p-4 text-xs font-medium text-muted-foreground">Grupo</th>
+                      <th className="p-4 w-12" />
                     </tr>
                   </thead>
                   <tbody>
@@ -480,7 +499,21 @@ export function AccountingView() {
                           <td className="p-4 font-mono text-sm font-semibold text-primary">{account.code}</td>
                           <td className="p-4 text-sm font-medium">{account.name}</td>
                           <td className="p-4 text-xs text-muted-foreground">{account.type}</td>
-                          <td className="p-4 text-xs text-muted-foreground">{account.group ?? "—"}</td>
+                          <td className="p-4 text-xs text-muted-foreground">{account.code.charAt(0)}</td>
+                          <td className="p-4 text-right">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                              onClick={() => {
+                                if (confirm(`Eliminar cuenta ${account.code} - ${account.name}?`)) {
+                                  deleteAccount.mutate(account.id);
+                                }
+                              }}
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          </td>
                         </motion.tr>
                       ))}
                   </tbody>

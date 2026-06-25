@@ -89,4 +89,9 @@ export class AccountingController {
   deleteAccount(@CurrentUser() user: JwtPayload, @Param("id") id: string) {
     return this.service.deleteAccount(user.companyId, id);
   }
+
+  @Post("backfill-taxes")
+  backfillTaxes(@CurrentUser() user: JwtPayload) {
+    return this.service.backfillInvoiceTaxes(user.companyId);
+  }
 }
