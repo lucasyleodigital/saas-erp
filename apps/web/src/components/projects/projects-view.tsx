@@ -41,6 +41,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useDebounce } from "@/hooks/use-debounce";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const STATUS_TABS = [
   { value: "ALL", label: "Todos" },
@@ -58,6 +59,7 @@ const STATUS_BADGE: Record<string, { label: string; variant: "success" | "warnin
 };
 
 export function ProjectsView() {
+  const t = useTranslations("projects");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -79,15 +81,15 @@ export function ProjectsView() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <FolderKanban className="h-6 w-6" />
-            Proyectos
+            {t("title")}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Gestiona tus proyectos, presupuestos y rentabilidad
+            {t("subtitle")}
           </p>
         </div>
         <Button onClick={() => setDialogOpen(true)} className="gap-2">
           <Plus className="h-4 w-4" />
-          Nuevo proyecto
+          {t("new")}
         </Button>
       </div>
 
@@ -106,7 +108,7 @@ export function ProjectsView() {
       <div className="relative w-full max-w-sm">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Buscar proyectos..."
+          placeholder={t("search")}
           className="pl-9"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -140,13 +142,13 @@ export function ProjectsView() {
             <div className="h-14 w-14 rounded-full bg-muted flex items-center justify-center mb-4">
               <FolderKanban className="h-6 w-6 text-muted-foreground" />
             </div>
-            <p className="font-medium">No hay proyectos</p>
+            <p className="font-medium">{t("noResults")}</p>
             <p className="text-sm text-muted-foreground mt-1 mb-4">
-              Empieza creando tu primer proyecto
+              {t("noResultsDesc")}
             </p>
             <Button onClick={() => setDialogOpen(true)} size="sm">
               <Plus className="h-4 w-4 mr-2" />
-              Nuevo proyecto
+              {t("new")}
             </Button>
           </CardContent>
         </Card>

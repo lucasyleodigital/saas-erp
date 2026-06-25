@@ -26,6 +26,7 @@ import {
   CheckCircle2, XCircle, ChevronDown, ChevronUp,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -546,6 +547,7 @@ function ExecutionLogs() {
 // ─── Main View ────────────────────────────────────────────────────────────────
 
 export function AutomationsView() {
+  const t = useTranslations("automations");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingAutomation, setEditingAutomation] = useState<any>(null);
 
@@ -590,10 +592,10 @@ export function AutomationsView() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Zap className="h-6 w-6 text-primary" />
-            Automatizaciones
+            {t("title")}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Reglas automáticas que trabajan por ti 24/7
+            {t("subtitle")}
           </p>
         </div>
         {!isBlocked && (
@@ -642,7 +644,7 @@ export function AutomationsView() {
               <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
                 <Zap className="h-8 w-8 text-primary" />
               </div>
-              <p className="font-semibold text-lg">Sin automatizaciones</p>
+              <p className="font-semibold text-lg">{t("noAutomations")}</p>
               <p className="text-sm text-muted-foreground mt-1 max-w-xs">
                 Elige una plantilla de arriba o crea una regla personalizada
                 desde cero.

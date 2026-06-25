@@ -48,6 +48,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useDebounce } from "@/hooks/use-debounce";
 import { formatCurrency } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 const _STATUS = {
   DRAFT:            { label: "Borrador",           color: "bg-gray-100 text-gray-600" },
@@ -60,6 +61,7 @@ const STATUS = _STATUS as Record<string, { label: string; color: string }>;
 function getStatus(s: string) { return STATUS[s] ?? _STATUS.DRAFT; }
 
 export function PurchaseOrdersView() {
+  const t = useTranslations("purchaseOrders");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [page, setPage] = useState(1);
@@ -82,12 +84,12 @@ export function PurchaseOrdersView() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Órdenes de compra</h1>
-          <p className="text-sm text-muted-foreground mt-1">Compras a proveedores y recepción de stock</p>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground mt-1">{t("subtitle")}</p>
         </div>
         <Button onClick={() => setDialogOpen(true)} className="gap-2">
           <Plus className="h-4 w-4" />
-          Nueva orden
+          {t("new")}
         </Button>
       </div>
 
@@ -95,7 +97,7 @@ export function PurchaseOrdersView() {
         <div className="relative w-full max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar por número o proveedor..."
+            placeholder={t("search")}
             className="pl-9"
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
@@ -439,15 +441,16 @@ function ReceiveDialog({
 }
 
 function EmptyState({ onNew }: { onNew: () => void }) {
+  const t = useTranslations("purchaseOrders");
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
       <div className="h-14 w-14 rounded-full bg-muted flex items-center justify-center mb-4">
         <ClipboardList className="h-6 w-6 text-muted-foreground" />
       </div>
-      <p className="font-medium">No hay órdenes de compra</p>
-      <p className="text-sm text-muted-foreground mt-1 mb-4">Crea tu primera orden de compra a un proveedor</p>
+      <p className="font-medium">{t("noResults")}</p>
+      <p className="text-sm text-muted-foreground mt-1 mb-4">{t("noResultsDesc")}</p>
       <Button onClick={onNew} size="sm">
-        <Plus className="h-4 w-4 mr-2" />Nueva orden
+        <Plus className="h-4 w-4 mr-2" />{t("new")}
       </Button>
     </div>
   );

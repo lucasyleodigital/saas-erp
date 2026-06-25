@@ -22,6 +22,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 const ENTITIES = [
   { value: "ALL", label: "Todas las entidades" },
@@ -50,6 +51,7 @@ const ACTION_BADGE: Record<string, { label: string; variant: "success" | "info" 
 };
 
 export function AuditView() {
+  const t = useTranslations("audit");
   const [entityFilter, setEntityFilter] = useState("ALL");
   const [actionFilter, setActionFilter] = useState("ALL");
   const [dateFrom, setDateFrom] = useState("");
@@ -74,10 +76,10 @@ export function AuditView() {
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <Shield className="h-6 w-6" />
-          Registro de actividad
+          {t("title")}
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Historial completo de cambios en el sistema
+          {t("subtitle")}
         </p>
       </div>
 
@@ -149,9 +151,9 @@ export function AuditView() {
               <div className="h-14 w-14 rounded-full bg-muted flex items-center justify-center mb-4">
                 <Eye className="h-6 w-6 text-muted-foreground" />
               </div>
-              <p className="font-medium">Sin registros</p>
+              <p className="font-medium">{t("noResults")}</p>
               <p className="text-sm text-muted-foreground mt-1">
-                No se encontraron entradas de auditoria con estos filtros
+                {t("noResultsDesc")}
               </p>
             </div>
           ) : (

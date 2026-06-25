@@ -39,8 +39,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDebounce } from "@/hooks/use-debounce";
+import { useTranslations } from "next-intl";
 
 export function SuppliersView() {
+  const t = useTranslations("suppliers");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -77,19 +79,19 @@ export function SuppliersView() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Proveedores</h1>
-          <p className="text-sm text-muted-foreground mt-1">Gestiona tu lista de proveedores</p>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground mt-1">{t("subtitle")}</p>
         </div>
         <Button onClick={handleNew} className="gap-2">
           <Plus className="h-4 w-4" />
-          Nuevo proveedor
+          {t("new")}
         </Button>
       </div>
 
       <div className="relative w-full max-w-sm">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Buscar por nombre, email, CIF..."
+          placeholder={t("search")}
           className="pl-9"
           value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(1); }}
@@ -299,15 +301,16 @@ function SupplierDialog({
 }
 
 function EmptyState({ onNew }: { onNew: () => void }) {
+  const t = useTranslations("suppliers");
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
       <div className="h-14 w-14 rounded-full bg-muted flex items-center justify-center mb-4">
         <Truck className="h-6 w-6 text-muted-foreground" />
       </div>
-      <p className="font-medium">No hay proveedores</p>
-      <p className="text-sm text-muted-foreground mt-1 mb-4">Empieza añadiendo tu primer proveedor</p>
+      <p className="font-medium">{t("noResults")}</p>
+      <p className="text-sm text-muted-foreground mt-1 mb-4">{t("noResultsDesc")}</p>
       <Button onClick={onNew} size="sm">
-        <Plus className="h-4 w-4 mr-2" />Añadir proveedor
+        <Plus className="h-4 w-4 mr-2" />{t("new")}
       </Button>
     </div>
   );

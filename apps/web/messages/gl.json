@@ -360,6 +360,94 @@
     "noRecords": "Sen rexistros VeriFactu",
     "noRecordsHint": "Xera o primeiro rexistro dende o detalle dunha factura enviada ou pagada"
   },
+  "employees": {
+    "title": "Empregados",
+    "subtitle": "Xestion de equipo, horarios e ausencias",
+    "new": "Novo empregado",
+    "search": "Buscar empregados...",
+    "noResults": "Non hai empregados",
+    "noResultsDesc": "Engade o primeiro membro do equipo",
+    "active": "Activos",
+    "onLeave": "De baixa",
+    "inactive": "Inactivos",
+    "all": "Todos",
+    "pendingLeaves": "Ausencias pendentes",
+    "monthlyCost": "Custo mensual",
+    "annualCost": "Custo anual"
+  },
+  "payroll": {
+    "title": "Nominas",
+    "subtitle": "Calculo e xestion de nominas do persoal",
+    "new": "Xerar nominas",
+    "search": "Buscar nominas...",
+    "noResults": "Non hai nominas para este periodo",
+    "generate": "Xerar nominas do periodo",
+    "employees": "Empregados",
+    "netTotal": "Neto total",
+    "companyCost": "Custo empresa",
+    "irpfWithheld": "IRPF retido",
+    "approveAll": "Aprobar todas",
+    "markPaid": "Marcar pagadas",
+    "loading": "Cargando nominas..."
+  },
+  "projects": {
+    "title": "Proxectos",
+    "subtitle": "Xestiona os teus proxectos, orzamentos e rendibilidade",
+    "new": "Novo proxecto",
+    "search": "Buscar proxectos...",
+    "noResults": "Non hai proxectos",
+    "noResultsDesc": "Comeza creando o teu primeiro proxecto",
+    "all": "Todos",
+    "active": "Activos",
+    "onHold": "En espera",
+    "completed": "Completados",
+    "cancelled": "Cancelados"
+  },
+  "suppliers": {
+    "title": "Provedores",
+    "subtitle": "Xestiona a tua lista de provedores",
+    "new": "Novo provedor",
+    "search": "Buscar por nome, correo, CIF...",
+    "noResults": "Non hai provedores",
+    "noResultsDesc": "Comeza engadindo o teu primeiro provedor"
+  },
+  "orders": {
+    "title": "Pedidos",
+    "subtitle": "Pedidos de clientes",
+    "new": "Novo pedido",
+    "search": "Buscar por numero ou cliente...",
+    "noResults": "Non hai pedidos",
+    "noResultsDesc": "Crea o teu primeiro pedido de cliente"
+  },
+  "purchaseOrders": {
+    "title": "Ordes de compra",
+    "subtitle": "Compras a provedores e recepcion de stock",
+    "new": "Nova orde",
+    "search": "Buscar por numero ou provedor...",
+    "noResults": "Non hai ordes de compra",
+    "noResultsDesc": "Crea a tua primeira orde de compra a un provedor"
+  },
+  "deliveryNotes": {
+    "title": "Albarans",
+    "subtitle": "Notas de entrega e documentos de transporte",
+    "new": "Novo albaran",
+    "search": "Buscar albarans...",
+    "noResults": "Non hai albarans",
+    "noResultsDesc": "Crea o teu primeiro albaran ou xerao dende un orzamento"
+  },
+  "audit": {
+    "title": "Rexistro de actividade",
+    "subtitle": "Historial completo de cambios no sistema",
+    "noResults": "Sen rexistros",
+    "noResultsDesc": "Non se atoparon entradas de auditoria con estes filtros"
+  },
+  "timeTracking": {
+    "title": "Control de horas",
+    "subtitle": "Rexistra e xestiona o tempo de traballo",
+    "new": "Rexistrar horas",
+    "noResults": "Non hai entradas",
+    "noResultsDesc": "Rexistra a primeira entrada de tempo"
+  },
   "errors": {
     "unauthorized": "Non tes permiso para realizar esta accion",
     "notFound": "Non se atopou o recurso",

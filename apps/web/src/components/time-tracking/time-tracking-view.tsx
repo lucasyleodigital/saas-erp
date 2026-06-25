@@ -38,8 +38,10 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 export function TimeTrackingView() {
+  const t = useTranslations("timeTracking");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [filterEmployee, setFilterEmployee] = useState("");
   const [filterProject, setFilterProject] = useState("");
@@ -70,15 +72,15 @@ export function TimeTrackingView() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Timer className="h-6 w-6" />
-            Control de horas
+            {t("title")}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Registra y gestiona el tiempo de trabajo
+            {t("subtitle")}
           </p>
         </div>
         <Button onClick={() => setDialogOpen(true)} className="gap-2">
           <Plus className="h-4 w-4" />
-          Registrar horas
+          {t("new")}
         </Button>
       </div>
 
@@ -160,13 +162,13 @@ export function TimeTrackingView() {
               <div className="h-14 w-14 rounded-full bg-muted flex items-center justify-center mb-4">
                 <Timer className="h-6 w-6 text-muted-foreground" />
               </div>
-              <p className="font-medium">No hay entradas</p>
+              <p className="font-medium">{t("noResults")}</p>
               <p className="text-sm text-muted-foreground mt-1 mb-4">
-                Registra la primera entrada de tiempo
+                {t("noResultsDesc")}
               </p>
               <Button onClick={() => setDialogOpen(true)} size="sm">
                 <Plus className="h-4 w-4 mr-2" />
-                Registrar horas
+                {t("new")}
               </Button>
             </div>
           ) : (

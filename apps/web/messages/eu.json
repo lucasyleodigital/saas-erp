@@ -360,6 +360,94 @@
     "noRecords": "VeriFactu erregistrorik gabe",
     "noRecordsHint": "Sortu lehen erregistroa bidalitako edo ordaindutako faktura baten xehetasunetik"
   },
+  "employees": {
+    "title": "Langileak",
+    "subtitle": "Talde-kudeaketa, ordutegiak eta absentziak",
+    "new": "Langile berria",
+    "search": "Langileak bilatu...",
+    "noResults": "Ez dago langilerik",
+    "noResultsDesc": "Gehitu taldeko lehen kidea",
+    "active": "Aktiboak",
+    "onLeave": "Bajan",
+    "inactive": "Inaktiboak",
+    "all": "Denak",
+    "pendingLeaves": "Absentzia zain",
+    "monthlyCost": "Hileko kostua",
+    "annualCost": "Urteko kostua"
+  },
+  "payroll": {
+    "title": "Nominak",
+    "subtitle": "Nominen kalkulua eta kudeaketa",
+    "new": "Nominak sortu",
+    "search": "Nominak bilatu...",
+    "noResults": "Ez dago nominarik aldi honetarako",
+    "generate": "Aldiko nominak sortu",
+    "employees": "Langileak",
+    "netTotal": "Garbi guztira",
+    "companyCost": "Enpresaren kostua",
+    "irpfWithheld": "Atxikitako PFEZ",
+    "approveAll": "Denak onartu",
+    "markPaid": "Ordainduta markatu",
+    "loading": "Nominak kargatzen..."
+  },
+  "projects": {
+    "title": "Proiektuak",
+    "subtitle": "Kudeatu zure proiektuak, aurrekontuak eta errentagarritasuna",
+    "new": "Proiektu berria",
+    "search": "Proiektuak bilatu...",
+    "noResults": "Ez dago proiekturik",
+    "noResultsDesc": "Hasi zure lehen proiektua sortuz",
+    "all": "Denak",
+    "active": "Aktiboak",
+    "onHold": "Zain",
+    "completed": "Osatuta",
+    "cancelled": "Bertan behera"
+  },
+  "suppliers": {
+    "title": "Hornitzaileak",
+    "subtitle": "Kudeatu zure hornitzaileen zerrenda",
+    "new": "Hornitzaile berria",
+    "search": "Bilatu izenez, emailez, IFK...",
+    "noResults": "Ez dago hornitzailerik",
+    "noResultsDesc": "Hasi zure lehen hornitzailea gehituz"
+  },
+  "orders": {
+    "title": "Eskariak",
+    "subtitle": "Bezeroen eskariak",
+    "new": "Eskari berria",
+    "search": "Bilatu zenbakiz edo bezeroz...",
+    "noResults": "Ez dago eskaririk",
+    "noResultsDesc": "Sortu zure lehen bezero-eskaria"
+  },
+  "purchaseOrders": {
+    "title": "Erosketa-aginduak",
+    "subtitle": "Hornitzaileei erosketak eta stock-a jasotzea",
+    "new": "Agindu berria",
+    "search": "Bilatu zenbakiz edo hornitzailez...",
+    "noResults": "Ez dago erosketa-agindurik",
+    "noResultsDesc": "Sortu zure lehen erosketa-agindua hornitzaile bati"
+  },
+  "deliveryNotes": {
+    "title": "Albaranak",
+    "subtitle": "Entrega-oharrak eta garraio-dokumentuak",
+    "new": "Albaran berria",
+    "search": "Albaranak bilatu...",
+    "noResults": "Ez dago albaranik",
+    "noResultsDesc": "Sortu zure lehen albarana edo sortu aurrekontu batetik"
+  },
+  "audit": {
+    "title": "Jarduera-erregistroa",
+    "subtitle": "Sistemako aldaketen historia osoa",
+    "noResults": "Erregistrorik gabe",
+    "noResultsDesc": "Ez da auditoria-sarrerarik aurkitu iragazki hauekin"
+  },
+  "timeTracking": {
+    "title": "Orduen kontrola",
+    "subtitle": "Erregistratu eta kudeatu lan-denbora",
+    "new": "Orduak erregistratu",
+    "noResults": "Ez dago sarrerarik",
+    "noResultsDesc": "Erregistratu lehen denbora-sarrera"
+  },
   "errors": {
     "unauthorized": "Ez duzu ekintza hau burutzeko baimenik",
     "notFound": "Baliabidea ez da aurkitu",

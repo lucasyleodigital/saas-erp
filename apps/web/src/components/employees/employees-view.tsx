@@ -34,6 +34,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { motion } from "framer-motion";
 import { EmployeeDialog } from "./employee-dialog";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const STATUS_TABS = [
   { key: undefined,   label: "Todos" },
@@ -47,6 +48,7 @@ function getInitials(firstName: string, lastName: string) {
 }
 
 export function EmployeesView() {
+  const t = useTranslations("employees");
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<string | undefined>(undefined);
   const [page, setPage] = useState(1);
@@ -73,15 +75,15 @@ export function EmployeesView() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Users className="h-6 w-6 text-primary" />
-            Empleados
+            {t("title")}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Gestión de equipo, horarios y ausencias
+            {t("subtitle")}
           </p>
         </div>
         <Button className="gap-2" onClick={() => setDialogOpen(true)}>
           <Plus className="h-4 w-4" />
-          Nuevo empleado
+          {t("new")}
         </Button>
       </div>
 
@@ -95,7 +97,7 @@ export function EmployeesView() {
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.active}</p>
-                <p className="text-xs text-muted-foreground">Activos</p>
+                <p className="text-xs text-muted-foreground">{t("active")}</p>
               </div>
             </CardContent>
           </Card>
@@ -106,7 +108,7 @@ export function EmployeesView() {
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.pendingLeaves}</p>
-                <p className="text-xs text-muted-foreground">Ausencias pendientes</p>
+                <p className="text-xs text-muted-foreground">{t("pendingLeaves")}</p>
               </div>
             </CardContent>
           </Card>
@@ -117,7 +119,7 @@ export function EmployeesView() {
               </div>
               <div>
                 <p className="text-xl font-bold">{formatCurrency(stats.monthlySalaryCost)}</p>
-                <p className="text-xs text-muted-foreground">Coste mensual</p>
+                <p className="text-xs text-muted-foreground">{t("monthlyCost")}</p>
               </div>
             </CardContent>
           </Card>
@@ -128,7 +130,7 @@ export function EmployeesView() {
               </div>
               <div>
                 <p className="text-xl font-bold">{formatCurrency(stats.annualSalaryCost)}</p>
-                <p className="text-xs text-muted-foreground">Coste anual</p>
+                <p className="text-xs text-muted-foreground">{t("annualCost")}</p>
               </div>
             </CardContent>
           </Card>
@@ -156,7 +158,7 @@ export function EmployeesView() {
         <div className="relative w-full sm:w-64">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar empleados..."
+            placeholder={t("search")}
             className="pl-9"
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
@@ -176,9 +178,9 @@ export function EmployeesView() {
           ) : employees.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <Users className="h-10 w-10 text-muted-foreground mb-3" />
-              <p className="font-medium">No hay empleados</p>
+              <p className="font-medium">{t("noResults")}</p>
               <p className="text-sm text-muted-foreground mt-1">
-                Añade el primer miembro del equipo
+                {t("noResultsDesc")}
               </p>
             </div>
           ) : (

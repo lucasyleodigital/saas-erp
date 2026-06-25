@@ -59,6 +59,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatCurrency } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 type Tab = "stock" | "alerts" | "movements" | "valuation" | "warehouses";
 
@@ -74,6 +75,7 @@ const MOVE_TYPE_LABELS: Record<string, string> = {
 };
 
 export function InventoryView() {
+  const t = useTranslations("inventory");
   const [tab, setTab] = useState<Tab>("stock");
   const { data: summary } = useInventorySummary();
 
@@ -88,8 +90,8 @@ export function InventoryView() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Inventario</h1>
-        <p className="text-sm text-muted-foreground mt-1">Stock, almacenes y valoración</p>
+        <h1 className="text-2xl font-bold">{t("title")}</h1>
+        <p className="text-sm text-muted-foreground mt-1">{t("subtitle")}</p>
       </div>
 
       {summary && (

@@ -360,6 +360,94 @@
     "noRecords": "No VeriFactu records",
     "noRecordsHint": "Generate the first record from a sent or paid invoice detail"
   },
+  "employees": {
+    "title": "Employees",
+    "subtitle": "Team management, schedules and absences",
+    "new": "New employee",
+    "search": "Search employees...",
+    "noResults": "No employees",
+    "noResultsDesc": "Add the first team member",
+    "active": "Active",
+    "onLeave": "On leave",
+    "inactive": "Inactive",
+    "all": "All",
+    "pendingLeaves": "Pending leaves",
+    "monthlyCost": "Monthly cost",
+    "annualCost": "Annual cost"
+  },
+  "payroll": {
+    "title": "Payroll",
+    "subtitle": "Payroll calculation and management",
+    "new": "Generate payrolls",
+    "search": "Search payrolls...",
+    "noResults": "No payrolls for this period",
+    "generate": "Generate payrolls for this period",
+    "employees": "Employees",
+    "netTotal": "Net total",
+    "companyCost": "Company cost",
+    "irpfWithheld": "IRPF withheld",
+    "approveAll": "Approve all",
+    "markPaid": "Mark as paid",
+    "loading": "Loading payrolls..."
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "Manage your projects, budgets and profitability",
+    "new": "New project",
+    "search": "Search projects...",
+    "noResults": "No projects",
+    "noResultsDesc": "Start by creating your first project",
+    "all": "All",
+    "active": "Active",
+    "onHold": "On hold",
+    "completed": "Completed",
+    "cancelled": "Cancelled"
+  },
+  "suppliers": {
+    "title": "Suppliers",
+    "subtitle": "Manage your supplier list",
+    "new": "New supplier",
+    "search": "Search by name, email, Tax ID...",
+    "noResults": "No suppliers",
+    "noResultsDesc": "Start by adding your first supplier"
+  },
+  "orders": {
+    "title": "Orders",
+    "subtitle": "Customer orders",
+    "new": "New order",
+    "search": "Search by number or client...",
+    "noResults": "No orders",
+    "noResultsDesc": "Create your first customer order"
+  },
+  "purchaseOrders": {
+    "title": "Purchase orders",
+    "subtitle": "Supplier purchases and stock reception",
+    "new": "New order",
+    "search": "Search by number or supplier...",
+    "noResults": "No purchase orders",
+    "noResultsDesc": "Create your first purchase order to a supplier"
+  },
+  "deliveryNotes": {
+    "title": "Delivery notes",
+    "subtitle": "Delivery notes and transport documents",
+    "new": "New delivery note",
+    "search": "Search delivery notes...",
+    "noResults": "No delivery notes",
+    "noResultsDesc": "Create your first delivery note or generate one from a quote"
+  },
+  "audit": {
+    "title": "Activity log",
+    "subtitle": "Complete history of system changes",
+    "noResults": "No records",
+    "noResultsDesc": "No audit entries found with these filters"
+  },
+  "timeTracking": {
+    "title": "Time tracking",
+    "subtitle": "Record and manage work time",
+    "new": "Log hours",
+    "noResults": "No entries",
+    "noResultsDesc": "Log the first time entry"
+  },
   "errors": {
     "unauthorized": "You don't have permission to perform this action",
     "notFound": "Resource not found",

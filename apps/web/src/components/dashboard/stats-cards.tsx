@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { TrendingUp, TrendingDown, FileText, Users, Briefcase, Euro } from "lucide-react";
 import { cn, formatCurrency } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 const ICONS = [Euro, FileText, Users, Briefcase];
 const COLORS = [
@@ -16,34 +17,37 @@ const COLORS = [
 
 export function StatsCards() {
   const { data, isLoading } = useDashboardStats();
+  const t = useTranslations("dashboard");
+
+  const labelKeys = ["revenue", "invoices", "clients", "deals"] as const;
 
   const stats: { label: string; value: string; change: number; extra?: string }[] = data
     ? [
         {
-          label: "Ingresos del mes",
+          label: t(`stats.revenue`),
           value: formatCurrency(data.totalRevenue),
           change: data.revenueChange,
         },
         {
-          label: "Facturas pendientes",
+          label: t(`stats.invoices`),
           value: `${data.pendingInvoices}`,
           change: 0,
           extra: formatCurrency(data.pendingAmount),
         },
         {
-          label: "Clientes activos",
+          label: t(`stats.clients`),
           value: `${data.activeClients}`,
           change: data.clientsChange,
         },
         {
-          label: "Oportunidades",
+          label: t(`stats.deals`),
           value: `${data.openDeals}`,
           change: 0,
           extra: formatCurrency(data.openDealsValue),
         },
       ]
     : Array.from({ length: 4 }, (_, i) => ({
-        label: ["Ingresos del mes", "Facturas pendientes", "Clientes activos", "Oportunidades"][i] ?? "",
+        label: t(`stats.${labelKeys[i]}`),
         value: "—",
         change: 0,
       }));
@@ -92,7 +96,7 @@ export function StatsCards() {
                     <span className={cn("text-xs font-medium", isPositive ? "text-emerald-500" : "text-red-500")}>
                       {isPositive ? "+" : ""}{stat.change}%
                     </span>
-                    <span className="text-xs text-muted-foreground">vs mes anterior</span>
+                    <span className="text-xs text-muted-foreground">{t("stats.vsLastMonth")}</span>
                   </div>
                 )}
               </CardContent>

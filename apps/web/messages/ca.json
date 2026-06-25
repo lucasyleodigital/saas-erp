@@ -360,6 +360,94 @@
     "noRecords": "Sense registres VeriFactu",
     "noRecordsHint": "Genera el primer registre des del detall d'una factura enviada o pagada"
   },
+  "employees": {
+    "title": "Empleats",
+    "subtitle": "Gestio d'equip, horaris i absencies",
+    "new": "Nou empleat",
+    "search": "Cercar empleats...",
+    "noResults": "No hi ha empleats",
+    "noResultsDesc": "Afegeix el primer membre de l'equip",
+    "active": "Actius",
+    "onLeave": "De baixa",
+    "inactive": "Inactius",
+    "all": "Tots",
+    "pendingLeaves": "Absencies pendents",
+    "monthlyCost": "Cost mensual",
+    "annualCost": "Cost anual"
+  },
+  "payroll": {
+    "title": "Nomines",
+    "subtitle": "Calcul i gestio de nomines del personal",
+    "new": "Generar nomines",
+    "search": "Cercar nomines...",
+    "noResults": "No hi ha nomines per a aquest periode",
+    "generate": "Generar nomines del periode",
+    "employees": "Empleats",
+    "netTotal": "Net total",
+    "companyCost": "Cost empresa",
+    "irpfWithheld": "IRPF retingut",
+    "approveAll": "Aprovar totes",
+    "markPaid": "Marcar pagades",
+    "loading": "Carregant nomines..."
+  },
+  "projects": {
+    "title": "Projectes",
+    "subtitle": "Gestiona els teus projectes, pressupostos i rendibilitat",
+    "new": "Nou projecte",
+    "search": "Cercar projectes...",
+    "noResults": "No hi ha projectes",
+    "noResultsDesc": "Comenca creant el teu primer projecte",
+    "all": "Tots",
+    "active": "Actius",
+    "onHold": "En espera",
+    "completed": "Completats",
+    "cancelled": "Cancel·lats"
+  },
+  "suppliers": {
+    "title": "Proveidors",
+    "subtitle": "Gestiona la teva llista de proveidors",
+    "new": "Nou proveidor",
+    "search": "Cercar per nom, correu, CIF...",
+    "noResults": "No hi ha proveidors",
+    "noResultsDesc": "Comenca afegint el teu primer proveidor"
+  },
+  "orders": {
+    "title": "Comandes",
+    "subtitle": "Comandes de clients",
+    "new": "Nova comanda",
+    "search": "Cercar per numero o client...",
+    "noResults": "No hi ha comandes",
+    "noResultsDesc": "Crea la teva primera comanda de client"
+  },
+  "purchaseOrders": {
+    "title": "Ordres de compra",
+    "subtitle": "Compres a proveidors i recepcio d'estoc",
+    "new": "Nova ordre",
+    "search": "Cercar per numero o proveidor...",
+    "noResults": "No hi ha ordres de compra",
+    "noResultsDesc": "Crea la teva primera ordre de compra a un proveidor"
+  },
+  "deliveryNotes": {
+    "title": "Albarans",
+    "subtitle": "Notes de lliurament i documents de transport",
+    "new": "Nou albara",
+    "search": "Cercar albarans...",
+    "noResults": "No hi ha albarans",
+    "noResultsDesc": "Crea el teu primer albara o genera'l des d'un pressupost"
+  },
+  "audit": {
+    "title": "Registre d'activitat",
+    "subtitle": "Historial complet de canvis al sistema",
+    "noResults": "Sense registres",
+    "noResultsDesc": "No s'han trobat entrades d'auditoria amb aquests filtres"
+  },
+  "timeTracking": {
+    "title": "Control d'hores",
+    "subtitle": "Registra i gestiona el temps de treball",
+    "new": "Registrar hores",
+    "noResults": "No hi ha entrades",
+    "noResultsDesc": "Registra la primera entrada de temps"
+  },
   "errors": {
     "unauthorized": "No tens permis per realitzar aquesta accio",
     "notFound": "No s'ha trobat el recurs",

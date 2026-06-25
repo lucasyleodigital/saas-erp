@@ -35,6 +35,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { motion } from "framer-motion";
 import { DeliveryNoteDialog } from "./delivery-note-dialog";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const STATUS_TABS = [
   { key: undefined,   label: "Todos" },
@@ -46,6 +47,7 @@ const STATUS_TABS = [
 ];
 
 export function DeliveryNotesView() {
+  const t = useTranslations("deliveryNotes");
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<string | undefined>(undefined);
   const [page, setPage] = useState(1);
@@ -73,15 +75,15 @@ export function DeliveryNotesView() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Truck className="h-6 w-6 text-primary" />
-            Albaranes
+            {t("title")}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Notas de entrega y documentos de transporte
+            {t("subtitle")}
           </p>
         </div>
         <Button className="gap-2" onClick={() => setDialogOpen(true)}>
           <Plus className="h-4 w-4" />
-          Nuevo albarán
+          {t("new")}
         </Button>
       </div>
 
@@ -106,7 +108,7 @@ export function DeliveryNotesView() {
         <div className="relative w-full sm:w-64">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar albaranes..."
+            placeholder={t("search")}
             className="pl-9"
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
@@ -126,9 +128,9 @@ export function DeliveryNotesView() {
           ) : notes.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <Truck className="h-10 w-10 text-muted-foreground mb-3" />
-              <p className="font-medium">No hay albaranes</p>
+              <p className="font-medium">{t("noResults")}</p>
               <p className="text-sm text-muted-foreground mt-1">
-                Crea tu primer albarán o genéralo desde un presupuesto
+                {t("noResultsDesc")}
               </p>
             </div>
           ) : (

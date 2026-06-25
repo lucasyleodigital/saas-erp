@@ -22,6 +22,7 @@ import {
 import { cn, formatCurrency } from "@/lib/utils";
 import { Plus, Trash2, Loader2, BookOpen, Receipt, TrendingUp, Calculator, FileText, Users as UsersIcon } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 // ---- Journal entry dialog ----
 const entrySchema = z.object({
@@ -173,6 +174,7 @@ function JournalEntryDialog({
 
 // ---- Main view ----
 export function AccountingView() {
+  const t = useTranslations("accounting");
   const [tab, setTab] = useState<"pyl" | "vat" | "journal" | "accounts" | "libro" | "modelo130" | "modelo347" | "retenciones">("pyl");
   const [year, setYear] = useState(new Date().getFullYear());
   const [entryDialogOpen, setEntryDialogOpen] = useState(false);
@@ -203,8 +205,8 @@ export function AccountingView() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Contabilidad</h1>
-          <p className="text-sm text-muted-foreground mt-1">PGC, asientos e informes fiscales</p>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground mt-1">{t("subtitle")}</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1 border rounded-lg overflow-hidden">

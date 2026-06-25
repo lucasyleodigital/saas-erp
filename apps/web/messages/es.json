@@ -360,6 +360,94 @@
     "noRecords": "Sin registros VeriFactu",
     "noRecordsHint": "Genera el primer registro desde el detalle de una factura enviada o pagada"
   },
+  "employees": {
+    "title": "Empleados",
+    "subtitle": "Gestion de equipo, horarios y ausencias",
+    "new": "Nuevo empleado",
+    "search": "Buscar empleados...",
+    "noResults": "No hay empleados",
+    "noResultsDesc": "Anade el primer miembro del equipo",
+    "active": "Activos",
+    "onLeave": "De baja",
+    "inactive": "Inactivos",
+    "all": "Todos",
+    "pendingLeaves": "Ausencias pendientes",
+    "monthlyCost": "Coste mensual",
+    "annualCost": "Coste anual"
+  },
+  "payroll": {
+    "title": "Nominas",
+    "subtitle": "Calculo y gestion de nominas del personal",
+    "new": "Generar nominas",
+    "search": "Buscar nominas...",
+    "noResults": "No hay nominas para este periodo",
+    "generate": "Generar nominas del periodo",
+    "employees": "Empleados",
+    "netTotal": "Neto total",
+    "companyCost": "Coste empresa",
+    "irpfWithheld": "IRPF retenido",
+    "approveAll": "Aprobar todas",
+    "markPaid": "Marcar pagadas",
+    "loading": "Cargando nominas..."
+  },
+  "projects": {
+    "title": "Proyectos",
+    "subtitle": "Gestiona tus proyectos, presupuestos y rentabilidad",
+    "new": "Nuevo proyecto",
+    "search": "Buscar proyectos...",
+    "noResults": "No hay proyectos",
+    "noResultsDesc": "Empieza creando tu primer proyecto",
+    "all": "Todos",
+    "active": "Activos",
+    "onHold": "En espera",
+    "completed": "Completados",
+    "cancelled": "Cancelados"
+  },
+  "suppliers": {
+    "title": "Proveedores",
+    "subtitle": "Gestiona tu lista de proveedores",
+    "new": "Nuevo proveedor",
+    "search": "Buscar por nombre, email, CIF...",
+    "noResults": "No hay proveedores",
+    "noResultsDesc": "Empieza anadiendo tu primer proveedor"
+  },
+  "orders": {
+    "title": "Pedidos",
+    "subtitle": "Pedidos de clientes",
+    "new": "Nuevo pedido",
+    "search": "Buscar por numero o cliente...",
+    "noResults": "No hay pedidos",
+    "noResultsDesc": "Crea tu primer pedido de cliente"
+  },
+  "purchaseOrders": {
+    "title": "Ordenes de compra",
+    "subtitle": "Compras a proveedores y recepcion de stock",
+    "new": "Nueva orden",
+    "search": "Buscar por numero o proveedor...",
+    "noResults": "No hay ordenes de compra",
+    "noResultsDesc": "Crea tu primera orden de compra a un proveedor"
+  },
+  "deliveryNotes": {
+    "title": "Albaranes",
+    "subtitle": "Notas de entrega y documentos de transporte",
+    "new": "Nuevo albaran",
+    "search": "Buscar albaranes...",
+    "noResults": "No hay albaranes",
+    "noResultsDesc": "Crea tu primer albaran o generalo desde un presupuesto"
+  },
+  "audit": {
+    "title": "Registro de actividad",
+    "subtitle": "Historial completo de cambios en el sistema",
+    "noResults": "Sin registros",
+    "noResultsDesc": "No se encontraron entradas de auditoria con estos filtros"
+  },
+  "timeTracking": {
+    "title": "Control de horas",
+    "subtitle": "Registra y gestiona el tiempo de trabajo",
+    "new": "Registrar horas",
+    "noResults": "No hay entradas",
+    "noResultsDesc": "Registra la primera entrada de tiempo"
+  },
   "errors": {
     "unauthorized": "No tienes permiso para realizar esta acción",
     "notFound": "No se encontró el recurso",

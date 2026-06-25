@@ -18,6 +18,7 @@ import {
   Users, TrendingUp, Euro, Receipt,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 const currentYear = new Date().getFullYear();
 const currentMonth = new Date().getMonth() + 1;
@@ -29,6 +30,7 @@ function fmt(n: number | string) {
 }
 
 export function PayrollView() {
+  const t = useTranslations("payroll");
   const locale = useLocale();
   const router = useRouter();
   const [year, setYear] = useState(currentYear);
@@ -88,8 +90,8 @@ export function PayrollView() {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Nóminas</h1>
-          <p className="text-muted-foreground text-sm">Cálculo y gestión de nóminas del personal</p>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
+          <p className="text-muted-foreground text-sm">{t("subtitle")}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Select value={String(year)} onValueChange={v => setYear(Number(v))}>
@@ -105,7 +107,7 @@ export function PayrollView() {
           </Button>
           <Button onClick={handleGenerate} disabled={generateMut.isPending}>
             <Wand2 className="h-4 w-4 mr-1" />
-            {generateMut.isPending ? "Generando..." : "Generar nóminas"}
+            {generateMut.isPending ? "Generando..." : t("new")}
           </Button>
         </div>
       </div>
@@ -113,10 +115,10 @@ export function PayrollView() {
       {/* Stats cards */}
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <StatCard icon={<Users className="h-5 w-5 text-blue-600" />} label="Empleados" value={String(stats.total)} sub={`${stats.paid} pagadas`} />
-          <StatCard icon={<Euro className="h-5 w-5 text-green-600" />} label="Neto total" value={fmt(stats.totalNet)} sub="líquido a pagar" />
-          <StatCard icon={<TrendingUp className="h-5 w-5 text-orange-600" />} label="Coste empresa" value={fmt(stats.totalCost)} sub={`SS: ${fmt(stats.totalSS)}`} />
-          <StatCard icon={<Receipt className="h-5 w-5 text-purple-600" />} label="IRPF retenido" value={fmt(stats.totalIRPF)} sub="a ingresar en AEAT" />
+          <StatCard icon={<Users className="h-5 w-5 text-blue-600" />} label={t("employees")} value={String(stats.total)} sub={`${stats.paid} pagadas`} />
+          <StatCard icon={<Euro className="h-5 w-5 text-green-600" />} label={t("netTotal")} value={fmt(stats.totalNet)} sub="líquido a pagar" />
+          <StatCard icon={<TrendingUp className="h-5 w-5 text-orange-600" />} label={t("companyCost")} value={fmt(stats.totalCost)} sub={`SS: ${fmt(stats.totalSS)}`} />
+          <StatCard icon={<Receipt className="h-5 w-5 text-purple-600" />} label={t("irpfWithheld")} value={fmt(stats.totalIRPF)} sub="a ingresar en AEAT" />
         </div>
       )}
 
@@ -138,7 +140,7 @@ export function PayrollView() {
 
       {/* Table */}
       {isLoading ? (
-        <div className="text-center py-12 text-muted-foreground">Cargando nóminas...</div>
+        <div className="text-center py-12 text-muted-foreground">{t("loading")}</div>
       ) : payrolls.length === 0 ? (
         <div className="text-center py-16 border rounded-xl">
           <p className="text-muted-foreground mb-4">No hay nóminas para {MONTHS_ES[month]} {year}</p>
