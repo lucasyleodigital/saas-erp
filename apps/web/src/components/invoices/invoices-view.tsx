@@ -113,7 +113,7 @@ export function InvoicesView() {
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={exportInvoices} disabled={exporting} className="gap-2">
             <Download className="h-4 w-4" />
-            {exporting ? "Exportando..." : "Excel"}
+            {exporting ? tCommon("exporting") : tCommon("export")}
           </Button>
           <Button onClick={() => setDialogOpen(true)} className="gap-2">
             <Plus className="h-4 w-4" />
@@ -144,7 +144,7 @@ export function InvoicesView() {
           <div className="relative w-full sm:w-64">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Buscar facturas..."
+              placeholder={t("searchPlaceholder")}
               className="pl-9"
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
@@ -157,7 +157,7 @@ export function InvoicesView() {
             className="gap-2"
           >
             <Filter className="h-4 w-4" />
-            Filtros
+            {tCommon("filters")}
           </Button>
         </div>
 
@@ -167,7 +167,7 @@ export function InvoicesView() {
             <CardContent className="pt-4 pb-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
                 <div className="space-y-1.5">
-                  <Label htmlFor="filter-date-from">Desde</Label>
+                  <Label htmlFor="filter-date-from">{tCommon("from")}</Label>
                   <Input
                     id="filter-date-from"
                     type="date"
@@ -176,7 +176,7 @@ export function InvoicesView() {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="filter-date-to">Hasta</Label>
+                  <Label htmlFor="filter-date-to">{tCommon("to")}</Label>
                   <Input
                     id="filter-date-to"
                     type="date"
@@ -185,7 +185,7 @@ export function InvoicesView() {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="filter-amount-min">Importe min</Label>
+                  <Label htmlFor="filter-amount-min">{t("filterAmountMin")}</Label>
                   <Input
                     id="filter-amount-min"
                     type="number"
@@ -197,7 +197,7 @@ export function InvoicesView() {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="filter-amount-max">Importe max</Label>
+                  <Label htmlFor="filter-amount-max">{t("filterAmountMax")}</Label>
                   <Input
                     id="filter-amount-max"
                     type="number"
@@ -209,11 +209,11 @@ export function InvoicesView() {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="filter-client">Cliente</Label>
+                  <Label htmlFor="filter-client">{t("filterClient")}</Label>
                   <Input
                     id="filter-client"
                     type="text"
-                    placeholder="Nombre del cliente..."
+                    placeholder={t("filterClientPlaceholder")}
                     value={clientFilter}
                     onChange={(e) => { setClientFilter(e.target.value); setPage(1); }}
                   />
@@ -232,7 +232,7 @@ export function InvoicesView() {
                     setPage(1);
                   }}
                 >
-                  Limpiar filtros
+                  {tCommon("clearFilters")}
                 </Button>
               </div>
             </CardContent>
@@ -254,11 +254,11 @@ export function InvoicesView() {
               <div className="h-14 w-14 rounded-full bg-destructive/10 flex items-center justify-center mb-4">
                 <AlertCircle className="h-6 w-6 text-destructive" />
               </div>
-              <p className="font-medium text-destructive">Error al cargar facturas</p>
+              <p className="font-medium text-destructive">{t("errorLoading")}</p>
               <p className="text-sm text-muted-foreground mt-1 mb-2 max-w-md">
                 {(error as any)?.response?.status === 401
-                  ? "Sesion expirada — cierra sesion y vuelve a entrar"
-                  : (error as any)?.message ?? "No se pudo conectar con el servidor"}
+                  ? t("sessionExpired")
+                  : (error as any)?.message ?? t("serverError")}
               </p>
               <p className="text-xs text-muted-foreground font-mono">
                 {(error as any)?.response?.status && `HTTP ${(error as any).response.status}`}
@@ -268,13 +268,13 @@ export function InvoicesView() {
           ) : invoices.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <FileText className="h-10 w-10 text-muted-foreground mb-3" />
-              <p className="font-medium">No hay facturas</p>
+              <p className="font-medium">{t("emptyTitle")}</p>
               <p className="text-sm text-muted-foreground mt-1 mb-4">
-                Crea tu primera factura para empezar
+                {t("emptyDescription")}
               </p>
               <Button size="sm" onClick={() => setDialogOpen(true)}>
                 <Plus className="h-4 w-4 mr-2" />
-                Nueva factura
+                {t("emptyAction")}
               </Button>
             </div>
           ) : (
@@ -293,12 +293,12 @@ export function InvoicesView() {
                         }}
                       />
                     </th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3">Número</th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3">Cliente</th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">Fecha</th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">Vencimiento</th>
-                    <th className="text-right font-medium text-muted-foreground px-4 py-3">Importe</th>
-                    <th className="text-center font-medium text-muted-foreground px-4 py-3">Estado</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3">{t("number")}</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3">{t("client")}</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">{t("date")}</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">{t("dueDate")}</th>
+                    <th className="text-right font-medium text-muted-foreground px-4 py-3">{t("amount")}</th>
+                    <th className="text-center font-medium text-muted-foreground px-4 py-3">{t("status")}</th>
                     <th className="px-4 py-3 w-12" />
                   </tr>
                 </thead>
@@ -356,7 +356,7 @@ export function InvoicesView() {
                           <span className="font-semibold">{formatCurrency(Number(inv.total))}</span>
                           {inv.status === "PARTIAL" && (
                             <p className="text-xs text-muted-foreground">
-                              Cobrado: {formatCurrency(Number(inv.paidAmount))}
+                              {t("paidAmount", { amount: formatCurrency(Number(inv.paidAmount)) })}
                             </p>
                           )}
                         </td>
@@ -374,7 +374,7 @@ export function InvoicesView() {
                               <DropdownMenuItem asChild>
                                 <Link href={`/facturas/${inv.id}`}>
                                   <Eye className="h-4 w-4 mr-2" />
-                                  Ver factura
+                                  {t("viewInvoice")}
                                 </Link>
                               </DropdownMenuItem>
                               <DropdownMenuItem
@@ -382,25 +382,25 @@ export function InvoicesView() {
                                 onClick={async () => {
                                   setPdfLoading(inv.id);
                                   try { await downloadInvoicePdf(inv.id); }
-                                  catch { toast.error("Error al generar PDF"); }
+                                  catch { toast.error(t("pdfError")); }
                                   finally { setPdfLoading(null); }
                                 }}
                               >
                                 <Download className="h-4 w-4 mr-2" />
-                                {pdfLoading === inv.id ? "Generando..." : "Descargar PDF"}
+                                {pdfLoading === inv.id ? t("generatingPdf") : t("downloadPdf")}
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => duplicateInvoice.mutate(inv.id)}
                               >
                                 <Copy className="h-4 w-4 mr-2" />
-                                Duplicar
+                                {t("duplicate")}
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => sendEmail.mutate(inv.id)}
                                 disabled={sendEmail.isPending}
                               >
                                 <Send className="h-4 w-4 mr-2" />
-                                Enviar por email
+                                {t("sendByEmail")}
                               </DropdownMenuItem>
                               {inv.status !== "PAID" && inv.status !== "CANCELLED" && inv.status !== "DRAFT" && (
                                 <DropdownMenuItem
@@ -408,7 +408,7 @@ export function InvoicesView() {
                                   disabled={paymentLink.isPending}
                                 >
                                   <CreditCard className="h-4 w-4 mr-2" />
-                                  {paymentLink.isPending ? "Generando..." : "Link de pago Stripe"}
+                                  {paymentLink.isPending ? tCommon("generating") : t("stripePaymentLink")}
                                 </DropdownMenuItem>
                               )}
                               {inv.isRecurring ? (
@@ -416,17 +416,17 @@ export function InvoicesView() {
                                   onClick={() => setRecurring.mutate({ id: inv.id, isRecurring: false })}
                                 >
                                   <RefreshCw className="h-4 w-4 mr-2" />
-                                  Desactivar recurrencia
+                                  {t("disableRecurrence")}
                                 </DropdownMenuItem>
                               ) : inv.status === "PAID" && (
                                 <DropdownMenuItem
                                   onClick={() => {
-                                    const interval = prompt("Intervalo de recurrencia:\nMONTHLY = Mensual\nQUARTERLY = Trimestral\nYEARLY = Anual\nWEEKLY = Semanal\nBIWEEKLY = Quincenal", "MONTHLY");
+                                    const interval = prompt(t("recurrencePrompt"), "MONTHLY");
                                     if (interval) setRecurring.mutate({ id: inv.id, isRecurring: true, interval: interval.toUpperCase() });
                                   }}
                                 >
                                   <RefreshCw className="h-4 w-4 mr-2" />
-                                  Hacer recurrente
+                                  {t("makeRecurrent")}
                                 </DropdownMenuItem>
                               )}
                               <DropdownMenuSeparator />
@@ -437,7 +437,7 @@ export function InvoicesView() {
                                   }
                                 >
                                   <Send className="h-4 w-4 mr-2" />
-                                  Marcar como enviada
+                                  {t("markAsSent")}
                                 </DropdownMenuItem>
                               )}
                               {["SENT", "PARTIAL", "OVERDUE"].includes(inv.status) && (
@@ -447,7 +447,7 @@ export function InvoicesView() {
                                   }
                                 >
                                   <CheckCircle className="h-4 w-4 mr-2" />
-                                  Marcar como pagada
+                                  {t("markAsPaidAction")}
                                 </DropdownMenuItem>
                               )}
                               {["SENT", "OVERDUE", "PARTIAL"].includes(inv.status) && (
@@ -456,7 +456,7 @@ export function InvoicesView() {
                                   disabled={sendEmail.isPending}
                                 >
                                   <Bell className="h-4 w-4 mr-2" />
-                                  Enviar recordatorio de pago
+                                  {t("sendPaymentReminder")}
                                 </DropdownMenuItem>
                               )}
                               {inv.status !== "CANCELLED" && (
@@ -467,20 +467,20 @@ export function InvoicesView() {
                                   }
                                 >
                                   <XCircle className="h-4 w-4 mr-2" />
-                                  Cancelar
+                                  {t("cancelInvoice")}
                                 </DropdownMenuItem>
                               )}
                               <DropdownMenuSeparator />
                               <DropdownMenuItem
                                 className="text-destructive focus:text-destructive"
                                 onClick={() => {
-                                  if (confirm(`Eliminar factura ${inv.number}? Esta accion no se puede deshacer.`)) {
+                                  if (confirm(t("confirmDelete", { number: inv.number }))) {
                                     deleteInvoice.mutate(inv.id);
                                   }
                                 }}
                               >
                                 <Trash2 className="h-4 w-4 mr-2" />
-                                Eliminar
+                                {t("deleteAction")}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -498,13 +498,13 @@ export function InvoicesView() {
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <span>Página {page} de {totalPages}</span>
+          <span>{t("pageOf", { page, totalPages })}</span>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
-              Anterior
+              {tCommon("previous")}
             </Button>
             <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>
-              Siguiente
+              {tCommon("next")}
             </Button>
           </div>
         </div>
@@ -513,7 +513,7 @@ export function InvoicesView() {
       {/* Bulk Actions Bar */}
       {selected.size > 0 && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-background border shadow-lg rounded-xl px-5 py-3">
-          <span className="text-sm font-medium">{selected.size} seleccionadas</span>
+          <span className="text-sm font-medium">{t("selectedCount", { count: selected.size })}</span>
           <Button
             size="sm"
             variant="outline"
@@ -525,7 +525,7 @@ export function InvoicesView() {
               );
             }}
           >
-            <CheckCircle className="h-4 w-4 mr-1" /> Pagadas
+            <CheckCircle className="h-4 w-4 mr-1" /> {t("bulkPaid")}
           </Button>
           <Button
             size="sm"
@@ -538,7 +538,7 @@ export function InvoicesView() {
               );
             }}
           >
-            <Send className="h-4 w-4 mr-1" /> Enviadas
+            <Send className="h-4 w-4 mr-1" /> {t("bulkSent")}
           </Button>
           <Button
             size="sm"
@@ -552,7 +552,7 @@ export function InvoicesView() {
               );
             }}
           >
-            <XCircle className="h-4 w-4 mr-1" /> Cancelar
+            <XCircle className="h-4 w-4 mr-1" /> {t("bulkCancel")}
           </Button>
         </div>
       )}

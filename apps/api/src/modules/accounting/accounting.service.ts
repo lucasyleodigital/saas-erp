@@ -13,41 +13,46 @@ export class AccountingService {
     const start = new Date(year, 0, 1);
     const end = new Date(year, 11, 31, 23, 59, 59);
 
-    // Revenue: from paid/sent invoices
     const invoices = await this.prisma.invoice.findMany({
       where: {
         companyId,
         issueDate: { gte: start, lte: end },
         status: { in: ["PAID", "SENT", "PARTIAL"] },
       },
-      select: { subtotal: true, taxAmount: true, total: true, issueDate: true, status: true },
+      include: { taxes: true },
     });
 
     const revenue = invoices.reduce((sum, inv) => sum + Number(inv.subtotal), 0);
-    const vatCollected = invoices.reduce((sum, inv) => sum + Number(inv.taxAmount), 0);
 
-    // Expenses: from MANUAL journal entries (gastos registrados manualmente)
+    const ivaTaxes = invoices.flatMap((inv) =>
+      (inv.taxes ?? []).filter((t: any) => Number(t.rate) > 0),
+    );
+    const vatCollected = ivaTaxes.reduce((sum, t: any) => sum + Number(t.amount), 0);
+
+    const irpfTaxes = invoices.flatMap((inv) =>
+      (inv.taxes ?? []).filter((t: any) => Number(t.rate) < 0),
+    );
+    const irpfRetained = irpfTaxes.reduce((sum, t: any) => sum + Math.abs(Number(t.amount)), 0);
+
     const expenses = await this.prisma.journalEntry.findMany({
       where: {
         companyId,
         type: { in: ["MANUAL", "ADJUSTMENT"] },
         entryDate: { gte: start, lte: end },
       },
-      include: { items: { include: { account: { select: { id: true, code: true, name: true, type: true } } } } },
+      include: { items: { include: { account: { select: { type: true } } } } },
     });
 
     const totalExpenses = expenses.reduce((sum, entry) => {
-      // Sum debit lines on expense accounts (type EXPENSE, codes 6xx)
       const debits = (entry as any).items
         .filter((item: any) => Number(item.debit) > 0 && item.account?.type === "EXPENSE")
         .reduce((s: number, item: any) => s + Number(item.debit), 0);
       return sum + debits;
     }, 0);
 
-    // Monthly breakdown
     const monthly = Array.from({ length: 12 }, (_, month) => {
       const monthInvoices = invoices.filter(
-        (inv) => new Date(inv.issueDate).getMonth() === month
+        (inv) => new Date(inv.issueDate).getMonth() === month,
       );
       const monthRevenue = monthInvoices.reduce((sum, inv) => sum + Number(inv.subtotal), 0);
       const monthExpenses = expenses
@@ -66,17 +71,17 @@ export class AccountingService {
       };
     });
 
-    const grossProfit = revenue - totalExpenses;
-    const invoiceCount = invoices.length;
+    const profit = revenue - totalExpenses;
 
     return {
       year,
-      revenue,
-      vatCollected,
-      expenses: totalExpenses,
-      grossProfit,
-      margin: revenue > 0 ? (grossProfit / revenue) * 100 : 0,
-      invoiceCount,
+      revenue: Math.round(revenue * 100) / 100,
+      vatCollected: Math.round(vatCollected * 100) / 100,
+      irpfRetained: Math.round(irpfRetained * 100) / 100,
+      expenses: Math.round(totalExpenses * 100) / 100,
+      profit: Math.round(profit * 100) / 100,
+      margin: revenue > 0 ? Math.round((profit / revenue) * 10000) / 100 : 0,
+      invoiceCount: invoices.length,
       monthly,
     };
   }
@@ -87,33 +92,37 @@ export class AccountingService {
     const start = new Date(year, 0, 1);
     const end = new Date(year, 11, 31, 23, 59, 59);
 
-    const invoices = await this.prisma.invoice.findMany({
+    const invoiceTaxes = await this.prisma.invoiceTax.findMany({
       where: {
-        companyId,
-        issueDate: { gte: start, lte: end },
-        status: { notIn: ["DRAFT", "CANCELLED"] },
+        invoice: {
+          companyId,
+          issueDate: { gte: start, lte: end },
+          status: { notIn: ["DRAFT", "CANCELLED"] },
+        },
+        rate: { gt: 0 },
       },
-      select: { subtotal: true, taxAmount: true, total: true, issueDate: true, number: true },
+      include: {
+        invoice: { select: { issueDate: true, subtotal: true } },
+      },
     });
 
     const quarters = [0, 1, 2, 3].map((q) => {
-      const qInvoices = invoices.filter((inv) => {
-        const m = new Date(inv.issueDate).getMonth();
+      const qTaxes = invoiceTaxes.filter((t) => {
+        const m = new Date(t.invoice.issueDate).getMonth();
         return Math.floor(m / 3) === q;
       });
 
-      const base = qInvoices.reduce((s, inv) => s + Number(inv.subtotal), 0);
-      const vat = qInvoices.reduce((s, inv) => s + Number(inv.taxAmount), 0);
-      const total = qInvoices.reduce((s, inv) => s + Number(inv.total), 0);
+      const base = qTaxes.reduce((s, t) => s + Number(t.base), 0);
+      const vat = qTaxes.reduce((s, t) => s + Number(t.amount), 0);
 
       return {
         quarter: q + 1,
         label: QUARTER_LABELS[q],
-        invoiceCount: qInvoices.length,
-        base,
-        vat,
-        total,
-        vatRate: base > 0 ? (vat / base) * 100 : 0,
+        invoiceCount: qTaxes.length,
+        base: Math.round(base * 100) / 100,
+        vat: Math.round(vat * 100) / 100,
+        total: Math.round((base + vat) * 100) / 100,
+        vatRate: base > 0 ? Math.round((vat / base) * 10000) / 100 : 0,
       };
     });
 
@@ -124,10 +133,11 @@ export class AccountingService {
       year,
       quarters,
       totals: { base: yearBase, vat: yearVat, total: yearBase + yearVat },
+      yearTotal: { base: yearBase, vat: yearVat, total: yearBase + yearVat },
     };
   }
 
-  // ─── Modelo 347 (operaciones >3.005€ anuales) ─────────────────────────────────
+  // ─── Modelo 347 (operaciones >3.005 EUR anuales) ─────────────────────────────
 
   async getModelo347(companyId: string, year: number) {
     const start = new Date(year, 0, 1);
@@ -142,33 +152,34 @@ export class AccountingService {
       include: { client: { select: { id: true, name: true, cifNif: true } } },
     });
 
-    const byClient = new Map<string, { name: string; cifNif: string; total: number; count: number }>();
+    const byClient = new Map<string, { id: string; name: string; cifNif: string; total: number; count: number }>();
     for (const inv of invoices) {
       const key = inv.clientId;
-      const existing = byClient.get(key) ?? { name: inv.client?.name ?? "", cifNif: inv.client?.cifNif ?? "", total: 0, count: 0 };
+      const existing = byClient.get(key) ?? { id: inv.clientId, name: inv.client?.name ?? "", cifNif: inv.client?.cifNif ?? "", total: 0, count: 0 };
       existing.total += Number(inv.total);
       existing.count++;
       byClient.set(key, existing);
     }
 
     const threshold = 3005.06;
-    const declarable = [...byClient.entries()]
-      .filter(([, v]) => v.total >= threshold)
-      .map(([clientId, v]) => ({
-        clientId,
+    const clients = [...byClient.values()]
+      .filter((v) => v.total >= threshold)
+      .map((v) => ({
+        id: v.id,
         name: v.name,
         cifNif: v.cifNif,
-        totalOperations: Math.round(v.total * 100) / 100,
+        total: Math.round(v.total * 100) / 100,
         invoiceCount: v.count,
       }))
-      .sort((a, b) => b.totalOperations - a.totalOperations);
+      .sort((a, b) => b.total - a.total);
 
     return {
       year,
       threshold,
-      totalDeclarable: declarable.length,
-      totalAmount: declarable.reduce((s, d) => s + d.totalOperations, 0),
-      entries: declarable,
+      clients,
+      suppliers: [],
+      totalDeclarable: clients.length,
+      totalAmount: clients.reduce((s, d) => s + d.total, 0),
     };
   }
 
@@ -188,72 +199,97 @@ export class AccountingService {
         rate: { lt: 0 },
       },
       include: {
-        invoice: { select: { issueDate: true, number: true, clientId: true, client: { select: { name: true, cifNif: true } } } },
+        invoice: {
+          select: {
+            issueDate: true,
+            number: true,
+            clientId: true,
+            client: { select: { name: true, cifNif: true } },
+          },
+        },
       },
     });
+
+    const byClient = new Map<string, { clientName: string; cifNif: string; base: number; amount: number; rate: number; count: number }>();
+    for (const t of invoiceTaxes) {
+      const key = t.invoice.clientId;
+      const existing = byClient.get(key) ?? {
+        clientName: t.invoice.client?.name ?? "",
+        cifNif: t.invoice.client?.cifNif ?? "",
+        base: 0,
+        amount: 0,
+        rate: Math.abs(Number(t.rate)),
+        count: 0,
+      };
+      existing.base += Number(t.base);
+      existing.amount += Math.abs(Number(t.amount));
+      existing.count++;
+      byClient.set(key, existing);
+    }
+
+    const retentions = [...byClient.values()]
+      .map((v) => ({
+        clientName: v.clientName,
+        cifNif: v.cifNif,
+        base: Math.round(v.base * 100) / 100,
+        amount: Math.round(v.amount * 100) / 100,
+        rate: v.rate,
+        count: v.count,
+      }))
+      .sort((a, b) => b.amount - a.amount);
 
     const quarters = [0, 1, 2, 3].map((q) => {
       const qTaxes = invoiceTaxes.filter((t) => {
         const m = new Date(t.invoice.issueDate).getMonth();
         return Math.floor(m / 3) === q;
       });
-
       const base = qTaxes.reduce((s, t) => s + Number(t.base), 0);
       const retention = qTaxes.reduce((s, t) => s + Math.abs(Number(t.amount)), 0);
-
-      return {
-        quarter: q + 1,
-        label: QUARTER_LABELS[q],
-        base: Math.round(base * 100) / 100,
-        retention: Math.round(retention * 100) / 100,
-        count: qTaxes.length,
-      };
+      return { quarter: q + 1, label: QUARTER_LABELS[q], base: Math.round(base * 100) / 100, retention: Math.round(retention * 100) / 100, count: qTaxes.length };
     });
 
     return {
       year,
+      retentions,
       quarters,
-      totals: {
-        base: quarters.reduce((s, q) => s + q.base, 0),
-        retention: quarters.reduce((s, q) => s + q.retention, 0),
+      total: {
+        base: retentions.reduce((s, r) => s + r.base, 0),
+        amount: retentions.reduce((s, r) => s + r.amount, 0),
       },
     };
   }
 
   // ─── Libro de facturas emitidas/recibidas (AEAT) ─────────────────────────────
 
-  async getLibroFacturas(companyId: string, year: number, type: "emitidas" | "recibidas") {
+  async getLibroFacturas(companyId: string, year: number, _type?: "emitidas" | "recibidas") {
     const start = new Date(year, 0, 1);
     const end = new Date(year, 11, 31, 23, 59, 59);
 
-    if (type === "emitidas") {
-      const invoices = await this.prisma.invoice.findMany({
-        where: { companyId, issueDate: { gte: start, lte: end }, status: { notIn: ["DRAFT"] } },
-        include: {
-          client: { select: { name: true, cifNif: true } },
-          taxes: { include: { tax: true } },
-        },
-        orderBy: { issueDate: "asc" },
-      });
+    const invoices = await this.prisma.invoice.findMany({
+      where: { companyId, issueDate: { gte: start, lte: end }, status: { notIn: ["DRAFT"] } },
+      include: {
+        client: { select: { name: true, cifNif: true } },
+        taxes: true,
+      },
+      orderBy: { issueDate: "asc" },
+    });
 
+    const emitidas = invoices.map((inv) => {
+      const ivaTaxes = (inv.taxes ?? []).filter((t: any) => Number(t.rate) > 0);
+      const irpfTaxes = (inv.taxes ?? []).filter((t: any) => Number(t.rate) < 0);
       return {
-        year,
-        type: "emitidas",
-        total: invoices.length,
-        entries: invoices.map((inv) => ({
-          numero: inv.number,
-          fecha: inv.issueDate.toISOString().slice(0, 10),
-          cliente: inv.client?.name ?? "",
-          cifNif: inv.client?.cifNif ?? "",
-          baseImponible: Number(inv.subtotal),
-          tipoIva: inv.taxes?.[0] ? Number(inv.taxes[0].rate) : 21,
-          cuotaIva: Number(inv.taxAmount),
-          retencion: inv.taxes?.filter((t: any) => Number(t.rate) < 0).reduce((s: number, t: any) => s + Math.abs(Number(t.amount)), 0) ?? 0,
-          total: Number(inv.total),
-          estado: inv.status,
-        })),
+        id: inv.id,
+        number: inv.number,
+        issueDate: inv.issueDate.toISOString().slice(0, 10),
+        clientName: inv.client?.name ?? "",
+        clientCif: inv.client?.cifNif ?? "",
+        subtotal: Number(inv.subtotal),
+        taxAmount: ivaTaxes.reduce((s: number, t: any) => s + Number(t.amount), 0),
+        irpfAmount: irpfTaxes.reduce((s: number, t: any) => s + Math.abs(Number(t.amount)), 0),
+        total: Number(inv.total),
+        status: inv.status,
       };
-    }
+    });
 
     const expenses = await this.prisma.journalEntry.findMany({
       where: { companyId, type: { in: ["MANUAL", "ADJUSTMENT"] }, entryDate: { gte: start, lte: end } },
@@ -261,96 +297,98 @@ export class AccountingService {
       orderBy: { entryDate: "asc" },
     });
 
-    return {
-      year,
-      type: "recibidas",
-      total: expenses.length,
-      entries: expenses.map((e) => ({
-        numero: e.reference ?? e.id.slice(0, 8),
-        fecha: e.entryDate.toISOString().slice(0, 10),
-        concepto: e.description,
-        base: (e as any).items.filter((i: any) => Number(i.debit) > 0).reduce((s: number, i: any) => s + Number(i.debit), 0),
-        iva: 0,
-        total: (e as any).items.filter((i: any) => Number(i.debit) > 0).reduce((s: number, i: any) => s + Number(i.debit), 0),
-      })),
-    };
+    const recibidas = expenses.map((e) => {
+      const debitTotal = (e as any).items
+        .filter((i: any) => Number(i.debit) > 0)
+        .reduce((s: number, i: any) => s + Number(i.debit), 0);
+      return {
+        id: e.id,
+        number: e.reference ?? e.id.slice(0, 8),
+        date: e.entryDate.toISOString().slice(0, 10),
+        supplierName: e.description,
+        subtotal: debitTotal,
+        taxAmount: 0,
+        total: debitTotal,
+      };
+    });
+
+    return { year, emitidas, recibidas };
   }
 
   // ─── Modelo 130 (pago fraccionado IRPF — autonomos) ──────────────────────────
 
-  async getModelo130(companyId: string, year: number, quarter: number) {
-    const qStart = new Date(year, (quarter - 1) * 3, 1);
-    const qEnd = new Date(year, quarter * 3, 0, 23, 59, 59);
+  async getModelo130(companyId: string, year: number, _quarter?: number) {
+    const start = new Date(year, 0, 1);
+    const end = new Date(year, 11, 31, 23, 59, 59);
 
     const invoices = await this.prisma.invoice.findMany({
       where: {
         companyId,
-        issueDate: { gte: qStart, lte: qEnd },
+        issueDate: { gte: start, lte: end },
         status: { notIn: ["DRAFT", "CANCELLED"] },
       },
-      select: { subtotal: true, taxAmount: true, total: true },
+      include: { taxes: true },
     });
 
     const expenses = await this.prisma.journalEntry.findMany({
       where: {
         companyId,
         type: { in: ["MANUAL", "ADJUSTMENT"] },
-        entryDate: { gte: qStart, lte: qEnd },
+        entryDate: { gte: start, lte: end },
       },
       include: { items: { include: { account: { select: { type: true } } } } },
     });
 
-    const revenue = invoices.reduce((s, inv) => s + Number(inv.subtotal), 0);
-    const totalExpenses = expenses.reduce((sum, entry) => {
-      return sum + (entry as any).items
-        .filter((item: any) => Number(item.debit) > 0 && item.account?.type === "EXPENSE")
-        .reduce((s: number, item: any) => s + Number(item.debit), 0);
-    }, 0);
+    const quarters = [0, 1, 2, 3].map((q) => {
+      const qInvoices = invoices.filter((inv) => Math.floor(new Date(inv.issueDate).getMonth() / 3) === q);
+      const qExpenses = expenses.filter((e) => Math.floor(new Date(e.entryDate).getMonth() / 3) === q);
 
-    const netIncome = revenue - totalExpenses;
-    const pagoFraccionado = Math.max(0, netIncome * 0.20);
+      const revenue = qInvoices.reduce((s, inv) => s + Number(inv.subtotal), 0);
+      const expenseTotal = qExpenses.reduce((sum, entry) => {
+        return sum + (entry as any).items
+          .filter((item: any) => Number(item.debit) > 0 && item.account?.type === "EXPENSE")
+          .reduce((s: number, item: any) => s + Number(item.debit), 0);
+      }, 0);
+      const netIncome = revenue - expenseTotal;
+      const irpfAmount = Math.max(0, netIncome * 0.20);
 
-    const prevQuarters = [];
-    for (let q = 1; q < quarter; q++) {
-      const pStart = new Date(year, (q - 1) * 3, 1);
-      const pEnd = new Date(year, q * 3, 0, 23, 59, 59);
-      const pInvoices = await this.prisma.invoice.findMany({
-        where: { companyId, issueDate: { gte: pStart, lte: pEnd }, status: { notIn: ["DRAFT", "CANCELLED"] } },
-        select: { subtotal: true },
-      });
-      const pExpenses = await this.prisma.journalEntry.findMany({
-        where: { companyId, type: { in: ["MANUAL", "ADJUSTMENT"] }, entryDate: { gte: pStart, lte: pEnd } },
-        include: { items: { include: { account: { select: { type: true } } } } },
-      });
-      const pRev = pInvoices.reduce((s, i) => s + Number(i.subtotal), 0);
-      const pExp = pExpenses.reduce((sum, e) => sum + (e as any).items.filter((i: any) => Number(i.debit) > 0 && i.account?.type === "EXPENSE").reduce((s: number, i: any) => s + Number(i.debit), 0), 0);
-      prevQuarters.push({ quarter: q, revenue: pRev, expenses: pExp, netIncome: pRev - pExp });
-    }
+      const retenciones = qInvoices.flatMap((inv) =>
+        (inv.taxes ?? []).filter((t: any) => Number(t.rate) < 0),
+      );
+      const retencionesAmount = retenciones.reduce((s, t: any) => s + Math.abs(Number(t.amount)), 0);
 
-    const ytdNetIncome = netIncome + prevQuarters.reduce((s, q) => s + q.netIncome, 0);
-    const ytdPagoFraccionado = Math.max(0, ytdNetIncome * 0.20);
-    const prevPagos = prevQuarters.reduce((s, q) => s + Math.max(0, q.netIncome * 0.20), 0);
-    const aIngresar = Math.max(0, ytdPagoFraccionado - prevPagos);
-
-    const retenciones = await this.prisma.invoiceTax.findMany({
-      where: {
-        invoice: { companyId, issueDate: { gte: qStart, lte: qEnd }, status: { notIn: ["DRAFT", "CANCELLED"] } },
-        rate: { lt: 0 },
-      },
+      return {
+        quarter: q + 1,
+        label: QUARTER_LABELS[q],
+        revenue: Math.round(revenue * 100) / 100,
+        expenses: Math.round(expenseTotal * 100) / 100,
+        netIncome: Math.round(netIncome * 100) / 100,
+        irpfRate: 20,
+        irpfAmount: Math.round(irpfAmount * 100) / 100,
+        retenciones: Math.round(retencionesAmount * 100) / 100,
+        previousPayments: 0,
+        toPay: Math.round(Math.max(0, irpfAmount - retencionesAmount) * 100) / 100,
+      };
     });
-    const totalRetenciones = retenciones.reduce((s, t) => s + Math.abs(Number(t.amount)), 0);
+
+    // Calculate cumulative previous payments
+    for (let i = 1; i < 4; i++) {
+      quarters[i]!.previousPayments = quarters.slice(0, i).reduce((s, q) => s + q.toPay, 0);
+      const ytdNet = quarters.slice(0, i + 1).reduce((s, q) => s + q.netIncome, 0);
+      const ytdIrpf = Math.max(0, ytdNet * 0.20);
+      const ytdRetenciones = quarters.slice(0, i + 1).reduce((s, q) => s + q.retenciones, 0);
+      quarters[i]!.toPay = Math.round(Math.max(0, ytdIrpf - ytdRetenciones - quarters[i]!.previousPayments) * 100) / 100;
+    }
 
     return {
       year,
-      quarter,
-      label: QUARTER_LABELS[quarter - 1],
-      revenue: Math.round(revenue * 100) / 100,
-      expenses: Math.round(totalExpenses * 100) / 100,
-      netIncome: Math.round(netIncome * 100) / 100,
-      pagoFraccionado20: Math.round(pagoFraccionado * 100) / 100,
-      retencionesYaPracticadas: Math.round(totalRetenciones * 100) / 100,
-      pagosAnteriores: Math.round(prevPagos * 100) / 100,
-      aIngresar: Math.round(Math.max(0, aIngresar - totalRetenciones) * 100) / 100,
+      quarters,
+      yearTotal: {
+        revenue: quarters.reduce((s, q) => s + q.revenue, 0),
+        expenses: quarters.reduce((s, q) => s + q.expenses, 0),
+        netIncome: quarters.reduce((s, q) => s + q.netIncome, 0),
+        toPay: quarters.reduce((s, q) => s + q.toPay, 0),
+      },
     };
   }
 
@@ -386,14 +424,14 @@ export class AccountingService {
   }
 
   async createJournalEntry(companyId: string, data: any) {
-    const { description, reference, entryDate, type, items } = data;
+    const { description, reference, entryDate, date, type, items } = data;
 
     return this.prisma.journalEntry.create({
       data: {
         companyId,
         description,
         reference,
-        entryDate: new Date(entryDate),
+        entryDate: new Date(entryDate || date),
         type: type || "MANUAL",
         items: {
           create: items.map((item: any) => ({
@@ -411,7 +449,7 @@ export class AccountingService {
   async deleteJournalEntry(companyId: string, id: string) {
     const entry = await this.prisma.journalEntry.findFirst({ where: { id, companyId } });
     if (!entry) throw new NotFoundException("Asiento no encontrado");
-    if (entry.isLocked) throw new NotFoundException("El asiento está bloqueado y no puede eliminarse");
+    if (entry.isLocked) throw new NotFoundException("El asiento esta bloqueado");
     return this.prisma.journalEntry.delete({ where: { id } });
   }
 
@@ -424,7 +462,6 @@ export class AccountingService {
     });
 
     if (accounts.length === 0) {
-      // Seed default Spanish PGC accounts
       await this.seedDefaultAccounts(companyId);
       return this.prisma.account.findMany({ where: { companyId }, orderBy: { code: "asc" } });
     }
@@ -436,21 +473,31 @@ export class AccountingService {
     return this.prisma.account.create({ data: { ...data, companyId } });
   }
 
+  async updateAccount(companyId: string, id: string, data: any) {
+    const account = await this.prisma.account.findFirst({ where: { id, companyId } });
+    if (!account) throw new NotFoundException("Cuenta no encontrada");
+    return this.prisma.account.update({ where: { id }, data });
+  }
+
+  async deleteAccount(companyId: string, id: string) {
+    const account = await this.prisma.account.findFirst({ where: { id, companyId } });
+    if (!account) throw new NotFoundException("Cuenta no encontrada");
+    const hasEntries = await this.prisma.journalItem.count({ where: { accountId: id } });
+    if (hasEntries > 0) throw new NotFoundException("La cuenta tiene asientos y no se puede eliminar");
+    return this.prisma.account.delete({ where: { id } });
+  }
+
   private async seedDefaultAccounts(companyId: string) {
     const defaultAccounts = [
-      // Grupo 1 - Financiación básica
       { code: "100", name: "Capital social", type: "EQUITY" },
       { code: "112", name: "Reserva legal", type: "EQUITY" },
       { code: "129", name: "Resultado del ejercicio", type: "EQUITY" },
-      // Grupo 2 - Inmovilizado
       { code: "210", name: "Terrenos y bienes naturales", type: "ASSET" },
       { code: "213", name: "Maquinaria", type: "ASSET" },
       { code: "216", name: "Mobiliario", type: "ASSET" },
-      { code: "217", name: "Equipos para procesos de información", type: "ASSET" },
-      // Grupo 3 - Existencias
-      { code: "300", name: "Mercaderías", type: "ASSET" },
+      { code: "217", name: "Equipos para procesos de informacion", type: "ASSET" },
+      { code: "300", name: "Mercaderias", type: "ASSET" },
       { code: "310", name: "Materias primas", type: "ASSET" },
-      // Grupo 4 - Acreedores y deudores
       { code: "400", name: "Proveedores", type: "LIABILITY" },
       { code: "410", name: "Acreedores varios", type: "LIABILITY" },
       { code: "430", name: "Clientes", type: "ASSET" },
@@ -458,37 +505,39 @@ export class AccountingService {
       { code: "460", name: "Anticipos de remuneraciones", type: "ASSET" },
       { code: "470", name: "HP, deudora por IVA", type: "ASSET" },
       { code: "472", name: "HP, IVA soportado", type: "ASSET" },
-      { code: "477", name: "HP, IVA repercutido", type: "LIABILITY" },
+      { code: "473", name: "HP, retenciones y pagos a cuenta", type: "ASSET" },
       { code: "475", name: "HP, acreedora por conceptos fiscales", type: "LIABILITY" },
-      // Grupo 5 - Cuentas financieras
-      { code: "520", name: "Deudas a corto plazo con entidades de crédito", type: "LIABILITY" },
+      { code: "476", name: "Organismos SS acreedores", type: "LIABILITY" },
+      { code: "477", name: "HP, IVA repercutido", type: "LIABILITY" },
+      { code: "520", name: "Deudas a corto plazo con entidades de credito", type: "LIABILITY" },
       { code: "570", name: "Caja, euros", type: "ASSET" },
-      { code: "572", name: "Bancos e instituciones de crédito", type: "ASSET" },
-      // Grupo 6 - Compras y gastos
-      { code: "600", name: "Compras de mercaderías", type: "EXPENSE" },
+      { code: "572", name: "Bancos e instituciones de credito", type: "ASSET" },
+      { code: "600", name: "Compras de mercaderias", type: "EXPENSE" },
       { code: "620", name: "Gastos en I+D del ejercicio", type: "EXPENSE" },
-      { code: "621", name: "Arrendamientos y cánones", type: "EXPENSE" },
-      { code: "622", name: "Reparaciones y conservación", type: "EXPENSE" },
+      { code: "621", name: "Arrendamientos y canones", type: "EXPENSE" },
+      { code: "622", name: "Reparaciones y conservacion", type: "EXPENSE" },
       { code: "623", name: "Servicios de profesionales independientes", type: "EXPENSE" },
       { code: "624", name: "Transportes", type: "EXPENSE" },
       { code: "625", name: "Primas de seguros", type: "EXPENSE" },
       { code: "626", name: "Servicios bancarios y similares", type: "EXPENSE" },
-      { code: "627", name: "Publicidad, propaganda y relaciones públicas", type: "EXPENSE" },
+      { code: "627", name: "Publicidad, propaganda y relaciones publicas", type: "EXPENSE" },
       { code: "628", name: "Suministros", type: "EXPENSE" },
       { code: "629", name: "Otros servicios", type: "EXPENSE" },
+      { code: "631", name: "Otros tributos", type: "EXPENSE" },
       { code: "640", name: "Sueldos y salarios", type: "EXPENSE" },
       { code: "642", name: "Seguridad Social a cargo de la empresa", type: "EXPENSE" },
+      { code: "649", name: "Otros gastos sociales", type: "EXPENSE" },
       { code: "662", name: "Intereses de deudas", type: "EXPENSE" },
       { code: "668", name: "Diferencias negativas de cambio", type: "EXPENSE" },
-      { code: "690", name: "Pérdidas por deterioro del inmovilizado", type: "EXPENSE" },
-      // Grupo 7 - Ventas e ingresos
-      { code: "700", name: "Ventas de mercaderías", type: "REVENUE" },
+      { code: "680", name: "Amortizacion del inmovilizado intangible", type: "EXPENSE" },
+      { code: "681", name: "Amortizacion del inmovilizado material", type: "EXPENSE" },
+      { code: "700", name: "Ventas de mercaderias", type: "REVENUE" },
       { code: "705", name: "Prestaciones de servicios", type: "REVENUE" },
       { code: "706", name: "Descuentos sobre ventas por pronto pago", type: "REVENUE" },
-      { code: "740", name: "Subvenciones a la explotación", type: "REVENUE" },
-      { code: "751", name: "Resultados de operaciones en común", type: "REVENUE" },
-      { code: "760", name: "Ingresos de participaciones en instrumentos de patrimonio", type: "REVENUE" },
+      { code: "740", name: "Subvenciones a la explotacion", type: "REVENUE" },
+      { code: "760", name: "Ingresos de participaciones", type: "REVENUE" },
       { code: "768", name: "Diferencias positivas de cambio", type: "REVENUE" },
+      { code: "769", name: "Otros ingresos financieros", type: "REVENUE" },
     ];
 
     await this.prisma.account.createMany({

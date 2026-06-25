@@ -23,20 +23,21 @@ import { formatCurrency } from "@/lib/utils";
 import { Plus, Trash2, Loader2 } from "lucide-react";
 import { CurrencySelector } from "./currency-selector";
 import { LanguageSelector } from "./language-selector";
+import { useTranslations } from "next-intl";
 
 const lineSchema = z.object({
   productId: z.string().optional(),
-  description: z.string().min(1, "Descripcion requerida"),
+  description: z.string().min(1),
   quantity: z.coerce.number().min(0.001),
   unitPrice: z.coerce.number().min(0),
   discount: z.coerce.number().min(0).max(100).optional(),
 });
 
 const schema = z.object({
-  clientId: z.string().min(1, "Selecciona un cliente"),
+  clientId: z.string().min(1),
   issueDate: z.string(),
   dueDate: z.string().optional(),
-  items: z.array(lineSchema).min(1, "Anade al menos una linea"),
+  items: z.array(lineSchema).min(1),
   notes: z.string().optional(),
 });
 
@@ -48,6 +49,9 @@ interface InvoiceDialogProps {
 }
 
 export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
+  const t = useTranslations("invoices");
+  const tCommon = useTranslations("common");
+
   const createInvoice = useCreateInvoice();
   const { data: clientsData } = useClients({ limit: 200 } as any);
   const { data: productsData } = useProducts();
@@ -153,36 +157,36 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Nueva factura</DialogTitle>
+          <DialogTitle>{t("form.dialogTitle")}</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* Cliente + Fechas */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="sm:col-span-1 space-y-1.5">
-              <Label>Cliente *</Label>
+              <Label>{t("form.clientRequired")}</Label>
               <select
                 {...register("clientId")}
                 className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
               >
-                <option value="">Seleccionar cliente...</option>
+                <option value="">{t("form.selectClient")}</option>
                 {clients.map((c: any) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
-                    {c.clientType === "PARTICULAR" ? " (particular)" : ""}
+                    {c.clientType === "PARTICULAR" ? ` (${t("form.particular")})` : ""}
                   </option>
                 ))}
               </select>
               {errors.clientId && (
-                <p className="text-xs text-destructive">{errors.clientId.message}</p>
+                <p className="text-xs text-destructive">{t("form.selectClientRequired")}</p>
               )}
             </div>
             <div className="space-y-1.5">
-              <Label>Fecha emision</Label>
+              <Label>{t("form.issueDate")}</Label>
               <Input type="date" {...register("issueDate")} />
             </div>
             <div className="space-y-1.5">
-              <Label>Fecha vencimiento</Label>
+              <Label>{t("form.dueDate")}</Label>
               <Input type="date" {...register("dueDate")} />
             </div>
           </div>
@@ -199,13 +203,13 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
               onChange={setLanguage}
             />
             <div className="space-y-1.5">
-              <Label>Proyecto</Label>
+              <Label>{t("form.project")}</Label>
               <select
                 value={projectId}
                 onChange={(e) => setProjectId(e.target.value)}
                 className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
               >
-                <option value="">Sin proyecto</option>
+                <option value="">{t("form.noProject")}</option>
                 {(Array.isArray(projects) ? projects : []).map((p: any) => (
                   <option key={p.id} value={p.id}>{p.name}</option>
                 ))}
@@ -224,10 +228,10 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
                 className="h-4 w-4 rounded border-input"
               />
               <label htmlFor="apply-irpf" className="text-sm cursor-pointer flex-1">
-                Aplicar retencion IRPF
+                {t("form.applyIrpf")}
                 {selectedClient?.clientType === "PARTICULAR" && (
                   <span className="text-xs text-muted-foreground ml-2">
-                    (no aplica a particulares)
+                    ({t("form.noIrpfParticular")})
                   </span>
                 )}
               </label>
@@ -251,7 +255,7 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
           {/* Lineas */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label>Lineas de factura</Label>
+              <Label>{t("form.invoiceLines")}</Label>
               <Button
                 type="button"
                 variant="outline"
@@ -259,17 +263,17 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
                 onClick={() => append({ description: "", quantity: 1, unitPrice: 0 })}
               >
                 <Plus className="h-3 w-3 mr-1" />
-                Anadir linea
+                {t("form.addLine")}
               </Button>
             </div>
 
             {/* Header */}
             <div className="grid grid-cols-12 gap-2 px-1 text-xs font-medium text-muted-foreground hidden sm:grid">
-              <div className="col-span-4">Descripcion</div>
-              <div className="col-span-2">Producto</div>
-              <div className="col-span-2 text-right">Cantidad</div>
-              <div className="col-span-2 text-right">Precio</div>
-              <div className="col-span-1 text-right">Dto%</div>
+              <div className="col-span-4">{t("form.description")}</div>
+              <div className="col-span-2">{t("form.product")}</div>
+              <div className="col-span-2 text-right">{t("form.quantity")}</div>
+              <div className="col-span-2 text-right">{t("form.price")}</div>
+              <div className="col-span-1 text-right">{t("form.discount")}</div>
               <div className="col-span-1" />
             </div>
 
@@ -278,11 +282,11 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
                 <div className="col-span-12 sm:col-span-4">
                   <Input
                     {...register(`items.${index}.description`)}
-                    placeholder="Descripcion del servicio"
+                    placeholder={t("form.descriptionPlaceholder")}
                   />
                   {errors.items?.[index]?.description && (
                     <p className="text-xs text-destructive mt-0.5">
-                      {errors.items[index]?.description?.message}
+                      {t("form.descriptionRequired")}
                     </p>
                   )}
                 </div>
@@ -292,7 +296,7 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
                     onChange={(e) => handleProductChange(index, e.target.value)}
                     defaultValue=""
                   >
-                    <option value="">-- Producto</option>
+                    <option value="">{t("form.selectProduct")}</option>
                     {products.map((p: any) => (
                       <option key={p.id} value={p.id}>{p.name}</option>
                     ))}
@@ -349,11 +353,11 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
           <div className="flex justify-end">
             <div className="w-full max-w-xs space-y-1.5 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Subtotal</span>
+                <span className="text-muted-foreground">{t("form.subtotal")}</span>
                 <span>{formatCurrency(subtotal, currency)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">IVA 21%</span>
+                <span className="text-muted-foreground">{t("form.vat21")}</span>
                 <span>{formatCurrency(iva, currency)}</span>
               </div>
               {applyIrpf && (
@@ -363,7 +367,7 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
                 </div>
               )}
               <div className="flex justify-between font-semibold text-base border-t border-border pt-1.5">
-                <span>Total</span>
+                <span>{t("form.total")}</span>
                 <span>{formatCurrency(total, currency)}</span>
               </div>
             </div>
@@ -371,10 +375,10 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
 
           {/* Notas */}
           <div className="space-y-1.5">
-            <Label>Notas</Label>
+            <Label>{t("form.notesLabel")}</Label>
             <textarea
               {...register("notes")}
-              placeholder="Condiciones de pago, observaciones..."
+              placeholder={t("form.notesPlaceholder")}
               rows={2}
               className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-none placeholder:text-muted-foreground"
             />
@@ -382,11 +386,11 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
 
           <DialogFooter className="gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancelar
+              {tCommon("cancel")}
             </Button>
             <Button type="submit" disabled={createInvoice.isPending}>
               {createInvoice.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-              Crear factura
+              {t("form.createInvoice")}
             </Button>
           </DialogFooter>
         </form>

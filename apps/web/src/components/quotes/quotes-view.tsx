@@ -123,7 +123,7 @@ export function QuotesView() {
         <div className="relative w-full sm:w-64">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar presupuestos..."
+            placeholder={t("searchPlaceholder")}
             className="pl-9"
             value={search}
             onChange={(e) => {
@@ -146,9 +146,9 @@ export function QuotesView() {
           ) : quotes.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <FileText className="h-10 w-10 text-muted-foreground mb-3" />
-              <p className="font-medium">No hay presupuestos</p>
+              <p className="font-medium">{t("emptyTitle")}</p>
               <p className="text-sm text-muted-foreground mt-1">
-                Los presupuestos enviados a clientes aparecerán aquí
+                {t("emptyDescription")}
               </p>
             </div>
           ) : (
@@ -157,22 +157,22 @@ export function QuotesView() {
                 <thead>
                   <tr className="border-b border-border bg-muted/30">
                     <th className="text-left font-medium text-muted-foreground px-4 py-3">
-                      Número
+                      {t("number")}
                     </th>
                     <th className="text-left font-medium text-muted-foreground px-4 py-3">
-                      Cliente
+                      {t("client")}
                     </th>
                     <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">
-                      Fecha
+                      {t("date")}
                     </th>
                     <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">
-                      Válido hasta
+                      {t("validUntil")}
                     </th>
                     <th className="text-right font-medium text-muted-foreground px-4 py-3">
-                      Importe
+                      {t("amount")}
                     </th>
                     <th className="text-center font-medium text-muted-foreground px-4 py-3">
-                      Estado
+                      {tCommon("status")}
                     </th>
                     <th className="px-4 py-3 w-12" />
                   </tr>
@@ -181,7 +181,7 @@ export function QuotesView() {
                   {quotes.map((q: any, i: number) => {
                     const config =
                       STATUS_CONFIG[q.status] ??
-                      { label: "Borrador", variant: "secondary" as const };
+                      { label: tCommon("draft"), variant: "secondary" as const };
                     return (
                       <motion.tr
                         key={q.id}
@@ -241,25 +241,25 @@ export function QuotesView() {
                                 onClick={async () => {
                                   setPdfLoading(q.id);
                                   try { await downloadQuotePdf(q.id); }
-                                  catch { toast.error("Error al generar PDF"); }
+                                  catch { toast.error(t("pdfError")); }
                                   finally { setPdfLoading(null); }
                                 }}
                               >
                                 <Download className="h-4 w-4 mr-2" />
-                                {pdfLoading === q.id ? "Generando..." : "Descargar PDF"}
+                                {pdfLoading === q.id ? t("generatingPdf") : t("downloadPdf")}
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => sendEmail.mutate(q.id)}
                                 disabled={sendEmail.isPending}
                               >
                                 <Send className="h-4 w-4 mr-2" />
-                                Enviar por email
+                                {t("sendByEmail")}
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => duplicateQuote.mutate(q.id)}
                               >
                                 <Copy className="h-4 w-4 mr-2" />
-                                Duplicar
+                                {t("duplicate")}
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               {q.status === "DRAFT" && (
@@ -269,7 +269,7 @@ export function QuotesView() {
                                   }
                                 >
                                   <Send className="h-4 w-4 mr-2" />
-                                  Marcar como enviado
+                                  {t("markAsSent")}
                                 </DropdownMenuItem>
                               )}
                               {q.status === "SENT" && (
@@ -283,7 +283,7 @@ export function QuotesView() {
                                     }
                                   >
                                     <CheckCircle className="h-4 w-4 mr-2" />
-                                    Marcar como aceptado
+                                    {t("markAsAccepted")}
                                   </DropdownMenuItem>
                                   <DropdownMenuItem
                                     onClick={() =>
@@ -294,7 +294,7 @@ export function QuotesView() {
                                     }
                                   >
                                     <XCircle className="h-4 w-4 mr-2" />
-                                    Marcar como rechazado
+                                    {t("markAsRejected")}
                                   </DropdownMenuItem>
                                 </>
                               )}
@@ -308,7 +308,7 @@ export function QuotesView() {
                                     disabled={convertToInvoice.isPending}
                                   >
                                     <ArrowRight className="h-4 w-4 mr-2" />
-                                    Convertir a factura
+                                    {t("convertToInvoice")}
                                   </DropdownMenuItem>
                                 </>
                               )}
@@ -317,15 +317,13 @@ export function QuotesView() {
                                 className="text-destructive focus:text-destructive"
                                 onClick={() => {
                                   if (
-                                    confirm(
-                                      `¿Eliminar el presupuesto ${q.number}?`
-                                    )
+                                    confirm(t("confirmDelete", { number: q.number }))
                                   )
                                     deleteQuote.mutate(q.id);
                                 }}
                               >
                                 <Trash2 className="h-4 w-4 mr-2" />
-                                Eliminar
+                                {t("deleteAction")}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -344,7 +342,7 @@ export function QuotesView() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between text-sm text-muted-foreground">
           <span>
-            Página {page} de {totalPages}
+            {t("pageOf", { page, totalPages })}
           </span>
           <div className="flex gap-2">
             <Button
@@ -353,7 +351,7 @@ export function QuotesView() {
               disabled={page <= 1}
               onClick={() => setPage((p) => p - 1)}
             >
-              Anterior
+              {tCommon("previous")}
             </Button>
             <Button
               variant="outline"
@@ -361,7 +359,7 @@ export function QuotesView() {
               disabled={page >= totalPages}
               onClick={() => setPage((p) => p + 1)}
             >
-              Siguiente
+              {tCommon("next")}
             </Button>
           </div>
         </div>

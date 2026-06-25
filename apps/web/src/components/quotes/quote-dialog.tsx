@@ -20,20 +20,21 @@ import { useProducts } from "@/hooks/use-products";
 import { useMyCompany } from "@/hooks/use-company";
 import { formatCurrency } from "@/lib/utils";
 import { Plus, Trash2, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const lineSchema = z.object({
   productId: z.string().optional(),
-  description: z.string().min(1, "Descripcion requerida"),
+  description: z.string().min(1),
   quantity: z.coerce.number().min(0.001),
   unitPrice: z.coerce.number().min(0),
   discount: z.coerce.number().min(0).max(100).optional(),
 });
 
 const schema = z.object({
-  clientId: z.string().min(1, "Selecciona un cliente"),
+  clientId: z.string().min(1),
   issueDate: z.string(),
   validUntil: z.string().optional(),
-  items: z.array(lineSchema).min(1, "Anade al menos una linea"),
+  items: z.array(lineSchema).min(1),
   notes: z.string().optional(),
 });
 
@@ -45,6 +46,9 @@ interface QuoteDialogProps {
 }
 
 export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
+  const t = useTranslations("quotes");
+  const tCommon = useTranslations("common");
+
   const createQuote = useCreateQuote();
   const { data: clientsData } = useClients({ limit: 200 } as any);
   const { data: productsData } = useProducts();
@@ -147,38 +151,38 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Nuevo presupuesto</DialogTitle>
+          <DialogTitle>{t("form.dialogTitle")}</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* Cliente + Fechas */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="sm:col-span-1 space-y-1.5">
-              <Label>Cliente *</Label>
+              <Label>{t("form.clientRequired")}</Label>
               <select
                 {...register("clientId")}
                 className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
               >
-                <option value="">Seleccionar cliente...</option>
+                <option value="">{t("form.selectClient")}</option>
                 {clients.map((c: any) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
-                    {c.clientType === "PARTICULAR" ? " (particular)" : ""}
+                    {c.clientType === "PARTICULAR" ? ` (${t("form.particular")})` : ""}
                   </option>
                 ))}
               </select>
               {errors.clientId && (
                 <p className="text-xs text-destructive">
-                  {errors.clientId.message}
+                  {t("form.selectClientRequired")}
                 </p>
               )}
             </div>
             <div className="space-y-1.5">
-              <Label>Fecha emision</Label>
+              <Label>{t("form.issueDate")}</Label>
               <Input type="date" {...register("issueDate")} />
             </div>
             <div className="space-y-1.5">
-              <Label>Valido hasta</Label>
+              <Label>{t("form.validUntil")}</Label>
               <Input type="date" {...register("validUntil")} />
             </div>
           </div>
@@ -194,10 +198,10 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
                 className="h-4 w-4 rounded border-input"
               />
               <label htmlFor="quote-apply-irpf" className="text-sm cursor-pointer flex-1">
-                Incluir retencion IRPF
+                {t("form.applyIrpf")}
                 {selectedClient?.clientType === "PARTICULAR" && (
                   <span className="text-xs text-muted-foreground ml-2">
-                    (no aplica a particulares)
+                    ({t("form.noIrpfParticular")})
                   </span>
                 )}
               </label>
@@ -221,7 +225,7 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
           {/* Lineas */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label>Lineas del presupuesto</Label>
+              <Label>{t("form.quoteLines")}</Label>
               <Button
                 type="button"
                 variant="outline"
@@ -231,16 +235,16 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
                 }
               >
                 <Plus className="h-3 w-3 mr-1" />
-                Anadir linea
+                {t("form.addLine")}
               </Button>
             </div>
 
             <div className="grid grid-cols-12 gap-2 px-1 text-xs font-medium text-muted-foreground hidden sm:grid">
-              <div className="col-span-4">Descripcion</div>
-              <div className="col-span-2">Producto</div>
-              <div className="col-span-2 text-right">Cantidad</div>
-              <div className="col-span-2 text-right">Precio</div>
-              <div className="col-span-1 text-right">Dto%</div>
+              <div className="col-span-4">{t("form.description")}</div>
+              <div className="col-span-2">{t("form.product")}</div>
+              <div className="col-span-2 text-right">{t("form.quantity")}</div>
+              <div className="col-span-2 text-right">{t("form.price")}</div>
+              <div className="col-span-1 text-right">{t("form.discount")}</div>
               <div className="col-span-1" />
             </div>
 
@@ -249,11 +253,11 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
                 <div className="col-span-12 sm:col-span-4">
                   <Input
                     {...register(`items.${index}.description`)}
-                    placeholder="Descripcion del servicio"
+                    placeholder={t("form.descriptionPlaceholder")}
                   />
                   {errors.items?.[index]?.description && (
                     <p className="text-xs text-destructive mt-0.5">
-                      {errors.items[index]?.description?.message}
+                      {t("form.descriptionRequired")}
                     </p>
                   )}
                 </div>
@@ -263,7 +267,7 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
                     onChange={(e) => handleProductChange(index, e.target.value)}
                     defaultValue=""
                   >
-                    <option value="">-- Producto</option>
+                    <option value="">{t("form.selectProduct")}</option>
                     {products.map((p: any) => (
                       <option key={p.id} value={p.id}>
                         {p.name}
@@ -322,11 +326,11 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
           <div className="flex justify-end">
             <div className="w-full max-w-xs space-y-1.5 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Subtotal</span>
+                <span className="text-muted-foreground">{t("form.subtotal")}</span>
                 <span>{formatCurrency(subtotal)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">IVA 21%</span>
+                <span className="text-muted-foreground">{t("form.vat21")}</span>
                 <span>{formatCurrency(iva)}</span>
               </div>
               {applyIrpf && (
@@ -336,7 +340,7 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
                 </div>
               )}
               <div className="flex justify-between font-semibold text-base border-t border-border pt-1.5">
-                <span>Total</span>
+                <span>{t("form.total")}</span>
                 <span>{formatCurrency(total)}</span>
               </div>
             </div>
@@ -344,10 +348,10 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
 
           {/* Notas */}
           <div className="space-y-1.5">
-            <Label>Notas internas</Label>
+            <Label>{t("form.notesLabel")}</Label>
             <textarea
               {...register("notes")}
-              placeholder="Condiciones, observaciones, informacion adicional..."
+              placeholder={t("form.notesPlaceholder")}
               rows={2}
               className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-none placeholder:text-muted-foreground"
             />
@@ -359,13 +363,13 @@ export function QuoteDialog({ open, onOpenChange }: QuoteDialogProps) {
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              Cancelar
+              {tCommon("cancel")}
             </Button>
             <Button type="submit" disabled={createQuote.isPending}>
               {createQuote.isPending && (
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
               )}
-              Crear presupuesto
+              {t("form.createQuote")}
             </Button>
           </DialogFooter>
         </form>

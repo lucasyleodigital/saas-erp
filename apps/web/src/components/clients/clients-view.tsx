@@ -31,12 +31,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { motion, AnimatePresence } from "framer-motion";
-import { LocaleLink as Link } from "@/components/ui/locale-link";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useExport } from "@/hooks/use-export";
 
 export function ClientsView() {
   const t = useTranslations("clients");
+  const tCommon = useTranslations("common");
+
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -58,9 +60,9 @@ export function ClientsView() {
       const result = await generatePortalToken.mutateAsync(clientId);
       const url = `${typeof window !== "undefined" ? window.location.origin : ""}/portal/${result.portalToken}`;
       await navigator.clipboard.writeText(url);
-      toast.success("¡Enlace del portal copiado al portapapeles!");
+      toast.success(t("portalLinkCopied"));
     } catch {
-      toast.error("Error al generar el enlace");
+      toast.error(t("portalLinkError"));
     }
   }
 
@@ -89,7 +91,7 @@ export function ClientsView() {
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={exportClients} disabled={exporting} className="gap-2">
             <Download className="h-4 w-4" />
-            {exporting ? "Exportando..." : "Excel"}
+            {exporting ? tCommon("exporting") : tCommon("export")}
           </Button>
           <Button onClick={handleNew} className="gap-2">
             <Plus className="h-4 w-4" />
@@ -102,7 +104,7 @@ export function ClientsView() {
       <div className="relative w-full max-w-sm">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Buscar por nombre, email, CIF..."
+          placeholder={t("searchPlaceholder")}
           className="pl-9"
           value={search}
           onChange={(e) => {
@@ -126,11 +128,11 @@ export function ClientsView() {
               <div className="h-14 w-14 rounded-full bg-destructive/10 flex items-center justify-center mb-4">
                 <AlertCircle className="h-6 w-6 text-destructive" />
               </div>
-              <p className="font-medium text-destructive">Error al cargar clientes</p>
+              <p className="font-medium text-destructive">{t("errorLoading")}</p>
               <p className="text-sm text-muted-foreground mt-1 mb-2 max-w-md">
                 {(error as any)?.response?.status === 401
-                  ? "Sesion expirada — cierra sesion y vuelve a entrar"
-                  : (error as any)?.message ?? "No se pudo conectar con el servidor"}
+                  ? t("sessionExpired")
+                  : (error as any)?.message ?? t("serverError")}
               </p>
               <p className="text-xs text-muted-foreground font-mono">
                 {(error as any)?.response?.status && `HTTP ${(error as any).response.status}`}
@@ -138,26 +140,26 @@ export function ClientsView() {
               </p>
             </div>
           ) : clients.length === 0 ? (
-            <EmptyState onNew={handleNew} />
+            <EmptyState t={t} onNew={handleNew} />
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border">
                     <th className="text-left font-medium text-muted-foreground px-4 py-3">
-                      Cliente
+                      {t("name")}
                     </th>
                     <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">
-                      Contacto
+                      {t("contact")}
                     </th>
                     <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">
-                      CIF/NIF
+                      {t("cifNif")}
                     </th>
                     <th className="text-right font-medium text-muted-foreground px-4 py-3 hidden xl:table-cell">
-                      Facturado
+                      {t("billed")}
                     </th>
                     <th className="text-right font-medium text-muted-foreground px-4 py-3 hidden xl:table-cell">
-                      Pendiente
+                      {t("pending")}
                     </th>
                     <th className="px-4 py-3 w-12" />
                   </tr>
@@ -230,28 +232,28 @@ export function ClientsView() {
                               <DropdownMenuItem asChild>
                                 <Link href={`/clientes/${client.id}`}>
                                   <Eye className="h-4 w-4 mr-2" />
-                                  Ver detalle
+                                  {t("viewDetail")}
                                 </Link>
                               </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => handleEdit(client)}>
                                 <Edit className="h-4 w-4 mr-2" />
-                                Editar
+                                {t("editAction")}
                               </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => handlePortalLink(client.id)}>
                                 <Globe className="h-4 w-4 mr-2" />
-                                Copiar enlace portal
+                                {t("copyPortalLink")}
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem
                                 className="text-destructive focus:text-destructive"
                                 onClick={() => {
-                                  if (confirm(`¿Eliminar a ${client.name}?`)) {
+                                  if (confirm(t("confirmDelete", { name: client.name }))) {
                                     deleteClient.mutate(client.id);
                                   }
                                 }}
                               >
                                 <Trash2 className="h-4 w-4 mr-2" />
-                                Eliminar
+                                {t("deleteAction")}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -270,7 +272,7 @@ export function ClientsView() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between text-sm text-muted-foreground">
           <span>
-            Página {page} de {totalPages}
+            {t("pageOf", { page, totalPages })}
           </span>
           <div className="flex gap-2">
             <Button
@@ -279,7 +281,7 @@ export function ClientsView() {
               disabled={page <= 1}
               onClick={() => setPage((p) => p - 1)}
             >
-              Anterior
+              {tCommon("previous")}
             </Button>
             <Button
               variant="outline"
@@ -287,7 +289,7 @@ export function ClientsView() {
               disabled={page >= totalPages}
               onClick={() => setPage((p) => p + 1)}
             >
-              Siguiente
+              {tCommon("next")}
             </Button>
           </div>
         </div>
@@ -302,19 +304,19 @@ export function ClientsView() {
   );
 }
 
-function EmptyState({ onNew }: { onNew: () => void }) {
+function EmptyState({ t, onNew }: { t: any; onNew: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
       <div className="h-14 w-14 rounded-full bg-muted flex items-center justify-center mb-4">
         <Search className="h-6 w-6 text-muted-foreground" />
       </div>
-      <p className="font-medium">No hay clientes</p>
+      <p className="font-medium">{t("emptyTitle")}</p>
       <p className="text-sm text-muted-foreground mt-1 mb-4">
-        Empieza añadiendo tu primer cliente
+        {t("emptyDescription")}
       </p>
       <Button onClick={onNew} size="sm">
         <Plus className="h-4 w-4 mr-2" />
-        Añadir cliente
+        {t("emptyAction")}
       </Button>
     </div>
   );

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Body, Param, Query, UseGuards } from "@nestjs/common";
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards } from "@nestjs/common";
 import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
@@ -78,5 +78,15 @@ export class AccountingController {
   @Post("accounts")
   createAccount(@CurrentUser() user: JwtPayload, @Body() body: CreateAccountDto) {
     return this.service.createAccount(user.companyId, body);
+  }
+
+  @Put("accounts/:id")
+  updateAccount(@CurrentUser() user: JwtPayload, @Param("id") id: string, @Body() body: any) {
+    return this.service.updateAccount(user.companyId, id, body);
+  }
+
+  @Delete("accounts/:id")
+  deleteAccount(@CurrentUser() user: JwtPayload, @Param("id") id: string) {
+    return this.service.deleteAccount(user.companyId, id);
   }
 }
