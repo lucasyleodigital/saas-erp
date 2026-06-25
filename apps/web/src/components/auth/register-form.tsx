@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 
-const LOCALES = ["es", "en", "fr", "de", "pt", "it"];
+const LOCALES = ["es", "ca", "eu", "gl", "en"];
 
 const schema = z.object({
   firstName:   z.string().min(1),

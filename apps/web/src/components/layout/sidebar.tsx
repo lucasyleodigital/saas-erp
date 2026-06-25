@@ -44,7 +44,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useUnreadCount } from "@/hooks/use-notifications";
 import { useUser } from "@/hooks/use-user";
 
-const LOCALES = ["es", "en", "fr", "de", "pt", "it"];
+const LOCALES = ["es", "ca", "eu", "gl", "en"];
 
 export function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
@@ -58,7 +58,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
   const locale = LOCALES.includes(segments[1] ?? "") ? segments[1]! : "es";
 
   // Strip locale prefix to compare paths
-  const pathWithoutLocale = pathname.replace(/^\/(es|en|fr|de|pt|it)/, "") || "/";
+  const pathWithoutLocale = pathname.replace(/^\/(es|ca|eu|gl|en)/, "") || "/";
 
   // Nav items defined inside component to use translations
   const navItems = [

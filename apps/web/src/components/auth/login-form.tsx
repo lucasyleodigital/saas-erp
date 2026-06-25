@@ -14,7 +14,7 @@ import { loginAction } from "@/lib/auth";
 import { useAuthStore } from "@/store/auth.store";
 import { api } from "@/lib/api";
 
-const LOCALES = ["es", "en", "fr", "de", "pt", "it"];
+const LOCALES = ["es", "ca", "eu", "gl", "en"];
 
 const schema = z.object({
   email: z.string().email(),
