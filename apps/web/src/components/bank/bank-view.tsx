@@ -169,7 +169,7 @@ function AccountCard({ account }: { account: any }) {
             <input
               ref={fileInputRef}
               type="file"
-              accept=".csv,.ofx,.qif"
+              accept=".csv,.xlsx,.xls,.ofx,.qif"
               onChange={handleFileChange}
               className="hidden"
             />

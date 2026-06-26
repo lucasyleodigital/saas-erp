@@ -141,7 +141,7 @@ const MAIN_FEATURES = [
   {
     icon: Landmark,
     title: "Conciliacion bancaria",
-    desc: "Importa extractos CSV de tu banco y concilia automaticamente con facturas pendientes de cobro.",
+    desc: "Importa extractos CSV o Excel de tu banco y concilia automaticamente con facturas pendientes de cobro.",
     color: "#84cc16",
     bg: "rgba(132,204,22,0.08)",
     border: "rgba(132,204,22,0.2)",
