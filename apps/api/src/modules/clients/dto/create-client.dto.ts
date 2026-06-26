@@ -4,6 +4,7 @@ import {
   IsOptional,
   MaxLength,
   IsBoolean,
+  IsEnum,
 } from "class-validator";
 import { ApiPropertyOptional } from "@nestjs/swagger";
 
@@ -20,6 +21,10 @@ export class CreateClientDto {
   @IsString()
   @MaxLength(20)
   cifNif?: string;
+
+  @IsOptional()
+  @IsEnum(["EMPRESA", "AUTONOMO", "PARTICULAR"])
+  clientType?: "EMPRESA" | "AUTONOMO" | "PARTICULAR";
 
   @IsOptional()
   @IsEmail()
