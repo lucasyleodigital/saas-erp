@@ -951,7 +951,13 @@
     "title": "Jarduera-erregistroa",
     "subtitle": "Sistemako aldaketen historia osoa",
     "noResults": "Erregistrorik gabe",
-    "noResultsDesc": "Ez da auditoria-sarrerarik aurkitu iragazki hauekin"
+    "noResultsDesc": "Ez da auditoria-sarrerarik aurkitu iragazki hauekin",
+    "errorLoading": "Errorea erregistroa kargatzean",
+    "system": "Sistema",
+    "entities": { "all": "Entitate guztiak", "invoices": "Fakturak", "clients": "Bezeroak", "products": "Produktuak", "quotes": "Aurrekontuak", "employees": "Langileak", "projects": "Proiektuak", "deliveryNotes": "Albaranak", "orders": "Eskariak", "suppliers": "Hornitzaileak" },
+    "actions": { "all": "Ekintza guztiak", "create": "Sorrera", "update": "Aldaketa", "delete": "Ezabatzea" },
+    "table": { "user": "Erabiltzailea", "action": "Ekintza", "entity": "Entitatea", "id": "ID", "dateTime": "Data eta ordua" },
+    "detail": { "title": "Aldaketaren xehetasunak", "oldData": "Aurreko datuak", "newData": "Datu berriak", "changes": "Egindako aldaketak" }
   },
   "timeTracking": {
     "title": "Orduen kontrola",

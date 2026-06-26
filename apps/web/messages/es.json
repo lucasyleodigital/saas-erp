@@ -1084,7 +1084,13 @@
     "title": "Registro de actividad",
     "subtitle": "Historial completo de cambios en el sistema",
     "noResults": "Sin registros",
-    "noResultsDesc": "No se encontraron entradas de auditoria con estos filtros"
+    "noResultsDesc": "No se encontraron entradas de auditoria con estos filtros",
+    "errorLoading": "Error al cargar el registro",
+    "system": "Sistema",
+    "entities": { "all": "Todas las entidades", "invoices": "Facturas", "clients": "Clientes", "products": "Productos", "quotes": "Presupuestos", "employees": "Empleados", "projects": "Proyectos", "deliveryNotes": "Albaranes", "orders": "Pedidos", "suppliers": "Proveedores" },
+    "actions": { "all": "Todas las acciones", "create": "Creacion", "update": "Modificacion", "delete": "Eliminacion" },
+    "table": { "user": "Usuario", "action": "Accion", "entity": "Entidad", "id": "ID", "dateTime": "Fecha y hora" },
+    "detail": { "title": "Detalles del cambio", "oldData": "Datos anteriores", "newData": "Datos nuevos", "changes": "Cambios realizados" }
   },
   "timeTracking": {
     "title": "Control de horas",

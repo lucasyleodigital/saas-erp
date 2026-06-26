@@ -1004,7 +1004,13 @@
     "title": "Registre d'activitat",
     "subtitle": "Historial complet de canvis al sistema",
     "noResults": "Sense registres",
-    "noResultsDesc": "No s'han trobat entrades d'auditoria amb aquests filtres"
+    "noResultsDesc": "No s'han trobat entrades d'auditoria amb aquests filtres",
+    "errorLoading": "Error en carregar el registre",
+    "system": "Sistema",
+    "entities": { "all": "Totes les entitats", "invoices": "Factures", "clients": "Clients", "products": "Productes", "quotes": "Pressupostos", "employees": "Empleats", "projects": "Projectes", "deliveryNotes": "Albarans", "orders": "Comandes", "suppliers": "Proveidors" },
+    "actions": { "all": "Totes les accions", "create": "Creacio", "update": "Modificacio", "delete": "Eliminacio" },
+    "table": { "user": "Usuari", "action": "Accio", "entity": "Entitat", "id": "ID", "dateTime": "Data i hora" },
+    "detail": { "title": "Detalls del canvi", "oldData": "Dades anteriors", "newData": "Dades noves", "changes": "Canvis realitzats" }
   },
   "timeTracking": {
     "title": "Control d'hores",

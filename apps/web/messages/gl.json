@@ -898,7 +898,13 @@
     "title": "Rexistro de actividade",
     "subtitle": "Historial completo de cambios no sistema",
     "noResults": "Sen rexistros",
-    "noResultsDesc": "Non se atoparon entradas de auditoria con estes filtros"
+    "noResultsDesc": "Non se atoparon entradas de auditoria con estes filtros",
+    "errorLoading": "Erro ao cargar o rexistro",
+    "system": "Sistema",
+    "entities": { "all": "Todas as entidades", "invoices": "Facturas", "clients": "Clientes", "products": "Produtos", "quotes": "Orzamentos", "employees": "Empregados", "projects": "Proxectos", "deliveryNotes": "Albarans", "orders": "Pedidos", "suppliers": "Provedores" },
+    "actions": { "all": "Todas as accions", "create": "Creacion", "update": "Modificacion", "delete": "Eliminacion" },
+    "table": { "user": "Usuario", "action": "Accion", "entity": "Entidade", "id": "ID", "dateTime": "Data e hora" },
+    "detail": { "title": "Detalles do cambio", "oldData": "Datos anteriores", "newData": "Datos novos", "changes": "Cambios realizados" }
   },
   "timeTracking": {
     "title": "Control de horas",

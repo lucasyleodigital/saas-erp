@@ -1004,7 +1004,13 @@
     "title": "Activity log",
     "subtitle": "Complete history of system changes",
     "noResults": "No records",
-    "noResultsDesc": "No audit entries found with these filters"
+    "noResultsDesc": "No audit entries found with these filters",
+    "errorLoading": "Error loading audit log",
+    "system": "System",
+    "entities": { "all": "All entities", "invoices": "Invoices", "clients": "Clients", "products": "Products", "quotes": "Quotes", "employees": "Employees", "projects": "Projects", "deliveryNotes": "Delivery notes", "orders": "Orders", "suppliers": "Suppliers" },
+    "actions": { "all": "All actions", "create": "Created", "update": "Modified", "delete": "Deleted" },
+    "table": { "user": "User", "action": "Action", "entity": "Entity", "id": "ID", "dateTime": "Date & time" },
+    "detail": { "title": "Change details", "oldData": "Previous data", "newData": "New data", "changes": "Changes made" }
   },
   "timeTracking": {
     "title": "Time tracking",
