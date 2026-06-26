@@ -32,6 +32,32 @@ export function useBankTransactions(accountId: string) {
   });
 }
 
+export function useDeleteTransaction() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ accountId, txId }: { accountId: string; txId: string }) =>
+      api.delete(`/bank/accounts/${accountId}/transactions/${txId}`).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["bank"] });
+      toast.success("Movimiento eliminado");
+    },
+    onError: () => toast.error("Error al eliminar"),
+  });
+}
+
+export function useClearTransactions() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (accountId: string) =>
+      api.delete(`/bank/accounts/${accountId}/transactions`).then((r) => r.data),
+    onSuccess: (data) => {
+      qc.invalidateQueries({ queryKey: ["bank"] });
+      toast.success(`${data.deleted} movimientos eliminados`);
+    },
+    onError: () => toast.error("Error al limpiar movimientos"),
+  });
+}
+
 export function useImportBankStatement() {
   const qc = useQueryClient();
   return useMutation({

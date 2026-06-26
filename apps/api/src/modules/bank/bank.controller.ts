@@ -50,4 +50,21 @@ export class BankController {
     if (!file) throw new BadRequestException("No se ha adjuntado archivo");
     return this.bankService.importStatement(u.companyId, accountId, file.buffer);
   }
+
+  @Delete("accounts/:accountId/transactions/:txId")
+  deleteTransaction(
+    @CurrentUser() u: JwtPayload,
+    @Param("accountId") accountId: string,
+    @Param("txId") txId: string,
+  ) {
+    return this.bankService.deleteTransaction(u.companyId, accountId, txId);
+  }
+
+  @Delete("accounts/:accountId/transactions")
+  clearTransactions(
+    @CurrentUser() u: JwtPayload,
+    @Param("accountId") accountId: string,
+  ) {
+    return this.bankService.clearTransactions(u.companyId, accountId);
+  }
 }

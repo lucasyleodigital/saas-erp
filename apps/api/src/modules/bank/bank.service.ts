@@ -55,6 +55,20 @@ export class BankService {
     return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
   }
 
+  async deleteTransaction(companyId: string, bankAccountId: string, txId: string) {
+    const account = await this.prisma.bankAccount.findFirst({ where: { id: bankAccountId, companyId } });
+    if (!account) throw new BadRequestException("Cuenta no encontrada");
+    await this.prisma.bankTransaction.delete({ where: { id: txId } });
+    return { deleted: true };
+  }
+
+  async clearTransactions(companyId: string, bankAccountId: string) {
+    const account = await this.prisma.bankAccount.findFirst({ where: { id: bankAccountId, companyId } });
+    if (!account) throw new BadRequestException("Cuenta no encontrada");
+    const result = await this.prisma.bankTransaction.deleteMany({ where: { bankAccountId } });
+    return { deleted: result.count };
+  }
+
   async importStatement(
     companyId: string,
     bankAccountId: string,

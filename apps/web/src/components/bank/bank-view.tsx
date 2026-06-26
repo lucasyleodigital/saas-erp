@@ -6,6 +6,8 @@ import {
   useCreateBankAccount,
   useImportBankStatement,
   useBankTransactions,
+  useDeleteTransaction,
+  useClearTransactions,
 } from "@/hooks/use-bank";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -31,6 +33,7 @@ import {
   Clock,
   ArrowUpRight,
   ArrowDownLeft,
+  Trash2,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -135,6 +138,8 @@ function AccountCard({ account }: { account: any }) {
   const importStatement = useImportBankStatement();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [expanded, setExpanded] = useState(false);
+  const deleteTx = useDeleteTransaction();
+  const clearTx = useClearTransactions();
   const { data: txData, isLoading: txLoading } = useBankTransactions(
     expanded ? account.id : ""
   );
@@ -226,6 +231,23 @@ function AccountCard({ account }: { account: any }) {
                 Sin movimientos. Importa un extracto CSV o Excel.
               </div>
             ) : (
+              <>
+              <div className="flex items-center justify-between px-4 py-2 bg-muted/20 border-b">
+                <p className="text-xs text-muted-foreground">{transactions.length} movimientos</p>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs text-destructive hover:text-destructive gap-1 h-7"
+                  onClick={() => {
+                    if (confirm("Eliminar todos los movimientos de esta cuenta?")) {
+                      clearTx.mutate(account.id);
+                    }
+                  }}
+                  disabled={clearTx.isPending}
+                >
+                  <Trash2 className="h-3 w-3" /> Limpiar todo
+                </Button>
+              </div>
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b bg-muted/30">
@@ -233,6 +255,7 @@ function AccountCard({ account }: { account: any }) {
                     <th className="text-left px-4 py-2.5 text-xs font-medium text-muted-foreground">Concepto</th>
                     <th className="text-right px-4 py-2.5 text-xs font-medium text-muted-foreground">Importe</th>
                     <th className="text-center px-4 py-2.5 text-xs font-medium text-muted-foreground">Estado</th>
+                    <th className="w-10" />
                   </tr>
                 </thead>
                 <tbody>
@@ -274,11 +297,22 @@ function AccountCard({ account }: { account: any }) {
                             </span>
                           )}
                         </td>
+                        <td className="px-2 py-2.5">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                            onClick={() => deleteTx.mutate({ accountId: account.id, txId: tx.id })}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </td>
                       </tr>
                     );
                   })}
                 </tbody>
               </table>
+              </>
             )}
           </div>
         )}
