@@ -154,17 +154,28 @@ export class BankService {
   }
 
   private parseStatement(buffer: Buffer): Array<{ date: Date; amount: number; description: string; reference: string }> {
-    const raw = buffer.toString("utf8").trimStart();
-
     let rows: Record<string, any>[];
-    if (raw.startsWith("[") || raw.startsWith("{")) {
-      rows = JSON.parse(raw);
-      if (!Array.isArray(rows)) rows = [rows];
-    } else {
+
+    // Detect file type by magic bytes
+    const isZip = buffer[0] === 0x50 && buffer[1] === 0x4B; // PK (xlsx is a zip)
+    const isXls = buffer[0] === 0xD0 && buffer[1] === 0xCF; // OLE2 (old xls)
+
+    if (isZip || isXls) {
       const wb = XLSX.read(buffer, { type: "buffer", cellDates: true });
       const ws = wb.Sheets[wb.SheetNames[0]!];
       if (!ws) throw new BadRequestException("Hoja vacia");
       rows = XLSX.utils.sheet_to_json(ws, { defval: "" });
+    } else {
+      const raw = buffer.toString("utf8").trimStart();
+      if (raw.startsWith("[") || raw.startsWith("{")) {
+        rows = JSON.parse(raw);
+        if (!Array.isArray(rows)) rows = [rows];
+      } else {
+        const wb = XLSX.read(buffer, { type: "buffer", cellDates: true });
+        const ws = wb.Sheets[wb.SheetNames[0]!];
+        if (!ws) throw new BadRequestException("Hoja vacia");
+        rows = XLSX.utils.sheet_to_json(ws, { defval: "" });
+      }
     }
 
     const AMOUNT_KEYS = ["importe", "amount", "cantidad", "monto", "valor", "debe", "haber", "cargo", "abono"];
