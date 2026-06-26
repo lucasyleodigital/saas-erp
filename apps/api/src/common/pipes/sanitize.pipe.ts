@@ -12,6 +12,7 @@ export class SanitizePipe implements PipeTransform {
   transform(value: any, metadata: ArgumentMetadata) {
     if (metadata.type !== "body" && metadata.type !== "query") return value;
     if (value === null || value === undefined) return value;
+    if (Buffer.isBuffer(value)) return value;
     if (typeof value === "string") return this.sanitizeString(value);
     if (typeof value === "object") return this.sanitizeObject(value);
     return value;
@@ -25,11 +26,14 @@ export class SanitizePipe implements PipeTransform {
   }
 
   private sanitizeObject(obj: any): any {
+    if (Buffer.isBuffer(obj)) return obj;
+    if (ArrayBuffer.isView(obj)) return obj;
+
     if (Array.isArray(obj)) {
       return obj.map((item) =>
         typeof item === "string"
           ? this.sanitizeString(item)
-          : typeof item === "object" && item !== null
+          : typeof item === "object" && item !== null && !Buffer.isBuffer(item)
             ? this.sanitizeObject(item)
             : item
       );
@@ -37,7 +41,9 @@ export class SanitizePipe implements PipeTransform {
 
     const sanitized: any = {};
     for (const [key, val] of Object.entries(obj)) {
-      if (typeof val === "string") {
+      if (Buffer.isBuffer(val) || ArrayBuffer.isView(val)) {
+        sanitized[key] = val;
+      } else if (typeof val === "string") {
         sanitized[key] = this.sanitizeString(val);
       } else if (typeof val === "object" && val !== null) {
         sanitized[key] = this.sanitizeObject(val);

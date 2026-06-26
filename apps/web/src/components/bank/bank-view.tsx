@@ -185,7 +185,7 @@ function AccountCard({ account }: { account: any }) {
               ) : (
                 <Upload className="h-3.5 w-3.5" />
               )}
-              Importar CSV
+              Importar extracto
             </Button>
           </div>
         </div>
