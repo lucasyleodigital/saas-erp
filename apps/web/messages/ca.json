@@ -585,7 +585,17 @@
     "vatReport": "Informe d'IVA",
     "journalEntries": "Llibre diari",
     "accounts": "Pla de comptes",
-    "upgrade": "Actualitza a PRO per accedir a comptabilitat"
+    "upgrade": "Actualitza a PRO per accedir a comptabilitat",
+    "tabs": { "pyl": "Perdues i Guanys", "vat": "IVA Trimestral", "journal": "Llibre Diari", "accounts": "Pla de Comptes", "libro": "Llibre Factures", "modelo130": "Model 130", "modelo347": "Model 347", "retenciones": "Retencions IRPF" },
+    "pyl": { "revenue": "Ingressos", "expenses": "Despeses", "netResult": "Resultat net", "margin": "Marge", "monthlyEvolution": "Evolucio mensual" },
+    "vat": { "base": "Base", "vatRate": "IVA", "annual303": "Total IVA a declarar", "repairHint": "Si l'IVA surt a 0 amb factures existents, prem Reparar", "repairTaxes": "Reparar impostos", "repairing": "Reparant..." },
+    "journal": { "newEntry": "Nou assentament comptable", "dateRequired": "Data *", "descriptionRequired": "Descripcio *", "account": "Compte", "accountPlaceholder": "Compte...", "conceptPlaceholder": "Concepte", "debit": "Deure", "credit": "Haver", "addLine": "Afegir linia", "balanced": "Quadrat", "unbalanced": "Desquadrat", "createEntry": "Crear assentament", "noEntries": "Sense assentaments", "createFirst": "Crea el primer assentament comptable", "entry": "Assentament", "type": "Tipus", "locked": "Bloquejat" },
+    "accounts": { "code": "Codi", "type": "Tipus", "group": "Grup", "empty": "Pla de comptes buit", "emptyHint": "El pla PGC es crea automaticament en registrar el primer assentament" },
+    "libro": { "issued": "Factures Emeses", "received": "Factures Rebudes", "number": "Numero", "client": "Client", "supplier": "Proveidor", "cifNif": "CIF/NIF", "base": "Base" },
+    "modelo130": { "title": "Model 130 - Pagament fraccionat IRPF", "description": "Estimacio directa simplificada. Autonoms obligats a presentar trimestralment.", "revenue": "Ingressos", "expenses": "Despeses", "netIncome": "Rdt. net", "previousPayments": "Pagaments ant.", "toPay": "A ingressar", "totalSubtitle": "Pagaments fraccionats IRPF acumulats" },
+    "modelo347": { "title": "Model 347 - Operacions amb tercers", "description": "Declaracio anual d'operacions superiors a 3.005,06 EUR.", "clientHeader": "Clients", "supplierHeader": "Proveidors", "totalOps": "Total operacions" },
+    "retenciones": { "title": "Retencions IRPF practicades", "description": "Resum de retencions aplicades en factures emeses.", "client": "Client", "base": "Base", "irpfRate": "% IRPF", "retention": "Retencio" },
+    "months": { "jan": "Gen", "feb": "Feb", "mar": "Mar", "apr": "Abr", "may": "Mai", "jun": "Jun", "jul": "Jul", "aug": "Ago", "sep": "Set", "oct": "Oct", "nov": "Nov", "dec": "Des" }
   },
   "inventory": {
     "title": "Inventari",

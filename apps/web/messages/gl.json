@@ -572,7 +572,17 @@
     "vatReport": "Informe de IVE",
     "journalEntries": "Libro diario",
     "accounts": "Plan de contas",
-    "upgrade": "Actualiza a PRO para acceder a contabilidade"
+    "upgrade": "Actualiza a PRO para acceder a contabilidade",
+    "tabs": { "pyl": "Perdas e Ganancias", "vat": "IVE Trimestral", "journal": "Libro Diario", "accounts": "Plan de Contas", "libro": "Libro Facturas", "modelo130": "Modelo 130", "modelo347": "Modelo 347", "retenciones": "Retencions IRPF" },
+    "pyl": { "revenue": "Ingresos", "expenses": "Gastos", "netResult": "Resultado neto", "margin": "Marxe", "monthlyEvolution": "Evolucion mensual" },
+    "vat": { "base": "Base", "vatRate": "IVE", "annual303": "Total IVE a declarar", "repairHint": "Se o IVE sale a 0 con facturas existentes, preme Reparar", "repairTaxes": "Reparar impostos", "repairing": "Reparando..." },
+    "journal": { "newEntry": "Novo asento contable", "dateRequired": "Data *", "descriptionRequired": "Descricion *", "account": "Conta", "accountPlaceholder": "Conta...", "conceptPlaceholder": "Concepto", "debit": "Debe", "credit": "Haber", "addLine": "Engadir lina", "balanced": "Cadrado", "unbalanced": "Descadrado", "createEntry": "Crear asento", "noEntries": "Sen asentos", "createFirst": "Crea o primeiro asento contable", "entry": "Asento", "type": "Tipo", "locked": "Bloqueado" },
+    "accounts": { "code": "Codigo", "type": "Tipo", "group": "Grupo", "empty": "Plan de contas baleiro", "emptyHint": "O plan PGC crease automaticamente ao rexistrar o primeiro asento" },
+    "libro": { "issued": "Facturas Emitidas", "received": "Facturas Recibidas", "number": "Numero", "client": "Cliente", "supplier": "Provedor", "cifNif": "CIF/NIF", "base": "Base" },
+    "modelo130": { "title": "Modelo 130 - Pagamento fraccionado IRPF", "description": "Estimacion directa simplificada. Autonomos obrigados a presentar trimestralmente.", "revenue": "Ingresos", "expenses": "Gastos", "netIncome": "Rto. neto", "previousPayments": "Pagamentos ant.", "toPay": "A ingresar", "totalSubtitle": "Pagamentos fraccionados IRPF acumulados" },
+    "modelo347": { "title": "Modelo 347 - Operacions con terceiros", "description": "Declaracion anual de operacions superiores a 3.005,06 EUR.", "clientHeader": "Clientes", "supplierHeader": "Provedores", "totalOps": "Total operacions" },
+    "retenciones": { "title": "Retencions IRPF practicadas", "description": "Resumo de retencions aplicadas en facturas emitidas.", "client": "Cliente", "base": "Base", "irpfRate": "% IRPF", "retention": "Retencion" },
+    "months": { "jan": "Xan", "feb": "Feb", "mar": "Mar", "apr": "Abr", "may": "Mai", "jun": "Xun", "jul": "Xul", "aug": "Ago", "sep": "Set", "oct": "Out", "nov": "Nov", "dec": "Dec" }
   },
   "inventory": {
     "title": "Inventario",

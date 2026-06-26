@@ -585,7 +585,97 @@
     "vatReport": "Informe de IVA",
     "journalEntries": "Libro diario",
     "accounts": "Plan de cuentas",
-    "upgrade": "Actualiza a PRO para acceder a contabilidad"
+    "upgrade": "Actualiza a PRO para acceder a contabilidad",
+    "tabs": {
+      "pyl": "Perdidas y Ganancias",
+      "vat": "IVA Trimestral",
+      "journal": "Libro Diario",
+      "accounts": "Plan de Cuentas",
+      "libro": "Libro Facturas",
+      "modelo130": "Modelo 130",
+      "modelo347": "Modelo 347",
+      "retenciones": "Retenciones IRPF"
+    },
+    "pyl": {
+      "revenue": "Ingresos",
+      "expenses": "Gastos",
+      "netResult": "Resultado neto",
+      "margin": "Margen",
+      "monthlyEvolution": "Evolucion mensual"
+    },
+    "vat": {
+      "base": "Base",
+      "vatRate": "IVA",
+      "annual303": "Total IVA a declarar",
+      "repairHint": "Si el IVA sale a 0 con facturas existentes, pulsa Reparar",
+      "repairTaxes": "Reparar impuestos",
+      "repairing": "Reparando..."
+    },
+    "journal": {
+      "newEntry": "Nuevo asiento contable",
+      "dateRequired": "Fecha *",
+      "descriptionRequired": "Descripcion *",
+      "account": "Cuenta",
+      "accountPlaceholder": "Cuenta...",
+      "conceptPlaceholder": "Concepto",
+      "debit": "Debe",
+      "credit": "Haber",
+      "addLine": "Anadir linea",
+      "balanced": "Cuadrado",
+      "unbalanced": "Descuadrado",
+      "createEntry": "Crear asiento",
+      "noEntries": "Sin asientos",
+      "createFirst": "Crea el primer asiento contable",
+      "entry": "Asiento",
+      "type": "Tipo",
+      "locked": "Bloqueado"
+    },
+    "accounts": {
+      "code": "Codigo",
+      "type": "Tipo",
+      "group": "Grupo",
+      "empty": "Plan de cuentas vacio",
+      "emptyHint": "El plan PGC se crea automaticamente al registrar el primer asiento"
+    },
+    "libro": {
+      "issued": "Facturas Emitidas",
+      "received": "Facturas Recibidas",
+      "number": "Numero",
+      "client": "Cliente",
+      "supplier": "Proveedor",
+      "cifNif": "CIF/NIF",
+      "base": "Base"
+    },
+    "modelo130": {
+      "title": "Modelo 130 - Pago fraccionado IRPF",
+      "description": "Estimacion directa simplificada. Autonomos obligados a presentar trimestralmente.",
+      "revenue": "Ingresos",
+      "expenses": "Gastos",
+      "netIncome": "Rto. neto",
+      "previousPayments": "Pagos ant.",
+      "toPay": "A ingresar",
+      "totalSubtitle": "Pagos fraccionados IRPF acumulados"
+    },
+    "modelo347": {
+      "title": "Modelo 347 - Operaciones con terceros",
+      "description": "Declaracion anual de operaciones superiores a 3.005,06 EUR.",
+      "clientHeader": "Clientes",
+      "supplierHeader": "Proveedores",
+      "totalOps": "Total operaciones"
+    },
+    "retenciones": {
+      "title": "Retenciones IRPF practicadas",
+      "description": "Resumen de retenciones aplicadas en facturas emitidas.",
+      "client": "Cliente",
+      "base": "Base",
+      "irpfRate": "% IRPF",
+      "retention": "Retencion"
+    },
+    "months": {
+      "jan": "Ene", "feb": "Feb", "mar": "Mar", "apr": "Abr",
+      "may": "May", "jun": "Jun", "jul": "Jul", "aug": "Ago",
+      "sep": "Sep", "oct": "Oct", "nov": "Nov", "dec": "Dic"
+    }
   },
   "inventory": {
     "title": "Inventario",

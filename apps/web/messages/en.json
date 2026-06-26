@@ -585,7 +585,17 @@
     "vatReport": "VAT report",
     "journalEntries": "Journal entries",
     "accounts": "Chart of accounts",
-    "upgrade": "Upgrade to PRO to access accounting"
+    "upgrade": "Upgrade to PRO to access accounting",
+    "tabs": { "pyl": "Profit & Loss", "vat": "Quarterly VAT", "journal": "Journal", "accounts": "Chart of Accounts", "libro": "Invoice Book", "modelo130": "Model 130", "modelo347": "Model 347", "retenciones": "IRPF Withholdings" },
+    "pyl": { "revenue": "Revenue", "expenses": "Expenses", "netResult": "Net result", "margin": "Margin", "monthlyEvolution": "Monthly evolution" },
+    "vat": { "base": "Base", "vatRate": "VAT", "annual303": "Total VAT to declare", "repairHint": "If VAT shows 0 with existing invoices, click Repair", "repairTaxes": "Repair taxes", "repairing": "Repairing..." },
+    "journal": { "newEntry": "New journal entry", "dateRequired": "Date *", "descriptionRequired": "Description *", "account": "Account", "accountPlaceholder": "Account...", "conceptPlaceholder": "Concept", "debit": "Debit", "credit": "Credit", "addLine": "Add line", "balanced": "Balanced", "unbalanced": "Unbalanced", "createEntry": "Create entry", "noEntries": "No entries", "createFirst": "Create the first journal entry", "entry": "Entry", "type": "Type", "locked": "Locked" },
+    "accounts": { "code": "Code", "type": "Type", "group": "Group", "empty": "Empty chart of accounts", "emptyHint": "The PGC chart is created automatically when registering the first entry" },
+    "libro": { "issued": "Issued Invoices", "received": "Received Invoices", "number": "Number", "client": "Client", "supplier": "Supplier", "cifNif": "Tax ID", "base": "Base" },
+    "modelo130": { "title": "Model 130 - IRPF instalment", "description": "Simplified direct estimation. Self-employed quarterly filing.", "revenue": "Revenue", "expenses": "Expenses", "netIncome": "Net income", "previousPayments": "Previous payments", "toPay": "To pay", "totalSubtitle": "Accumulated IRPF instalments" },
+    "modelo347": { "title": "Model 347 - Third-party operations", "description": "Annual declaration of operations over 3,005.06 EUR.", "clientHeader": "Clients", "supplierHeader": "Suppliers", "totalOps": "Total operations" },
+    "retenciones": { "title": "IRPF withholdings applied", "description": "Summary of withholdings on issued invoices.", "client": "Client", "base": "Base", "irpfRate": "IRPF %", "retention": "Withholding" },
+    "months": { "jan": "Jan", "feb": "Feb", "mar": "Mar", "apr": "Apr", "may": "May", "jun": "Jun", "jul": "Jul", "aug": "Aug", "sep": "Sep", "oct": "Oct", "nov": "Nov", "dec": "Dec" }
   },
   "inventory": {
     "title": "Inventory",

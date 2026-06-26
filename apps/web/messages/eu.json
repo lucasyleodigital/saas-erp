@@ -585,7 +585,17 @@
     "vatReport": "BEZ txostena",
     "journalEntries": "Eguneroko liburua",
     "accounts": "Kontu-plana",
-    "upgrade": "Eguneratu PRO planera kontabilitaterako"
+    "upgrade": "Eguneratu PRO planera kontabilitaterako",
+    "tabs": { "pyl": "Galera eta Irabaziak", "vat": "BEZ Hiruhilekoa", "journal": "Eguneroko Liburua", "accounts": "Kontu-plana", "libro": "Faktura Liburua", "modelo130": "130 Eredua", "modelo347": "347 Eredua", "retenciones": "PFEZ Atxikipenak" },
+    "pyl": { "revenue": "Diru-sarrerak", "expenses": "Gastuak", "netResult": "Emaitza garbia", "margin": "Marjina", "monthlyEvolution": "Hileko bilakaera" },
+    "vat": { "base": "Oinarria", "vatRate": "BEZ", "annual303": "Deklaratzeko BEZ guztira", "repairHint": "BEZ 0 agertzen bada faktura existenteekin, sakatu Konpondu", "repairTaxes": "Zergak konpondu", "repairing": "Konpontzen..." },
+    "journal": { "newEntry": "Kontabilitate-idazpen berria", "dateRequired": "Data *", "descriptionRequired": "Deskribapena *", "account": "Kontua", "accountPlaceholder": "Kontua...", "conceptPlaceholder": "Kontzeptua", "debit": "Zorra", "credit": "Hartzekoena", "addLine": "Lerroa gehitu", "balanced": "Orekatuta", "unbalanced": "Desorekeatuta", "createEntry": "Idazpena sortu", "noEntries": "Idazpenik ez", "createFirst": "Sortu lehen kontabilitate-idazpena", "entry": "Idazpena", "type": "Mota", "locked": "Blokeatuta" },
+    "accounts": { "code": "Kodea", "type": "Mota", "group": "Taldea", "empty": "Kontu-plana hutsik", "emptyHint": "PGC plana automatikoki sortzen da lehen idazpena erregistratzean" },
+    "libro": { "issued": "Emandako Fakturak", "received": "Jasotako Fakturak", "number": "Zenbakia", "client": "Bezeroa", "supplier": "Hornitzailea", "cifNif": "IFK/NAN", "base": "Oinarria" },
+    "modelo130": { "title": "130 Eredua - PFEZ zatikako ordainketa", "description": "Estimazio zuzen sinplifikatua. Autonomoek hiruhilero aurkeztu behar dute.", "revenue": "Diru-sarrerak", "expenses": "Gastuak", "netIncome": "Errendimendu garbia", "previousPayments": "Aurreko ordainketak", "toPay": "Ordaintzeko", "totalSubtitle": "Metatutako PFEZ zatikako ordainketak" },
+    "modelo347": { "title": "347 Eredua - Hirugarrenekin eragiketak", "description": "3.005,06 EUR gainetiko eragiketen urteko adierazpena.", "clientHeader": "Bezeroak", "supplierHeader": "Hornitzaileak", "totalOps": "Eragiketa guztira" },
+    "retenciones": { "title": "Praktikatutako PFEZ atxikipenak", "description": "Emandako fakturetan aplikatutako atxikipenen laburpena.", "client": "Bezeroa", "base": "Oinarria", "irpfRate": "PFEZ %", "retention": "Atxikipena" },
+    "months": { "jan": "Urt", "feb": "Ots", "mar": "Mar", "apr": "Api", "may": "Mai", "jun": "Eka", "jul": "Uzt", "aug": "Abu", "sep": "Ira", "oct": "Urr", "nov": "Aza", "dec": "Abe" }
   },
   "inventory": {
     "title": "Inbentarioa",
