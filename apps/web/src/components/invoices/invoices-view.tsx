@@ -105,12 +105,12 @@ export function InvoicesView() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">{t("title")}</h1>
+          <h1 className="text-xl sm:text-2xl font-bold">{t("title")}</h1>
           <p className="text-sm text-muted-foreground mt-1">{t("subtitle")}</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <Button variant="outline" size="sm" onClick={exportInvoices} disabled={exporting} className="gap-2">
             <Download className="h-4 w-4" />
             {exporting ? tCommon("exporting") : tCommon("export")}

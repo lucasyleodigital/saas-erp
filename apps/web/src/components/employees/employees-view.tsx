@@ -71,7 +71,7 @@ export function EmployeesView() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Users className="h-6 w-6 text-primary" />
@@ -96,7 +96,7 @@ export function EmployeesView() {
                 <Users className="h-4 w-4 text-primary" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{stats.active}</p>
+                <p className="text-xl sm:text-2xl font-bold">{stats.active}</p>
                 <p className="text-xs text-muted-foreground">{t("active")}</p>
               </div>
             </CardContent>
@@ -107,7 +107,7 @@ export function EmployeesView() {
                 <CalendarOff className="h-4 w-4 text-amber-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{stats.pendingLeaves}</p>
+                <p className="text-xl sm:text-2xl font-bold">{stats.pendingLeaves}</p>
                 <p className="text-xs text-muted-foreground">{t("pendingLeaves")}</p>
               </div>
             </CardContent>

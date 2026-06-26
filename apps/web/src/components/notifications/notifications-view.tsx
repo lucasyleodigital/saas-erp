@@ -50,7 +50,7 @@ export function NotificationsView() {
   return (
     <div className="space-y-5 max-w-2xl">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             {t("title")}

@@ -56,7 +56,7 @@ function ResultCard({ result, onClear, entityHref, entityLabel }: { result: Impo
   return (
     <div className="space-y-3">
       <div className="grid grid-cols-3 gap-3">
-        <Card><CardContent className="p-4 text-center"><p className="text-2xl font-bold">{result.total}</p><p className="text-xs text-muted-foreground mt-0.5">Total filas</p></CardContent></Card>
+        <Card><CardContent className="p-4 text-center"><p className="text-xl sm:text-2xl font-bold">{result.total}</p><p className="text-xs text-muted-foreground mt-0.5">Total filas</p></CardContent></Card>
         <Card className="border-emerald-200 dark:border-emerald-800"><CardContent className="p-4 text-center"><p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 flex items-center justify-center gap-1"><CheckCircle2 className="h-5 w-5" />{result.inserted}</p><p className="text-xs text-muted-foreground mt-0.5">Importados</p></CardContent></Card>
         <Card className={hasErrors ? "border-red-200 dark:border-red-800" : "border-amber-200 dark:border-amber-800"}>
           <CardContent className="p-4 text-center">

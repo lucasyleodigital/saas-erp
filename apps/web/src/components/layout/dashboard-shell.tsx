@@ -34,7 +34,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       <div className="flex flex-1 flex-col overflow-hidden min-w-0">
         <RouteProgress />
         <Header onMenuClick={openMenu} />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 scrollbar-thin">
+        <main className="flex-1 overflow-y-auto px-3 py-4 sm:px-4 md:px-6 md:py-6 scrollbar-thin">
           {children}
         </main>
       </div>
