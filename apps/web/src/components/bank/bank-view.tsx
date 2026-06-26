@@ -5,6 +5,7 @@ import {
   useBankAccounts,
   useCreateBankAccount,
   useImportBankStatement,
+  useBankTransactions,
 } from "@/hooks/use-bank";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,12 @@ import {
   Plus,
   CreditCard,
   Loader2,
+  ChevronDown,
+  ChevronUp,
+  CheckCircle,
+  Clock,
+  ArrowUpRight,
+  ArrowDownLeft,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -127,6 +134,12 @@ function CreateAccountDialog({
 function AccountCard({ account }: { account: any }) {
   const importStatement = useImportBankStatement();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [expanded, setExpanded] = useState(false);
+  const { data: txData, isLoading: txLoading } = useBankTransactions(
+    expanded ? account.id : ""
+  );
+
+  const transactions: any[] = txData?.data ?? [];
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -160,12 +173,12 @@ function AccountCard({ account }: { account: any }) {
           </p>
         </div>
       </CardHeader>
-      <CardContent className="pt-0">
+      <CardContent className="pt-0 space-y-3">
         <div className="flex items-center justify-between">
           <p className="text-xs text-muted-foreground font-mono">
             {account.iban}
           </p>
-          <div>
+          <div className="flex gap-2">
             <input
               ref={fileInputRef}
               type="file"
@@ -187,8 +200,88 @@ function AccountCard({ account }: { account: any }) {
               )}
               Importar extracto
             </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-1"
+              onClick={() => setExpanded(!expanded)}
+            >
+              {expanded ? (
+                <><ChevronUp className="h-3.5 w-3.5" /> Ocultar</>
+              ) : (
+                <><ChevronDown className="h-3.5 w-3.5" /> Movimientos</>
+              )}
+            </Button>
           </div>
         </div>
+
+        {expanded && (
+          <div className="border rounded-lg overflow-hidden">
+            {txLoading ? (
+              <div className="p-8 flex justify-center">
+                <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              </div>
+            ) : transactions.length === 0 ? (
+              <div className="p-8 text-center text-sm text-muted-foreground">
+                Sin movimientos. Importa un extracto CSV o Excel.
+              </div>
+            ) : (
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b bg-muted/30">
+                    <th className="text-left px-4 py-2.5 text-xs font-medium text-muted-foreground">Fecha</th>
+                    <th className="text-left px-4 py-2.5 text-xs font-medium text-muted-foreground">Concepto</th>
+                    <th className="text-right px-4 py-2.5 text-xs font-medium text-muted-foreground">Importe</th>
+                    <th className="text-center px-4 py-2.5 text-xs font-medium text-muted-foreground">Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {transactions.map((tx: any) => {
+                    const amount = Number(tx.amount);
+                    const isIncome = amount > 0;
+                    return (
+                      <tr key={tx.id} className="border-b last:border-0 hover:bg-muted/20 transition-colors">
+                        <td className="px-4 py-2.5 text-muted-foreground text-xs">
+                          {new Date(tx.date).toLocaleDateString("es-ES")}
+                        </td>
+                        <td className="px-4 py-2.5">
+                          <div className="flex items-center gap-2">
+                            {isIncome ? (
+                              <ArrowDownLeft className="h-3.5 w-3.5 text-green-600 shrink-0" />
+                            ) : (
+                              <ArrowUpRight className="h-3.5 w-3.5 text-red-500 shrink-0" />
+                            )}
+                            <span className="truncate max-w-xs">{tx.description}</span>
+                          </div>
+                          {tx.reference && (
+                            <p className="text-xs text-muted-foreground mt-0.5 pl-5">{tx.reference}</p>
+                          )}
+                        </td>
+                        <td className={cn(
+                          "px-4 py-2.5 text-right font-semibold tabular-nums",
+                          isIncome ? "text-green-600" : "text-red-500"
+                        )}>
+                          {isIncome ? "+" : ""}{formatCurrency(amount)}
+                        </td>
+                        <td className="px-4 py-2.5 text-center">
+                          {tx.isReconciled ? (
+                            <span className="inline-flex items-center gap-1 text-xs text-green-700 bg-green-100 rounded-full px-2 py-0.5">
+                              <CheckCircle className="h-3 w-3" /> Conciliado
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 text-xs text-amber-700 bg-amber-100 rounded-full px-2 py-0.5">
+                              <Clock className="h-3 w-3" /> Pendiente
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            )}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

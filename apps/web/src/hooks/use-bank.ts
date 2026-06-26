@@ -23,6 +23,15 @@ export function useCreateBankAccount() {
   });
 }
 
+export function useBankTransactions(accountId: string) {
+  return useQuery({
+    queryKey: ["bank", "transactions", accountId],
+    queryFn: () => api.get(`/bank/accounts/${accountId}/transactions`, { params: { limit: 100 } }).then((r) => r.data),
+    enabled: !!accountId,
+    refetchOnMount: true,
+  });
+}
+
 export function useImportBankStatement() {
   const qc = useQueryClient();
   return useMutation({
