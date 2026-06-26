@@ -222,6 +222,8 @@ export class InvoicesService {
       }),
     ]);
 
+    this.updateClientBillingTotals(companyId, dto.clientId).catch(() => {});
+
     this.automations.trigger(companyId, "INVOICE_CREATED", {
       invoiceNumber: invoice.number,
       clientEmail:   (invoice as any).client?.email ?? "",
@@ -286,6 +288,8 @@ export class InvoicesService {
       oldData: { status: invoice.status, paidAmount: invoice.paidAmount },
       newData: { status: newStatus, paidAmount: newPaid },
     }).catch(() => {});
+
+    this.updateClientBillingTotals(companyId, invoice.clientId).catch(() => {});
 
     if (newStatus === "PAID") {
       this.automations.trigger(companyId, "INVOICE_PAID", {
@@ -437,5 +441,26 @@ export class InvoicesService {
     }
     this.verifactu.generateForInvoice(companyId, id, true).catch(() => {});
     return { sent: true, to: clientEmail };
+  }
+
+  private async updateClientBillingTotals(companyId: string, clientId: string) {
+    const [billed, pending] = await Promise.all([
+      this.prisma.invoice.aggregate({
+        where: { companyId, clientId, status: { notIn: ["DRAFT", "CANCELLED"] } },
+        _sum: { total: true },
+      }),
+      this.prisma.invoice.aggregate({
+        where: { companyId, clientId, status: { in: ["SENT", "PARTIAL", "OVERDUE"] } },
+        _sum: { total: true },
+      }),
+    ]);
+
+    await this.prisma.client.update({
+      where: { id: clientId },
+      data: {
+        totalBilled: billed._sum.total ?? 0,
+        pendingBalance: pending._sum.total ?? 0,
+      },
+    });
   }
 }
