@@ -51,18 +51,28 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { formatCurrency } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 
-const _STATUS = {
-  PENDING:   { label: "Pendiente",  color: "bg-yellow-100 text-yellow-700" },
-  CONFIRMED: { label: "Confirmado", color: "bg-blue-100 text-blue-700" },
-  SHIPPED:   { label: "Enviado",    color: "bg-purple-100 text-purple-700" },
-  DELIVERED: { label: "Entregado",  color: "bg-green-100 text-green-700" },
-  CANCELLED: { label: "Cancelado",  color: "bg-gray-100 text-gray-500" },
+const STATUS_COLORS: Record<string, string> = {
+  PENDING: "bg-yellow-100 text-yellow-700",
+  CONFIRMED: "bg-blue-100 text-blue-700",
+  SHIPPED: "bg-purple-100 text-purple-700",
+  DELIVERED: "bg-green-100 text-green-700",
+  CANCELLED: "bg-gray-100 text-gray-500",
 };
-const STATUS = _STATUS as Record<string, { label: string; color: string }>;
-function getStatus(s: string) { return STATUS[s] ?? _STATUS.PENDING; }
+function getStatusColor(s: string) { return STATUS_COLORS[s] ?? STATUS_COLORS.PENDING; }
 
 export function OrdersView() {
   const t = useTranslations("orders");
+  const tCommon = useTranslations("common");
+
+  const STATUS_LABELS: Record<string, string> = {
+    PENDING: t("status.pending"),
+    CONFIRMED: t("status.confirmed"),
+    SHIPPED: t("status.shipped"),
+    DELIVERED: t("status.delivered"),
+    CANCELLED: t("status.cancelled"),
+  };
+  function getStatusLabel(s: string) { return STATUS_LABELS[s] ?? STATUS_LABELS.PENDING; }
+
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [page, setPage] = useState(1);
@@ -82,12 +92,12 @@ export function OrdersView() {
   const totalPages = data?.totalPages ?? 1;
 
   async function handleConvert(id: string, number: string) {
-    if (!confirm(`¿Convertir pedido ${number} en albarán?`)) return;
+    if (!confirm(t("confirmConvert", { number }))) return;
     try {
       const dn = await convertOrder.mutateAsync(id);
-      toast.success(`Albarán ${dn.number} creado`);
+      toast.success(t("convertSuccess", { number: dn.number }));
     } catch {
-      toast.error("Error al convertir el pedido");
+      toast.error(t("convertError"));
     }
   }
 
@@ -116,15 +126,15 @@ export function OrdersView() {
         </div>
         <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v === "ALL" ? "" : v); setPage(1); }}>
           <SelectTrigger className="w-40">
-            <SelectValue placeholder="Estado" />
+            <SelectValue placeholder={tCommon("status")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ALL">Todos</SelectItem>
-            <SelectItem value="PENDING">Pendiente</SelectItem>
-            <SelectItem value="CONFIRMED">Confirmado</SelectItem>
-            <SelectItem value="SHIPPED">Enviado</SelectItem>
-            <SelectItem value="DELIVERED">Entregado</SelectItem>
-            <SelectItem value="CANCELLED">Cancelado</SelectItem>
+            <SelectItem value="ALL">{tCommon("all")}</SelectItem>
+            <SelectItem value="PENDING">{t("status.pending")}</SelectItem>
+            <SelectItem value="CONFIRMED">{t("status.confirmed")}</SelectItem>
+            <SelectItem value="SHIPPED">{t("status.shipped")}</SelectItem>
+            <SelectItem value="DELIVERED">{t("status.delivered")}</SelectItem>
+            <SelectItem value="CANCELLED">{t("status.cancelled")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -144,18 +154,19 @@ export function OrdersView() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border">
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3">Número</th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3">Cliente</th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3">Estado</th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">Fecha</th>
-                    <th className="text-right font-medium text-muted-foreground px-4 py-3">Total</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3">{t("number")}</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3">{t("client")}</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3">{tCommon("status")}</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">{tCommon("date")}</th>
+                    <th className="text-right font-medium text-muted-foreground px-4 py-3">{tCommon("total")}</th>
                     <th className="px-4 py-3 w-12" />
                   </tr>
                 </thead>
                 <tbody>
                   <AnimatePresence>
                     {orders.map((order, i) => {
-                      const cfg = getStatus(order.status);
+                      const cfgColor = getStatusColor(order.status);
+                      const cfgLabel = getStatusLabel(order.status);
                       return (
                         <motion.tr
                           key={order.id}
@@ -167,7 +178,7 @@ export function OrdersView() {
                           <td className="px-4 py-3 font-mono font-medium">{order.number}</td>
                           <td className="px-4 py-3">{(order as any).client?.name ?? "—"}</td>
                           <td className="px-4 py-3">
-                            <Badge className={cfg.color}>{cfg.label}</Badge>
+                            <Badge className={cfgColor}>{cfgLabel}</Badge>
                           </td>
                           <td className="px-4 py-3 hidden md:table-cell text-muted-foreground">
                             {new Date(order.issueDate).toLocaleDateString("es-ES")}
@@ -186,19 +197,19 @@ export function OrdersView() {
                                 {!order.convertedToDeliveryNoteId && order.status !== "CANCELLED" && (
                                   <DropdownMenuItem onClick={() => handleConvert(order.id, order.number)}>
                                     <FileText className="h-4 w-4 mr-2" />
-                                    Crear albarán
+                                    {t("createDeliveryNote")}
                                   </DropdownMenuItem>
                                 )}
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                   className="text-destructive focus:text-destructive"
                                   onClick={() => {
-                                    if (confirm(`¿Eliminar pedido ${order.number}?`)) {
+                                    if (confirm(t("confirmDelete", { number: order.number }))) {
                                       deleteOrder.mutate(order.id);
                                     }
                                   }}
                                 >
-                                  <Trash2 className="h-4 w-4 mr-2" />Eliminar
+                                  <Trash2 className="h-4 w-4 mr-2" />{tCommon("delete")}
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
@@ -216,10 +227,10 @@ export function OrdersView() {
 
       {totalPages > 1 && (
         <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <span>Página {page} de {totalPages}</span>
+          <span>{t("pageOf", { page, totalPages })}</span>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>Anterior</Button>
-            <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>Siguiente</Button>
+            <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>{tCommon("previous")}</Button>
+            <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>{tCommon("next")}</Button>
           </div>
         </div>
       )}
@@ -230,6 +241,8 @@ export function OrdersView() {
 }
 
 function OrderDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
+  const t = useTranslations("orders");
+  const tCommon = useTranslations("common");
   const createOrder = useCreateOrder();
   const { data: clientsData } = useClients({ limit: 100 });
   const { data: productsData } = useProducts();
@@ -269,8 +282,8 @@ function OrderDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: 
   }, 0);
 
   async function handleSubmit() {
-    if (!clientId) return toast.error("Selecciona un cliente");
-    if (!items.some((i) => i.description)) return toast.error("Añade al menos una línea");
+    if (!clientId) return toast.error(t("form.selectClientRequired"));
+    if (!items.some((i) => i.description)) return toast.error(t("form.addLineRequired"));
     try {
       await createOrder.mutateAsync({
         clientId,
@@ -280,10 +293,10 @@ function OrderDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: 
           productId: i.productId || null,
         })),
       } as any);
-      toast.success("Pedido creado");
+      toast.success(t("form.createSuccess"));
       onOpenChange(false);
     } catch {
-      toast.error("Error al crear el pedido");
+      toast.error(t("form.createError"));
     }
   }
 
@@ -291,14 +304,14 @@ function OrderDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Nuevo pedido</DialogTitle>
+          <DialogTitle>{t("form.dialogTitle")}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 mt-2">
           <div className="space-y-1">
-            <Label>Cliente *</Label>
+            <Label>{t("form.client")}</Label>
             <Select value={clientId} onValueChange={setClientId}>
               <SelectTrigger>
-                <SelectValue placeholder="Seleccionar cliente..." />
+                <SelectValue placeholder={t("form.selectClient")} />
               </SelectTrigger>
               <SelectContent>
                 {clients.map((c: any) => (
@@ -310,9 +323,9 @@ function OrderDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: 
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <Label>Líneas</Label>
+              <Label>{t("form.lines")}</Label>
               <Button type="button" variant="outline" size="sm" onClick={addItem}>
-                <Plus className="h-3 w-3 mr-1" />Añadir línea
+                <Plus className="h-3 w-3 mr-1" />{t("form.addLine")}
               </Button>
             </div>
             <div className="space-y-2">
@@ -321,7 +334,7 @@ function OrderDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: 
                   <div className="col-span-4">
                     <Select value={item.productId} onValueChange={(v) => setItem(i, "productId", v)}>
                       <SelectTrigger className="h-8 text-xs">
-                        <SelectValue placeholder="Producto..." />
+                        <SelectValue placeholder={t("form.product")} />
                       </SelectTrigger>
                       <SelectContent>
                         {products.map((p: any) => (
@@ -331,7 +344,7 @@ function OrderDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: 
                     </Select>
                     <Input
                       className="h-8 text-xs mt-1"
-                      placeholder="Descripción *"
+                      placeholder={t("form.description")}
                       value={item.description}
                       onChange={(e) => setItem(i, "description", e.target.value)}
                     />
@@ -340,7 +353,7 @@ function OrderDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: 
                     <Input
                       className="h-8 text-xs"
                       type="number"
-                      placeholder="Qty"
+                      placeholder={t("form.quantity")}
                       value={item.quantity}
                       onChange={(e) => setItem(i, "quantity", Number(e.target.value))}
                     />
@@ -349,7 +362,7 @@ function OrderDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: 
                     <Input
                       className="h-8 text-xs"
                       type="number"
-                      placeholder="Precio"
+                      placeholder={t("form.price")}
                       value={item.unitPrice}
                       onChange={(e) => setItem(i, "unitPrice", Number(e.target.value))}
                     />
@@ -358,7 +371,7 @@ function OrderDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: 
                     <Input
                       className="h-8 text-xs"
                       type="number"
-                      placeholder="IVA %"
+                      placeholder={t("form.taxRate")}
                       value={item.taxRate}
                       onChange={(e) => setItem(i, "taxRate", Number(e.target.value))}
                     />
@@ -381,19 +394,19 @@ function OrderDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: 
           </div>
 
           <div className="space-y-1">
-            <Label>Notas</Label>
-            <Input value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Notas internas..." />
+            <Label>{tCommon("notes")}</Label>
+            <Input value={notes} onChange={(e) => setNotes(e.target.value)} placeholder={t("form.notesPlaceholder")} />
           </div>
 
           <div className="flex justify-between items-center border-t pt-3">
-            <span className="text-sm text-muted-foreground">Total estimado</span>
+            <span className="text-sm text-muted-foreground">{t("form.estimatedTotal")}</span>
             <span className="font-bold text-lg">{formatCurrency(total)}</span>
           </div>
 
           <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+            <Button variant="outline" onClick={() => onOpenChange(false)}>{tCommon("cancel")}</Button>
             <Button disabled={createOrder.isPending} onClick={handleSubmit}>
-              {createOrder.isPending ? "Creando..." : "Crear pedido"}
+              {createOrder.isPending ? t("form.creating") : t("form.createOrder")}
             </Button>
           </div>
         </div>

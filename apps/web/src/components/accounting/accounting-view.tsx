@@ -43,6 +43,8 @@ function JournalEntryDialog({
 }: {
   open: boolean; onOpenChange: (o: boolean) => void; accounts: any[];
 }) {
+  const t = useTranslations("accounting");
+  const tCommon = useTranslations("common");
   const create = useCreateJournalEntry();
   const {
     register, handleSubmit, control, watch, reset, formState: { errors },
@@ -72,16 +74,16 @@ function JournalEntryDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Nuevo asiento contable</DialogTitle>
+          <DialogTitle>{t("journal.newEntry")}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label>Fecha *</Label>
+              <Label>{t("journal.dateRequired")}</Label>
               <Input type="date" {...register("date")} />
             </div>
             <div className="space-y-1.5">
-              <Label>Descripción *</Label>
+              <Label>{t("journal.descriptionRequired")}</Label>
               <Input {...register("description")} placeholder="Pago de proveedor..." />
               {errors.description && <p className="text-xs text-destructive">{errors.description.message}</p>}
             </div>
@@ -90,10 +92,10 @@ function JournalEntryDialog({
           {/* Lines */}
           <div className="space-y-2">
             <div className="grid grid-cols-12 gap-2 text-xs text-muted-foreground px-1">
-              <span className="col-span-4">Cuenta</span>
-              <span className="col-span-3">Descripción</span>
-              <span className="col-span-2 text-right">Debe</span>
-              <span className="col-span-2 text-right">Haber</span>
+              <span className="col-span-4">{t("journal.account")}</span>
+              <span className="col-span-3">{tCommon("description")}</span>
+              <span className="col-span-2 text-right">{t("journal.debit")}</span>
+              <span className="col-span-2 text-right">{t("journal.credit")}</span>
               <span className="col-span-1" />
             </div>
             {fields.map((field, idx) => (
@@ -103,7 +105,7 @@ function JournalEntryDialog({
                     {...register(`items.${idx}.accountId`)}
                     className="flex h-9 w-full rounded-lg border border-input bg-background px-2 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-ring"
                   >
-                    <option value="">Cuenta...</option>
+                    <option value="">{t("journal.accountPlaceholder")}</option>
                     {accounts.map((a: any) => (
                       <option key={a.id} value={a.id}>{a.code} — {a.name}</option>
                     ))}
@@ -112,7 +114,7 @@ function JournalEntryDialog({
                 <div className="col-span-3">
                   <Input
                     className="h-9 text-xs"
-                    placeholder="Concepto"
+                    placeholder={t("journal.conceptPlaceholder")}
                     {...register(`items.${idx}.description`)}
                   />
                 </div>
@@ -142,29 +144,29 @@ function JournalEntryDialog({
               type="button" variant="outline" size="sm" className="gap-2 text-xs"
               onClick={() => append({ accountId: "", debit: 0, credit: 0, description: "" })}
             >
-              <Plus className="h-3.5 w-3.5" /> Añadir línea
+              <Plus className="h-3.5 w-3.5" /> {t("journal.addLine")}
             </Button>
           </div>
 
           {/* Totals */}
           <div className="flex items-center justify-end gap-6 text-sm border-t pt-3">
             <div className="flex gap-4">
-              <span>Debe: <strong>{formatCurrency(totalDebit)}</strong></span>
-              <span>Haber: <strong>{formatCurrency(totalCredit)}</strong></span>
+              <span>{t("journal.debit")}: <strong>{formatCurrency(totalDebit)}</strong></span>
+              <span>{t("journal.credit")}: <strong>{formatCurrency(totalCredit)}</strong></span>
             </div>
             <span className={cn(
               "text-xs font-medium px-2 py-0.5 rounded-full",
               balanced ? "bg-emerald-100 text-emerald-700" : "bg-destructive/10 text-destructive"
             )}>
-              {balanced ? "Cuadrado" : "Descuadrado"}
+              {balanced ? t("journal.balanced") : t("journal.unbalanced")}
             </span>
           </div>
 
           <DialogFooter className="gap-2">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>{tCommon("cancel")}</Button>
             <Button type="submit" disabled={create.isPending || !balanced}>
               {create.isPending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-              Crear asiento
+              {t("journal.createEntry")}
             </Button>
           </DialogFooter>
         </form>
@@ -176,6 +178,7 @@ function JournalEntryDialog({
 // ---- Main view ----
 export function AccountingView() {
   const t = useTranslations("accounting");
+  const tCommon = useTranslations("common");
   const [tab, setTab] = useState<"pyl" | "vat" | "journal" | "accounts" | "libro" | "modelo130" | "modelo347" | "retenciones">("pyl");
   const [year, setYear] = useState(new Date().getFullYear());
   const [entryDialogOpen, setEntryDialogOpen] = useState(false);
@@ -196,11 +199,13 @@ export function AccountingView() {
   const accounts: any[] = accountsData ?? [];
   const entries: any[] = journalData?.data ?? [];
 
-  const MONTHS = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+  const MONTHS = [t("months.jan"), t("months.feb"), t("months.mar"), t("months.apr"), t("months.may"), t("months.jun"), t("months.jul"), t("months.aug"), t("months.sep"), t("months.oct"), t("months.nov"), t("months.dec")];
+  const revenueLabel = t("pyl.revenue");
+  const expensesLabel = t("pyl.expenses");
   const chartData = pyl?.monthly?.map((m: any, i: number) => ({
     mes: MONTHS[i],
-    Ingresos: m.revenue,
-    Gastos: m.expenses,
+    [revenueLabel]: m.revenue,
+    [expensesLabel]: m.expenses,
   })) ?? [];
 
   return (
@@ -225,7 +230,7 @@ export function AccountingView() {
           </div>
           {tab === "journal" && (
             <Button size="sm" className="gap-2" onClick={() => setEntryDialogOpen(true)}>
-              <Plus className="h-4 w-4" /> Asiento
+              <Plus className="h-4 w-4" /> {t("journal.entry")}
             </Button>
           )}
         </div>
@@ -234,25 +239,25 @@ export function AccountingView() {
       {/* Tabs */}
       <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg w-fit overflow-x-auto">
         {[
-          { key: "pyl", label: "Pérdidas y Ganancias", icon: TrendingUp },
-          { key: "vat", label: "IVA Trimestral", icon: Calculator },
-          { key: "journal", label: "Libro Diario", icon: BookOpen },
-          { key: "accounts", label: "Plan de Cuentas", icon: Receipt },
-          { key: "libro", label: "Libro Facturas", icon: FileText },
-          { key: "modelo130", label: "Modelo 130", icon: Calculator },
-          { key: "modelo347", label: "Modelo 347", icon: UsersIcon },
-          { key: "retenciones", label: "Retenciones IRPF", icon: Receipt },
-        ].map((t) => (
+          { key: "pyl", label: t("tabs.pyl"), icon: TrendingUp },
+          { key: "vat", label: t("tabs.vat"), icon: Calculator },
+          { key: "journal", label: t("tabs.journal"), icon: BookOpen },
+          { key: "accounts", label: t("tabs.accounts"), icon: Receipt },
+          { key: "libro", label: t("tabs.libro"), icon: FileText },
+          { key: "modelo130", label: t("tabs.modelo130"), icon: Calculator },
+          { key: "modelo347", label: t("tabs.modelo347"), icon: UsersIcon },
+          { key: "retenciones", label: t("tabs.retenciones"), icon: Receipt },
+        ].map((tabItem) => (
           <button
-            key={t.key}
-            onClick={() => setTab(t.key as any)}
+            key={tabItem.key}
+            onClick={() => setTab(tabItem.key as any)}
             className={cn(
               "flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap",
-              tab === t.key ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"
+              tab === tabItem.key ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"
             )}
           >
-            <t.icon className="h-3.5 w-3.5" />
-            {t.label}
+            <tabItem.icon className="h-3.5 w-3.5" />
+            {tabItem.label}
           </button>
         ))}
       </div>
@@ -263,18 +268,18 @@ export function AccountingView() {
           {/* KPI cards */}
           <div className="grid grid-cols-3 gap-4">
             {[
-              { label: "Ingresos", value: pyl?.revenue ?? 0, color: "text-emerald-600" },
-              { label: "Gastos", value: pyl?.expenses ?? 0, color: "text-destructive" },
-              { label: "Resultado neto", value: pyl?.profit ?? 0, color: (pyl?.profit ?? 0) >= 0 ? "text-emerald-600" : "text-destructive" },
+              { label: t("pyl.revenue"), value: pyl?.revenue ?? 0, color: "text-emerald-600", key: "revenue" },
+              { label: t("pyl.expenses"), value: pyl?.expenses ?? 0, color: "text-destructive", key: "expenses" },
+              { label: t("pyl.netResult"), value: pyl?.profit ?? 0, color: (pyl?.profit ?? 0) >= 0 ? "text-emerald-600" : "text-destructive", key: "netResult" },
             ].map((c) => (
-              <Card key={c.label}>
+              <Card key={c.key}>
                 <CardContent className="p-5">
                   <p className="text-xs text-muted-foreground">{c.label}</p>
                   <p className={cn("text-2xl font-bold mt-1", c.color)}>
                     {formatCurrency(c.value)}
                   </p>
-                  {c.label === "Resultado neto" && pyl?.margin !== undefined && (
-                    <p className="text-xs text-muted-foreground mt-1">Margen: {pyl.margin.toFixed(1)}%</p>
+                  {c.key === "netResult" && pyl?.margin !== undefined && (
+                    <p className="text-xs text-muted-foreground mt-1">{t("pyl.margin")}: {pyl.margin.toFixed(1)}%</p>
                   )}
                 </CardContent>
               </Card>
@@ -284,14 +289,14 @@ export function AccountingView() {
           {/* Chart */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Evolución mensual {year}</CardTitle>
+              <CardTitle className="text-base">{t("pyl.monthlyEvolution", { year })}</CardTitle>
             </CardHeader>
             <CardContent>
               {pylLoading ? (
                 <div className="h-64 bg-muted rounded-lg animate-pulse" />
               ) : chartData.length === 0 ? (
                 <div className="h-64 flex items-center justify-center text-muted-foreground text-sm">
-                  Sin datos para {year}
+                  {t("pyl.noData", { year })}
                 </div>
               ) : (
                 <ResponsiveContainer width="100%" height={260}>
@@ -301,8 +306,8 @@ export function AccountingView() {
                     <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
                     <Tooltip formatter={(v: number) => formatCurrency(v)} />
                     <Legend />
-                    <Bar dataKey="Ingresos" fill="hsl(142 76% 36%)" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="Gastos" fill="hsl(0 84% 60%)" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey={revenueLabel} fill="hsl(142 76% 36%)" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey={expensesLabel} fill="hsl(0 84% 60%)" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               )}
@@ -317,7 +322,7 @@ export function AccountingView() {
           <Card className="border-amber-500/20 bg-amber-500/5">
             <CardContent className="p-4 flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium">Si el IVA sale a 0 con facturas existentes, pulsa "Reparar" para crear los registros de impuestos que faltan.</p>
+                <p className="text-sm font-medium">{t("vat.repairHint")}</p>
               </div>
               <Button
                 variant="outline"
@@ -325,7 +330,7 @@ export function AccountingView() {
                 onClick={() => backfillTaxes.mutate()}
                 disabled={backfillTaxes.isPending}
               >
-                {backfillTaxes.isPending ? "Reparando..." : "Reparar impuestos"}
+                {backfillTaxes.isPending ? t("vat.repairing") : t("vat.repairTaxes")}
               </Button>
             </CardContent>
           </Card>
@@ -344,15 +349,15 @@ export function AccountingView() {
                       <p className="text-sm font-semibold text-muted-foreground mb-3">{q.quarter} {year}</p>
                       <div className="space-y-1.5 text-sm">
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">Base</span>
+                          <span className="text-muted-foreground">{t("vat.base")}</span>
                           <span className="font-medium">{formatCurrency(q.base)}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">IVA (21%)</span>
+                          <span className="text-muted-foreground">{t("vat.vatRate")}</span>
                           <span className="font-medium text-amber-600">{formatCurrency(q.vat)}</span>
                         </div>
                         <div className="flex justify-between border-t pt-1.5">
-                          <span className="font-semibold">Total</span>
+                          <span className="font-semibold">{tCommon("total")}</span>
                           <span className="font-bold">{formatCurrency(q.total)}</span>
                         </div>
                       </div>
@@ -364,15 +369,15 @@ export function AccountingView() {
               <Card className="border-primary/30 bg-primary/5">
                 <CardContent className="p-5 flex items-center justify-between">
                   <div>
-                    <p className="font-semibold">Total IVA a declarar {year}</p>
-                    <p className="text-sm text-muted-foreground mt-0.5">Modelos 303 anuales</p>
+                    <p className="font-semibold">{t("vat.totalToDeclare", { year })}</p>
+                    <p className="text-sm text-muted-foreground mt-0.5">{t("vat.annual303")}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-2xl font-bold text-primary">
                       {formatCurrency(vat?.yearTotal?.vat ?? 0)}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      sobre {formatCurrency(vat?.yearTotal?.base ?? 0)} de base
+                      {t("vat.onBase", { amount: formatCurrency(vat?.yearTotal?.base ?? 0) })}
                     </p>
                   </div>
                 </CardContent>
@@ -393,10 +398,10 @@ export function AccountingView() {
             ) : entries.length === 0 ? (
               <div className="flex flex-col items-center py-14 text-center">
                 <BookOpen className="h-10 w-10 text-muted-foreground mb-3" />
-                <p className="font-medium">Sin asientos</p>
-                <p className="text-sm text-muted-foreground mt-1">Crea el primer asiento contable</p>
+                <p className="font-medium">{t("journal.noEntries")}</p>
+                <p className="text-sm text-muted-foreground mt-1">{t("journal.createFirst")}</p>
                 <Button className="mt-4 gap-2" onClick={() => setEntryDialogOpen(true)}>
-                  <Plus className="h-4 w-4" /> Nuevo asiento
+                  <Plus className="h-4 w-4" /> {t("journal.newEntry")}
                 </Button>
               </div>
             ) : (
@@ -404,11 +409,11 @@ export function AccountingView() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b">
-                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">Fecha</th>
-                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">Descripción</th>
-                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">Tipo</th>
-                      <th className="text-right p-4 text-xs font-medium text-muted-foreground">Importe</th>
-                      <th className="text-right p-4 text-xs font-medium text-muted-foreground">Estado</th>
+                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">{tCommon("date")}</th>
+                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">{tCommon("description")}</th>
+                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">{t("journal.type")}</th>
+                      <th className="text-right p-4 text-xs font-medium text-muted-foreground">{tCommon("amount")}</th>
+                      <th className="text-right p-4 text-xs font-medium text-muted-foreground">{tCommon("status")}</th>
                       <th className="p-4" />
                     </tr>
                   </thead>
@@ -436,7 +441,7 @@ export function AccountingView() {
                             "text-xs font-medium px-2 py-0.5 rounded-full",
                             entry.isLocked ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700"
                           )}>
-                            {entry.isLocked ? "Bloqueado" : "Borrador"}
+                            {entry.isLocked ? t("journal.locked") : tCommon("draft")}
                           </span>
                         </td>
                         <td className="p-4 text-right">
@@ -468,9 +473,9 @@ export function AccountingView() {
             {accounts.length === 0 ? (
               <div className="flex flex-col items-center py-14 text-center">
                 <Receipt className="h-10 w-10 text-muted-foreground mb-3" />
-                <p className="font-medium">Plan de cuentas vacio</p>
+                <p className="font-medium">{t("accounts.empty")}</p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  El plan de cuentas PGC se crea automaticamente. Ve a Libro Diario y crea un asiento para inicializarlo.
+                  {t("accounts.emptyHint")}
                 </p>
               </div>
             ) : (
@@ -478,10 +483,10 @@ export function AccountingView() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b">
-                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">Codigo</th>
-                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">Nombre</th>
-                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">Tipo</th>
-                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">Grupo</th>
+                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">{t("accounts.code")}</th>
+                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">{tCommon("name")}</th>
+                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">{t("accounts.type")}</th>
+                      <th className="text-left p-4 text-xs font-medium text-muted-foreground">{t("accounts.group")}</th>
                       <th className="p-4 w-12" />
                     </tr>
                   </thead>
@@ -506,7 +511,7 @@ export function AccountingView() {
                               size="icon"
                               className="h-7 w-7 text-muted-foreground hover:text-destructive"
                               onClick={() => {
-                                if (confirm(`Eliminar cuenta ${account.code} - ${account.name}?`)) {
+                                if (confirm(t("accounts.confirmDelete", { code: account.code, name: account.name }))) {
                                   deleteAccount.mutate(account.id);
                                 }
                               }}
@@ -528,7 +533,7 @@ export function AccountingView() {
       {tab === "libro" && (
         <div className="space-y-4">
           <Card>
-            <CardHeader><CardTitle className="text-base">Facturas Emitidas</CardTitle></CardHeader>
+            <CardHeader><CardTitle className="text-base">{t("libro.issued")}</CardTitle></CardHeader>
             <CardContent className="p-0">
               {libroLoading ? (
                 <div className="h-32 animate-pulse bg-muted m-4 rounded-lg" />
@@ -537,13 +542,13 @@ export function AccountingView() {
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b bg-muted/30">
-                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Numero</th>
-                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Fecha</th>
-                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">Cliente</th>
-                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">CIF/NIF</th>
-                        <th className="text-right px-4 py-3 font-medium text-muted-foreground">Base</th>
-                        <th className="text-right px-4 py-3 font-medium text-muted-foreground">IVA</th>
-                        <th className="text-right px-4 py-3 font-medium text-muted-foreground">Total</th>
+                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">{t("libro.number")}</th>
+                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">{tCommon("date")}</th>
+                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">{t("libro.client")}</th>
+                        <th className="text-left px-4 py-3 font-medium text-muted-foreground">{t("libro.cifNif")}</th>
+                        <th className="text-right px-4 py-3 font-medium text-muted-foreground">{t("libro.base")}</th>
+                        <th className="text-right px-4 py-3 font-medium text-muted-foreground">{tCommon("tax")}</th>
+                        <th className="text-right px-4 py-3 font-medium text-muted-foreground">{tCommon("total")}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -559,7 +564,7 @@ export function AccountingView() {
                         </tr>
                       ))}
                       {(libro?.emitidas ?? []).length === 0 && (
-                        <tr><td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">Sin facturas emitidas en {year}</td></tr>
+                        <tr><td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">{t("libro.noIssued", { year })}</td></tr>
                       )}
                     </tbody>
                   </table>
@@ -568,18 +573,18 @@ export function AccountingView() {
             </CardContent>
           </Card>
           <Card>
-            <CardHeader><CardTitle className="text-base">Facturas Recibidas</CardTitle></CardHeader>
+            <CardHeader><CardTitle className="text-base">{t("libro.received")}</CardTitle></CardHeader>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b bg-muted/30">
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Numero</th>
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Fecha</th>
-                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Proveedor</th>
-                      <th className="text-right px-4 py-3 font-medium text-muted-foreground">Base</th>
-                      <th className="text-right px-4 py-3 font-medium text-muted-foreground">IVA</th>
-                      <th className="text-right px-4 py-3 font-medium text-muted-foreground">Total</th>
+                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">{t("libro.number")}</th>
+                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">{tCommon("date")}</th>
+                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">{t("libro.supplier")}</th>
+                      <th className="text-right px-4 py-3 font-medium text-muted-foreground">{t("libro.base")}</th>
+                      <th className="text-right px-4 py-3 font-medium text-muted-foreground">{tCommon("tax")}</th>
+                      <th className="text-right px-4 py-3 font-medium text-muted-foreground">{tCommon("total")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -594,7 +599,7 @@ export function AccountingView() {
                       </tr>
                     ))}
                     {(libro?.recibidas ?? []).length === 0 && (
-                      <tr><td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">Sin facturas recibidas en {year}</td></tr>
+                      <tr><td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">{t("libro.noReceived", { year })}</td></tr>
                     )}
                   </tbody>
                 </table>
@@ -609,8 +614,8 @@ export function AccountingView() {
         <div className="space-y-4">
           <Card className="border-amber-500/30 bg-amber-500/5">
             <CardContent className="p-5">
-              <p className="text-sm font-medium">Modelo 130 — Pago fraccionado IRPF</p>
-              <p className="text-xs text-muted-foreground mt-1">Estimacion directa simplificada. Autonomos obligados a presentar trimestralmente.</p>
+              <p className="text-sm font-medium">{t("modelo130.title")}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t("modelo130.description")}</p>
             </CardContent>
           </Card>
           {m130Loading ? (
@@ -628,27 +633,27 @@ export function AccountingView() {
                       <p className="text-sm font-semibold text-muted-foreground mb-3">{q.quarter} {year}</p>
                       <div className="space-y-1.5 text-sm">
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">Ingresos</span>
+                          <span className="text-muted-foreground">{t("modelo130.revenue")}</span>
                           <span>{formatCurrency(q.revenue ?? 0)}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">Gastos</span>
+                          <span className="text-muted-foreground">{t("modelo130.expenses")}</span>
                           <span>{formatCurrency(q.expenses ?? 0)}</span>
                         </div>
                         <div className="flex justify-between border-t pt-1">
-                          <span className="text-muted-foreground">Rto. neto</span>
+                          <span className="text-muted-foreground">{t("modelo130.netIncome")}</span>
                           <span className="font-medium">{formatCurrency(q.netIncome ?? 0)}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">IRPF ({q.irpfRate ?? 20}%)</span>
+                          <span className="text-muted-foreground">{t("modelo130.irpf", { rate: q.irpfRate ?? 20 })}</span>
                           <span className="text-amber-600 font-medium">{formatCurrency(q.irpfAmount ?? 0)}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">Pagos ant.</span>
+                          <span className="text-muted-foreground">{t("modelo130.previousPayments")}</span>
                           <span>{formatCurrency(q.previousPayments ?? 0)}</span>
                         </div>
                         <div className="flex justify-between border-t pt-1.5 font-bold">
-                          <span>A ingresar</span>
+                          <span>{t("modelo130.toPay")}</span>
                           <span className="text-primary">{formatCurrency(q.toPay ?? 0)}</span>
                         </div>
                       </div>
@@ -659,8 +664,8 @@ export function AccountingView() {
               <Card className="border-primary/30 bg-primary/5">
                 <CardContent className="p-5 flex items-center justify-between">
                   <div>
-                    <p className="font-semibold">Total Modelo 130 — {year}</p>
-                    <p className="text-sm text-muted-foreground mt-0.5">Pagos fraccionados IRPF acumulados</p>
+                    <p className="font-semibold">{t("modelo130.totalTitle", { year })}</p>
+                    <p className="text-sm text-muted-foreground mt-0.5">{t("modelo130.totalSubtitle")}</p>
                   </div>
                   <p className="text-2xl font-bold text-primary">{formatCurrency(modelo130?.yearTotal?.toPay ?? 0)}</p>
                 </CardContent>
@@ -675,8 +680,8 @@ export function AccountingView() {
         <div className="space-y-4">
           <Card className="border-blue-500/30 bg-blue-500/5">
             <CardContent className="p-5">
-              <p className="text-sm font-medium">Modelo 347 — Operaciones con terceros</p>
-              <p className="text-xs text-muted-foreground mt-1">Declaracion anual de operaciones superiores a 3.005,06 EUR con un mismo cliente o proveedor.</p>
+              <p className="text-sm font-medium">{t("modelo347.title")}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t("modelo347.description")}</p>
             </CardContent>
           </Card>
           {m347Loading ? (
@@ -684,15 +689,15 @@ export function AccountingView() {
           ) : (
             <>
               <Card>
-                <CardHeader><CardTitle className="text-base">Clientes ({modelo347?.clients?.length ?? 0})</CardTitle></CardHeader>
+                <CardHeader><CardTitle className="text-base">{t("modelo347.clients", { count: modelo347?.clients?.length ?? 0 })}</CardTitle></CardHeader>
                 <CardContent className="p-0">
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b bg-muted/30">
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Cliente</th>
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">CIF/NIF</th>
-                          <th className="text-right px-4 py-3 font-medium text-muted-foreground">Total operaciones</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">{t("modelo347.clientHeader")}</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">{t("libro.cifNif")}</th>
+                          <th className="text-right px-4 py-3 font-medium text-muted-foreground">{t("modelo347.totalOps")}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -704,7 +709,7 @@ export function AccountingView() {
                           </tr>
                         ))}
                         {(modelo347?.clients ?? []).length === 0 && (
-                          <tr><td colSpan={3} className="px-4 py-8 text-center text-muted-foreground">Ningun cliente supera los 3.005,06 EUR en {year}</td></tr>
+                          <tr><td colSpan={3} className="px-4 py-8 text-center text-muted-foreground">{t("modelo347.noClients", { year })}</td></tr>
                         )}
                       </tbody>
                     </table>
@@ -712,15 +717,15 @@ export function AccountingView() {
                 </CardContent>
               </Card>
               <Card>
-                <CardHeader><CardTitle className="text-base">Proveedores ({modelo347?.suppliers?.length ?? 0})</CardTitle></CardHeader>
+                <CardHeader><CardTitle className="text-base">{t("modelo347.suppliers", { count: modelo347?.suppliers?.length ?? 0 })}</CardTitle></CardHeader>
                 <CardContent className="p-0">
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b bg-muted/30">
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Proveedor</th>
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">CIF/NIF</th>
-                          <th className="text-right px-4 py-3 font-medium text-muted-foreground">Total operaciones</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">{t("modelo347.supplierHeader")}</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">{t("libro.cifNif")}</th>
+                          <th className="text-right px-4 py-3 font-medium text-muted-foreground">{t("modelo347.totalOps")}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -732,7 +737,7 @@ export function AccountingView() {
                           </tr>
                         ))}
                         {(modelo347?.suppliers ?? []).length === 0 && (
-                          <tr><td colSpan={3} className="px-4 py-8 text-center text-muted-foreground">Ningun proveedor supera los 3.005,06 EUR en {year}</td></tr>
+                          <tr><td colSpan={3} className="px-4 py-8 text-center text-muted-foreground">{t("modelo347.noSuppliers", { year })}</td></tr>
                         )}
                       </tbody>
                     </table>
@@ -749,8 +754,8 @@ export function AccountingView() {
         <div className="space-y-4">
           <Card className="border-red-500/30 bg-red-500/5">
             <CardContent className="p-5">
-              <p className="text-sm font-medium">Retenciones IRPF practicadas</p>
-              <p className="text-xs text-muted-foreground mt-1">Resumen de retenciones aplicadas en facturas emitidas. Util para el Modelo 190.</p>
+              <p className="text-sm font-medium">{t("retenciones.title")}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t("retenciones.description")}</p>
             </CardContent>
           </Card>
           {retLoading ? (
@@ -763,11 +768,11 @@ export function AccountingView() {
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b bg-muted/30">
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">Cliente</th>
-                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">CIF/NIF</th>
-                          <th className="text-right px-4 py-3 font-medium text-muted-foreground">Base</th>
-                          <th className="text-right px-4 py-3 font-medium text-muted-foreground">% IRPF</th>
-                          <th className="text-right px-4 py-3 font-medium text-muted-foreground">Retencion</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">{t("retenciones.client")}</th>
+                          <th className="text-left px-4 py-3 font-medium text-muted-foreground">{t("libro.cifNif")}</th>
+                          <th className="text-right px-4 py-3 font-medium text-muted-foreground">{t("retenciones.base")}</th>
+                          <th className="text-right px-4 py-3 font-medium text-muted-foreground">{t("retenciones.irpfRate")}</th>
+                          <th className="text-right px-4 py-3 font-medium text-muted-foreground">{t("retenciones.retention")}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -781,7 +786,7 @@ export function AccountingView() {
                           </tr>
                         ))}
                         {(retenciones?.retentions ?? []).length === 0 && (
-                          <tr><td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">Sin retenciones IRPF en {year}</td></tr>
+                          <tr><td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">{t("retenciones.noRetentions", { year })}</td></tr>
                         )}
                       </tbody>
                     </table>
@@ -792,8 +797,8 @@ export function AccountingView() {
                 <Card className="border-primary/30 bg-primary/5">
                   <CardContent className="p-5 flex items-center justify-between">
                     <div>
-                      <p className="font-semibold">Total retenciones {year}</p>
-                      <p className="text-sm text-muted-foreground mt-0.5">Base: {formatCurrency(retenciones.total.base ?? 0)}</p>
+                      <p className="font-semibold">{t("retenciones.totalTitle", { year })}</p>
+                      <p className="text-sm text-muted-foreground mt-0.5">{t("retenciones.totalBase", { amount: formatCurrency(retenciones.total.base ?? 0) })}</p>
                     </div>
                     <p className="text-2xl font-bold text-red-600">{formatCurrency(retenciones.total.amount ?? 0)}</p>
                   </CardContent>

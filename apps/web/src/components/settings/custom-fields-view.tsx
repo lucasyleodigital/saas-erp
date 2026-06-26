@@ -17,28 +17,29 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Settings2, Plus, Trash2, GripVertical, Type, Pencil, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
-const ENTITY_TABS = [
-  { value: "CLIENT", label: "Clientes" },
-  { value: "INVOICE", label: "Facturas" },
-  { value: "PRODUCT", label: "Productos" },
-  { value: "PROJECT", label: "Proyectos" },
+const ENTITY_TAB_VALUES = [
+  { value: "CLIENT", key: "clients" },
+  { value: "INVOICE", key: "invoices" },
+  { value: "PRODUCT", key: "products" },
+  { value: "PROJECT", key: "projects" },
 ] as const;
 
-const FIELD_TYPES = [
-  { value: "TEXT", label: "Texto" },
-  { value: "NUMBER", label: "Numero" },
-  { value: "DATE", label: "Fecha" },
-  { value: "SELECT", label: "Seleccion" },
-  { value: "BOOLEAN", label: "Si/No" },
+const FIELD_TYPE_VALUES = [
+  { value: "TEXT", key: "text" },
+  { value: "NUMBER", key: "number" },
+  { value: "DATE", key: "date" },
+  { value: "SELECT", key: "select" },
+  { value: "BOOLEAN", key: "boolean" },
 ] as const;
 
-const TYPE_LABELS: Record<string, string> = {
-  TEXT: "Texto",
-  NUMBER: "Numero",
-  DATE: "Fecha",
-  SELECT: "Seleccion",
-  BOOLEAN: "Si/No",
+const TYPE_LABEL_KEYS: Record<string, string> = {
+  TEXT: "text",
+  NUMBER: "number",
+  DATE: "date",
+  SELECT: "select",
+  BOOLEAN: "boolean",
 };
 
 interface FieldFormData {
@@ -58,6 +59,8 @@ const EMPTY_FORM: FieldFormData = {
 };
 
 export function CustomFieldsView() {
+  const t = useTranslations("customFields");
+  const tCommon = useTranslations("common");
   const [selectedEntity, setSelectedEntity] = useState<string>("CLIENT");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -107,7 +110,7 @@ export function CustomFieldsView() {
   }
 
   function handleDelete(id: string) {
-    if (confirm("Eliminar este campo personalizado?")) {
+    if (confirm(t("confirmDelete"))) {
       deleteField.mutate(id);
     }
   }
@@ -120,34 +123,34 @@ export function CustomFieldsView() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Settings2 className="h-6 w-6 text-muted-foreground" />
-            Campos personalizados
+            {t("title")}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Define campos adicionales para tus entidades
+            {t("subtitle")}
           </p>
         </div>
         <Button onClick={openCreate} className="gap-2">
           <Plus className="h-4 w-4" />
-          Nuevo campo
+          {t("newField")}
         </Button>
       </div>
 
       <Tabs value={selectedEntity} onValueChange={setSelectedEntity}>
         <TabsList>
-          {ENTITY_TABS.map((tab) => (
+          {ENTITY_TAB_VALUES.map((tab) => (
             <TabsTrigger key={tab.value} value={tab.value}>
-              {tab.label}
+              {t(`entities.${tab.key}`)}
             </TabsTrigger>
           ))}
         </TabsList>
 
-        {ENTITY_TABS.map((tab) => (
+        {ENTITY_TAB_VALUES.map((tab) => (
           <TabsContent key={tab.value} value={tab.value}>
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm flex items-center gap-2">
                   <Type className="h-4 w-4 text-muted-foreground" />
-                  Campos de {tab.label.toLowerCase()}
+                  {t("fieldsOf", { entity: t(`entities.${tab.key}`).toLowerCase() })}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -160,10 +163,10 @@ export function CustomFieldsView() {
                 ) : !fields || fields.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
                     <Type className="h-10 w-10 mx-auto mb-3 opacity-30" />
-                    <p className="text-sm">No hay campos personalizados para {tab.label.toLowerCase()}</p>
+                    <p className="text-sm">{t("noFields", { entity: t(`entities.${tab.key}`).toLowerCase() })}</p>
                     <Button onClick={openCreate} variant="outline" size="sm" className="mt-3 gap-2">
                       <Plus className="h-4 w-4" />
-                      Crear primer campo
+                      {t("createFirst")}
                     </Button>
                   </div>
                 ) : (
@@ -171,11 +174,11 @@ export function CustomFieldsView() {
                     {/* Table header */}
                     <div className="grid grid-cols-[auto_1fr_120px_100px_80px_80px] gap-3 px-3 py-2 text-xs font-medium text-muted-foreground border-b">
                       <div className="w-6" />
-                      <div>Nombre</div>
-                      <div>Tipo</div>
-                      <div>Obligatorio</div>
-                      <div>Orden</div>
-                      <div>Acciones</div>
+                      <div>{tCommon("name")}</div>
+                      <div>{t("table.type")}</div>
+                      <div>{t("table.required")}</div>
+                      <div>{t("table.order")}</div>
+                      <div>{tCommon("actions")}</div>
                     </div>
 
                     {/* Table rows */}
@@ -190,14 +193,14 @@ export function CustomFieldsView() {
                         <div className="text-sm font-medium">{field.name}</div>
                         <div>
                           <Badge variant="secondary" className="text-xs font-normal">
-                            {TYPE_LABELS[field.type] ?? field.type}
+                            {t(`fieldTypes.${TYPE_LABEL_KEYS[field.type] ?? field.type}`)}
                           </Badge>
                         </div>
                         <div>
                           {field.required ? (
-                            <Badge variant="default" className="text-xs">Si</Badge>
+                            <Badge variant="default" className="text-xs">{tCommon("yes")}</Badge>
                           ) : (
-                            <span className="text-xs text-muted-foreground">No</span>
+                            <span className="text-xs text-muted-foreground">{tCommon("no")}</span>
                           )}
                         </div>
                         <div className="text-sm text-muted-foreground">{field.order}</div>
@@ -233,17 +236,17 @@ export function CustomFieldsView() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editingId ? "Editar campo" : "Nuevo campo personalizado"}</DialogTitle>
+            <DialogTitle>{editingId ? t("dialog.editTitle") : t("dialog.createTitle")}</DialogTitle>
             <DialogDescription>
               {editingId
-                ? "Modifica las propiedades del campo"
-                : "Anade un campo personalizado a la entidad seleccionada"}
+                ? t("dialog.editDescription")
+                : t("dialog.createDescription")}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-2">
             <div className="space-y-1.5">
-              <Label htmlFor="cf-name">Nombre del campo</Label>
+              <Label htmlFor="cf-name">{t("dialog.fieldName")}</Label>
               <Input
                 id="cf-name"
                 value={form.name}
@@ -253,16 +256,16 @@ export function CustomFieldsView() {
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="cf-type">Tipo de campo</Label>
+              <Label htmlFor="cf-type">{t("dialog.fieldType")}</Label>
               <select
                 id="cf-type"
                 value={form.type}
                 onChange={(e) => setForm((f) => ({ ...f, type: e.target.value }))}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                {FIELD_TYPES.map((ft) => (
+                {FIELD_TYPE_VALUES.map((ft) => (
                   <option key={ft.value} value={ft.value}>
-                    {ft.label}
+                    {t(`fieldTypes.${ft.key}`)}
                   </option>
                 ))}
               </select>
@@ -270,7 +273,7 @@ export function CustomFieldsView() {
 
             {form.type === "SELECT" && (
               <div className="space-y-1.5">
-                <Label htmlFor="cf-options">Opciones (separadas por comas)</Label>
+                <Label htmlFor="cf-options">{t("dialog.options")}</Label>
                 <Input
                   id="cf-options"
                   value={form.options}
@@ -285,7 +288,7 @@ export function CustomFieldsView() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label htmlFor="cf-order">Orden</Label>
+                <Label htmlFor="cf-order">{t("table.order")}</Label>
                 <Input
                   id="cf-order"
                   type="number"
@@ -302,7 +305,7 @@ export function CustomFieldsView() {
                     onChange={(e) => setForm((f) => ({ ...f, required: e.target.checked }))}
                     className="h-4 w-4 rounded border-input"
                   />
-                  <span className="text-sm">Campo obligatorio</span>
+                  <span className="text-sm">{t("dialog.requiredField")}</span>
                 </label>
               </div>
             </div>
@@ -310,11 +313,11 @@ export function CustomFieldsView() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>
-              Cancelar
+              {tCommon("cancel")}
             </Button>
             <Button onClick={handleSubmit} disabled={!form.name.trim() || isPending}>
               {isPending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-              {editingId ? "Guardar cambios" : "Crear campo"}
+              {editingId ? t("dialog.saveChanges") : t("dialog.createField")}
             </Button>
           </DialogFooter>
         </DialogContent>

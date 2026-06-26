@@ -10,6 +10,7 @@ import { useAuthStore } from "@/store/auth.store";
 import { useUpdateProfile, useChangePassword } from "@/hooks/use-user";
 import { Loader2, User, Lock, Bell } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface PasswordFormData {
   currentPassword: string;
@@ -18,6 +19,8 @@ interface PasswordFormData {
 }
 
 export function UserSettings() {
+  const t = useTranslations("settings");
+  const tCommon = useTranslations("common");
   const user = useAuthStore((s) => s.user);
   const updateProfile = useUpdateProfile();
   const changePassword = useChangePassword();
@@ -39,11 +42,11 @@ export function UserSettings() {
 
   async function onPasswordSubmit(data: PasswordFormData) {
     if (data.newPassword !== data.confirmPassword) {
-      toast.error("Las contraseñas no coinciden");
+      toast.error(t("user.passwordMismatch"));
       return;
     }
     if (data.newPassword.length < 8) {
-      toast.error("La contraseña debe tener mínimo 8 caracteres");
+      toast.error(t("user.passwordMinLength"));
       return;
     }
     await changePassword.mutateAsync({
@@ -56,9 +59,9 @@ export function UserSettings() {
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
-        <h1 className="text-2xl font-bold">Configuración</h1>
+        <h1 className="text-2xl font-bold">{t("title")}</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Gestiona tu perfil personal y seguridad de la cuenta
+          {t("user.subtitle")}
         </p>
       </div>
 
@@ -66,15 +69,15 @@ export function UserSettings() {
         <TabsList>
           <TabsTrigger value="perfil">
             <User className="h-4 w-4 mr-2" />
-            Perfil
+            {t("profile")}
           </TabsTrigger>
           <TabsTrigger value="seguridad">
             <Lock className="h-4 w-4 mr-2" />
-            Seguridad
+            {t("security")}
           </TabsTrigger>
           <TabsTrigger value="notificaciones">
             <Bell className="h-4 w-4 mr-2" />
-            Notificaciones
+            {t("notifications")}
           </TabsTrigger>
         </TabsList>
 
@@ -82,7 +85,7 @@ export function UserSettings() {
         <TabsContent value="perfil">
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm">Datos personales</CardTitle>
+              <CardTitle className="text-sm">{t("user.personalData")}</CardTitle>
             </CardHeader>
             <CardContent>
               <form
@@ -93,14 +96,14 @@ export function UserSettings() {
               >
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <Label htmlFor="p-first">Nombre</Label>
+                    <Label htmlFor="p-first">{t("user.firstName")}</Label>
                     <Input
                       id="p-first"
                       {...profileForm.register("firstName")}
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="p-last">Apellido</Label>
+                    <Label htmlFor="p-last">{t("user.lastName")}</Label>
                     <Input
                       id="p-last"
                       {...profileForm.register("lastName")}
@@ -108,14 +111,14 @@ export function UserSettings() {
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Email</Label>
+                  <Label>{tCommon("email")}</Label>
                   <Input
                     value={user?.email ?? ""}
                     disabled
                     className="opacity-60 cursor-not-allowed"
                   />
                   <p className="text-xs text-muted-foreground">
-                    El email no se puede cambiar por seguridad
+                    {t("user.emailReadonly")}
                   </p>
                 </div>
                 <div className="flex justify-end">
@@ -127,7 +130,7 @@ export function UserSettings() {
                     {updateProfile.isPending && (
                       <Loader2 className="h-4 w-4 animate-spin mr-2" />
                     )}
-                    Guardar cambios
+                    {t("user.saveChanges")}
                   </Button>
                 </div>
               </form>
@@ -140,7 +143,7 @@ export function UserSettings() {
           <div className="space-y-4">
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm">Cambiar contraseña</CardTitle>
+                <CardTitle className="text-sm">{t("user.changePassword")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <form
@@ -148,7 +151,7 @@ export function UserSettings() {
                   className="space-y-4"
                 >
                   <div className="space-y-1.5">
-                    <Label htmlFor="pwd-current">Contraseña actual</Label>
+                    <Label htmlFor="pwd-current">{t("user.currentPassword")}</Label>
                     <Input
                       id="pwd-current"
                       type="password"
@@ -156,18 +159,18 @@ export function UserSettings() {
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="pwd-new">Nueva contraseña</Label>
+                    <Label htmlFor="pwd-new">{t("user.newPassword")}</Label>
                     <Input
                       id="pwd-new"
                       type="password"
                       {...passwordForm.register("newPassword")}
                     />
                     <p className="text-xs text-muted-foreground">
-                      Mínimo 8 caracteres, una mayúscula y un número
+                      {t("user.passwordHint")}
                     </p>
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="pwd-confirm">Confirmar nueva contraseña</Label>
+                    <Label htmlFor="pwd-confirm">{t("user.confirmNewPassword")}</Label>
                     <Input
                       id="pwd-confirm"
                       type="password"
@@ -183,7 +186,7 @@ export function UserSettings() {
                       {changePassword.isPending && (
                         <Loader2 className="h-4 w-4 animate-spin mr-2" />
                       )}
-                      Cambiar contraseña
+                      {t("user.changePassword")}
                     </Button>
                   </div>
                 </form>
@@ -193,20 +196,19 @@ export function UserSettings() {
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm">
-                  Autenticación en dos pasos (2FA)
+                  {t("user.twoFactorTitle")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Añade una capa extra de seguridad usando una app como Google
-                  Authenticator o Authy.
+                  {t("user.twoFactorDescription")}
                 </p>
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => toast.info("La autenticacion en dos pasos estara disponible proximamente")}
+                  onClick={() => toast.info(t("user.twoFactorComingSoon"))}
                 >
-                  Configurar 2FA
+                  {t("user.configure2FA")}
                 </Button>
               </CardContent>
             </Card>
@@ -217,23 +219,23 @@ export function UserSettings() {
         <TabsContent value="notificaciones">
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm">Preferencias de notificaciones</CardTitle>
+              <CardTitle className="text-sm">{t("user.notifPreferences")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {[
-                { label: "Facturas vencidas", description: "Aviso cuando una factura lleva mas de X dias sin pagar" },
-                { label: "Nuevos leads", description: "Notificacion cuando se asigna un lead al equipo" },
-                { label: "Pagos recibidos", description: "Confirmacion al registrar un pago en una factura" },
-                { label: "Resumen semanal", description: "Email con el resumen de actividad de la semana" },
+                { key: "overdueInvoices" },
+                { key: "newLeads" },
+                { key: "paymentsReceived" },
+                { key: "weeklySummary" },
               ].map((item) => (
-                <div key={item.label} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+                <div key={item.key} className="flex items-center justify-between py-2 border-b border-border last:border-0">
                   <div>
-                    <p className="text-sm font-medium">{item.label}</p>
-                    <p className="text-xs text-muted-foreground">{item.description}</p>
+                    <p className="text-sm font-medium">{t(`user.notifItems.${item.key}.label`)}</p>
+                    <p className="text-xs text-muted-foreground">{t(`user.notifItems.${item.key}.description`)}</p>
                   </div>
                   <button
                     type="button"
-                    onClick={() => toast.info("Las preferencias de notificaciones estaran disponibles proximamente")}
+                    onClick={() => toast.info(t("user.notifComingSoon"))}
                     className="h-5 w-9 rounded-full bg-primary/20 flex items-center justify-end px-0.5 cursor-pointer border-none"
                   >
                     <div className="h-4 w-4 rounded-full bg-primary" />
@@ -241,7 +243,7 @@ export function UserSettings() {
                 </div>
               ))}
               <p className="text-xs text-muted-foreground pt-2">
-                Las preferencias detalladas estaran disponibles proximamente.
+                {t("user.notifDetailedComingSoon")}
               </p>
             </CardContent>
           </Card>

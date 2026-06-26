@@ -149,7 +149,11 @@
     "newInvoice": "Faktura berria",
     "newClient": "Bezero berria",
     "newQuote": "Aurrekontu berria",
-    "newDeal": "Lead berria"
+    "newDeal": "Lead berria",
+    "viewPipeline": "Pipeline ikusi",
+    "viewAll": "Denak ikusi",
+    "noInvoicesYet": "Oraindik ez duzu fakturarik",
+    "noClient": "Bezerorik gabe"
   },
   "clients": {
     "title": "Bezeroak",
@@ -381,6 +385,11 @@
     "stock": "Stock-a",
     "category": "Kategoria",
     "noProducts": "Oraindik ez duzu produkturik",
+    "type": {
+      "service": "Zerbitzua",
+      "digital": "Digitala",
+      "physical": "Fisikoa"
+    },
     "form": {
       "name": "Produktuaren izena",
       "description": "Deskribapena",
@@ -390,7 +399,15 @@
       "stock": "Hasierako stock-a",
       "category": "Kategoria",
       "createSuccess": "Produktua zuzen sortuta",
-      "updateSuccess": "Produktua zuzen eguneratuta"
+      "updateSuccess": "Produktua zuzen eguneratuta",
+      "dialogTitleEdit": "Produktua editatu",
+      "dialogTitleNew": "Produktu berria",
+      "nameRequired": "Izena *",
+      "namePlaceholder": "Produktuaren izena",
+      "descriptionPlaceholder": "Produktuaren deskribapena",
+      "type": "Mota",
+      "salePrice": "Salmenta-prezioa (€) *",
+      "cost": "Kostua (€)"
     }
   },
   "pipeline": {
@@ -421,11 +438,34 @@
     "search": "Leadak bilatu...",
     "convert": "Bezero bihurtu",
     "source": "Jatorria",
+    "company": "Enpresa",
+    "noResults": "Ez dago lead-ik",
+    "noResultsDesc": "Erregistratu salmenta-aukera berriak",
+    "confirmDelete": "\"{name}\" lead-a ezabatu? Ekintza hau ezin da desegin.",
     "status": {
       "new": "Berria",
       "contacted": "Kontaktatuta",
       "qualified": "Kalifikatua",
       "lost": "Galduta"
+    },
+    "sources": {
+      "web": "Web",
+      "referral": "Erreferentzia",
+      "linkedin": "LinkedIn",
+      "googleAds": "Google Ads",
+      "call": "Deia",
+      "email": "Emaila",
+      "event": "Ekitaldia",
+      "other": "Bestea"
+    },
+    "form": {
+      "namePlaceholder": "Maria Garcia",
+      "emailPlaceholder": "maria@enpresa.com",
+      "phonePlaceholder": "600 123 456",
+      "companyPlaceholder": "Enpresa SL",
+      "selectSource": "Hautatu...",
+      "notesPlaceholder": "Lead honi buruzko informazio gehigarria...",
+      "createLead": "Lead-a sortu"
     }
   },
   "automations": {
@@ -439,7 +479,104 @@
     "runs": "Exekuzioak",
     "lastRun": "Azken exekuzioa",
     "noAutomations": "Oraindik ez duzu automatizaziorik",
-    "upgrade": "Eguneratu zure plana automatizazioak erabiltzeko"
+    "upgrade": "Eguneratu zure plana automatizazioak erabiltzeko",
+    "newRule": "Arau berria",
+    "createFromScratch": "Hutsetik sortu",
+    "emptyDescription": "Aukeratu goiko txantiloi bat edo sortu arau pertsonalizatu bat hutsetik.",
+    "triggers": {
+      "invoiceCreated": "Faktura sortuta",
+      "invoicePaid": "Faktura ordainduta",
+      "invoiceOverdue": "Faktura iraungita",
+      "quoteCreated": "Aurrekontua sortuta",
+      "quoteAccepted": "Aurrekontua onartuta",
+      "leadCreated": "Lead berria",
+      "dealStageChanged": "Deal-ak etapa aldatu du",
+      "clientCreated": "Bezero berria",
+      "paymentReceived": "Ordainketa jasota",
+      "orderCreated": "Eskaria sortuta",
+      "purchaseReceived": "Erosketa biltegian jasota",
+      "lowStock": "Stock-a gutxienekoaren azpitik"
+    },
+    "actions": {
+      "sendEmail": "Emaila bidali",
+      "createNotification": "Barne-jakinarazpena sortu",
+      "sendWebhook": "Webhook-a bidali (HTTP POST)"
+    },
+    "templates": {
+      "title": "Txantiloi azkarrak",
+      "clickToUse": "— egin klik erabiltzeko",
+      "overdueReminder": {
+        "name": "Iraungitako fakturaren gogorarazlea",
+        "description": "Email automatikoa bidaltzen du faktura batek mugaeguna gainditzen duenean"
+      },
+      "welcomeClient": {
+        "name": "Bezero berriaren ongietorria",
+        "description": "Automatikoki agurtzen du alta ematen den bezero berri bakoitza"
+      },
+      "newLeadAlert": {
+        "name": "Lead berriaren alerta",
+        "description": "Barne-jakinarazpen bat jasotzen du lead berri bat sartzen den bakoitzean"
+      },
+      "paymentConfirmation": {
+        "name": "Jasotako ordainketaren berrespena",
+        "description": "Berrespen email automatikoa bidaltzen du ordainketa bat jasotzean"
+      },
+      "quoteWebhook": {
+        "name": "Webhook-a aurrekontua onartzean",
+        "description": "Zure CRM edo Zapier-i jakinarazten dio bezero batek aurrekontu bat onartzen duenean"
+      },
+      "lowStockAlert": {
+        "name": "Stock baxuaren alerta",
+        "description": "Barne-jakinarazpen bat jasotzen du produktu baten stock-a gutxienekoaren azpitik jaisten denean"
+      },
+      "newOrderNotif": {
+        "name": "Eskari berriaren jakinarazpena",
+        "description": "Barnetik jakinarazten du bezero-eskari berri bat iristen denean"
+      },
+      "purchaseReceivedAlert": {
+        "name": "Jasotako erosketaren alerta",
+        "description": "Jakinarazten du erosketa-agindu bat guztiz jasota geratzen denean biltegian"
+      }
+    },
+    "form": {
+      "editTitle": "Automatizazioa editatu",
+      "newTitle": "Automatizazio berria",
+      "triggerLabel": "Hau gertatzen denean (trigger) *",
+      "selectEvent": "Gertaera hautatu...",
+      "actionLabel": "Ekintza hau exekutatu *",
+      "emailConfig": "Email-aren konfigurazioa",
+      "subject": "Gaia",
+      "body": "Gorputza",
+      "notifConfig": "Jakinarazpenaren konfigurazioa",
+      "notifTitleLabel": "Izenburua",
+      "message": "Mezua",
+      "webhookConfig": "Webhook-aren konfigurazioa",
+      "namePlaceholder": "Ordainketa-gogorarazlea",
+      "nameRequired": "Izena derrigorrezkoa da",
+      "selectTrigger": "Hautatu trigger bat",
+      "selectAction": "Hautatu ekintza bat",
+      "invalidUrl": "URL baliogabea"
+    },
+    "stats": {
+      "totalRules": "Arau guztira",
+      "totalExecutions": "Exekuzio guztira",
+      "executedCount": "{count} aldiz exekutatuta",
+      "noExecutions": "Exekuziorik gabe oraindik",
+      "last": "azkena",
+      "testNow": "Orain probatu",
+      "pause": "Pausatu",
+      "activate": "Aktibatu"
+    },
+    "logs": {
+      "title": "Exekuzio-historia",
+      "noLogs": "Oraindik ez da exekuziorik erregistratu"
+    },
+    "planWall": {
+      "title": "Automatizazioak ordainpekoak dira",
+      "description": "FREE planarekin ezin dituzu automatizazioak sortu. Eguneratu STARTER edo goragoko planera email, jakinarazpen eta webhook fluxu automatikoak desblokeatzeko.",
+      "viewPlans": "Planak ikusi",
+      "upgradeStarter": "Starter-era eguneratu"
+    }
   },
   "accounting": {
     "title": "Kontabilitatea",
@@ -456,7 +593,109 @@
     "stock": "Uneko stock-a",
     "movements": "Mugimenduak",
     "lowStock": "Stock baxua",
-    "noStock": "Stock-ik gabe"
+    "noStock": "Stock-ik gabe",
+    "tabs": {
+      "stock": "Stock-a",
+      "alerts": "Alertak",
+      "movements": "Mugimenduak",
+      "valuation": "Balorazioa",
+      "warehouses": "Biltegiak"
+    },
+    "summary": {
+      "products": "Produktuak",
+      "lowStock": "Stock baxua",
+      "outOfStock": "Stock-ik gabe",
+      "totalValue": "Balio osoa"
+    },
+    "moveType": {
+      "purchase": "Erosketa",
+      "sale": "Salmenta",
+      "adjustmentIn": "Doikuntza sarrera",
+      "adjustmentOut": "Doikuntza irteera",
+      "return": "Itzulketa",
+      "transferOut": "Transferentzia irteera",
+      "transferIn": "Transferentzia sarrera",
+      "in": "Sarrera"
+    },
+    "stockTab": {
+      "searchProduct": "Produktua bilatu...",
+      "allWarehouses": "Biltegi guztiak",
+      "physicalInventory": "Inbentario fisikoa",
+      "noProducts": "Ez dago produkturik",
+      "product": "Produktua",
+      "sku": "SKU",
+      "stockHeader": "Stock-a",
+      "minimum": "Gutxienekoa",
+      "value": "Balioa",
+      "addMovement": "Mugimendua gehitu",
+      "transfer": "Transferitu",
+      "minStock": "Gutxieneko stock-a"
+    },
+    "alertsTab": {
+      "description": "Gutxieneko stock-a jo edo azpitik dauden produktuak.",
+      "noAlerts": "Alerta aktiborik gabe",
+      "allAboveMin": "Produktu guztiak gutxieneko stock-aren gainetik daude",
+      "stockLabel": "Stock-a:",
+      "minLabel": "Gutxienekoa:"
+    },
+    "movementsTab": {
+      "type": "Mota",
+      "allTypes": "Mota guztiak",
+      "warehouse": "Biltegia",
+      "quantity": "Kopurua",
+      "reference": "Erreferentzia",
+      "noMovements": "Ez dago mugimendurik"
+    },
+    "valuationTab": {
+      "costValue": "Kostuaren balioa",
+      "saleValue": "Salmenta-balioa",
+      "avgMargin": "Batez besteko marjina",
+      "noCostProducts": "Ez dago kostua definitutako produkturik",
+      "unitCost": "Unitate-kostua",
+      "unitPrice": "PVP ud.",
+      "margin": "Marjina",
+      "stockValue": "Stock-aren balioa"
+    },
+    "warehousesTab": {
+      "newWarehouse": "Biltegi berria",
+      "noWarehouses": "Ez dago biltegirik konfiguratuta",
+      "default": "Lehenetsia",
+      "setDefault": "Lehenetsi gisa markatu",
+      "confirmDelete": "\"{name}\" ezabatu?"
+    },
+    "warehouseDialog": {
+      "editTitle": "Biltegia editatu"
+    },
+    "moveDialog": {
+      "title": "Mugimendua — {name}",
+      "warehouse": "Biltegia",
+      "referencePlaceholder": "Faktura zk., albarana...",
+      "saving": "Gordetzen...",
+      "register": "Erregistratu"
+    },
+    "transferDialog": {
+      "title": "Transferitu — {name}",
+      "from": "Nondik",
+      "to": "Nora",
+      "sourceWarehouse": "Jatorrizko biltegia",
+      "destWarehouse": "Helburuko biltegia",
+      "completeAllFields": "Bete eremu guztiak",
+      "transferring": "Transferitzen...",
+      "transfer": "Transferitu"
+    },
+    "physicalDialog": {
+      "title": "Inbentario fisikoa",
+      "helpText": "Sartu benetako zenbaketa. Doikuntza automatikoak sortuko dira diferentziak dauden tokian.",
+      "noTrackedProducts": "Ez dago stock-aren jarraipena aktibatuta duten produkturik",
+      "system": "Sistema:",
+      "applying": "Aplikatzen...",
+      "apply": "Inbentarioa aplikatu"
+    },
+    "minStockDialog": {
+      "title": "Gutxieneko stock-a — {name}",
+      "helpText": "Alerta bat sortuko da stock-a maila honetara jaisten denean. Utzi hutsik desaktibatzeko.",
+      "noMinimum": "Gutxienekorik gabe"
+    }
   },
   "settings": {
     "title": "Konfigurazioa",
@@ -550,7 +789,29 @@
     "irpfWithheld": "Atxikitako PFEZ",
     "approveAll": "Denak onartu",
     "markPaid": "Ordainduta markatu",
-    "loading": "Nominak kargatzen..."
+    "loading": "Nominak kargatzen...",
+    "generateSuccess": "{count} nomina sortuta",
+    "generateError": "Errorea nominak sortzean",
+    "approveSuccess": "{count} nomina onartuta",
+    "paidSuccess": "{count} nomina ordainduta markatu",
+    "confirmDeletePayroll": "Nomina hau ezabatu? Ekintza hau ezin da desegin.",
+    "deleteSuccess": "Nomina ezabatuta",
+    "sepaError": "Errorea SEPA XML sortzean",
+    "paidCount": "{count} ordainduta",
+    "liquidToPay": "ordaintzeko garbia",
+    "ssLabel": "GS: {amount}",
+    "toPayAEAT": "AEATen sartzeko",
+    "noResultsForMonth": "Ez dago nominarik {month} {year} aldirako",
+    "table": {
+      "employee": "Langilea",
+      "gross": "Gordina",
+      "ssEmployee": "GS langilea",
+      "irpf": "PFEZ",
+      "net": "Garbia",
+      "viewPayroll": "Nomina ikusi",
+      "approve": "Onartu",
+      "markAsPaid": "Ordainduta markatu"
+    }
   },
   "projects": {
     "title": "Proiektuak",
@@ -563,7 +824,47 @@
     "active": "Aktiboak",
     "onHold": "Zain",
     "completed": "Osatuta",
-    "cancelled": "Bertan behera"
+    "cancelled": "Bertan behera",
+    "statusActive": "Aktibo",
+    "statusOnHold": "Zain",
+    "statusCompleted": "Osatuta",
+    "statusCancelled": "Bertan behera",
+    "errorLoading": "Errorea proiektuak kargatzean",
+    "errorLoadingDetail": "Errorea proiektua kargatzean",
+    "noClient": "Bezerorik gabe",
+    "budget": "Aurrekontua",
+    "hours": "ordu",
+    "invoicesCount": "faktura",
+    "confirmDelete": "\"{name}\" ezabatu?",
+    "detail": {
+      "revenue": "Diru-sarrerak",
+      "hours": "Orduak",
+      "budgetUsed": "Erabilitako aurrekontua",
+      "margin": "Margina",
+      "recentTimeEntries": "Azken denbora-sarrerak",
+      "noTimeEntries": "Ez dago erregistratutako denbora-sarrerarik",
+      "employee": "Langilea",
+      "clockIn": "Sarrera",
+      "clockOut": "Irteera",
+      "hoursCol": "Orduak",
+      "linkedInvoices": "Lotutako fakturak",
+      "noLinkedInvoices": "Ez dago proiektu honekin lotutako fakturarik",
+      "invoiceNumber": "Zenbakia"
+    },
+    "form": {
+      "dialogTitle": "Proiektu berria",
+      "dialogDesc": "Sortu proiektu berri bat eta esleitu bezero bati",
+      "name": "Izena *",
+      "client": "Bezeroa",
+      "selectClient": "Bezeroa hautatu",
+      "budget": "Aurrekontua",
+      "hourlyRate": "Orduko tarifa",
+      "startDate": "Hasiera-data",
+      "endDate": "Amaiera-data",
+      "color": "Kolorea",
+      "creating": "Sortzen...",
+      "createProject": "Proiektua sortu"
+    }
   },
   "suppliers": {
     "title": "Hornitzaileak",
@@ -587,7 +888,46 @@
     "new": "Agindu berria",
     "search": "Bilatu zenbakiz edo hornitzailez...",
     "noResults": "Ez dago erosketa-agindurik",
-    "noResultsDesc": "Sortu zure lehen erosketa-agindua hornitzaile bati"
+    "noResultsDesc": "Sortu zure lehen erosketa-agindua hornitzaile bati",
+    "colNumber": "Zenbakia",
+    "colSupplier": "Hornitzailea",
+    "statusDraft": "Zirriborroa",
+    "statusSent": "Bidalita",
+    "statusPartialReceived": "Partziala",
+    "statusReceived": "Jasota",
+    "statusCancelled": "Bertan behera",
+    "registerReception": "Harrera erregistratu",
+    "confirmDelete": "{number} agindua ezabatu?",
+    "form": {
+      "dialogTitle": "Erosketa-agindu berria",
+      "supplier": "Hornitzailea *",
+      "selectSupplier": "Hornitzailea hautatu...",
+      "lines": "Lerroak",
+      "addLine": "Lerroa gehitu",
+      "product": "Produktua...",
+      "description": "Deskribapena *",
+      "qty": "Kop",
+      "price": "Prezioa",
+      "vatPercent": "BEZ %",
+      "notes": "Oharrak",
+      "notesPlaceholder": "Barne-oharrak...",
+      "estimatedTotal": "Gutxi gorabeherako guztira",
+      "creating": "Sortzen...",
+      "createOrder": "Agindua sortu",
+      "selectSupplierRequired": "Hautatu hornitzaile bat",
+      "addLineRequired": "Gehitu gutxienez lerro bat"
+    },
+    "createSuccess": "Erosketa-agindua sortuta",
+    "createError": "Errorea agindua sortzean",
+    "receive": {
+      "title": "Harrera erregistratu — {number}",
+      "ordered": "Eskatuta: {quantity}",
+      "received": "Jasota",
+      "saving": "Gordetzen...",
+      "confirm": "Harrera berretsi",
+      "success": "Harrera erregistratuta",
+      "error": "Errorea harrera erregistratzean"
+    }
   },
   "deliveryNotes": {
     "title": "Albaranak",
@@ -608,7 +948,40 @@
     "subtitle": "Erregistratu eta kudeatu lan-denbora",
     "new": "Orduak erregistratu",
     "noResults": "Ez dago sarrerarik",
-    "noResultsDesc": "Erregistratu lehen denbora-sarrera"
+    "noResultsDesc": "Erregistratu lehen denbora-sarrera",
+    "summary": {
+      "today": "Gaur",
+      "thisWeek": "Aste honetan",
+      "thisMonth": "Hilabete honetan"
+    },
+    "loadError": "Errorea sarrerak kargatzean",
+    "inProgress": "Abian",
+    "confirmDelete": "Sarrera hau ezabatu?",
+    "table": {
+      "employee": "Langilea",
+      "project": "Proiektua",
+      "clockIn": "Sarrera",
+      "clockOut": "Irteera"
+    },
+    "filter": {
+      "allEmployees": "Langile guztiak",
+      "allProjects": "Proiektu guztiak"
+    },
+    "dialog": {
+      "title": "Orduak erregistratu",
+      "description": "Erregistratu langile baten denbora-sarrera",
+      "employee": "Langilea *",
+      "selectEmployee": "Langilea hautatu",
+      "project": "Proiektua (aukerakoa)",
+      "noProject": "Proiekturik gabe",
+      "date": "Data *",
+      "clockIn": "Sarrera *",
+      "clockOut": "Irteera *",
+      "break": "Atsedenaldia (min)",
+      "notesPlaceholder": "Aukerako oharrak...",
+      "submitting": "Erregistratzen...",
+      "submit": "Erregistratu"
+    }
   },
   "errors": {
     "unauthorized": "Ez duzu ekintza hau burutzeko baimenik",

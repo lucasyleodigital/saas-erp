@@ -149,7 +149,11 @@
     "newInvoice": "New invoice",
     "newClient": "New client",
     "newQuote": "New quote",
-    "newDeal": "New deal"
+    "newDeal": "New deal",
+    "viewPipeline": "View pipeline",
+    "viewAll": "View all",
+    "noInvoicesYet": "No invoices yet",
+    "noClient": "No client"
   },
   "clients": {
     "title": "Clients",
@@ -381,6 +385,11 @@
     "stock": "Stock",
     "category": "Category",
     "noProducts": "No products yet",
+    "type": {
+      "service": "Service",
+      "digital": "Digital",
+      "physical": "Physical"
+    },
     "form": {
       "name": "Product name",
       "description": "Description",
@@ -390,7 +399,15 @@
       "stock": "Initial stock",
       "category": "Category",
       "createSuccess": "Product created successfully",
-      "updateSuccess": "Product updated successfully"
+      "updateSuccess": "Product updated successfully",
+      "dialogTitleEdit": "Edit product",
+      "dialogTitleNew": "New product",
+      "nameRequired": "Name *",
+      "namePlaceholder": "Product name",
+      "descriptionPlaceholder": "Product description",
+      "type": "Type",
+      "salePrice": "Sale price (€) *",
+      "cost": "Cost (€)"
     }
   },
   "pipeline": {
@@ -421,11 +438,34 @@
     "search": "Search leads...",
     "convert": "Convert to client",
     "source": "Source",
+    "company": "Company",
+    "noResults": "No leads",
+    "noResultsDesc": "Register new sales opportunities",
+    "confirmDelete": "Delete lead \"{name}\"? This action cannot be undone.",
     "status": {
       "new": "New",
       "contacted": "Contacted",
       "qualified": "Qualified",
       "lost": "Lost"
+    },
+    "sources": {
+      "web": "Web",
+      "referral": "Referral",
+      "linkedin": "LinkedIn",
+      "googleAds": "Google Ads",
+      "call": "Phone call",
+      "email": "Email",
+      "event": "Event",
+      "other": "Other"
+    },
+    "form": {
+      "namePlaceholder": "Jane Smith",
+      "emailPlaceholder": "jane@company.com",
+      "phonePlaceholder": "600 123 456",
+      "companyPlaceholder": "Company Ltd",
+      "selectSource": "Select...",
+      "notesPlaceholder": "Additional information about this lead...",
+      "createLead": "Create lead"
     }
   },
   "automations": {
@@ -439,7 +479,104 @@
     "runs": "Runs",
     "lastRun": "Last run",
     "noAutomations": "No automations yet",
-    "upgrade": "Upgrade your plan to use automations"
+    "upgrade": "Upgrade your plan to use automations",
+    "newRule": "New rule",
+    "createFromScratch": "Create from scratch",
+    "emptyDescription": "Choose a template above or create a custom rule from scratch.",
+    "triggers": {
+      "invoiceCreated": "Invoice created",
+      "invoicePaid": "Invoice paid",
+      "invoiceOverdue": "Invoice overdue",
+      "quoteCreated": "Quote created",
+      "quoteAccepted": "Quote accepted",
+      "leadCreated": "New lead",
+      "dealStageChanged": "Deal stage changed",
+      "clientCreated": "New client",
+      "paymentReceived": "Payment received",
+      "orderCreated": "Order created",
+      "purchaseReceived": "Purchase received in warehouse",
+      "lowStock": "Stock below minimum"
+    },
+    "actions": {
+      "sendEmail": "Send email",
+      "createNotification": "Create internal notification",
+      "sendWebhook": "Send webhook (HTTP POST)"
+    },
+    "templates": {
+      "title": "Quick templates",
+      "clickToUse": "— click to use",
+      "overdueReminder": {
+        "name": "Overdue invoice reminder",
+        "description": "Send an automatic email when an invoice exceeds its due date"
+      },
+      "welcomeClient": {
+        "name": "Welcome new client",
+        "description": "Automatically greet each new client that signs up"
+      },
+      "newLeadAlert": {
+        "name": "New lead alert",
+        "description": "Receive an internal notification each time a new lead comes in"
+      },
+      "paymentConfirmation": {
+        "name": "Payment received confirmation",
+        "description": "Send an automatic confirmation email upon receiving a payment"
+      },
+      "quoteWebhook": {
+        "name": "Webhook on quote accepted",
+        "description": "Notify your CRM or Zapier when a client accepts a quote"
+      },
+      "lowStockAlert": {
+        "name": "Low stock alert",
+        "description": "Receive an internal notification when product stock falls below minimum"
+      },
+      "newOrderNotif": {
+        "name": "New order notification",
+        "description": "Get notified internally when a new customer order arrives"
+      },
+      "purchaseReceivedAlert": {
+        "name": "Purchase received alert",
+        "description": "Notify when a purchase order is fully received in warehouse"
+      }
+    },
+    "form": {
+      "editTitle": "Edit automation",
+      "newTitle": "New automation",
+      "triggerLabel": "When this happens (trigger) *",
+      "selectEvent": "Select event...",
+      "actionLabel": "Execute this action *",
+      "emailConfig": "Email config",
+      "subject": "Subject",
+      "body": "Body",
+      "notifConfig": "Notification config",
+      "notifTitleLabel": "Title",
+      "message": "Message",
+      "webhookConfig": "Webhook config",
+      "namePlaceholder": "Payment reminder",
+      "nameRequired": "Name is required",
+      "selectTrigger": "Select a trigger",
+      "selectAction": "Select an action",
+      "invalidUrl": "Invalid URL"
+    },
+    "stats": {
+      "totalRules": "Total rules",
+      "totalExecutions": "Total executions",
+      "executedCount": "Executed {count} times",
+      "noExecutions": "No executions yet",
+      "last": "last",
+      "testNow": "Test now",
+      "pause": "Pause",
+      "activate": "Activate"
+    },
+    "logs": {
+      "title": "Execution history",
+      "noLogs": "No executions recorded yet"
+    },
+    "planWall": {
+      "title": "Automations are a paid feature",
+      "description": "With the FREE plan you cannot create automations. Upgrade to STARTER or higher to unlock automatic email, notification and webhook flows.",
+      "viewPlans": "View plans",
+      "upgradeStarter": "Upgrade to Starter"
+    }
   },
   "accounting": {
     "title": "Accounting",
@@ -456,7 +593,109 @@
     "stock": "Current stock",
     "movements": "Movements",
     "lowStock": "Low stock",
-    "noStock": "Out of stock"
+    "noStock": "Out of stock",
+    "tabs": {
+      "stock": "Stock",
+      "alerts": "Alerts",
+      "movements": "Movements",
+      "valuation": "Valuation",
+      "warehouses": "Warehouses"
+    },
+    "summary": {
+      "products": "Products",
+      "lowStock": "Low stock",
+      "outOfStock": "Out of stock",
+      "totalValue": "Total value"
+    },
+    "moveType": {
+      "purchase": "Purchase",
+      "sale": "Sale",
+      "adjustmentIn": "Adjustment in",
+      "adjustmentOut": "Adjustment out",
+      "return": "Return",
+      "transferOut": "Transfer out",
+      "transferIn": "Transfer in",
+      "in": "Inbound"
+    },
+    "stockTab": {
+      "searchProduct": "Search product...",
+      "allWarehouses": "All warehouses",
+      "physicalInventory": "Physical inventory",
+      "noProducts": "No products",
+      "product": "Product",
+      "sku": "SKU",
+      "stockHeader": "Stock",
+      "minimum": "Minimum",
+      "value": "Value",
+      "addMovement": "Add movement",
+      "transfer": "Transfer",
+      "minStock": "Minimum stock"
+    },
+    "alertsTab": {
+      "description": "Products that have reached or are below their minimum stock.",
+      "noAlerts": "No active alerts",
+      "allAboveMin": "All products are above their minimum stock",
+      "stockLabel": "Stock:",
+      "minLabel": "Minimum:"
+    },
+    "movementsTab": {
+      "type": "Type",
+      "allTypes": "All types",
+      "warehouse": "Warehouse",
+      "quantity": "Quantity",
+      "reference": "Reference",
+      "noMovements": "No movements"
+    },
+    "valuationTab": {
+      "costValue": "Cost value",
+      "saleValue": "Sale value",
+      "avgMargin": "Average margin",
+      "noCostProducts": "No products with defined cost",
+      "unitCost": "Unit cost",
+      "unitPrice": "Unit price",
+      "margin": "Margin",
+      "stockValue": "Stock value"
+    },
+    "warehousesTab": {
+      "newWarehouse": "New warehouse",
+      "noWarehouses": "No warehouses configured",
+      "default": "Default",
+      "setDefault": "Set as default",
+      "confirmDelete": "Delete \"{name}\"?"
+    },
+    "warehouseDialog": {
+      "editTitle": "Edit warehouse"
+    },
+    "moveDialog": {
+      "title": "Movement — {name}",
+      "warehouse": "Warehouse",
+      "referencePlaceholder": "Invoice no., delivery note...",
+      "saving": "Saving...",
+      "register": "Register"
+    },
+    "transferDialog": {
+      "title": "Transfer — {name}",
+      "from": "From",
+      "to": "To",
+      "sourceWarehouse": "Source warehouse",
+      "destWarehouse": "Destination warehouse",
+      "completeAllFields": "Complete all fields",
+      "transferring": "Transferring...",
+      "transfer": "Transfer"
+    },
+    "physicalDialog": {
+      "title": "Physical inventory",
+      "helpText": "Enter the actual count. Automatic adjustments will be created where there are differences.",
+      "noTrackedProducts": "No products with active stock tracking",
+      "system": "System:",
+      "applying": "Applying...",
+      "apply": "Apply inventory"
+    },
+    "minStockDialog": {
+      "title": "Minimum stock — {name}",
+      "helpText": "An alert will be generated when stock drops to this level. Leave empty to disable.",
+      "noMinimum": "No minimum"
+    }
   },
   "settings": {
     "title": "Settings",
@@ -550,7 +789,29 @@
     "irpfWithheld": "IRPF withheld",
     "approveAll": "Approve all",
     "markPaid": "Mark as paid",
-    "loading": "Loading payrolls..."
+    "loading": "Loading payrolls...",
+    "generateSuccess": "{count} payrolls generated",
+    "generateError": "Error generating payrolls",
+    "approveSuccess": "{count} payrolls approved",
+    "paidSuccess": "{count} payrolls marked as paid",
+    "confirmDeletePayroll": "Delete this payroll? This action cannot be undone.",
+    "deleteSuccess": "Payroll deleted",
+    "sepaError": "Error generating SEPA XML",
+    "paidCount": "{count} paid",
+    "liquidToPay": "net to pay",
+    "ssLabel": "SS: {amount}",
+    "toPayAEAT": "to deposit at AEAT",
+    "noResultsForMonth": "No payrolls for {month} {year}",
+    "table": {
+      "employee": "Employee",
+      "gross": "Gross",
+      "ssEmployee": "SS employee",
+      "irpf": "IRPF",
+      "net": "Net",
+      "viewPayroll": "View payroll",
+      "approve": "Approve",
+      "markAsPaid": "Mark as paid"
+    }
   },
   "projects": {
     "title": "Projects",
@@ -563,7 +824,47 @@
     "active": "Active",
     "onHold": "On hold",
     "completed": "Completed",
-    "cancelled": "Cancelled"
+    "cancelled": "Cancelled",
+    "statusActive": "Active",
+    "statusOnHold": "On hold",
+    "statusCompleted": "Completed",
+    "statusCancelled": "Cancelled",
+    "errorLoading": "Error loading projects",
+    "errorLoadingDetail": "Error loading project",
+    "noClient": "No client",
+    "budget": "Budget",
+    "hours": "hours",
+    "invoicesCount": "invoices",
+    "confirmDelete": "Delete \"{name}\"?",
+    "detail": {
+      "revenue": "Revenue",
+      "hours": "Hours",
+      "budgetUsed": "Budget used",
+      "margin": "Margin",
+      "recentTimeEntries": "Recent time entries",
+      "noTimeEntries": "No time entries recorded",
+      "employee": "Employee",
+      "clockIn": "Clock in",
+      "clockOut": "Clock out",
+      "hoursCol": "Hours",
+      "linkedInvoices": "Linked invoices",
+      "noLinkedInvoices": "No invoices linked to this project",
+      "invoiceNumber": "Number"
+    },
+    "form": {
+      "dialogTitle": "New project",
+      "dialogDesc": "Create a new project and assign it to a client",
+      "name": "Name *",
+      "client": "Client",
+      "selectClient": "Select client",
+      "budget": "Budget",
+      "hourlyRate": "Hourly rate",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "color": "Color",
+      "creating": "Creating...",
+      "createProject": "Create project"
+    }
   },
   "suppliers": {
     "title": "Suppliers",
@@ -571,7 +872,25 @@
     "new": "New supplier",
     "search": "Search by name, email, Tax ID...",
     "noResults": "No suppliers",
-    "noResultsDesc": "Start by adding your first supplier"
+    "noResultsDesc": "Start by adding your first supplier",
+    "supplier": "Supplier",
+    "contact": "Contact",
+    "cifNif": "Tax ID",
+    "purchaseOrdersShort": "PO",
+    "updateSuccess": "Supplier updated",
+    "createSuccess": "Supplier created",
+    "saveError": "Error saving supplier",
+    "confirmDelete": "Delete {name}?",
+    "pageOf": "Page {page} of {totalPages}",
+    "form": {
+      "dialogTitleEdit": "Edit supplier",
+      "dialogTitleNew": "New supplier",
+      "name": "Name *",
+      "contactName": "Contact person",
+      "website": "Website",
+      "bankAccount": "IBAN / Bank account",
+      "saving": "Saving..."
+    }
   },
   "orders": {
     "title": "Orders",
@@ -579,7 +898,42 @@
     "new": "New order",
     "search": "Search by number or client...",
     "noResults": "No orders",
-    "noResultsDesc": "Create your first customer order"
+    "noResultsDesc": "Create your first customer order",
+    "number": "Number",
+    "client": "Client",
+    "createDeliveryNote": "Create delivery note",
+    "confirmDelete": "Delete order {number}?",
+    "confirmConvert": "Convert order {number} to delivery note?",
+    "convertSuccess": "Delivery note {number} created",
+    "convertError": "Error converting order",
+    "pageOf": "Page {page} of {totalPages}",
+    "status": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "shipped": "Shipped",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled"
+    },
+    "form": {
+      "dialogTitle": "New order",
+      "client": "Client *",
+      "selectClient": "Select client...",
+      "lines": "Lines",
+      "addLine": "Add line",
+      "product": "Product...",
+      "description": "Description *",
+      "quantity": "Qty",
+      "price": "Price",
+      "taxRate": "VAT %",
+      "notesPlaceholder": "Internal notes...",
+      "estimatedTotal": "Estimated total",
+      "creating": "Creating...",
+      "createOrder": "Create order",
+      "selectClientRequired": "Select a client",
+      "addLineRequired": "Add at least one line",
+      "createSuccess": "Order created",
+      "createError": "Error creating order"
+    }
   },
   "purchaseOrders": {
     "title": "Purchase orders",
@@ -587,7 +941,46 @@
     "new": "New order",
     "search": "Search by number or supplier...",
     "noResults": "No purchase orders",
-    "noResultsDesc": "Create your first purchase order to a supplier"
+    "noResultsDesc": "Create your first purchase order to a supplier",
+    "colNumber": "Number",
+    "colSupplier": "Supplier",
+    "statusDraft": "Draft",
+    "statusSent": "Sent",
+    "statusPartialReceived": "Partial",
+    "statusReceived": "Received",
+    "statusCancelled": "Cancelled",
+    "registerReception": "Register reception",
+    "confirmDelete": "Delete order {number}?",
+    "form": {
+      "dialogTitle": "New purchase order",
+      "supplier": "Supplier *",
+      "selectSupplier": "Select supplier...",
+      "lines": "Lines",
+      "addLine": "Add line",
+      "product": "Product...",
+      "description": "Description *",
+      "qty": "Qty",
+      "price": "Price",
+      "vatPercent": "VAT %",
+      "notes": "Notes",
+      "notesPlaceholder": "Internal notes...",
+      "estimatedTotal": "Estimated total",
+      "creating": "Creating...",
+      "createOrder": "Create order",
+      "selectSupplierRequired": "Select a supplier",
+      "addLineRequired": "Add at least one line"
+    },
+    "createSuccess": "Purchase order created",
+    "createError": "Error creating the order",
+    "receive": {
+      "title": "Register reception — {number}",
+      "ordered": "Ordered: {quantity}",
+      "received": "Received",
+      "saving": "Saving...",
+      "confirm": "Confirm reception",
+      "success": "Reception registered",
+      "error": "Error registering reception"
+    }
   },
   "deliveryNotes": {
     "title": "Delivery notes",
@@ -608,7 +1001,40 @@
     "subtitle": "Record and manage work time",
     "new": "Log hours",
     "noResults": "No entries",
-    "noResultsDesc": "Log the first time entry"
+    "noResultsDesc": "Log the first time entry",
+    "summary": {
+      "today": "Today",
+      "thisWeek": "This week",
+      "thisMonth": "This month"
+    },
+    "loadError": "Error loading entries",
+    "inProgress": "In progress",
+    "confirmDelete": "Delete this entry?",
+    "table": {
+      "employee": "Employee",
+      "project": "Project",
+      "clockIn": "Clock in",
+      "clockOut": "Clock out"
+    },
+    "filter": {
+      "allEmployees": "All employees",
+      "allProjects": "All projects"
+    },
+    "dialog": {
+      "title": "Log hours",
+      "description": "Log a time entry for an employee",
+      "employee": "Employee *",
+      "selectEmployee": "Select employee",
+      "project": "Project (optional)",
+      "noProject": "No project",
+      "date": "Date *",
+      "clockIn": "Clock in *",
+      "clockOut": "Clock out *",
+      "break": "Break (min)",
+      "notesPlaceholder": "Optional notes...",
+      "submitting": "Submitting...",
+      "submit": "Submit"
+    }
   },
   "errors": {
     "unauthorized": "You don't have permission to perform this action",

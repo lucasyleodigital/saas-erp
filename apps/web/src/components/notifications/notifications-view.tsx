@@ -10,16 +10,20 @@ import {
 } from "@/hooks/use-notifications";
 import { Bell, BellOff, CheckCheck, Trash2, FileText, Users, AlertCircle, Info } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
-function timeAgo(date: string) {
-  const diff = Date.now() - new Date(date).getTime();
-  const mins = Math.floor(diff / 60000);
-  const hours = Math.floor(diff / 3600000);
-  const days = Math.floor(diff / 86400000);
-  if (mins < 1) return "ahora";
-  if (mins < 60) return `hace ${mins}m`;
-  if (hours < 24) return `hace ${hours}h`;
-  return `hace ${days}d`;
+function useTimeAgo() {
+  const t = useTranslations("notifications");
+  return (date: string) => {
+    const diff = Date.now() - new Date(date).getTime();
+    const mins = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+    if (mins < 1) return t("timeAgo.now");
+    if (mins < 60) return t("timeAgo.minutes", { n: mins });
+    if (hours < 24) return t("timeAgo.hours", { n: hours });
+    return t("timeAgo.days", { n: days });
+  };
 }
 
 function NotifIcon({ title }: { title: string }) {
@@ -31,6 +35,9 @@ function NotifIcon({ title }: { title: string }) {
 }
 
 export function NotificationsView() {
+  const t = useTranslations("notifications");
+  const tCommon = useTranslations("common");
+  const timeAgo = useTimeAgo();
   const [filter, setFilter] = useState<"all" | "unread">("all");
   const { data, isLoading } = useNotifications({ unreadOnly: filter === "unread" });
   const markRead = useMarkRead();
@@ -46,20 +53,20 @@ export function NotificationsView() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
-            Notificaciones
+            {t("title")}
             {unread > 0 && (
               <Badge variant="destructive" className="text-xs px-2 py-0.5">{unread}</Badge>
             )}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            {data?.total ?? 0} notificaciones en total
+            {t("totalCount", { total: data?.total ?? 0 })}
           </p>
         </div>
         <div className="flex gap-2">
           {unread > 0 && (
             <Button variant="outline" size="sm" className="gap-2" onClick={() => markAllRead.mutate()}>
               <CheckCheck className="h-4 w-4" />
-              Marcar todas
+              {t("markAll")}
             </Button>
           )}
           <Button
@@ -69,7 +76,7 @@ export function NotificationsView() {
             onClick={() => clearRead.mutate()}
           >
             <Trash2 className="h-4 w-4" />
-            Limpiar leídas
+            {t("clearRead")}
           </Button>
         </div>
       </div>
@@ -77,8 +84,8 @@ export function NotificationsView() {
       {/* Filter tabs */}
       <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg w-fit">
         {[
-          { key: "all", label: "Todas" },
-          { key: "unread", label: `Sin leer ${unread > 0 ? `(${unread})` : ""}` },
+          { key: "all", label: tCommon("all") },
+          { key: "unread", label: `${t("unread")} ${unread > 0 ? `(${unread})` : ""}` },
         ].map((tab) => (
           <button
             key={tab.key}
@@ -113,9 +120,9 @@ export function NotificationsView() {
           ) : notifications.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <BellOff className="h-10 w-10 text-muted-foreground mb-3" />
-              <p className="font-medium">Sin notificaciones</p>
+              <p className="font-medium">{t("empty")}</p>
               <p className="text-sm text-muted-foreground mt-1">
-                {filter === "unread" ? "Todo leído 🎉" : "No tienes notificaciones todavía"}
+                {filter === "unread" ? t("allRead") : t("noNotificationsYet")}
               </p>
             </div>
           ) : (
@@ -149,6 +156,7 @@ export function NotificationsView() {
                       <span className="text-xs text-muted-foreground shrink-0">
                         {timeAgo(notif.createdAt)}
                       </span>
+
                     </div>
                     <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{notif.body}</p>
                   </div>

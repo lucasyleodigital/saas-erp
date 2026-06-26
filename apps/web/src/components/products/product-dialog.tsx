@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { useCreateProduct, useUpdateProduct } from "@/hooks/use-products";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const schema = z.object({
   name: z.string().min(1, "Nombre requerido"),
@@ -44,6 +45,8 @@ export function ProductDialog({
   onOpenChange: (v: boolean) => void;
   product?: any;
 }) {
+  const t = useTranslations("products");
+  const tCommon = useTranslations("common");
   const isEditing = !!product;
   const createProduct = useCreateProduct();
   const updateProduct = useUpdateProduct(product?.id ?? "");
@@ -89,20 +92,20 @@ export function ProductDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>{isEditing ? "Editar producto" : "Nuevo producto"}</DialogTitle>
+          <DialogTitle>{isEditing ? t("form.dialogTitleEdit") : t("form.dialogTitleNew")}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-1.5">
-            <Label>Nombre *</Label>
-            <Input {...register("name")} placeholder="Consultoría mensual" />
+            <Label>{t("form.nameRequired")}</Label>
+            <Input {...register("name")} placeholder={t("form.namePlaceholder")} />
             {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
           </div>
 
           <div className="space-y-1.5">
-            <Label>Descripción</Label>
+            <Label>{tCommon("description")}</Label>
             <textarea
               {...register("description")}
-              placeholder="Descripción del producto o servicio..."
+              placeholder={t("form.descriptionPlaceholder")}
               rows={2}
               className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-none placeholder:text-muted-foreground"
             />
@@ -110,7 +113,7 @@ export function ProductDialog({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label>Tipo</Label>
+              <Label>{t("form.type")}</Label>
               <Select
                 value={watch("type")}
                 onValueChange={(v) => setValue("type", v as any)}
@@ -119,21 +122,21 @@ export function ProductDialog({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="SERVICE">Servicio</SelectItem>
-                  <SelectItem value="DIGITAL">Digital</SelectItem>
-                  <SelectItem value="PHYSICAL">Físico</SelectItem>
+                  <SelectItem value="SERVICE">{t("type.service")}</SelectItem>
+                  <SelectItem value="DIGITAL">{t("type.digital")}</SelectItem>
+                  <SelectItem value="PHYSICAL">{t("type.physical")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label>SKU / Referencia</Label>
+              <Label>{t("form.sku")}</Label>
               <Input {...register("sku")} placeholder="PROD-001" />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label>Precio venta (€) *</Label>
+              <Label>{t("form.salePrice")}</Label>
               <Input
                 type="number"
                 step="0.01"
@@ -144,7 +147,7 @@ export function ProductDialog({
               {errors.price && <p className="text-xs text-destructive">{errors.price.message}</p>}
             </div>
             <div className="space-y-1.5">
-              <Label>Coste (€)</Label>
+              <Label>{t("form.cost")}</Label>
               <Input
                 type="number"
                 step="0.01"
@@ -157,11 +160,11 @@ export function ProductDialog({
 
           <DialogFooter className="pt-2 gap-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancelar
+              {tCommon("cancel")}
             </Button>
             <Button type="submit" disabled={isPending}>
               {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-              {isEditing ? "Guardar" : "Crear"}
+              {isEditing ? tCommon("save") : tCommon("create")}
             </Button>
           </DialogFooter>
         </form>

@@ -41,20 +41,20 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { formatDate } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 
-const SOURCES = [
-  "Web",
-  "Referido",
-  "LinkedIn",
-  "Google Ads",
-  "Llamada",
-  "Email",
-  "Evento",
-  "Otro",
-];
+const SOURCE_KEYS = [
+  "web",
+  "referral",
+  "linkedin",
+  "googleAds",
+  "call",
+  "email",
+  "event",
+  "other",
+] as const;
 
 const schema = z.object({
-  name: z.string().min(1, "El nombre es obligatorio"),
-  email: z.string().email("Email inválido").optional().or(z.literal("")),
+  name: z.string().min(1),
+  email: z.string().email().optional().or(z.literal("")),
   phone: z.string().optional(),
   company: z.string().optional(),
   source: z.string().optional(),
@@ -65,6 +65,7 @@ type FormData = z.infer<typeof schema>;
 
 export function LeadsView() {
   const t = useTranslations("leads");
+  const tCommon = useTranslations("common");
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const debouncedSearch = useDebounce(search, 300);
@@ -111,7 +112,7 @@ export function LeadsView() {
       <div className="relative w-full max-w-sm">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Buscar leads..."
+          placeholder={t("search")}
           className="pl-9"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -134,14 +135,14 @@ export function LeadsView() {
                 <Users className="h-6 w-6 text-muted-foreground" />
               </div>
               <div>
-                <p className="font-medium">No hay leads</p>
+                <p className="font-medium">{t("noResults")}</p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Registra nuevas oportunidades de venta
+                  {t("noResultsDesc")}
                 </p>
               </div>
               <Button size="sm" onClick={() => setDialogOpen(true)}>
                 <Plus className="h-4 w-4 mr-2" />
-                Nuevo lead
+                {t("new")}
               </Button>
             </div>
           ) : (
@@ -149,16 +150,16 @@ export function LeadsView() {
               <thead>
                 <tr className="border-b border-border bg-muted/30">
                   <th className="text-left font-medium text-muted-foreground px-4 py-3">
-                    Nombre
+                    {tCommon("name")}
                   </th>
                   <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">
-                    Empresa
+                    {t("company")}
                   </th>
                   <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">
-                    Fuente
+                    {t("source")}
                   </th>
                   <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">
-                    Fecha
+                    {tCommon("date")}
                   </th>
                   <th className="px-4 py-3 w-12" />
                 </tr>
@@ -207,21 +208,21 @@ export function LeadsView() {
                             disabled={convertLead.isPending}
                           >
                             <UserCheck className="h-4 w-4 mr-2" />
-                            Convertir a cliente
+                            {t("convert")}
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-destructive focus:text-destructive"
                             onClick={() => {
                               if (
                                 confirm(
-                                  `¿Eliminar el lead "${lead.name}"? Esta acción no se puede deshacer.`
+                                  t("confirmDelete", { name: lead.name })
                                 )
                               )
                                 deleteLead.mutate(lead.id);
                             }}
                           >
                             <Trash2 className="h-4 w-4 mr-2" />
-                            Eliminar
+                            {tCommon("delete")}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -238,16 +239,16 @@ export function LeadsView() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Nuevo lead</DialogTitle>
+            <DialogTitle>{t("new")}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5 col-span-2">
-                <Label htmlFor="lead-name">Nombre *</Label>
+                <Label htmlFor="lead-name">{tCommon("name")} *</Label>
                 <Input
                   id="lead-name"
                   {...register("name")}
-                  placeholder="María García"
+                  placeholder={t("form.namePlaceholder")}
                 />
                 {errors.name && (
                   <p className="text-xs text-destructive">
@@ -256,12 +257,12 @@ export function LeadsView() {
                 )}
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="lead-email">Email</Label>
+                <Label htmlFor="lead-email">{tCommon("email")}</Label>
                 <Input
                   id="lead-email"
                   type="email"
                   {...register("email")}
-                  placeholder="maria@empresa.com"
+                  placeholder={t("form.emailPlaceholder")}
                 />
                 {errors.email && (
                   <p className="text-xs text-destructive">
@@ -270,43 +271,43 @@ export function LeadsView() {
                 )}
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="lead-phone">Teléfono</Label>
+                <Label htmlFor="lead-phone">{tCommon("phone")}</Label>
                 <Input
                   id="lead-phone"
                   {...register("phone")}
-                  placeholder="600 123 456"
+                  placeholder={t("form.phonePlaceholder")}
                 />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="lead-company">Empresa</Label>
+                <Label htmlFor="lead-company">{t("company")}</Label>
                 <Input
                   id="lead-company"
                   {...register("company")}
-                  placeholder="Empresa SL"
+                  placeholder={t("form.companyPlaceholder")}
                 />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="lead-source">Fuente</Label>
+                <Label htmlFor="lead-source">{t("source")}</Label>
                 <select
                   id="lead-source"
                   {...register("source")}
                   className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                 >
-                  <option value="">Seleccionar...</option>
-                  {SOURCES.map((s) => (
-                    <option key={s} value={s}>
-                      {s}
+                  <option value="">{t("form.selectSource")}</option>
+                  {SOURCE_KEYS.map((key) => (
+                    <option key={key} value={key}>
+                      {t(`sources.${key}`)}
                     </option>
                   ))}
                 </select>
               </div>
               <div className="space-y-1.5 col-span-2">
-                <Label htmlFor="lead-notes">Notas</Label>
+                <Label htmlFor="lead-notes">{tCommon("notes")}</Label>
                 <textarea
                   id="lead-notes"
                   {...register("notes")}
                   rows={2}
-                  placeholder="Información adicional sobre este lead..."
+                  placeholder={t("form.notesPlaceholder")}
                   className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-none placeholder:text-muted-foreground"
                 />
               </div>
@@ -320,13 +321,13 @@ export function LeadsView() {
                   reset();
                 }}
               >
-                Cancelar
+                {tCommon("cancel")}
               </Button>
               <Button type="submit" disabled={createLead.isPending}>
                 {createLead.isPending && (
                   <Loader2 className="h-4 w-4 animate-spin mr-2" />
                 )}
-                Crear lead
+                {t("form.createLead")}
               </Button>
             </DialogFooter>
           </form>

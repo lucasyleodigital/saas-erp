@@ -50,18 +50,24 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { formatCurrency } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 
-const _STATUS = {
-  DRAFT:            { label: "Borrador",           color: "bg-gray-100 text-gray-600" },
-  SENT:             { label: "Enviada",             color: "bg-blue-100 text-blue-700" },
-  PARTIAL_RECEIVED: { label: "Recepción parcial",   color: "bg-yellow-100 text-yellow-700" },
-  RECEIVED:         { label: "Recibida",            color: "bg-green-100 text-green-700" },
-  CANCELLED:        { label: "Cancelada",           color: "bg-red-100 text-red-700" },
+const STATUS_COLORS: Record<string, string> = {
+  DRAFT:            "bg-gray-100 text-gray-600",
+  SENT:             "bg-blue-100 text-blue-700",
+  PARTIAL_RECEIVED: "bg-yellow-100 text-yellow-700",
+  RECEIVED:         "bg-green-100 text-green-700",
+  CANCELLED:        "bg-red-100 text-red-700",
 };
-const STATUS = _STATUS as Record<string, { label: string; color: string }>;
-function getStatus(s: string) { return STATUS[s] ?? _STATUS.DRAFT; }
+const STATUS_KEYS: Record<string, string> = {
+  DRAFT: "statusDraft",
+  SENT: "statusSent",
+  PARTIAL_RECEIVED: "statusPartialReceived",
+  RECEIVED: "statusReceived",
+  CANCELLED: "statusCancelled",
+};
 
 export function PurchaseOrdersView() {
   const t = useTranslations("purchaseOrders");
+  const tCommon = useTranslations("common");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [page, setPage] = useState(1);
@@ -105,15 +111,15 @@ export function PurchaseOrdersView() {
         </div>
         <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v === "ALL" ? "" : v); setPage(1); }}>
           <SelectTrigger className="w-44">
-            <SelectValue placeholder="Estado" />
+            <SelectValue placeholder={tCommon("status")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ALL">Todos</SelectItem>
-            <SelectItem value="DRAFT">Borrador</SelectItem>
-            <SelectItem value="SENT">Enviada</SelectItem>
-            <SelectItem value="PARTIAL_RECEIVED">Parcial</SelectItem>
-            <SelectItem value="RECEIVED">Recibida</SelectItem>
-            <SelectItem value="CANCELLED">Cancelada</SelectItem>
+            <SelectItem value="ALL">{tCommon("all")}</SelectItem>
+            <SelectItem value="DRAFT">{t("statusDraft")}</SelectItem>
+            <SelectItem value="SENT">{t("statusSent")}</SelectItem>
+            <SelectItem value="PARTIAL_RECEIVED">{tCommon("partial")}</SelectItem>
+            <SelectItem value="RECEIVED">{t("statusReceived")}</SelectItem>
+            <SelectItem value="CANCELLED">{tCommon("cancelled")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -133,18 +139,19 @@ export function PurchaseOrdersView() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border">
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3">Número</th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3">Proveedor</th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3">Estado</th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">Fecha</th>
-                    <th className="text-right font-medium text-muted-foreground px-4 py-3">Total</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3">{t("colNumber")}</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3">{t("colSupplier")}</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3">{tCommon("status")}</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">{tCommon("date")}</th>
+                    <th className="text-right font-medium text-muted-foreground px-4 py-3">{tCommon("total")}</th>
                     <th className="px-4 py-3 w-12" />
                   </tr>
                 </thead>
                 <tbody>
                   <AnimatePresence>
                     {pos.map((po, i) => {
-                      const cfg = getStatus(po.status);
+                      const statusColor = STATUS_COLORS[po.status] ?? STATUS_COLORS.DRAFT;
+                      const statusLabel = t(STATUS_KEYS[po.status] ?? "statusDraft");
                       return (
                         <motion.tr
                           key={po.id}
@@ -156,7 +163,7 @@ export function PurchaseOrdersView() {
                           <td className="px-4 py-3 font-mono font-medium">{po.number}</td>
                           <td className="px-4 py-3">{(po as any).supplier?.name ?? "—"}</td>
                           <td className="px-4 py-3">
-                            <Badge className={cfg.color}>{cfg.label}</Badge>
+                            <Badge className={statusColor}>{statusLabel}</Badge>
                           </td>
                           <td className="px-4 py-3 hidden md:table-cell text-muted-foreground">
                             {new Date(po.issueDate).toLocaleDateString("es-ES")}
@@ -175,19 +182,19 @@ export function PurchaseOrdersView() {
                                 {(po.status === "SENT" || po.status === "PARTIAL_RECEIVED") && (
                                   <DropdownMenuItem onClick={() => setReceivePoId(po.id)}>
                                     <PackageCheck className="h-4 w-4 mr-2" />
-                                    Registrar recepción
+                                    {t("registerReception")}
                                   </DropdownMenuItem>
                                 )}
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                   className="text-destructive focus:text-destructive"
                                   onClick={() => {
-                                    if (confirm(`¿Eliminar orden ${po.number}?`)) {
+                                    if (confirm(t("confirmDelete", { number: po.number }))) {
                                       deletePo.mutate(po.id);
                                     }
                                   }}
                                 >
-                                  <Trash2 className="h-4 w-4 mr-2" />Eliminar
+                                  <Trash2 className="h-4 w-4 mr-2" />{tCommon("delete")}
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
@@ -205,10 +212,10 @@ export function PurchaseOrdersView() {
 
       {totalPages > 1 && (
         <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <span>Página {page} de {totalPages}</span>
+          <span>{tCommon("page")} {page} {tCommon("of")} {totalPages}</span>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>Anterior</Button>
-            <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>Siguiente</Button>
+            <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>{tCommon("previous")}</Button>
+            <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>{tCommon("next")}</Button>
           </div>
         </div>
       )}
@@ -227,6 +234,8 @@ export function PurchaseOrdersView() {
 }
 
 function CreatePoDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
+  const t = useTranslations("purchaseOrders");
+  const tCommon = useTranslations("common");
   const createPo = useCreatePurchaseOrder();
   const { data: suppliersData } = useSuppliers({ page: 1, limit: 100 });
   const { data: productsData } = useProducts();
@@ -259,8 +268,8 @@ function CreatePoDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (
   }, 0);
 
   async function handleSubmit() {
-    if (!supplierId) return toast.error("Selecciona un proveedor");
-    if (!items.some((i) => i.description)) return toast.error("Añade al menos una línea");
+    if (!supplierId) return toast.error(t("form.selectSupplierRequired"));
+    if (!items.some((i) => i.description)) return toast.error(t("form.addLineRequired"));
     try {
       await createPo.mutateAsync({
         supplierId,
@@ -270,10 +279,10 @@ function CreatePoDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (
           productId: i.productId || null,
         })),
       } as any);
-      toast.success("Orden de compra creada");
+      toast.success(t("createSuccess"));
       onOpenChange(false);
     } catch {
-      toast.error("Error al crear la orden");
+      toast.error(t("createError"));
     }
   }
 
@@ -281,14 +290,14 @@ function CreatePoDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Nueva orden de compra</DialogTitle>
+          <DialogTitle>{t("form.dialogTitle")}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 mt-2">
           <div className="space-y-1">
-            <Label>Proveedor *</Label>
+            <Label>{t("form.supplier")}</Label>
             <Select value={supplierId} onValueChange={setSupplierId}>
               <SelectTrigger>
-                <SelectValue placeholder="Seleccionar proveedor..." />
+                <SelectValue placeholder={t("form.selectSupplier")} />
               </SelectTrigger>
               <SelectContent>
                 {suppliers.map((s) => (
@@ -300,9 +309,9 @@ function CreatePoDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <Label>Líneas</Label>
+              <Label>{t("form.lines")}</Label>
               <Button type="button" variant="outline" size="sm" onClick={addItem}>
-                <Plus className="h-3 w-3 mr-1" />Añadir línea
+                <Plus className="h-3 w-3 mr-1" />{t("form.addLine")}
               </Button>
             </div>
             <div className="space-y-2">
@@ -311,7 +320,7 @@ function CreatePoDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (
                   <div className="col-span-4">
                     <Select value={item.productId} onValueChange={(v) => setItem(i, "productId", v)}>
                       <SelectTrigger className="h-8 text-xs">
-                        <SelectValue placeholder="Producto..." />
+                        <SelectValue placeholder={t("form.product")} />
                       </SelectTrigger>
                       <SelectContent>
                         {products.map((p: any) => (
@@ -321,19 +330,19 @@ function CreatePoDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (
                     </Select>
                     <Input
                       className="h-8 text-xs mt-1"
-                      placeholder="Descripción *"
+                      placeholder={t("form.description")}
                       value={item.description}
                       onChange={(e) => setItem(i, "description", e.target.value)}
                     />
                   </div>
                   <div className="col-span-2">
-                    <Input className="h-8 text-xs" type="number" placeholder="Qty" value={item.quantity} onChange={(e) => setItem(i, "quantity", Number(e.target.value))} />
+                    <Input className="h-8 text-xs" type="number" placeholder={t("form.qty")} value={item.quantity} onChange={(e) => setItem(i, "quantity", Number(e.target.value))} />
                   </div>
                   <div className="col-span-2">
-                    <Input className="h-8 text-xs" type="number" placeholder="Precio" value={item.unitPrice} onChange={(e) => setItem(i, "unitPrice", Number(e.target.value))} />
+                    <Input className="h-8 text-xs" type="number" placeholder={t("form.price")} value={item.unitPrice} onChange={(e) => setItem(i, "unitPrice", Number(e.target.value))} />
                   </div>
                   <div className="col-span-2">
-                    <Input className="h-8 text-xs" type="number" placeholder="IVA %" value={item.taxRate} onChange={(e) => setItem(i, "taxRate", Number(e.target.value))} />
+                    <Input className="h-8 text-xs" type="number" placeholder={t("form.vatPercent")} value={item.taxRate} onChange={(e) => setItem(i, "taxRate", Number(e.target.value))} />
                   </div>
                   <div className="col-span-2 flex justify-end">
                     <Button type="button" variant="ghost" size="icon" className="h-8 w-8" onClick={() => removeItem(i)} disabled={items.length === 1}>
@@ -346,19 +355,19 @@ function CreatePoDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (
           </div>
 
           <div className="space-y-1">
-            <Label>Notas</Label>
-            <Input value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Notas internas..." />
+            <Label>{tCommon("notes")}</Label>
+            <Input value={notes} onChange={(e) => setNotes(e.target.value)} placeholder={t("form.notesPlaceholder")} />
           </div>
 
           <div className="flex justify-between items-center border-t pt-3">
-            <span className="text-sm text-muted-foreground">Total estimado</span>
+            <span className="text-sm text-muted-foreground">{t("form.estimatedTotal")}</span>
             <span className="font-bold text-lg">{formatCurrency(total)}</span>
           </div>
 
           <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+            <Button variant="outline" onClick={() => onOpenChange(false)}>{tCommon("cancel")}</Button>
             <Button disabled={createPo.isPending} onClick={handleSubmit}>
-              {createPo.isPending ? "Creando..." : "Crear orden"}
+              {createPo.isPending ? t("form.creating") : t("form.createOrder")}
             </Button>
           </div>
         </div>
@@ -376,6 +385,8 @@ function ReceiveDialog({
   pos: PurchaseOrder[];
   onClose: () => void;
 }) {
+  const t = useTranslations("purchaseOrders");
+  const tCommon = useTranslations("common");
   const receive = useReceivePurchaseOrder();
   const po = pos.find((p) => p.id === poId);
   const [quantities, setQuantities] = useState<Record<string, number>>(() => {
@@ -392,10 +403,10 @@ function ReceiveDialog({
         id: poId,
         items: Object.entries(quantities).map(([itemId, receivedQty]) => ({ itemId, receivedQty })),
       });
-      toast.success("Recepción registrada");
+      toast.success(t("receive.success"));
       onClose();
     } catch {
-      toast.error("Error al registrar la recepción");
+      toast.error(t("receive.error"));
     }
   }
 
@@ -403,17 +414,17 @@ function ReceiveDialog({
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Registrar recepción — {po.number}</DialogTitle>
+          <DialogTitle>{t("receive.title", { number: po.number })}</DialogTitle>
         </DialogHeader>
         <div className="space-y-3 mt-2">
           {po.items.map((item) => (
             <div key={item.id} className="flex items-center justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium truncate">{item.description}</p>
-                <p className="text-xs text-muted-foreground">Pedido: {Number(item.quantity)}</p>
+                <p className="text-xs text-muted-foreground">{t("receive.ordered", { quantity: Number(item.quantity) })}</p>
               </div>
               <div className="w-28 flex-shrink-0">
-                <Label className="text-xs text-muted-foreground">Recibido</Label>
+                <Label className="text-xs text-muted-foreground">{t("receive.received")}</Label>
                 <Input
                   type="number"
                   min={0}
@@ -429,10 +440,10 @@ function ReceiveDialog({
           ))}
         </div>
         <div className="flex justify-end gap-2 mt-4">
-          <Button variant="outline" onClick={onClose}>Cancelar</Button>
+          <Button variant="outline" onClick={onClose}>{tCommon("cancel")}</Button>
           <Button disabled={receive.isPending} onClick={handleSubmit}>
             <PackageCheck className="h-4 w-4 mr-2" />
-            {receive.isPending ? "Guardando..." : "Confirmar recepción"}
+            {receive.isPending ? t("receive.saving") : t("receive.confirm")}
           </Button>
         </div>
       </DialogContent>

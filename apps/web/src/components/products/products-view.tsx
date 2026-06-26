@@ -18,14 +18,20 @@ import { useExport } from "@/hooks/use-export";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
-const typeConfig: Record<string, { label: string; icon: any; color: string }> = {
-  SERVICE: { label: "Servicio", icon: Settings, color: "text-blue-500 bg-blue-500/10" },
-  DIGITAL: { label: "Digital", icon: Tag, color: "text-purple-500 bg-purple-500/10" },
-  PHYSICAL: { label: "Físico", icon: Boxes, color: "text-amber-500 bg-amber-500/10" },
+const typeIcons: Record<string, { icon: any; color: string }> = {
+  SERVICE: { icon: Settings, color: "text-blue-500 bg-blue-500/10" },
+  DIGITAL: { icon: Tag, color: "text-purple-500 bg-purple-500/10" },
+  PHYSICAL: { icon: Boxes, color: "text-amber-500 bg-amber-500/10" },
 };
 
 export function ProductsView() {
   const t = useTranslations("products");
+  const tCommon = useTranslations("common");
+  const typeLabels: Record<string, string> = {
+    SERVICE: t("type.service"),
+    DIGITAL: t("type.digital"),
+    PHYSICAL: t("type.physical"),
+  };
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
@@ -46,7 +52,7 @@ export function ProductsView() {
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={exportProducts} disabled={exporting} className="gap-2">
             <Download className="h-4 w-4" />
-            {exporting ? "Exportando..." : "Excel"}
+            {exporting ? tCommon("exporting") : tCommon("export")}
           </Button>
           <Button
             onClick={() => { setEditingProduct(null); setDialogOpen(true); }}
@@ -61,7 +67,7 @@ export function ProductsView() {
       <div className="relative w-full max-w-sm">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Buscar productos..."
+          placeholder={t("search")}
           className="pl-9"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -77,19 +83,20 @@ export function ProductsView() {
       ) : products.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <Package className="h-10 w-10 text-muted-foreground mb-3" />
-          <p className="font-medium">No hay productos</p>
+          <p className="font-medium">{t("emptyTitle")}</p>
           <p className="text-sm text-muted-foreground mt-1 mb-4">
-            Añade productos o servicios para usarlos en facturas
+            {t("emptyDescription")}
           </p>
           <Button size="sm" onClick={() => { setEditingProduct(null); setDialogOpen(true); }}>
             <Plus className="h-4 w-4 mr-2" />
-            Añadir producto
+            {t("emptyAction")}
           </Button>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {products.map((product: any, i: number) => {
-            const config = typeConfig[product.type] ?? { label: "Servicio", icon: Settings, color: "text-blue-500 bg-blue-500/10" };
+            const config = typeIcons[product.type] ?? { icon: Settings, color: "text-blue-500 bg-blue-500/10" };
+            const typeLabel = typeLabels[product.type] ?? typeLabels.SERVICE;
             const Icon = config.icon;
             return (
               <motion.div
@@ -108,7 +115,7 @@ export function ProductsView() {
                         <Icon className="h-4 w-4" />
                       </div>
                       <div className="flex items-center gap-1">
-                        <Badge variant="secondary" className="text-xs">{config.label}</Badge>
+                        <Badge variant="secondary" className="text-xs">{typeLabel}</Badge>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button
@@ -123,19 +130,19 @@ export function ProductsView() {
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem onClick={() => { setEditingProduct(product); setDialogOpen(true); }}>
                               <Edit className="h-4 w-4 mr-2" />
-                              Editar
+                              {tCommon("edit")}
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                               className="text-destructive focus:text-destructive"
                               onClick={() => {
-                                if (confirm(`¿Eliminar "${product.name}"?`)) {
+                                if (confirm(t("confirmDelete", { name: product.name }))) {
                                   deleteProduct.mutate(product.id);
                                 }
                               }}
                             >
                               <Trash2 className="h-4 w-4 mr-2" />
-                              Eliminar
+                              {tCommon("delete")}
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -156,7 +163,7 @@ export function ProductsView() {
                     >
                       <span className="text-lg font-bold">{formatCurrency(Number(product.price))}</span>
                       {product.tax && (
-                        <span className="text-xs text-muted-foreground">+{Number(product.tax.rate)}% IVA</span>
+                        <span className="text-xs text-muted-foreground">+{Number(product.tax.rate)}% {t("vatSuffix")}</span>
                       )}
                     </div>
                   </CardContent>

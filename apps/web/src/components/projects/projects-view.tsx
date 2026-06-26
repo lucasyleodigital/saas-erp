@@ -43,23 +43,34 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { LocaleLink as Link } from "@/components/ui/locale-link";
 import { useTranslations } from "next-intl";
 
-const STATUS_TABS = [
-  { value: "ALL", label: "Todos" },
-  { value: "ACTIVE", label: "Activos" },
-  { value: "ON_HOLD", label: "En espera" },
-  { value: "COMPLETED", label: "Completados" },
-  { value: "CANCELLED", label: "Cancelados" },
-];
+const STATUS_TAB_KEYS = ["ALL", "ACTIVE", "ON_HOLD", "COMPLETED", "CANCELLED"] as const;
 
-const STATUS_BADGE: Record<string, { label: string; variant: "success" | "warning" | "info" | "destructive" }> = {
-  ACTIVE:    { label: "Activo",     variant: "success" },
-  ON_HOLD:   { label: "En espera",  variant: "warning" },
-  COMPLETED: { label: "Completado", variant: "info" },
-  CANCELLED: { label: "Cancelado",  variant: "destructive" },
+const STATUS_BADGE_VARIANTS: Record<string, "success" | "warning" | "info" | "destructive"> = {
+  ACTIVE: "success",
+  ON_HOLD: "warning",
+  COMPLETED: "info",
+  CANCELLED: "destructive",
 };
 
 export function ProjectsView() {
   const t = useTranslations("projects");
+  const tCommon = useTranslations("common");
+
+  const STATUS_TAB_LABELS: Record<string, string> = {
+    ALL: t("all"),
+    ACTIVE: t("active"),
+    ON_HOLD: t("onHold"),
+    COMPLETED: t("completed"),
+    CANCELLED: t("cancelled"),
+  };
+
+  const STATUS_BADGE_LABELS: Record<string, string> = {
+    ACTIVE: t("statusActive"),
+    ON_HOLD: t("statusOnHold"),
+    COMPLETED: t("statusCompleted"),
+    CANCELLED: t("statusCancelled"),
+  };
+
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -96,9 +107,9 @@ export function ProjectsView() {
       {/* Status tabs */}
       <Tabs value={statusFilter} onValueChange={setStatusFilter}>
         <TabsList>
-          {STATUS_TABS.map((tab) => (
-            <TabsTrigger key={tab.value} value={tab.value}>
-              {tab.label}
+          {STATUS_TAB_KEYS.map((value) => (
+            <TabsTrigger key={value} value={value}>
+              {STATUS_TAB_LABELS[value]}
             </TabsTrigger>
           ))}
         </TabsList>
@@ -132,7 +143,7 @@ export function ProjectsView() {
               <AlertCircle className="h-6 w-6 text-destructive" />
             </div>
             <p className="font-medium text-destructive">
-              Error al cargar proyectos
+              {t("errorLoading")}
             </p>
           </CardContent>
         </Card>
@@ -160,7 +171,8 @@ export function ProjectsView() {
                 const budget = Number(project.budget) || 0;
                 const spent = Number(project.budgetUsed ?? project.spent ?? 0);
                 const pct = budget > 0 ? Math.min((spent / budget) * 100, 100) : 0;
-                const sb = STATUS_BADGE[project.status] ?? STATUS_BADGE.ACTIVE;
+                const sbVariant = STATUS_BADGE_VARIANTS[project.status] ?? STATUS_BADGE_VARIANTS.ACTIVE;
+                const sbLabel = STATUS_BADGE_LABELS[project.status] ?? STATUS_BADGE_LABELS.ACTIVE;
                 const hours = Number(project.totalHours ?? project.hours ?? 0);
                 const invoiceCount = Number(project.invoiceCount ?? project._count?.invoices ?? 0);
 
@@ -190,11 +202,11 @@ export function ProjectsView() {
                                 {project.name}
                               </p>
                               <p className="text-xs text-muted-foreground truncate">
-                                {project.client?.name ?? project.clientName ?? "Sin cliente"}
+                                {project.client?.name ?? project.clientName ?? t("noClient")}
                               </p>
                             </div>
-                            <Badge variant={sb!.variant} className="shrink-0">
-                              {sb!.label}
+                            <Badge variant={sbVariant} className="shrink-0">
+                              {sbLabel}
                             </Badge>
                           </div>
 
@@ -202,7 +214,7 @@ export function ProjectsView() {
                           {budget > 0 && (
                             <div className="mb-3">
                               <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                                <span>Presupuesto</span>
+                                <span>{t("budget")}</span>
                                 <span>
                                   {formatCurrency(spent)} / {formatCurrency(budget)}
                                 </span>
@@ -227,11 +239,11 @@ export function ProjectsView() {
                           <div className="flex items-center gap-4 text-xs text-muted-foreground">
                             <span className="flex items-center gap-1">
                               <Clock className="h-3.5 w-3.5" />
-                              {hours.toFixed(1)} horas
+                              {hours.toFixed(1)} {t("hours")}
                             </span>
                             <span className="flex items-center gap-1">
                               <FileText className="h-3.5 w-3.5" />
-                              {invoiceCount} facturas
+                              {invoiceCount} {t("invoicesCount")}
                             </span>
                           </div>
                         </CardContent>
@@ -242,7 +254,7 @@ export function ProjectsView() {
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            if (confirm(`Eliminar "${project.name}"?`)) {
+                            if (confirm(t("confirmDelete", { name: project.name }))) {
                               deleteProject.mutate(project.id);
                             }
                           }}
@@ -285,6 +297,9 @@ function NewProjectDialog({
   onSubmit: (data: Record<string, unknown>) => void;
   isPending: boolean;
 }) {
+  const t = useTranslations("projects");
+  const tCommon = useTranslations("common");
+
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -321,14 +336,14 @@ function NewProjectDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Nuevo proyecto</DialogTitle>
+          <DialogTitle>{t("form.dialogTitle")}</DialogTitle>
           <DialogDescription>
-            Crea un nuevo proyecto y asignalo a un cliente
+            {t("form.dialogDesc")}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="proj-name">Nombre *</Label>
+            <Label htmlFor="proj-name">{t("form.name")}</Label>
             <Input
               id="proj-name"
               value={form.name}
@@ -338,7 +353,7 @@ function NewProjectDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="proj-desc">Descripcion</Label>
+            <Label htmlFor="proj-desc">{tCommon("description")}</Label>
             <Input
               id="proj-desc"
               value={form.description}
@@ -347,13 +362,13 @@ function NewProjectDialog({
           </div>
 
           <div className="space-y-2">
-            <Label>Cliente</Label>
+            <Label>{t("form.client")}</Label>
             <Select
               value={form.clientId}
               onValueChange={(v) => update("clientId", v)}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Seleccionar cliente" />
+                <SelectValue placeholder={t("form.selectClient")} />
               </SelectTrigger>
               <SelectContent>
                 {clients.map((c: any) => (
@@ -367,7 +382,7 @@ function NewProjectDialog({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="proj-budget">Presupuesto</Label>
+              <Label htmlFor="proj-budget">{t("form.budget")}</Label>
               <Input
                 id="proj-budget"
                 type="number"
@@ -377,7 +392,7 @@ function NewProjectDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="proj-rate">Tarifa / hora</Label>
+              <Label htmlFor="proj-rate">{t("form.hourlyRate")}</Label>
               <Input
                 id="proj-rate"
                 type="number"
@@ -390,7 +405,7 @@ function NewProjectDialog({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="proj-start">Fecha inicio</Label>
+              <Label htmlFor="proj-start">{t("form.startDate")}</Label>
               <Input
                 id="proj-start"
                 type="date"
@@ -399,7 +414,7 @@ function NewProjectDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="proj-end">Fecha fin</Label>
+              <Label htmlFor="proj-end">{t("form.endDate")}</Label>
               <Input
                 id="proj-end"
                 type="date"
@@ -410,7 +425,7 @@ function NewProjectDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="proj-color">Color</Label>
+            <Label htmlFor="proj-color">{t("form.color")}</Label>
             <div className="flex items-center gap-3">
               <input
                 id="proj-color"
@@ -429,10 +444,10 @@ function NewProjectDialog({
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              Cancelar
+              {tCommon("cancel")}
             </Button>
             <Button type="submit" disabled={!form.name || isPending}>
-              {isPending ? "Creando..." : "Crear proyecto"}
+              {isPending ? t("form.creating") : t("form.createProject")}
             </Button>
           </DialogFooter>
         </form>

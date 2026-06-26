@@ -149,7 +149,11 @@
     "newInvoice": "Nueva factura",
     "newClient": "Nuevo cliente",
     "newQuote": "Nuevo presupuesto",
-    "newDeal": "Nuevo lead"
+    "newDeal": "Nuevo lead",
+    "viewPipeline": "Ver pipeline",
+    "viewAll": "Ver todas",
+    "noInvoicesYet": "No tienes facturas todavia",
+    "noClient": "Sin cliente"
   },
   "clients": {
     "title": "Clientes",
@@ -381,6 +385,11 @@
     "stock": "Stock",
     "category": "Categoría",
     "noProducts": "No tienes productos todavía",
+    "type": {
+      "service": "Servicio",
+      "digital": "Digital",
+      "physical": "Fisico"
+    },
     "form": {
       "name": "Nombre del producto",
       "description": "Descripción",
@@ -390,7 +399,15 @@
       "stock": "Stock inicial",
       "category": "Categoría",
       "createSuccess": "Producto creado correctamente",
-      "updateSuccess": "Producto actualizado correctamente"
+      "updateSuccess": "Producto actualizado correctamente",
+      "dialogTitleEdit": "Editar producto",
+      "dialogTitleNew": "Nuevo producto",
+      "nameRequired": "Nombre *",
+      "namePlaceholder": "Nombre del producto",
+      "descriptionPlaceholder": "Descripcion del producto",
+      "type": "Tipo",
+      "salePrice": "Precio venta (€) *",
+      "cost": "Coste (€)"
     }
   },
   "pipeline": {
@@ -421,11 +438,34 @@
     "search": "Buscar leads...",
     "convert": "Convertir a cliente",
     "source": "Origen",
+    "company": "Empresa",
+    "noResults": "No hay leads",
+    "noResultsDesc": "Registra nuevas oportunidades de venta",
+    "confirmDelete": "Eliminar el lead \"{name}\"? Esta accion no se puede deshacer.",
     "status": {
       "new": "Nuevo",
       "contacted": "Contactado",
       "qualified": "Calificado",
       "lost": "Perdido"
+    },
+    "sources": {
+      "web": "Web",
+      "referral": "Referido",
+      "linkedin": "LinkedIn",
+      "googleAds": "Google Ads",
+      "call": "Llamada",
+      "email": "Email",
+      "event": "Evento",
+      "other": "Otro"
+    },
+    "form": {
+      "namePlaceholder": "Maria Garcia",
+      "emailPlaceholder": "maria@empresa.com",
+      "phonePlaceholder": "600 123 456",
+      "companyPlaceholder": "Empresa SL",
+      "selectSource": "Seleccionar...",
+      "notesPlaceholder": "Informacion adicional sobre este lead...",
+      "createLead": "Crear lead"
     }
   },
   "automations": {
@@ -439,7 +479,104 @@
     "runs": "Ejecuciones",
     "lastRun": "Última ejecución",
     "noAutomations": "No tienes automatizaciones todavía",
-    "upgrade": "Actualiza tu plan para usar automatizaciones"
+    "upgrade": "Actualiza tu plan para usar automatizaciones",
+    "newRule": "Nueva regla",
+    "createFromScratch": "Crear desde cero",
+    "emptyDescription": "Elige una plantilla de arriba o crea una regla personalizada desde cero.",
+    "triggers": {
+      "invoiceCreated": "Factura creada",
+      "invoicePaid": "Factura pagada",
+      "invoiceOverdue": "Factura vencida",
+      "quoteCreated": "Presupuesto creado",
+      "quoteAccepted": "Presupuesto aceptado",
+      "leadCreated": "Nuevo lead",
+      "dealStageChanged": "Deal cambia de etapa",
+      "clientCreated": "Nuevo cliente",
+      "paymentReceived": "Pago recibido",
+      "orderCreated": "Pedido creado",
+      "purchaseReceived": "Compra recibida en almacen",
+      "lowStock": "Stock por debajo del minimo"
+    },
+    "actions": {
+      "sendEmail": "Enviar email",
+      "createNotification": "Crear notificacion interna",
+      "sendWebhook": "Enviar webhook (HTTP POST)"
+    },
+    "templates": {
+      "title": "Plantillas rapidas",
+      "clickToUse": "— haz clic para usar",
+      "overdueReminder": {
+        "name": "Recordatorio de factura vencida",
+        "description": "Envia un email automatico cuando una factura supera la fecha de vencimiento"
+      },
+      "welcomeClient": {
+        "name": "Bienvenida a nuevo cliente",
+        "description": "Saluda automaticamente a cada cliente nuevo que se da de alta"
+      },
+      "newLeadAlert": {
+        "name": "Alerta de nuevo lead",
+        "description": "Recibe una notificacion interna cada vez que entra un lead nuevo"
+      },
+      "paymentConfirmation": {
+        "name": "Confirmacion de pago recibido",
+        "description": "Envia un email de confirmacion automatico al recibir un pago"
+      },
+      "quoteWebhook": {
+        "name": "Webhook al aceptar presupuesto",
+        "description": "Notifica a tu CRM o Zapier cuando un cliente acepta un presupuesto"
+      },
+      "lowStockAlert": {
+        "name": "Alerta de stock bajo",
+        "description": "Recibe una notificacion interna cuando el stock de un producto cae por debajo del minimo"
+      },
+      "newOrderNotif": {
+        "name": "Notificacion de nuevo pedido",
+        "description": "Avisa internamente cuando llega un nuevo pedido de cliente"
+      },
+      "purchaseReceivedAlert": {
+        "name": "Alerta de compra recibida",
+        "description": "Notifica cuando una orden de compra queda completamente recibida en almacen"
+      }
+    },
+    "form": {
+      "editTitle": "Editar automatizacion",
+      "newTitle": "Nueva automatizacion",
+      "triggerLabel": "Cuando ocurra esto (trigger) *",
+      "selectEvent": "Seleccionar evento...",
+      "actionLabel": "Ejecutar esta accion *",
+      "emailConfig": "Config del email",
+      "subject": "Asunto",
+      "body": "Cuerpo",
+      "notifConfig": "Config de notificacion",
+      "notifTitleLabel": "Titulo",
+      "message": "Mensaje",
+      "webhookConfig": "Config del webhook",
+      "namePlaceholder": "Recordatorio de pago",
+      "nameRequired": "Nombre obligatorio",
+      "selectTrigger": "Selecciona un trigger",
+      "selectAction": "Selecciona una accion",
+      "invalidUrl": "URL invalida"
+    },
+    "stats": {
+      "totalRules": "Total reglas",
+      "totalExecutions": "Ejecuciones totales",
+      "executedCount": "Ejecutada {count} veces",
+      "noExecutions": "Sin ejecuciones aun",
+      "last": "ultima",
+      "testNow": "Probar ahora",
+      "pause": "Pausar",
+      "activate": "Activar"
+    },
+    "logs": {
+      "title": "Historial de ejecuciones",
+      "noLogs": "Sin ejecuciones registradas todavia"
+    },
+    "planWall": {
+      "title": "Las automatizaciones son de pago",
+      "description": "Con el plan FREE no puedes crear automatizaciones. Actualiza a STARTER o superior para desbloquear flujos automaticos de email, notificaciones y webhooks.",
+      "viewPlans": "Ver planes",
+      "upgradeStarter": "Actualizar a Starter"
+    }
   },
   "accounting": {
     "title": "Contabilidad",
@@ -456,7 +593,109 @@
     "stock": "Stock actual",
     "movements": "Movimientos",
     "lowStock": "Stock bajo",
-    "noStock": "Sin stock"
+    "noStock": "Sin stock",
+    "tabs": {
+      "stock": "Stock",
+      "alerts": "Alertas",
+      "movements": "Movimientos",
+      "valuation": "Valoracion",
+      "warehouses": "Almacenes"
+    },
+    "summary": {
+      "products": "Productos",
+      "lowStock": "Stock bajo",
+      "outOfStock": "Sin stock",
+      "totalValue": "Valor total"
+    },
+    "moveType": {
+      "purchase": "Compra",
+      "sale": "Venta",
+      "adjustmentIn": "Ajuste entrada",
+      "adjustmentOut": "Ajuste salida",
+      "return": "Devolucion",
+      "transferOut": "Transferencia salida",
+      "transferIn": "Transferencia entrada",
+      "in": "Entrada"
+    },
+    "stockTab": {
+      "searchProduct": "Buscar producto...",
+      "allWarehouses": "Todos los almacenes",
+      "physicalInventory": "Inventario fisico",
+      "noProducts": "No hay productos",
+      "product": "Producto",
+      "sku": "SKU",
+      "stockHeader": "Stock",
+      "minimum": "Minimo",
+      "value": "Valor",
+      "addMovement": "Anadir movimiento",
+      "transfer": "Transferir",
+      "minStock": "Stock minimo"
+    },
+    "alertsTab": {
+      "description": "Productos que han alcanzado o estan por debajo de su stock minimo.",
+      "noAlerts": "Sin alertas activas",
+      "allAboveMin": "Todos los productos estan por encima de su stock minimo",
+      "stockLabel": "Stock:",
+      "minLabel": "Minimo:"
+    },
+    "movementsTab": {
+      "type": "Tipo",
+      "allTypes": "Todos los tipos",
+      "warehouse": "Almacen",
+      "quantity": "Cantidad",
+      "reference": "Referencia",
+      "noMovements": "No hay movimientos"
+    },
+    "valuationTab": {
+      "costValue": "Valor de coste",
+      "saleValue": "Valor de venta",
+      "avgMargin": "Margen medio",
+      "noCostProducts": "No hay productos con coste definido",
+      "unitCost": "Coste ud.",
+      "unitPrice": "PVP ud.",
+      "margin": "Margen",
+      "stockValue": "Valor stock"
+    },
+    "warehousesTab": {
+      "newWarehouse": "Nuevo almacen",
+      "noWarehouses": "No hay almacenes configurados",
+      "default": "Por defecto",
+      "setDefault": "Marcar como defecto",
+      "confirmDelete": "Eliminar \"{name}\"?"
+    },
+    "warehouseDialog": {
+      "editTitle": "Editar almacen"
+    },
+    "moveDialog": {
+      "title": "Movimiento — {name}",
+      "warehouse": "Almacen",
+      "referencePlaceholder": "N factura, albaran...",
+      "saving": "Guardando...",
+      "register": "Registrar"
+    },
+    "transferDialog": {
+      "title": "Transferir — {name}",
+      "from": "Desde",
+      "to": "Hacia",
+      "sourceWarehouse": "Almacen origen",
+      "destWarehouse": "Almacen destino",
+      "completeAllFields": "Completa todos los campos",
+      "transferring": "Transfiriendo...",
+      "transfer": "Transferir"
+    },
+    "physicalDialog": {
+      "title": "Inventario fisico",
+      "helpText": "Introduce el recuento real. Se crearan ajustes automaticos donde haya diferencias.",
+      "noTrackedProducts": "No hay productos con seguimiento de stock activo",
+      "system": "Sistema:",
+      "applying": "Aplicando...",
+      "apply": "Aplicar inventario"
+    },
+    "minStockDialog": {
+      "title": "Stock minimo — {name}",
+      "helpText": "Se generara una alerta cuando el stock baje a este nivel. Deja vacio para desactivar.",
+      "noMinimum": "Sin minimo"
+    }
   },
   "settings": {
     "title": "Configuración",
@@ -550,7 +789,29 @@
     "irpfWithheld": "IRPF retenido",
     "approveAll": "Aprobar todas",
     "markPaid": "Marcar pagadas",
-    "loading": "Cargando nominas..."
+    "loading": "Cargando nominas...",
+    "generateSuccess": "{count} nominas generadas",
+    "generateError": "Error al generar nominas",
+    "approveSuccess": "{count} nominas aprobadas",
+    "paidSuccess": "{count} nominas marcadas como pagadas",
+    "confirmDeletePayroll": "Eliminar esta nomina? Esta accion no se puede deshacer.",
+    "deleteSuccess": "Nomina eliminada",
+    "sepaError": "Error al generar SEPA XML",
+    "paidCount": "{count} pagadas",
+    "liquidToPay": "liquido a pagar",
+    "ssLabel": "SS: {amount}",
+    "toPayAEAT": "a ingresar en AEAT",
+    "noResultsForMonth": "No hay nominas para {month} {year}",
+    "table": {
+      "employee": "Empleado",
+      "gross": "Bruto",
+      "ssEmployee": "SS empleado",
+      "irpf": "IRPF",
+      "net": "Neto",
+      "viewPayroll": "Ver nomina",
+      "approve": "Aprobar",
+      "markAsPaid": "Marcar pagada"
+    }
   },
   "projects": {
     "title": "Proyectos",
@@ -563,7 +824,47 @@
     "active": "Activos",
     "onHold": "En espera",
     "completed": "Completados",
-    "cancelled": "Cancelados"
+    "cancelled": "Cancelados",
+    "statusActive": "Activo",
+    "statusOnHold": "En espera",
+    "statusCompleted": "Completado",
+    "statusCancelled": "Cancelado",
+    "errorLoading": "Error al cargar proyectos",
+    "errorLoadingDetail": "Error al cargar el proyecto",
+    "noClient": "Sin cliente",
+    "budget": "Presupuesto",
+    "hours": "horas",
+    "invoicesCount": "facturas",
+    "confirmDelete": "Eliminar \"{name}\"?",
+    "detail": {
+      "revenue": "Ingresos",
+      "hours": "Horas",
+      "budgetUsed": "Presupuesto usado",
+      "margin": "Margen",
+      "recentTimeEntries": "Entradas de tiempo recientes",
+      "noTimeEntries": "No hay entradas de tiempo registradas",
+      "employee": "Empleado",
+      "clockIn": "Entrada",
+      "clockOut": "Salida",
+      "hoursCol": "Horas",
+      "linkedInvoices": "Facturas vinculadas",
+      "noLinkedInvoices": "No hay facturas vinculadas a este proyecto",
+      "invoiceNumber": "Numero"
+    },
+    "form": {
+      "dialogTitle": "Nuevo proyecto",
+      "dialogDesc": "Crea un nuevo proyecto y asignalo a un cliente",
+      "name": "Nombre *",
+      "client": "Cliente",
+      "selectClient": "Seleccionar cliente",
+      "budget": "Presupuesto",
+      "hourlyRate": "Tarifa / hora",
+      "startDate": "Fecha inicio",
+      "endDate": "Fecha fin",
+      "color": "Color",
+      "creating": "Creando...",
+      "createProject": "Crear proyecto"
+    }
   },
   "suppliers": {
     "title": "Proveedores",
@@ -571,7 +872,25 @@
     "new": "Nuevo proveedor",
     "search": "Buscar por nombre, email, CIF...",
     "noResults": "No hay proveedores",
-    "noResultsDesc": "Empieza anadiendo tu primer proveedor"
+    "noResultsDesc": "Empieza anadiendo tu primer proveedor",
+    "supplier": "Proveedor",
+    "contact": "Contacto",
+    "cifNif": "CIF/NIF",
+    "purchaseOrdersShort": "OC",
+    "updateSuccess": "Proveedor actualizado",
+    "createSuccess": "Proveedor creado",
+    "saveError": "Error al guardar el proveedor",
+    "confirmDelete": "Eliminar a {name}?",
+    "pageOf": "Pagina {page} de {totalPages}",
+    "form": {
+      "dialogTitleEdit": "Editar proveedor",
+      "dialogTitleNew": "Nuevo proveedor",
+      "name": "Nombre *",
+      "contactName": "Persona de contacto",
+      "website": "Web",
+      "bankAccount": "IBAN / Cuenta bancaria",
+      "saving": "Guardando..."
+    }
   },
   "orders": {
     "title": "Pedidos",
@@ -579,7 +898,42 @@
     "new": "Nuevo pedido",
     "search": "Buscar por numero o cliente...",
     "noResults": "No hay pedidos",
-    "noResultsDesc": "Crea tu primer pedido de cliente"
+    "noResultsDesc": "Crea tu primer pedido de cliente",
+    "number": "Numero",
+    "client": "Cliente",
+    "createDeliveryNote": "Crear albaran",
+    "confirmDelete": "Eliminar pedido {number}?",
+    "confirmConvert": "Convertir pedido {number} en albaran?",
+    "convertSuccess": "Albaran {number} creado",
+    "convertError": "Error al convertir el pedido",
+    "pageOf": "Pagina {page} de {totalPages}",
+    "status": {
+      "pending": "Pendiente",
+      "confirmed": "Confirmado",
+      "shipped": "Enviado",
+      "delivered": "Entregado",
+      "cancelled": "Cancelado"
+    },
+    "form": {
+      "dialogTitle": "Nuevo pedido",
+      "client": "Cliente *",
+      "selectClient": "Seleccionar cliente...",
+      "lines": "Lineas",
+      "addLine": "Anadir linea",
+      "product": "Producto...",
+      "description": "Descripcion *",
+      "quantity": "Cant.",
+      "price": "Precio",
+      "taxRate": "IVA %",
+      "notesPlaceholder": "Notas internas...",
+      "estimatedTotal": "Total estimado",
+      "creating": "Creando...",
+      "createOrder": "Crear pedido",
+      "selectClientRequired": "Selecciona un cliente",
+      "addLineRequired": "Anade al menos una linea",
+      "createSuccess": "Pedido creado",
+      "createError": "Error al crear el pedido"
+    }
   },
   "purchaseOrders": {
     "title": "Ordenes de compra",
@@ -587,7 +941,46 @@
     "new": "Nueva orden",
     "search": "Buscar por numero o proveedor...",
     "noResults": "No hay ordenes de compra",
-    "noResultsDesc": "Crea tu primera orden de compra a un proveedor"
+    "noResultsDesc": "Crea tu primera orden de compra a un proveedor",
+    "colNumber": "Numero",
+    "colSupplier": "Proveedor",
+    "statusDraft": "Borrador",
+    "statusSent": "Enviada",
+    "statusPartialReceived": "Parcial",
+    "statusReceived": "Recibida",
+    "statusCancelled": "Cancelada",
+    "registerReception": "Registrar recepcion",
+    "confirmDelete": "Eliminar la orden {number}?",
+    "form": {
+      "dialogTitle": "Nueva orden de compra",
+      "supplier": "Proveedor *",
+      "selectSupplier": "Seleccionar proveedor...",
+      "lines": "Lineas",
+      "addLine": "Anadir linea",
+      "product": "Producto...",
+      "description": "Descripcion *",
+      "qty": "Qty",
+      "price": "Precio",
+      "vatPercent": "IVA %",
+      "notes": "Notas",
+      "notesPlaceholder": "Notas internas...",
+      "estimatedTotal": "Total estimado",
+      "creating": "Creando...",
+      "createOrder": "Crear orden",
+      "selectSupplierRequired": "Selecciona un proveedor",
+      "addLineRequired": "Anade al menos una linea"
+    },
+    "createSuccess": "Orden de compra creada",
+    "createError": "Error al crear la orden",
+    "receive": {
+      "title": "Registrar recepcion — {number}",
+      "ordered": "Pedido: {quantity}",
+      "received": "Recibido",
+      "saving": "Guardando...",
+      "confirm": "Confirmar recepcion",
+      "success": "Recepcion registrada",
+      "error": "Error al registrar la recepcion"
+    }
   },
   "deliveryNotes": {
     "title": "Albaranes",
@@ -608,7 +1001,40 @@
     "subtitle": "Registra y gestiona el tiempo de trabajo",
     "new": "Registrar horas",
     "noResults": "No hay entradas",
-    "noResultsDesc": "Registra la primera entrada de tiempo"
+    "noResultsDesc": "Registra la primera entrada de tiempo",
+    "summary": {
+      "today": "Hoy",
+      "thisWeek": "Esta semana",
+      "thisMonth": "Este mes"
+    },
+    "loadError": "Error al cargar entradas",
+    "inProgress": "En curso",
+    "confirmDelete": "Eliminar esta entrada?",
+    "table": {
+      "employee": "Empleado",
+      "project": "Proyecto",
+      "clockIn": "Entrada",
+      "clockOut": "Salida"
+    },
+    "filter": {
+      "allEmployees": "Todos los empleados",
+      "allProjects": "Todos los proyectos"
+    },
+    "dialog": {
+      "title": "Registrar horas",
+      "description": "Registra una entrada de tiempo para un empleado",
+      "employee": "Empleado *",
+      "selectEmployee": "Seleccionar empleado",
+      "project": "Proyecto (opcional)",
+      "noProject": "Sin proyecto",
+      "date": "Fecha *",
+      "clockIn": "Entrada *",
+      "clockOut": "Salida *",
+      "break": "Descanso (min)",
+      "notesPlaceholder": "Notas opcionales...",
+      "submitting": "Registrando...",
+      "submit": "Registrar"
+    }
   },
   "errors": {
     "unauthorized": "No tienes permiso para realizar esta acción",

@@ -7,33 +7,39 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 import { LocaleLink as Link } from "@/components/ui/locale-link";
 import { ArrowRight } from "lucide-react";
 import { useRecentInvoices } from "@/hooks/use-dashboard";
+import { useTranslations } from "next-intl";
 
-const STATUS_CONFIG: Record<
-  string,
-  {
-    label: string;
-    variant: "success" | "info" | "destructive" | "secondary" | "warning";
-  }
-> = {
-  PAID: { label: "Pagada", variant: "success" },
-  SENT: { label: "Enviada", variant: "info" },
-  PARTIAL: { label: "Parcial", variant: "warning" },
-  OVERDUE: { label: "Vencida", variant: "destructive" },
-  DRAFT: { label: "Borrador", variant: "secondary" },
-  CANCELLED: { label: "Cancelada", variant: "secondary" },
+const STATUS_VARIANTS: Record<string, "success" | "info" | "destructive" | "secondary" | "warning"> = {
+  PAID: "success",
+  SENT: "info",
+  PARTIAL: "warning",
+  OVERDUE: "destructive",
+  DRAFT: "secondary",
+  CANCELLED: "secondary",
+};
+
+const STATUS_KEYS: Record<string, string> = {
+  PAID: "paid",
+  SENT: "sent",
+  PARTIAL: "partial",
+  OVERDUE: "overdue",
+  DRAFT: "draft",
+  CANCELLED: "cancelled",
 };
 
 export function RecentInvoices() {
   const { data: invoices, isLoading } = useRecentInvoices();
+  const t = useTranslations("dashboard");
+  const tCommon = useTranslations("common");
 
   return (
     <Card>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle>Facturas recientes</CardTitle>
+          <CardTitle>{t("recentInvoices")}</CardTitle>
           <Button variant="ghost" size="sm" asChild>
             <Link href="/facturas" className="text-xs gap-1">
-              Ver todas <ArrowRight className="h-3 w-3" />
+              {t("viewAll")} <ArrowRight className="h-3 w-3" />
             </Link>
           </Button>
         </div>
@@ -50,13 +56,14 @@ export function RecentInvoices() {
           </div>
         ) : !invoices || invoices.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-4">
-            No hay facturas todavía
+            {t("noInvoicesYet")}
           </p>
         ) : (
           <div className="space-y-3">
             {invoices.map((inv: any) => {
-              const config =
-                STATUS_CONFIG[inv.status] ?? { label: "Borrador", variant: "secondary" as const };
+              const variant = STATUS_VARIANTS[inv.status] ?? "secondary";
+              const statusKey = STATUS_KEYS[inv.status] ?? "draft";
+              const label = tCommon(statusKey);
               return (
                 <Link
                   key={inv.id}
@@ -65,7 +72,7 @@ export function RecentInvoices() {
                 >
                   <div className="min-w-0">
                     <p className="text-sm font-medium truncate">
-                      {inv.client?.name ?? "Sin cliente"}
+                      {inv.client?.name ?? t("noClient")}
                     </p>
                     <p className="text-xs text-muted-foreground">
                       <span className="font-mono">{inv.number}</span> ·{" "}
@@ -76,7 +83,7 @@ export function RecentInvoices() {
                     <span className="text-sm font-semibold">
                       {formatCurrency(Number(inv.total))}
                     </span>
-                    <Badge variant={config.variant}>{config.label}</Badge>
+                    <Badge variant={variant}>{label}</Badge>
                   </div>
                 </Link>
               );

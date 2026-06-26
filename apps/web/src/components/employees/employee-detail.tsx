@@ -46,9 +46,15 @@ import {
   CreditCard,
 } from "lucide-react";
 import { LocaleLink as Link } from "@/components/ui/locale-link";
+import { useTranslations } from "next-intl";
+import { useLocale } from "@/hooks/use-locale";
 
-const TABS = ["Ficha", "Horario", "Ausencias"] as const;
-type Tab = typeof TABS[number];
+const TAB_KEYS = ["profile", "schedule", "leaves"] as const;
+type Tab = typeof TAB_KEYS[number];
+
+const LOCALE_MAP: Record<string, string> = {
+  es: "es-ES", en: "en-US", ca: "ca-ES", eu: "eu-ES", gl: "gl-ES",
+};
 
 function getInitials(first: string, last: string) {
   return `${first[0] ?? ""}${last[0] ?? ""}`.toUpperCase();
@@ -62,6 +68,10 @@ function formatMinutes(minutes: number | null): string {
 }
 
 export function EmployeeDetailView({ id }: { id: string }) {
+  const t = useTranslations("employees");
+  const tCommon = useTranslations("common");
+  const locale = useLocale();
+  const dateLocale = LOCALE_MAP[locale] ?? "es-ES";
   const { data: employee, isLoading } = useEmployee(id);
   const updateEmployee = useUpdateEmployee();
   const clockIn  = useClockIn();
@@ -78,7 +88,7 @@ export function EmployeeDetailView({ id }: { id: string }) {
   });
   const { data: leaveData } = useLeaveRequests({ employeeId: id });
 
-  const [activeTab, setActiveTab] = useState<Tab>("Ficha");
+  const [activeTab, setActiveTab] = useState<Tab>("profile");
   const [leaveForm, setLeaveForm] = useState({ type: "VACATION", startDate: "", endDate: "", reason: "" });
 
   if (isLoading) {
@@ -91,7 +101,7 @@ export function EmployeeDetailView({ id }: { id: string }) {
     );
   }
 
-  if (!employee) return <div className="text-center py-20 text-muted-foreground">Empleado no encontrado</div>;
+  if (!employee) return <div className="text-center py-20 text-muted-foreground">{t("detail.notFound")}</div>;
 
   const statusCfg = EMPLOYEE_STATUS_CONFIG[employee.status] ?? EMPLOYEE_STATUS_CONFIG.ACTIVE;
   const entries = timeData?.entries ?? [];
@@ -117,7 +127,7 @@ export function EmployeeDetailView({ id }: { id: string }) {
                   {statusCfg!.label}
                 </span>
               </div>
-              <p className="text-sm text-muted-foreground">{employee.position ?? "Sin cargo"}{employee.department ? ` · ${employee.department}` : ""}</p>
+              <p className="text-sm text-muted-foreground">{employee.position ?? t("detail.noPosition")}{employee.department ? ` · ${employee.department}` : ""}</p>
             </div>
           </div>
         </div>
@@ -125,7 +135,7 @@ export function EmployeeDetailView({ id }: { id: string }) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="gap-1">
-              Estado <ChevronDown className="h-3 w-3" />
+              {tCommon("status")} <ChevronDown className="h-3 w-3" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -144,7 +154,7 @@ export function EmployeeDetailView({ id }: { id: string }) {
 
       {/* Tabs */}
       <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg w-fit">
-        {TABS.map((tab) => (
+        {TAB_KEYS.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -155,29 +165,29 @@ export function EmployeeDetailView({ id }: { id: string }) {
                 : "text-muted-foreground hover:text-foreground"
             )}
           >
-            {tab === "Ficha" && <User className="h-3.5 w-3.5" />}
-            {tab === "Horario" && <Clock className="h-3.5 w-3.5" />}
-            {tab === "Ausencias" && <CalendarOff className="h-3.5 w-3.5" />}
-            {tab}
+            {tab === "profile" && <User className="h-3.5 w-3.5" />}
+            {tab === "schedule" && <Clock className="h-3.5 w-3.5" />}
+            {tab === "leaves" && <CalendarOff className="h-3.5 w-3.5" />}
+            {t(`detail.tabs.${tab}`)}
           </button>
         ))}
       </div>
 
       {/* ── FICHA ─────────────────────────────── */}
-      {activeTab === "Ficha" && (
+      {activeTab === "profile" && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm flex items-center gap-2">
-                <User className="h-4 w-4" /> Datos personales
+                <User className="h-4 w-4" /> {t("detail.personalData")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
               {[
-                { icon: Mail,   label: "Email",    value: employee.email },
-                { icon: Phone,  label: "Teléfono", value: employee.phone },
-                { icon: User,   label: "NIF/NIE",  value: employee.nif },
-                { icon: User,   label: "Nº SS",    value: employee.socialSecurityNumber },
+                { icon: Mail,   label: tCommon("email"),    value: employee.email },
+                { icon: Phone,  label: tCommon("phone"), value: employee.phone },
+                { icon: User,   label: t("detail.nif"),  value: employee.nif },
+                { icon: User,   label: t("detail.ssNumber"),    value: employee.socialSecurityNumber },
               ].map(({ icon: Icon, label, value }) => value ? (
                 <div key={label} className="flex items-center gap-2">
                   <Icon className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
@@ -196,7 +206,7 @@ export function EmployeeDetailView({ id }: { id: string }) {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm flex items-center gap-2">
-                <Briefcase className="h-4 w-4" /> Datos laborales
+                <Briefcase className="h-4 w-4" /> {t("detail.workData")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
@@ -253,7 +263,7 @@ export function EmployeeDetailView({ id }: { id: string }) {
       )}
 
       {/* ── HORARIO ───────────────────────────── */}
-      {activeTab === "Horario" && (
+      {activeTab === "schedule" && (
         <div className="space-y-4">
           {/* Clock in/out */}
           <Card>
@@ -351,7 +361,7 @@ export function EmployeeDetailView({ id }: { id: string }) {
       )}
 
       {/* ── AUSENCIAS ─────────────────────────── */}
-      {activeTab === "Ausencias" && (
+      {activeTab === "leaves" && (
         <div className="space-y-4">
           {/* New leave request form */}
           <Card>

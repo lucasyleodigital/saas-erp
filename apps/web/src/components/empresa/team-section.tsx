@@ -47,13 +47,17 @@ import {
 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
-const ASSIGNABLE_ROLES = [
-  { value: "ADMIN",      label: "Administrador",  desc: "Acceso completo excepto transferir propiedad" },
-  { value: "ACCOUNTANT", label: "Contable",        desc: "Acceso a contabilidad, facturas y presupuestos" },
-  { value: "SALES",      label: "Ventas",          desc: "Acceso a CRM, leads y pipeline" },
-  { value: "EMPLOYEE",   label: "Empleado",        desc: "Acceso básico de solo lectura" },
-];
+function useAssignableRoles() {
+  const t = useTranslations("team");
+  return [
+    { value: "ADMIN",      label: t("roles.admin"),      desc: t("roles.adminDesc") },
+    { value: "ACCOUNTANT", label: t("roles.accountant"),  desc: t("roles.accountantDesc") },
+    { value: "SALES",      label: t("roles.sales"),       desc: t("roles.salesDesc") },
+    { value: "EMPLOYEE",   label: t("roles.employee"),    desc: t("roles.employeeDesc") },
+  ];
+}
 
 const ROLE_ICONS: Record<string, any> = {
   OWNER: Crown,
@@ -61,6 +65,9 @@ const ROLE_ICONS: Record<string, any> = {
 };
 
 export function TeamSection({ currentRole }: { currentRole: string }) {
+  const t = useTranslations("team");
+  const tCommon = useTranslations("common");
+  const ASSIGNABLE_ROLES = useAssignableRoles();
   const { data, isLoading } = useMembers();
   const inviteMember = useInviteMember();
   const updateRole = useUpdateMemberRole();
@@ -94,17 +101,17 @@ export function TeamSection({ currentRole }: { currentRole: string }) {
         <div className="flex items-center gap-2">
           <Users className="h-5 w-5 text-muted-foreground" />
           <div>
-            <h3 className="font-semibold">Equipo</h3>
+            <h3 className="font-semibold">{t("title")}</h3>
             <p className="text-sm text-muted-foreground">
-              {members.length} miembro{members.length !== 1 ? "s" : ""}
-              {invitations.length > 0 && ` · ${invitations.length} invitación${invitations.length !== 1 ? "es" : ""} pendiente${invitations.length !== 1 ? "s" : ""}`}
+              {t("memberCount", { count: members.length })}
+              {invitations.length > 0 && ` · ${t("invitationCount", { count: invitations.length })}`}
             </p>
           </div>
         </div>
         {isOwnerOrAdmin && (
           <Button size="sm" className="gap-2" onClick={() => setInviteOpen(true)}>
             <UserPlus className="h-4 w-4" />
-            Invitar
+            {t("invite")}
           </Button>
         )}
       </div>
@@ -156,7 +163,7 @@ export function TeamSection({ currentRole }: { currentRole: string }) {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <p className="text-xs text-muted-foreground px-2 py-1.5 font-medium">Cambiar rol</p>
+                            <p className="text-xs text-muted-foreground px-2 py-1.5 font-medium">{t("changeRole")}</p>
                             {ASSIGNABLE_ROLES.filter(r => !(r.value === "ADMIN" && currentRole !== "OWNER")).map((r) => (
                               <DropdownMenuItem
                                 key={r.value}
@@ -164,20 +171,20 @@ export function TeamSection({ currentRole }: { currentRole: string }) {
                                 className={member.role === r.value ? "font-medium" : ""}
                               >
                                 {r.label}
-                                {member.role === r.value && <span className="ml-auto text-xs text-muted-foreground">actual</span>}
+                                {member.role === r.value && <span className="ml-auto text-xs text-muted-foreground">{t("current")}</span>}
                               </DropdownMenuItem>
                             ))}
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                               className="text-destructive focus:text-destructive"
                               onClick={() => {
-                                if (confirm(`¿Eliminar a ${member.user.firstName} del equipo?`)) {
+                                if (confirm(t("confirmRemove", { name: member.user.firstName }))) {
                                   removeMember.mutate(member.id);
                                 }
                               }}
                             >
                               <Trash2 className="h-4 w-4 mr-2" />
-                              Eliminar del equipo
+                              {t("removeFromTeam")}
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -196,7 +203,7 @@ export function TeamSection({ currentRole }: { currentRole: string }) {
         <div className="space-y-2">
           <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
             <Clock className="h-4 w-4" />
-            Invitaciones pendientes
+            {t("pendingInvitations")}
           </h4>
           <Card>
             <CardContent className="p-0">
@@ -218,7 +225,7 @@ export function TeamSection({ currentRole }: { currentRole: string }) {
                       <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${ROLE_COLORS[inv.role]}`}>
                         {ROLE_LABELS[inv.role]}
                       </span>
-                      <Badge variant="outline" className="text-xs">Pendiente</Badge>
+                      <Badge variant="outline" className="text-xs">{tCommon("pending")}</Badge>
                       {isOwnerOrAdmin && (
                         <Button
                           variant="ghost"
@@ -241,16 +248,16 @@ export function TeamSection({ currentRole }: { currentRole: string }) {
       {/* Roles guide */}
       <Card className="bg-muted/30">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm">Guía de roles</CardTitle>
+          <CardTitle className="text-sm">{t("rolesGuide")}</CardTitle>
         </CardHeader>
         <CardContent className="p-4 pt-0">
           <div className="space-y-2">
             {[
-              { role: "OWNER",      desc: "Control total de la empresa, facturación y equipo" },
-              { role: "ADMIN",      desc: "Acceso completo excepto transferir la propiedad" },
-              { role: "ACCOUNTANT", desc: "Contabilidad, facturas, presupuestos y productos" },
-              { role: "SALES",      desc: "CRM, leads, pipeline y clientes" },
-              { role: "EMPLOYEE",   desc: "Acceso de solo visualización" },
+              { role: "OWNER",      desc: t("guide.owner") },
+              { role: "ADMIN",      desc: t("guide.admin") },
+              { role: "ACCOUNTANT", desc: t("guide.accountant") },
+              { role: "SALES",      desc: t("guide.sales") },
+              { role: "EMPLOYEE",   desc: t("guide.employee") },
             ].map(({ role, desc }) => (
               <div key={role} className="flex items-start gap-2 text-sm">
                 <span className={`text-xs font-medium px-2 py-0.5 rounded-full shrink-0 mt-0.5 ${ROLE_COLORS[role]}`}>
@@ -267,11 +274,11 @@ export function TeamSection({ currentRole }: { currentRole: string }) {
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Invitar a un miembro</DialogTitle>
+            <DialogTitle>{t("inviteDialogTitle")}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div className="space-y-1.5">
-              <label className="text-sm font-medium">Email</label>
+              <label className="text-sm font-medium">{tCommon("email")}</label>
               <Input
                 type="email"
                 placeholder="nombre@empresa.com"
@@ -282,7 +289,7 @@ export function TeamSection({ currentRole }: { currentRole: string }) {
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm font-medium">Rol</label>
+              <label className="text-sm font-medium">{t("roleLabel")}</label>
               <Select value={role} onValueChange={setRole}>
                 <SelectTrigger>
                   <SelectValue />
@@ -300,18 +307,18 @@ export function TeamSection({ currentRole }: { currentRole: string }) {
               </Select>
             </div>
             <div className="text-xs text-muted-foreground bg-muted/50 rounded-lg p-3">
-              Se enviará un email con un enlace de invitación. El enlace expira en 7 días.
+              {t("inviteInfo")}
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setInviteOpen(false)}>
-              Cancelar
+              {tCommon("cancel")}
             </Button>
             <Button
               onClick={handleInvite}
               disabled={!email.trim() || inviteMember.isPending}
             >
-              {inviteMember.isPending ? "Enviando..." : "Enviar invitación"}
+              {inviteMember.isPending ? t("sending") : t("sendInvitation")}
             </Button>
           </DialogFooter>
         </DialogContent>

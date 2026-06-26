@@ -4,36 +4,38 @@ import Link from "next/link";
 import { FilePlus, UserPlus, Receipt, BarChart3 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLocale } from "@/hooks/use-locale";
-
-const actions = [
-  {
-    href: "/facturas",
-    label: "Nueva factura",
-    icon: FilePlus,
-    color: "text-primary bg-primary/10 hover:bg-primary/20",
-  },
-  {
-    href: "/clientes",
-    label: "Nuevo cliente",
-    icon: UserPlus,
-    color: "text-emerald-500 bg-emerald-500/10 hover:bg-emerald-500/20",
-  },
-  {
-    href: "/presupuestos",
-    label: "Nuevo presupuesto",
-    icon: Receipt,
-    color: "text-amber-500 bg-amber-500/10 hover:bg-amber-500/20",
-  },
-  {
-    href: "/pipeline",
-    label: "Ver pipeline",
-    icon: BarChart3,
-    color: "text-purple-500 bg-purple-500/10 hover:bg-purple-500/20",
-  },
-];
+import { useTranslations } from "next-intl";
 
 export function QuickActions() {
   const locale = useLocale();
+  const t = useTranslations("dashboard");
+
+  const actions = [
+    {
+      href: "/facturas",
+      label: t("newInvoice"),
+      icon: FilePlus,
+      color: "text-primary bg-primary/10 hover:bg-primary/20",
+    },
+    {
+      href: "/clientes",
+      label: t("newClient"),
+      icon: UserPlus,
+      color: "text-emerald-500 bg-emerald-500/10 hover:bg-emerald-500/20",
+    },
+    {
+      href: "/presupuestos",
+      label: t("newQuote"),
+      icon: Receipt,
+      color: "text-amber-500 bg-amber-500/10 hover:bg-amber-500/20",
+    },
+    {
+      href: "/pipeline",
+      label: t("viewPipeline"),
+      icon: BarChart3,
+      color: "text-purple-500 bg-purple-500/10 hover:bg-purple-500/20",
+    },
+  ];
 
   return (
     <div className="flex flex-wrap gap-2">

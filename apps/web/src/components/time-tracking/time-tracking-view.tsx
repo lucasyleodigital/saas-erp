@@ -42,6 +42,7 @@ import { useTranslations } from "next-intl";
 
 export function TimeTrackingView() {
   const t = useTranslations("timeTracking");
+  const tCommon = useTranslations("common");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [filterEmployee, setFilterEmployee] = useState("");
   const [filterProject, setFilterProject] = useState("");
@@ -87,9 +88,9 @@ export function TimeTrackingView() {
       {/* Summary cards */}
       <div className="grid gap-4 sm:grid-cols-3">
         {[
-          { label: "Hoy", value: todayHours, icon: Clock },
-          { label: "Esta semana", value: weekHours, icon: CalendarDays },
-          { label: "Este mes", value: monthHours, icon: Timer },
+          { label: t("summary.today"), value: todayHours, icon: Clock },
+          { label: t("summary.thisWeek"), value: weekHours, icon: CalendarDays },
+          { label: t("summary.thisMonth"), value: monthHours, icon: Timer },
         ].map((s, i) => (
           <motion.div
             key={s.label}
@@ -154,7 +155,7 @@ export function TimeTrackingView() {
                 <AlertCircle className="h-6 w-6 text-destructive" />
               </div>
               <p className="font-medium text-destructive">
-                Error al cargar entradas
+                {t("loadError")}
               </p>
             </div>
           ) : entries.length === 0 ? (
@@ -177,25 +178,25 @@ export function TimeTrackingView() {
                 <thead>
                   <tr className="border-b border-border">
                     <th className="text-left font-medium text-muted-foreground px-4 py-3">
-                      Fecha
+                      {tCommon("date")}
                     </th>
                     <th className="text-left font-medium text-muted-foreground px-4 py-3">
-                      Empleado
+                      {t("table.employee")}
                     </th>
                     <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">
-                      Proyecto
+                      {t("table.project")}
                     </th>
                     <th className="text-left font-medium text-muted-foreground px-4 py-3">
-                      Entrada
+                      {t("table.clockIn")}
                     </th>
                     <th className="text-left font-medium text-muted-foreground px-4 py-3">
-                      Salida
+                      {t("table.clockOut")}
                     </th>
                     <th className="text-right font-medium text-muted-foreground px-4 py-3">
-                      Total
+                      {tCommon("total")}
                     </th>
                     <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">
-                      Notas
+                      {tCommon("notes")}
                     </th>
                     <th className="px-4 py-3 w-10" />
                   </tr>
@@ -242,7 +243,7 @@ export function TimeTrackingView() {
                                   { hour: "2-digit", minute: "2-digit" }
                                 )
                               : (
-                                <Badge variant="success">En curso</Badge>
+                                <Badge variant="success">{t("inProgress")}</Badge>
                               )}
                           </td>
                           <td className="px-4 py-3 text-right font-medium">
@@ -257,7 +258,7 @@ export function TimeTrackingView() {
                               size="icon"
                               className="h-8 w-8 text-destructive hover:text-destructive"
                               onClick={() => {
-                                if (confirm("Eliminar esta entrada?")) {
+                                if (confirm(t("confirmDelete"))) {
                                   deleteEntry.mutate(entry.id);
                                 }
                               }}
@@ -294,16 +295,17 @@ function EmployeeFilter({
   value: string;
   onChange: (v: string) => void;
 }) {
+  const t = useTranslations("timeTracking");
   const { data } = useEmployees({ limit: 200 });
   const employees = data?.data ?? [];
 
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger className="w-[200px]">
-        <SelectValue placeholder="Todos los empleados" />
+        <SelectValue placeholder={t("filter.allEmployees")} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="ALL">Todos los empleados</SelectItem>
+        <SelectItem value="ALL">{t("filter.allEmployees")}</SelectItem>
         {employees.map((emp: any) => (
           <SelectItem key={emp.id} value={emp.id}>
             {emp.firstName} {emp.lastName}
@@ -321,16 +323,17 @@ function ProjectFilter({
   value: string;
   onChange: (v: string) => void;
 }) {
+  const t = useTranslations("timeTracking");
   const { data } = useProjects({ limit: 200 });
   const projects = data?.data ?? (Array.isArray(data) ? data : []);
 
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger className="w-[200px]">
-        <SelectValue placeholder="Todos los proyectos" />
+        <SelectValue placeholder={t("filter.allProjects")} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="ALL">Todos los proyectos</SelectItem>
+        <SelectItem value="ALL">{t("filter.allProjects")}</SelectItem>
         {(Array.isArray(projects) ? projects : []).map((p: any) => (
           <SelectItem key={p.id} value={p.id}>
             {p.name}
@@ -350,6 +353,9 @@ function NewTimeEntryDialog({
   open: boolean;
   onOpenChange: (v: boolean) => void;
 }) {
+  const t = useTranslations("timeTracking");
+  const tCommon = useTranslations("common");
+
   const [form, setForm] = useState({
     employeeId: "",
     projectId: "",
@@ -404,20 +410,20 @@ function NewTimeEntryDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Registrar horas</DialogTitle>
+          <DialogTitle>{t("dialog.title")}</DialogTitle>
           <DialogDescription>
-            Registra una entrada de tiempo para un empleado
+            {t("dialog.description")}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label>Empleado *</Label>
+            <Label>{t("dialog.employee")}</Label>
             <Select
               value={form.employeeId}
               onValueChange={(v) => update("employeeId", v)}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Seleccionar empleado" />
+                <SelectValue placeholder={t("dialog.selectEmployee")} />
               </SelectTrigger>
               <SelectContent>
                 {employees.map((emp: any) => (
@@ -430,16 +436,16 @@ function NewTimeEntryDialog({
           </div>
 
           <div className="space-y-2">
-            <Label>Proyecto (opcional)</Label>
+            <Label>{t("dialog.project")}</Label>
             <Select
               value={form.projectId}
               onValueChange={(v) => update("projectId", v)}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Sin proyecto" />
+                <SelectValue placeholder={t("dialog.noProject")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="NONE">Sin proyecto</SelectItem>
+                <SelectItem value="NONE">{t("dialog.noProject")}</SelectItem>
                 {(Array.isArray(projects) ? projects : []).map((p: any) => (
                   <SelectItem key={p.id} value={p.id}>
                     {p.name}
@@ -450,7 +456,7 @@ function NewTimeEntryDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="te-date">Fecha *</Label>
+            <Label htmlFor="te-date">{t("dialog.date")}</Label>
             <Input
               id="te-date"
               type="date"
@@ -462,7 +468,7 @@ function NewTimeEntryDialog({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="te-in">Entrada *</Label>
+              <Label htmlFor="te-in">{t("dialog.clockIn")}</Label>
               <Input
                 id="te-in"
                 type="time"
@@ -472,7 +478,7 @@ function NewTimeEntryDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="te-out">Salida *</Label>
+              <Label htmlFor="te-out">{t("dialog.clockOut")}</Label>
               <Input
                 id="te-out"
                 type="time"
@@ -484,7 +490,7 @@ function NewTimeEntryDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="te-break">Descanso (min)</Label>
+            <Label htmlFor="te-break">{t("dialog.break")}</Label>
             <Input
               id="te-break"
               type="number"
@@ -495,12 +501,12 @@ function NewTimeEntryDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="te-notes">Notas</Label>
+            <Label htmlFor="te-notes">{tCommon("notes")}</Label>
             <Input
               id="te-notes"
               value={form.notes}
               onChange={(e) => update("notes", e.target.value)}
-              placeholder="Notas opcionales..."
+              placeholder={t("dialog.notesPlaceholder")}
             />
           </div>
 
@@ -510,13 +516,13 @@ function NewTimeEntryDialog({
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              Cancelar
+              {tCommon("cancel")}
             </Button>
             <Button
               type="submit"
               disabled={!form.employeeId || createEntry.isPending}
             >
-              {createEntry.isPending ? "Registrando..." : "Registrar"}
+              {createEntry.isPending ? t("dialog.submitting") : t("dialog.submit")}
             </Button>
           </DialogFooter>
         </form>

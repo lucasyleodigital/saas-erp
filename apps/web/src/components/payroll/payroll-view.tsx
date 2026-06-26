@@ -31,6 +31,7 @@ function fmt(n: number | string) {
 
 export function PayrollView() {
   const t = useTranslations("payroll");
+  const tCommon = useTranslations("common");
   const locale = useLocale();
   const router = useRouter();
   const [year, setYear] = useState(currentYear);
@@ -46,9 +47,9 @@ export function PayrollView() {
   const handleGenerate = async () => {
     try {
       const created = await generateMut.mutateAsync({ year, month });
-      toast.success(`${created.length} nóminas generadas`);
+      toast.success(t("generateSuccess", { count: created.length }));
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : "Error al generar nóminas";
+      const msg = e instanceof Error ? e.message : t("generateError");
       toast.error(msg);
     }
   };
@@ -56,18 +57,18 @@ export function PayrollView() {
   const handleApproveAll = async () => {
     const drafts = payrolls.filter(p => p.status === "DRAFT");
     await Promise.all(drafts.map(p => approveMut.mutateAsync(p.id)));
-    toast.success(`${drafts.length} nóminas aprobadas`);
+    toast.success(t("approveSuccess", { count: drafts.length }));
   };
 
   const handlePayAll = async () => {
     const approved = payrolls.filter(p => p.status === "APPROVED");
     await Promise.all(approved.map(p => paidMut.mutateAsync({ id: p.id })));
-    toast.success(`${approved.length} nóminas marcadas como pagadas`);
+    toast.success(t("paidSuccess", { count: approved.length }));
   };
 
   const handleDelete = (id: string) => {
-    if (!confirm("¿Eliminar esta nómina? Esta acción no se puede deshacer.")) return;
-    deleteMut.mutate(id, { onSuccess: () => toast.success("Nómina eliminada") });
+    if (!confirm(t("confirmDeletePayroll"))) return;
+    deleteMut.mutate(id, { onSuccess: () => toast.success(t("deleteSuccess")) });
   };
 
   const handleSepa = () => {
@@ -82,7 +83,7 @@ export function PayrollView() {
         a.download = `sepa-nominas-${year}-${String(month).padStart(2, "0")}.xml`;
         a.click();
       })
-      .catch(() => toast.error("Error al generar SEPA XML"));
+      .catch(() => toast.error(t("sepaError")));
   };
 
   return (
@@ -115,10 +116,10 @@ export function PayrollView() {
       {/* Stats cards */}
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <StatCard icon={<Users className="h-5 w-5 text-blue-600" />} label={t("employees")} value={String(stats.total)} sub={`${stats.paid} pagadas`} />
-          <StatCard icon={<Euro className="h-5 w-5 text-green-600" />} label={t("netTotal")} value={fmt(stats.totalNet)} sub="líquido a pagar" />
-          <StatCard icon={<TrendingUp className="h-5 w-5 text-orange-600" />} label={t("companyCost")} value={fmt(stats.totalCost)} sub={`SS: ${fmt(stats.totalSS)}`} />
-          <StatCard icon={<Receipt className="h-5 w-5 text-purple-600" />} label={t("irpfWithheld")} value={fmt(stats.totalIRPF)} sub="a ingresar en AEAT" />
+          <StatCard icon={<Users className="h-5 w-5 text-blue-600" />} label={t("employees")} value={String(stats.total)} sub={t("paidCount", { count: stats.paid })} />
+          <StatCard icon={<Euro className="h-5 w-5 text-green-600" />} label={t("netTotal")} value={fmt(stats.totalNet)} sub={t("liquidToPay")} />
+          <StatCard icon={<TrendingUp className="h-5 w-5 text-orange-600" />} label={t("companyCost")} value={fmt(stats.totalCost)} sub={t("ssLabel", { amount: fmt(stats.totalSS) })} />
+          <StatCard icon={<Receipt className="h-5 w-5 text-purple-600" />} label={t("irpfWithheld")} value={fmt(stats.totalIRPF)} sub={t("toPayAEAT")} />
         </div>
       )}
 
@@ -127,12 +128,12 @@ export function PayrollView() {
         <div className="flex gap-2 flex-wrap">
           {payrolls.some(p => p.status === "DRAFT") && (
             <Button variant="outline" size="sm" onClick={handleApproveAll} disabled={approveMut.isPending}>
-              <CheckCircle className="h-4 w-4 mr-1" /> Aprobar todas
+              <CheckCircle className="h-4 w-4 mr-1" /> {t("approveAll")}
             </Button>
           )}
           {payrolls.some(p => p.status === "APPROVED") && (
             <Button variant="outline" size="sm" onClick={handlePayAll} disabled={paidMut.isPending}>
-              <CreditCard className="h-4 w-4 mr-1" /> Marcar pagadas
+              <CreditCard className="h-4 w-4 mr-1" /> {t("markPaid")}
             </Button>
           )}
         </div>
@@ -143,9 +144,9 @@ export function PayrollView() {
         <div className="text-center py-12 text-muted-foreground">{t("loading")}</div>
       ) : payrolls.length === 0 ? (
         <div className="text-center py-16 border rounded-xl">
-          <p className="text-muted-foreground mb-4">No hay nóminas para {MONTHS_ES[month]} {year}</p>
+          <p className="text-muted-foreground mb-4">{t("noResultsForMonth", { month: MONTHS_ES[month] ?? month, year })}</p>
           <Button onClick={handleGenerate} disabled={generateMut.isPending}>
-            <Wand2 className="h-4 w-4 mr-1" /> Generar nóminas del período
+            <Wand2 className="h-4 w-4 mr-1" /> {t("generate")}
           </Button>
         </div>
       ) : (
@@ -153,13 +154,13 @@ export function PayrollView() {
           <table className="w-full text-sm">
             <thead className="bg-muted/50">
               <tr>
-                <th className="text-left px-4 py-3 font-medium">Empleado</th>
-                <th className="text-right px-4 py-3 font-medium">Bruto</th>
-                <th className="text-right px-4 py-3 font-medium">SS empleado</th>
-                <th className="text-right px-4 py-3 font-medium">IRPF</th>
-                <th className="text-right px-4 py-3 font-medium">Neto</th>
-                <th className="text-center px-4 py-3 font-medium">Estado</th>
-                <th className="text-right px-4 py-3 font-medium">Acciones</th>
+                <th className="text-left px-4 py-3 font-medium">{t("table.employee")}</th>
+                <th className="text-right px-4 py-3 font-medium">{t("table.gross")}</th>
+                <th className="text-right px-4 py-3 font-medium">{t("table.ssEmployee")}</th>
+                <th className="text-right px-4 py-3 font-medium">{t("table.irpf")}</th>
+                <th className="text-right px-4 py-3 font-medium">{t("table.net")}</th>
+                <th className="text-center px-4 py-3 font-medium">{tCommon("status")}</th>
+                <th className="text-right px-4 py-3 font-medium">{tCommon("actions")}</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -182,14 +183,14 @@ export function PayrollView() {
                     <td className="px-4 py-3">
                       <div className="flex justify-end gap-1">
                         <Button
-                          variant="ghost" size="icon" title="Ver nómina"
+                          variant="ghost" size="icon" title={t("table.viewPayroll")}
                           onClick={() => router.push(`/${locale}/nominas/${p.id}`)}
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
                         {p.status === "DRAFT" && (
                           <Button
-                            variant="ghost" size="icon" title="Aprobar"
+                            variant="ghost" size="icon" title={t("table.approve")}
                             onClick={() => approveMut.mutate(p.id)}
                           >
                             <CheckCircle className="h-4 w-4 text-blue-600" />
@@ -197,7 +198,7 @@ export function PayrollView() {
                         )}
                         {p.status === "APPROVED" && (
                           <Button
-                            variant="ghost" size="icon" title="Marcar pagada"
+                            variant="ghost" size="icon" title={t("table.markAsPaid")}
                             onClick={() => paidMut.mutate({ id: p.id })}
                           >
                             <CreditCard className="h-4 w-4 text-green-600" />
@@ -205,7 +206,7 @@ export function PayrollView() {
                         )}
                         {p.status !== "PAID" && (
                           <Button
-                            variant="ghost" size="icon" title="Eliminar"
+                            variant="ghost" size="icon" title={tCommon("delete")}
                             onClick={() => handleDelete(p.id)}
                           >
                             <Trash2 className="h-4 w-4 text-red-500" />

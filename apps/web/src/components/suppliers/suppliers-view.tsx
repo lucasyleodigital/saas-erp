@@ -43,6 +43,7 @@ import { useTranslations } from "next-intl";
 
 export function SuppliersView() {
   const t = useTranslations("suppliers");
+  const tCommon = useTranslations("common");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -64,14 +65,14 @@ export function SuppliersView() {
     try {
       if (editing) {
         await updateSupplier.mutateAsync({ id: editing.id, ...dto });
-        toast.success("Proveedor actualizado");
+        toast.success(t("updateSuccess"));
       } else {
         await createSupplier.mutateAsync(dto);
-        toast.success("Proveedor creado");
+        toast.success(t("createSuccess"));
       }
       setDialogOpen(false);
     } catch {
-      toast.error("Error al guardar el proveedor");
+      toast.error(t("saveError"));
     }
   }
 
@@ -113,11 +114,11 @@ export function SuppliersView() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border">
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3">Proveedor</th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">Contacto</th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">CIF/NIF</th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">Ciudad</th>
-                    <th className="text-center font-medium text-muted-foreground px-4 py-3 hidden xl:table-cell">OC</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3">{t("supplier")}</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">{t("contact")}</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">{t("cifNif")}</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">{tCommon("city")}</th>
+                    <th className="text-center font-medium text-muted-foreground px-4 py-3 hidden xl:table-cell">{t("purchaseOrdersShort")}</th>
                     <th className="px-4 py-3 w-12" />
                   </tr>
                 </thead>
@@ -139,7 +140,7 @@ export function SuppliersView() {
                             <div>
                               <p className="font-medium">{s.name}</p>
                               {!s.isActive && (
-                                <Badge variant="secondary" className="text-xs">Inactivo</Badge>
+                                <Badge variant="secondary" className="text-xs">{tCommon("inactive")}</Badge>
                               )}
                             </div>
                           </div>
@@ -172,18 +173,18 @@ export function SuppliersView() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem onClick={() => handleEdit(s)}>
-                                <Edit className="h-4 w-4 mr-2" />Editar
+                                <Edit className="h-4 w-4 mr-2" />{tCommon("edit")}
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem
                                 className="text-destructive focus:text-destructive"
                                 onClick={() => {
-                                  if (confirm(`¿Eliminar a ${s.name}?`)) {
+                                  if (confirm(t("confirmDelete", { name: s.name }))) {
                                     deleteSupplier.mutate(s.id);
                                   }
                                 }}
                               >
-                                <Trash2 className="h-4 w-4 mr-2" />Eliminar
+                                <Trash2 className="h-4 w-4 mr-2" />{tCommon("delete")}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -200,10 +201,10 @@ export function SuppliersView() {
 
       {totalPages > 1 && (
         <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <span>Página {page} de {totalPages}</span>
+          <span>{t("pageOf", { page, totalPages })}</span>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>Anterior</Button>
-            <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>Siguiente</Button>
+            <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>{tCommon("previous")}</Button>
+            <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>{tCommon("next")}</Button>
           </div>
         </div>
       )}
@@ -232,6 +233,8 @@ function SupplierDialog({
   onSave: (dto: Partial<Supplier>) => void;
   loading: boolean;
 }) {
+  const t = useTranslations("suppliers");
+  const tCommon = useTranslations("common");
   const [form, setForm] = useState<Partial<Supplier>>({});
 
   function set(k: keyof Supplier, v: any) { setForm((f) => ({ ...f, [k]: v })); }
@@ -242,57 +245,57 @@ function SupplierDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>{supplier ? "Editar proveedor" : "Nuevo proveedor"}</DialogTitle>
+          <DialogTitle>{supplier ? t("form.dialogTitleEdit") : t("form.dialogTitleNew")}</DialogTitle>
         </DialogHeader>
         <div className="grid grid-cols-2 gap-4 mt-2">
           <div className="col-span-2 space-y-1">
-            <Label>Nombre *</Label>
+            <Label>{t("form.name")}</Label>
             <Input value={values.name ?? ""} onChange={(e) => set("name", e.target.value)} />
           </div>
           <div className="space-y-1">
-            <Label>Email</Label>
+            <Label>{tCommon("email")}</Label>
             <Input value={values.email ?? ""} onChange={(e) => set("email", e.target.value)} />
           </div>
           <div className="space-y-1">
-            <Label>Teléfono</Label>
+            <Label>{tCommon("phone")}</Label>
             <Input value={values.phone ?? ""} onChange={(e) => set("phone", e.target.value)} />
           </div>
           <div className="space-y-1">
-            <Label>CIF/NIF</Label>
+            <Label>{t("cifNif")}</Label>
             <Input value={values.cifNif ?? ""} onChange={(e) => set("cifNif", e.target.value)} />
           </div>
           <div className="space-y-1">
-            <Label>Persona de contacto</Label>
+            <Label>{t("form.contactName")}</Label>
             <Input value={values.contactName ?? ""} onChange={(e) => set("contactName", e.target.value)} />
           </div>
           <div className="space-y-1">
-            <Label>Dirección</Label>
+            <Label>{tCommon("address")}</Label>
             <Input value={values.address ?? ""} onChange={(e) => set("address", e.target.value)} />
           </div>
           <div className="space-y-1">
-            <Label>Ciudad</Label>
+            <Label>{tCommon("city")}</Label>
             <Input value={values.city ?? ""} onChange={(e) => set("city", e.target.value)} />
           </div>
           <div className="space-y-1">
-            <Label>Web</Label>
+            <Label>{t("form.website")}</Label>
             <Input value={values.website ?? ""} onChange={(e) => set("website", e.target.value)} />
           </div>
           <div className="space-y-1">
-            <Label>IBAN / Cuenta bancaria</Label>
+            <Label>{t("form.bankAccount")}</Label>
             <Input value={values.bankAccount ?? ""} onChange={(e) => set("bankAccount", e.target.value)} />
           </div>
           <div className="col-span-2 space-y-1">
-            <Label>Notas</Label>
+            <Label>{tCommon("notes")}</Label>
             <Input value={values.notes ?? ""} onChange={(e) => set("notes", e.target.value)} />
           </div>
         </div>
         <div className="flex justify-end gap-2 mt-4">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>{tCommon("cancel")}</Button>
           <Button
             disabled={loading || !values.name}
             onClick={() => onSave(values)}
           >
-            {loading ? "Guardando..." : "Guardar"}
+            {loading ? t("form.saving") : tCommon("save")}
           </Button>
         </div>
       </DialogContent>

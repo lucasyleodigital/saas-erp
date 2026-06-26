@@ -17,6 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { LocaleLink as Link } from "@/components/ui/locale-link";
 import { TeamSection } from "@/components/empresa/team-section";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 const schema = z.object({
   name: z.string().min(1, "El nombre es obligatorio"),
@@ -35,14 +36,16 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-const PLAN_LABELS: Record<string, { label: string; description: string }> = {
-  FREE: { label: "Gratuito", description: "5 clientes, 10 facturas/mes, 1 usuario" },
-  STARTER: { label: "Starter", description: "50 clientes, 100 facturas/mes, 3 usuarios" },
-  PRO: { label: "Pro", description: "500 clientes, 1000 facturas/mes, 10 usuarios + IA" },
-  ENTERPRISE: { label: "Enterprise", description: "Sin limites, usuarios ilimitados" },
+const PLAN_KEYS: Record<string, { labelKey: string; descKey: string }> = {
+  FREE: { labelKey: "plans.free", descKey: "plans.freeDesc" },
+  STARTER: { labelKey: "plans.starter", descKey: "plans.starterDesc" },
+  PRO: { labelKey: "plans.pro", descKey: "plans.proDesc" },
+  ENTERPRISE: { labelKey: "plans.enterprise", descKey: "plans.enterpriseDesc" },
 };
 
 export function CompanySettings() {
+  const t = useTranslations("company");
+  const tCommon = useTranslations("common");
   const { data: company, isLoading, refetch } = useMyCompany();
   const { data: currentUser } = useUser();
   const updateCompany = useUpdateCompany();
@@ -107,10 +110,10 @@ export function CompanySettings() {
       await api.put("/companies/me", {
         settings: { ...currentSettings, companyType, taxRegime, irpfRate, autoApplyIrpf, autonomoStartDate: autonomoStartDate || undefined },
       });
-      toast.success("Configuracion fiscal guardada");
+      toast.success(t("fiscal.savedSuccess"));
       refetch();
     } catch {
-      toast.error("Error al guardar");
+      toast.error(t("saveError"));
     }
     setSavingFiscal(false);
   }
@@ -122,10 +125,10 @@ export function CompanySettings() {
       await api.put("/companies/me", {
         settings: { ...currentSettings, invoiceColor, invoiceFooter, invoiceTerms },
       });
-      toast.success("Apariencia de facturas guardada");
+      toast.success(t("appearance.savedSuccess"));
       refetch();
     } catch {
-      toast.error("Error al guardar");
+      toast.error(t("saveError"));
     }
     setSavingAppearance(false);
   }
@@ -137,9 +140,9 @@ export function CompanySettings() {
       const r = await api.post("/bank/accounts", newBank);
       setBankAccounts((prev) => [...prev, r.data]);
       setNewBank({ name: "", iban: "", bic: "" });
-      toast.success("Cuenta bancaria agregada");
+      toast.success(t("bank.addedSuccess"));
     } catch {
-      toast.error("Error al crear cuenta");
+      toast.error(t("bank.addError"));
     }
     setAddingBank(false);
   }
@@ -148,9 +151,9 @@ export function CompanySettings() {
     try {
       await api.delete(`/bank/accounts/${id}`);
       setBankAccounts((prev) => prev.filter((a) => a.id !== id));
-      toast.success("Cuenta eliminada");
+      toast.success(t("bank.deletedSuccess"));
     } catch {
-      toast.error("Error al eliminar");
+      toast.error(t("bank.deleteError"));
     }
   }
 
@@ -164,19 +167,19 @@ export function CompanySettings() {
   }
 
   const plan = company?.plan ?? "FREE";
-  const planInfo = PLAN_LABELS[plan] ?? { label: "Gratuito", description: "5 clientes, 10 facturas/mes, 1 usuario" };
+  const planKeys = PLAN_KEYS[plan] ?? PLAN_KEYS.FREE!;
 
   return (
     <div className="space-y-6 max-w-3xl">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Mi empresa</h1>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Datos fiscales, apariencia de facturas y datos bancarios
+            {t("pageSubtitle")}
           </p>
         </div>
         <Badge variant={plan === "FREE" ? "secondary" : "default"}>
-          {planInfo.label}
+          {t(planKeys.labelKey)}
         </Badge>
       </div>
 
@@ -194,59 +197,59 @@ export function CompanySettings() {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm flex items-center gap-2">
               <Building2 className="h-4 w-4 text-muted-foreground" />
-              Datos de la empresa
+              {t("companyData")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label htmlFor="comp-name">Nombre comercial *</Label>
+                <Label htmlFor="comp-name">{t("form.tradeName")}</Label>
                 <Input id="comp-name" {...register("name")} placeholder="Mi empresa" />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="comp-legal">Razon social</Label>
+                <Label htmlFor="comp-legal">{t("form.legalName")}</Label>
                 <Input id="comp-legal" {...register("legalName")} placeholder="Mi Empresa S.L." />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="comp-cif">CIF / NIF</Label>
+                <Label htmlFor="comp-cif">{t("form.cifNif")}</Label>
                 <Input id="comp-cif" {...register("cif")} placeholder="B12345678" />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="comp-email">Email de contacto</Label>
+                <Label htmlFor="comp-email">{t("form.contactEmail")}</Label>
                 <Input id="comp-email" type="email" {...register("email")} placeholder="info@miempresa.es" />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="comp-phone">Telefono</Label>
+                <Label htmlFor="comp-phone">{tCommon("phone")}</Label>
                 <Input id="comp-phone" {...register("phone")} placeholder="93 123 45 67" />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="comp-web">Pagina web</Label>
+                <Label htmlFor="comp-web">{t("website")}</Label>
                 <Input id="comp-web" {...register("website")} placeholder="https://miempresa.es" />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="comp-logo">URL del logo</Label>
+              <Label htmlFor="comp-logo">{t("form.logoUrl")}</Label>
               <Input id="comp-logo" {...register("logo")} placeholder="https://miempresa.es/logo.png" />
-              <p className="text-xs text-muted-foreground">Sube tu logo a tu web o a un servicio como imgur.com y pega la URL aqui</p>
+              <p className="text-xs text-muted-foreground">{t("form.logoHint")}</p>
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="comp-address">Direccion fiscal</Label>
+              <Label htmlFor="comp-address">{t("address")}</Label>
               <Input id="comp-address" {...register("address")} placeholder="Calle Mayor 1, 2a planta" />
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div className="col-span-2 space-y-1.5">
-                <Label htmlFor="comp-city">Ciudad</Label>
+                <Label htmlFor="comp-city">{tCommon("city")}</Label>
                 <Input id="comp-city" {...register("city")} placeholder="Barcelona" />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="comp-cp">CP</Label>
+                <Label htmlFor="comp-cp">{tCommon("postalCode")}</Label>
                 <Input id="comp-cp" {...register("postalCode")} placeholder="08001" />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="comp-prov">Provincia</Label>
+                <Label htmlFor="comp-prov">{tCommon("province")}</Label>
                 <Input id="comp-prov" {...register("province")} placeholder="Barcelona" />
               </div>
             </div>
@@ -257,7 +260,7 @@ export function CompanySettings() {
           <div className="flex justify-end">
             <Button type="submit" disabled={isSubmitting || updateCompany.isPending}>
               {(isSubmitting || updateCompany.isPending) && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-              Guardar datos
+              {t("form.saveData")}
             </Button>
           </div>
         )}
@@ -268,13 +271,13 @@ export function CompanySettings() {
         <CardHeader className="pb-3">
           <CardTitle className="text-sm flex items-center gap-2">
             <Scale className="h-4 w-4 text-muted-foreground" />
-            Configuracion fiscal
+            {t("fiscal.title")}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label>Tipo de entidad</Label>
+              <Label>{t("fiscal.entityType")}</Label>
               <select
                 value={companyType}
                 onChange={(e) => {
@@ -283,26 +286,26 @@ export function CompanySettings() {
                 }}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <option value="AUTONOMO">Autonomo / Persona fisica</option>
-                <option value="SL">Sociedad Limitada (S.L.)</option>
-                <option value="SA">Sociedad Anonima (S.A.)</option>
-                <option value="COOPERATIVA">Cooperativa</option>
-                <option value="ASOCIACION">Asociacion</option>
-                <option value="COMUNIDAD_BIENES">Comunidad de bienes</option>
+                <option value="AUTONOMO">{t("fiscal.types.autonomo")}</option>
+                <option value="SL">{t("fiscal.types.sl")}</option>
+                <option value="SA">{t("fiscal.types.sa")}</option>
+                <option value="COOPERATIVA">{t("fiscal.types.cooperativa")}</option>
+                <option value="ASOCIACION">{t("fiscal.types.asociacion")}</option>
+                <option value="COMUNIDAD_BIENES">{t("fiscal.types.comunidadBienes")}</option>
               </select>
             </div>
 
             {companyType === "AUTONOMO" && (
               <div className="space-y-1.5">
-                <Label>Regimen fiscal</Label>
+                <Label>{t("fiscal.taxRegime")}</Label>
                 <select
                   value={taxRegime}
                   onChange={(e) => setTaxRegime(e.target.value)}
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  <option value="SIMPLIFICADA">Estimacion directa simplificada</option>
-                  <option value="NORMAL">Estimacion directa normal</option>
-                  <option value="MODULOS">Estimacion objetiva (modulos)</option>
+                  <option value="SIMPLIFICADA">{t("fiscal.regimes.simplified")}</option>
+                  <option value="NORMAL">{t("fiscal.regimes.normal")}</option>
+                  <option value="MODULOS">{t("fiscal.regimes.modules")}</option>
                 </select>
               </div>
             )}
@@ -312,26 +315,26 @@ export function CompanySettings() {
             <>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="space-y-1.5">
-                  <Label>Retencion IRPF (%)</Label>
+                  <Label>{t("fiscal.irpfRate")}</Label>
                   <select
                     value={irpfRate}
                     onChange={(e) => setIrpfRate(Number(e.target.value))}
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
-                    <option value={7}>7% (nuevos autonomos, primeros 3 anos)</option>
-                    <option value={15}>15% (tipo general)</option>
-                    <option value={1}>1% (modulos — actividades agricolas/ganaderas)</option>
-                    <option value={2}>2% (modulos — resto de actividades)</option>
+                    <option value={7}>{t("fiscal.rates.new7")}</option>
+                    <option value={15}>{t("fiscal.rates.general15")}</option>
+                    <option value={1}>{t("fiscal.rates.modules1")}</option>
+                    <option value={2}>{t("fiscal.rates.modules2")}</option>
                   </select>
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Fecha de alta como autonomo</Label>
+                  <Label>{t("fiscal.autonomoStartDate")}</Label>
                   <Input
                     type="date"
                     value={autonomoStartDate}
                     onChange={(e) => setAutonomoStartDate(e.target.value)}
                   />
-                  <p className="text-xs text-muted-foreground">Para calcular si aplica el 7% de nuevos autonomos</p>
+                  <p className="text-xs text-muted-foreground">{t("fiscal.autonomoStartDateHint")}</p>
                 </div>
                 <div className="flex items-end pb-1">
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -341,13 +344,13 @@ export function CompanySettings() {
                       onChange={(e) => setAutoApplyIrpf(e.target.checked)}
                       className="h-4 w-4 rounded border-input"
                     />
-                    <span className="text-sm">Aplicar IRPF automaticamente en facturas</span>
+                    <span className="text-sm">{t("fiscal.autoApplyIrpf")}</span>
                   </label>
                 </div>
               </div>
               <div className="rounded-lg bg-blue-500/5 border border-blue-500/20 p-3">
                 <p className="text-xs text-blue-400">
-                  Al crear una factura, se anadira automaticamente una linea de retencion IRPF del {irpfRate}% sobre la base imponible. Esto es obligatorio cuando facturas a empresas o profesionales.
+                  {t("fiscal.irpfInfo", { rate: irpfRate })}
                 </p>
               </div>
             </>
@@ -356,7 +359,7 @@ export function CompanySettings() {
           <div className="flex justify-end">
             <Button onClick={saveFiscal} disabled={savingFiscal} variant="outline">
               {savingFiscal && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-              Guardar configuracion fiscal
+              {t("fiscal.save")}
             </Button>
           </div>
         </CardContent>
@@ -367,13 +370,13 @@ export function CompanySettings() {
         <CardHeader className="pb-3">
           <CardTitle className="text-sm flex items-center gap-2">
             <Palette className="h-4 w-4 text-muted-foreground" />
-            Apariencia de facturas
+            {t("appearance.title")}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label htmlFor="inv-color">Color principal</Label>
+              <Label htmlFor="inv-color">{t("appearance.primaryColor")}</Label>
               <div className="flex items-center gap-3">
                 <input
                   type="color"
@@ -395,7 +398,7 @@ export function CompanySettings() {
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="inv-footer">Pie de pagina de la factura</Label>
+            <Label htmlFor="inv-footer">{t("appearance.invoiceFooter")}</Label>
             <Input
               id="inv-footer"
               value={invoiceFooter}
@@ -405,7 +408,7 @@ export function CompanySettings() {
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="inv-terms">Condiciones de pago</Label>
+            <Label htmlFor="inv-terms">{t("appearance.paymentTerms")}</Label>
             <Textarea
               id="inv-terms"
               value={invoiceTerms}
@@ -418,7 +421,7 @@ export function CompanySettings() {
           <div className="flex justify-end">
             <Button onClick={saveAppearance} disabled={savingAppearance} variant="outline">
               {savingAppearance && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-              Guardar apariencia
+              {t("appearance.save")}
             </Button>
           </div>
         </CardContent>
@@ -429,11 +432,11 @@ export function CompanySettings() {
         <CardHeader className="pb-3">
           <CardTitle className="text-sm flex items-center gap-2">
             <Landmark className="h-4 w-4 text-muted-foreground" />
-            Cuentas bancarias
+            {t("bank.title")}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-xs text-muted-foreground">La primera cuenta activa aparecera en las facturas como datos de pago</p>
+          <p className="text-xs text-muted-foreground">{t("bank.hint")}</p>
 
           {bankAccounts.length > 0 && (
             <div className="space-y-2">
@@ -448,7 +451,7 @@ export function CompanySettings() {
                     variant="ghost"
                     size="icon"
                     className="h-8 w-8 text-destructive"
-                    onClick={() => { if (confirm("Eliminar esta cuenta?")) deleteBankAccount(acc.id); }}
+                    onClick={() => { if (confirm(t("bank.confirmDelete"))) deleteBankAccount(acc.id); }}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -459,7 +462,7 @@ export function CompanySettings() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="space-y-1.5">
-              <Label>Nombre de la cuenta</Label>
+              <Label>{t("bank.accountName")}</Label>
               <Input
                 value={newBank.name}
                 onChange={(e) => setNewBank((p) => ({ ...p, name: e.target.value }))}
@@ -485,7 +488,7 @@ export function CompanySettings() {
           </div>
           <Button onClick={addBankAccount} disabled={addingBank || !newBank.name} variant="outline" size="sm" className="gap-2">
             {addingBank ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-            Agregar cuenta
+            {t("bank.addAccount")}
           </Button>
         </CardContent>
       </Card>
@@ -495,17 +498,17 @@ export function CompanySettings() {
         <CardHeader className="pb-3">
           <CardTitle className="text-sm flex items-center gap-2">
             <CreditCard className="h-4 w-4 text-muted-foreground" />
-            Plan y facturacion
+            {t("planAndBilling")}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium">Plan {planInfo.label}</p>
-              <p className="text-sm text-muted-foreground mt-0.5">{planInfo.description}</p>
+              <p className="font-medium">{t("planLabel", { plan: t(planKeys.labelKey) })}</p>
+              <p className="text-sm text-muted-foreground mt-0.5">{t(planKeys.descKey)}</p>
             </div>
             <Button variant="outline" size="sm" asChild>
-              <Link href="/billing">Cambiar plan</Link>
+              <Link href="/billing">{t("changePlan")}</Link>
             </Button>
           </div>
         </CardContent>

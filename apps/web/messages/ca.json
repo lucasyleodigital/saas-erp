@@ -149,7 +149,11 @@
     "newInvoice": "Nova factura",
     "newClient": "Nou client",
     "newQuote": "Nou pressupost",
-    "newDeal": "Nou lead"
+    "newDeal": "Nou lead",
+    "viewPipeline": "Veure pipeline",
+    "viewAll": "Veure totes",
+    "noInvoicesYet": "Encara no tens factures",
+    "noClient": "Sense client"
   },
   "clients": {
     "title": "Clients",
@@ -381,6 +385,11 @@
     "stock": "Estoc",
     "category": "Categoria",
     "noProducts": "Encara no tens productes",
+    "type": {
+      "service": "Servei",
+      "digital": "Digital",
+      "physical": "Fisic"
+    },
     "form": {
       "name": "Nom del producte",
       "description": "Descripcio",
@@ -390,7 +399,15 @@
       "stock": "Estoc inicial",
       "category": "Categoria",
       "createSuccess": "Producte creat correctament",
-      "updateSuccess": "Producte actualitzat correctament"
+      "updateSuccess": "Producte actualitzat correctament",
+      "dialogTitleEdit": "Editar producte",
+      "dialogTitleNew": "Nou producte",
+      "nameRequired": "Nom *",
+      "namePlaceholder": "Nom del producte",
+      "descriptionPlaceholder": "Descripcio del producte",
+      "type": "Tipus",
+      "salePrice": "Preu de venda (€) *",
+      "cost": "Cost (€)"
     }
   },
   "pipeline": {
@@ -421,11 +438,34 @@
     "search": "Cercar leads...",
     "convert": "Convertir a client",
     "source": "Origen",
+    "company": "Empresa",
+    "noResults": "No hi ha leads",
+    "noResultsDesc": "Registra noves oportunitats de venda",
+    "confirmDelete": "Eliminar el lead \"{name}\"? Aquesta accio no es pot desfer.",
     "status": {
       "new": "Nou",
       "contacted": "Contactat",
       "qualified": "Qualificat",
       "lost": "Perdut"
+    },
+    "sources": {
+      "web": "Web",
+      "referral": "Referit",
+      "linkedin": "LinkedIn",
+      "googleAds": "Google Ads",
+      "call": "Trucada",
+      "email": "Correu",
+      "event": "Esdeveniment",
+      "other": "Altre"
+    },
+    "form": {
+      "namePlaceholder": "Maria Garcia",
+      "emailPlaceholder": "maria@empresa.com",
+      "phonePlaceholder": "600 123 456",
+      "companyPlaceholder": "Empresa SL",
+      "selectSource": "Seleccionar...",
+      "notesPlaceholder": "Informacio addicional sobre aquest lead...",
+      "createLead": "Crear lead"
     }
   },
   "automations": {
@@ -439,7 +479,104 @@
     "runs": "Execucions",
     "lastRun": "Ultima execucio",
     "noAutomations": "Encara no tens automatitzacions",
-    "upgrade": "Actualitza el teu pla per usar automatitzacions"
+    "upgrade": "Actualitza el teu pla per usar automatitzacions",
+    "newRule": "Nova regla",
+    "createFromScratch": "Crear des de zero",
+    "emptyDescription": "Tria una plantilla de dalt o crea una regla personalitzada des de zero.",
+    "triggers": {
+      "invoiceCreated": "Factura creada",
+      "invoicePaid": "Factura pagada",
+      "invoiceOverdue": "Factura vencuda",
+      "quoteCreated": "Pressupost creat",
+      "quoteAccepted": "Pressupost acceptat",
+      "leadCreated": "Nou lead",
+      "dealStageChanged": "Deal canvia d'etapa",
+      "clientCreated": "Nou client",
+      "paymentReceived": "Pagament rebut",
+      "orderCreated": "Comanda creada",
+      "purchaseReceived": "Compra rebuda al magatzem",
+      "lowStock": "Estoc per sota del minim"
+    },
+    "actions": {
+      "sendEmail": "Enviar correu",
+      "createNotification": "Crear notificacio interna",
+      "sendWebhook": "Enviar webhook (HTTP POST)"
+    },
+    "templates": {
+      "title": "Plantilles rapides",
+      "clickToUse": "— fes clic per usar",
+      "overdueReminder": {
+        "name": "Recordatori de factura vencuda",
+        "description": "Envia un correu automatic quan una factura supera la data de venciment"
+      },
+      "welcomeClient": {
+        "name": "Benvinguda a nou client",
+        "description": "Saluda automaticament cada client nou que es dona d'alta"
+      },
+      "newLeadAlert": {
+        "name": "Alerta de nou lead",
+        "description": "Rep una notificacio interna cada cop que entra un lead nou"
+      },
+      "paymentConfirmation": {
+        "name": "Confirmacio de pagament rebut",
+        "description": "Envia un correu de confirmacio automatic en rebre un pagament"
+      },
+      "quoteWebhook": {
+        "name": "Webhook en acceptar pressupost",
+        "description": "Notifica al teu CRM o Zapier quan un client accepta un pressupost"
+      },
+      "lowStockAlert": {
+        "name": "Alerta d'estoc baix",
+        "description": "Rep una notificacio interna quan l'estoc d'un producte cau per sota del minim"
+      },
+      "newOrderNotif": {
+        "name": "Notificacio de nova comanda",
+        "description": "Avisa internament quan arriba una nova comanda de client"
+      },
+      "purchaseReceivedAlert": {
+        "name": "Alerta de compra rebuda",
+        "description": "Notifica quan una ordre de compra queda completament rebuda al magatzem"
+      }
+    },
+    "form": {
+      "editTitle": "Editar automatitzacio",
+      "newTitle": "Nova automatitzacio",
+      "triggerLabel": "Quan passi aixo (trigger) *",
+      "selectEvent": "Seleccionar esdeveniment...",
+      "actionLabel": "Executar aquesta accio *",
+      "emailConfig": "Config del correu",
+      "subject": "Assumpte",
+      "body": "Cos",
+      "notifConfig": "Config de notificacio",
+      "notifTitleLabel": "Titol",
+      "message": "Missatge",
+      "webhookConfig": "Config del webhook",
+      "namePlaceholder": "Recordatori de pagament",
+      "nameRequired": "Nom obligatori",
+      "selectTrigger": "Selecciona un trigger",
+      "selectAction": "Selecciona una accio",
+      "invalidUrl": "URL invalida"
+    },
+    "stats": {
+      "totalRules": "Total regles",
+      "totalExecutions": "Execucions totals",
+      "executedCount": "Executada {count} vegades",
+      "noExecutions": "Sense execucions encara",
+      "last": "ultima",
+      "testNow": "Provar ara",
+      "pause": "Pausar",
+      "activate": "Activar"
+    },
+    "logs": {
+      "title": "Historial d'execucions",
+      "noLogs": "Sense execucions registrades encara"
+    },
+    "planWall": {
+      "title": "Les automatitzacions son de pagament",
+      "description": "Amb el pla FREE no pots crear automatitzacions. Actualitza a STARTER o superior per desbloquejar fluxos automatics de correu, notificacions i webhooks.",
+      "viewPlans": "Veure plans",
+      "upgradeStarter": "Actualitzar a Starter"
+    }
   },
   "accounting": {
     "title": "Comptabilitat",
@@ -456,7 +593,109 @@
     "stock": "Estoc actual",
     "movements": "Moviments",
     "lowStock": "Estoc baix",
-    "noStock": "Sense estoc"
+    "noStock": "Sense estoc",
+    "tabs": {
+      "stock": "Estoc",
+      "alerts": "Alertes",
+      "movements": "Moviments",
+      "valuation": "Valoracio",
+      "warehouses": "Magatzems"
+    },
+    "summary": {
+      "products": "Productes",
+      "lowStock": "Estoc baix",
+      "outOfStock": "Sense estoc",
+      "totalValue": "Valor total"
+    },
+    "moveType": {
+      "purchase": "Compra",
+      "sale": "Venda",
+      "adjustmentIn": "Ajust entrada",
+      "adjustmentOut": "Ajust sortida",
+      "return": "Devolucio",
+      "transferOut": "Transferencia sortida",
+      "transferIn": "Transferencia entrada",
+      "in": "Entrada"
+    },
+    "stockTab": {
+      "searchProduct": "Cercar producte...",
+      "allWarehouses": "Tots els magatzems",
+      "physicalInventory": "Inventari fisic",
+      "noProducts": "No hi ha productes",
+      "product": "Producte",
+      "sku": "SKU",
+      "stockHeader": "Estoc",
+      "minimum": "Minim",
+      "value": "Valor",
+      "addMovement": "Afegir moviment",
+      "transfer": "Transferir",
+      "minStock": "Estoc minim"
+    },
+    "alertsTab": {
+      "description": "Productes que han assolit o estan per sota del seu estoc minim.",
+      "noAlerts": "Sense alertes actives",
+      "allAboveMin": "Tots els productes estan per sobre del seu estoc minim",
+      "stockLabel": "Estoc:",
+      "minLabel": "Minim:"
+    },
+    "movementsTab": {
+      "type": "Tipus",
+      "allTypes": "Tots els tipus",
+      "warehouse": "Magatzem",
+      "quantity": "Quantitat",
+      "reference": "Referencia",
+      "noMovements": "No hi ha moviments"
+    },
+    "valuationTab": {
+      "costValue": "Valor de cost",
+      "saleValue": "Valor de venda",
+      "avgMargin": "Marge mitja",
+      "noCostProducts": "No hi ha productes amb cost definit",
+      "unitCost": "Cost ud.",
+      "unitPrice": "PVP ud.",
+      "margin": "Marge",
+      "stockValue": "Valor estoc"
+    },
+    "warehousesTab": {
+      "newWarehouse": "Nou magatzem",
+      "noWarehouses": "No hi ha magatzems configurats",
+      "default": "Per defecte",
+      "setDefault": "Marcar com a defecte",
+      "confirmDelete": "Eliminar \"{name}\"?"
+    },
+    "warehouseDialog": {
+      "editTitle": "Editar magatzem"
+    },
+    "moveDialog": {
+      "title": "Moviment — {name}",
+      "warehouse": "Magatzem",
+      "referencePlaceholder": "N factura, albara...",
+      "saving": "Desant...",
+      "register": "Registrar"
+    },
+    "transferDialog": {
+      "title": "Transferir — {name}",
+      "from": "Des de",
+      "to": "Cap a",
+      "sourceWarehouse": "Magatzem origen",
+      "destWarehouse": "Magatzem desti",
+      "completeAllFields": "Completa tots els camps",
+      "transferring": "Transferint...",
+      "transfer": "Transferir"
+    },
+    "physicalDialog": {
+      "title": "Inventari fisic",
+      "helpText": "Introdueix el recompte real. Es crearan ajustos automatics on hi hagi diferencies.",
+      "noTrackedProducts": "No hi ha productes amb seguiment d'estoc actiu",
+      "system": "Sistema:",
+      "applying": "Aplicant...",
+      "apply": "Aplicar inventari"
+    },
+    "minStockDialog": {
+      "title": "Estoc minim — {name}",
+      "helpText": "Es generara una alerta quan l'estoc baixi a aquest nivell. Deixa buit per desactivar.",
+      "noMinimum": "Sense minim"
+    }
   },
   "settings": {
     "title": "Configuracio",
@@ -550,7 +789,29 @@
     "irpfWithheld": "IRPF retingut",
     "approveAll": "Aprovar totes",
     "markPaid": "Marcar pagades",
-    "loading": "Carregant nomines..."
+    "loading": "Carregant nomines...",
+    "generateSuccess": "{count} nomines generades",
+    "generateError": "Error en generar nomines",
+    "approveSuccess": "{count} nomines aprovades",
+    "paidSuccess": "{count} nomines marcades com a pagades",
+    "confirmDeletePayroll": "Eliminar aquesta nomina? Aquesta accio no es pot desfer.",
+    "deleteSuccess": "Nomina eliminada",
+    "sepaError": "Error en generar SEPA XML",
+    "paidCount": "{count} pagades",
+    "liquidToPay": "liquid a pagar",
+    "ssLabel": "SS: {amount}",
+    "toPayAEAT": "a ingressar a AEAT",
+    "noResultsForMonth": "No hi ha nomines per a {month} {year}",
+    "table": {
+      "employee": "Empleat",
+      "gross": "Brut",
+      "ssEmployee": "SS empleat",
+      "irpf": "IRPF",
+      "net": "Net",
+      "viewPayroll": "Veure nomina",
+      "approve": "Aprovar",
+      "markAsPaid": "Marcar pagada"
+    }
   },
   "projects": {
     "title": "Projectes",
@@ -563,7 +824,47 @@
     "active": "Actius",
     "onHold": "En espera",
     "completed": "Completats",
-    "cancelled": "Cancel·lats"
+    "cancelled": "Cancel·lats",
+    "statusActive": "Actiu",
+    "statusOnHold": "En espera",
+    "statusCompleted": "Completat",
+    "statusCancelled": "Cancel·lat",
+    "errorLoading": "Error en carregar projectes",
+    "errorLoadingDetail": "Error en carregar el projecte",
+    "noClient": "Sense client",
+    "budget": "Pressupost",
+    "hours": "hores",
+    "invoicesCount": "factures",
+    "confirmDelete": "Eliminar \"{name}\"?",
+    "detail": {
+      "revenue": "Ingressos",
+      "hours": "Hores",
+      "budgetUsed": "Pressupost usat",
+      "margin": "Marge",
+      "recentTimeEntries": "Entrades de temps recents",
+      "noTimeEntries": "No hi ha entrades de temps registrades",
+      "employee": "Empleat",
+      "clockIn": "Entrada",
+      "clockOut": "Sortida",
+      "hoursCol": "Hores",
+      "linkedInvoices": "Factures vinculades",
+      "noLinkedInvoices": "No hi ha factures vinculades a aquest projecte",
+      "invoiceNumber": "Numero"
+    },
+    "form": {
+      "dialogTitle": "Nou projecte",
+      "dialogDesc": "Crea un nou projecte i assigna'l a un client",
+      "name": "Nom *",
+      "client": "Client",
+      "selectClient": "Seleccionar client",
+      "budget": "Pressupost",
+      "hourlyRate": "Tarifa / hora",
+      "startDate": "Data inici",
+      "endDate": "Data fi",
+      "color": "Color",
+      "creating": "Creant...",
+      "createProject": "Crear projecte"
+    }
   },
   "suppliers": {
     "title": "Proveidors",
@@ -571,7 +872,25 @@
     "new": "Nou proveidor",
     "search": "Cercar per nom, correu, CIF...",
     "noResults": "No hi ha proveidors",
-    "noResultsDesc": "Comenca afegint el teu primer proveidor"
+    "noResultsDesc": "Comenca afegint el teu primer proveidor",
+    "supplier": "Proveidor",
+    "contact": "Contacte",
+    "cifNif": "CIF/NIF",
+    "purchaseOrdersShort": "OC",
+    "updateSuccess": "Proveidor actualitzat",
+    "createSuccess": "Proveidor creat",
+    "saveError": "Error en desar el proveidor",
+    "confirmDelete": "Eliminar {name}?",
+    "pageOf": "Pagina {page} de {totalPages}",
+    "form": {
+      "dialogTitleEdit": "Editar proveidor",
+      "dialogTitleNew": "Nou proveidor",
+      "name": "Nom *",
+      "contactName": "Persona de contacte",
+      "website": "Web",
+      "bankAccount": "IBAN / Compte bancari",
+      "saving": "Desant..."
+    }
   },
   "orders": {
     "title": "Comandes",
@@ -579,7 +898,42 @@
     "new": "Nova comanda",
     "search": "Cercar per numero o client...",
     "noResults": "No hi ha comandes",
-    "noResultsDesc": "Crea la teva primera comanda de client"
+    "noResultsDesc": "Crea la teva primera comanda de client",
+    "number": "Numero",
+    "client": "Client",
+    "createDeliveryNote": "Crear albara",
+    "confirmDelete": "Eliminar comanda {number}?",
+    "confirmConvert": "Convertir comanda {number} en albara?",
+    "convertSuccess": "Albara {number} creat",
+    "convertError": "Error en convertir la comanda",
+    "pageOf": "Pagina {page} de {totalPages}",
+    "status": {
+      "pending": "Pendent",
+      "confirmed": "Confirmat",
+      "shipped": "Enviat",
+      "delivered": "Lliurat",
+      "cancelled": "Cancel·lat"
+    },
+    "form": {
+      "dialogTitle": "Nova comanda",
+      "client": "Client *",
+      "selectClient": "Seleccionar client...",
+      "lines": "Linies",
+      "addLine": "Afegir linia",
+      "product": "Producte...",
+      "description": "Descripcio *",
+      "quantity": "Quant.",
+      "price": "Preu",
+      "taxRate": "IVA %",
+      "notesPlaceholder": "Notes internes...",
+      "estimatedTotal": "Total estimat",
+      "creating": "Creant...",
+      "createOrder": "Crear comanda",
+      "selectClientRequired": "Selecciona un client",
+      "addLineRequired": "Afegeix almenys una linia",
+      "createSuccess": "Comanda creada",
+      "createError": "Error en crear la comanda"
+    }
   },
   "purchaseOrders": {
     "title": "Ordres de compra",
@@ -587,7 +941,46 @@
     "new": "Nova ordre",
     "search": "Cercar per numero o proveidor...",
     "noResults": "No hi ha ordres de compra",
-    "noResultsDesc": "Crea la teva primera ordre de compra a un proveidor"
+    "noResultsDesc": "Crea la teva primera ordre de compra a un proveidor",
+    "colNumber": "Numero",
+    "colSupplier": "Proveidor",
+    "statusDraft": "Esborrany",
+    "statusSent": "Enviada",
+    "statusPartialReceived": "Parcial",
+    "statusReceived": "Rebuda",
+    "statusCancelled": "Cancel·lada",
+    "registerReception": "Registrar recepcio",
+    "confirmDelete": "Eliminar l'ordre {number}?",
+    "form": {
+      "dialogTitle": "Nova ordre de compra",
+      "supplier": "Proveidor *",
+      "selectSupplier": "Seleccionar proveidor...",
+      "lines": "Linies",
+      "addLine": "Afegir linia",
+      "product": "Producte...",
+      "description": "Descripcio *",
+      "qty": "Qty",
+      "price": "Preu",
+      "vatPercent": "IVA %",
+      "notes": "Notes",
+      "notesPlaceholder": "Notes internes...",
+      "estimatedTotal": "Total estimat",
+      "creating": "Creant...",
+      "createOrder": "Crear ordre",
+      "selectSupplierRequired": "Selecciona un proveidor",
+      "addLineRequired": "Afegeix almenys una linia"
+    },
+    "createSuccess": "Ordre de compra creada",
+    "createError": "Error en crear l'ordre",
+    "receive": {
+      "title": "Registrar recepcio — {number}",
+      "ordered": "Demanat: {quantity}",
+      "received": "Rebut",
+      "saving": "Desant...",
+      "confirm": "Confirmar recepcio",
+      "success": "Recepcio registrada",
+      "error": "Error en registrar la recepcio"
+    }
   },
   "deliveryNotes": {
     "title": "Albarans",
@@ -608,7 +1001,40 @@
     "subtitle": "Registra i gestiona el temps de treball",
     "new": "Registrar hores",
     "noResults": "No hi ha entrades",
-    "noResultsDesc": "Registra la primera entrada de temps"
+    "noResultsDesc": "Registra la primera entrada de temps",
+    "summary": {
+      "today": "Avui",
+      "thisWeek": "Aquesta setmana",
+      "thisMonth": "Aquest mes"
+    },
+    "loadError": "Error en carregar entrades",
+    "inProgress": "En curs",
+    "confirmDelete": "Eliminar aquesta entrada?",
+    "table": {
+      "employee": "Empleat",
+      "project": "Projecte",
+      "clockIn": "Entrada",
+      "clockOut": "Sortida"
+    },
+    "filter": {
+      "allEmployees": "Tots els empleats",
+      "allProjects": "Tots els projectes"
+    },
+    "dialog": {
+      "title": "Registrar hores",
+      "description": "Registra una entrada de temps per a un empleat",
+      "employee": "Empleat *",
+      "selectEmployee": "Seleccionar empleat",
+      "project": "Projecte (opcional)",
+      "noProject": "Sense projecte",
+      "date": "Data *",
+      "clockIn": "Entrada *",
+      "clockOut": "Sortida *",
+      "break": "Descans (min)",
+      "notesPlaceholder": "Notes opcionals...",
+      "submitting": "Registrant...",
+      "submit": "Registrar"
+    }
   },
   "errors": {
     "unauthorized": "No tens permis per realitzar aquesta accio",

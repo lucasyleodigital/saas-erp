@@ -149,7 +149,11 @@
     "newInvoice": "Nova factura",
     "newClient": "Novo cliente",
     "newQuote": "Novo orzamento",
-    "newDeal": "Novo lead"
+    "newDeal": "Novo lead",
+    "viewPipeline": "Ver pipeline",
+    "viewAll": "Ver todas",
+    "noInvoicesYet": "Ainda non tes facturas",
+    "noClient": "Sen cliente"
   },
   "clients": {
     "title": "Clientes",
@@ -421,11 +425,34 @@
     "search": "Buscar leads...",
     "convert": "Converter a cliente",
     "source": "Orixe",
+    "company": "Empresa",
+    "noResults": "Non hai leads",
+    "noResultsDesc": "Rexistra novas oportunidades de venda",
+    "confirmDelete": "Eliminar o lead \"{name}\"? Esta accion non se pode desfacer.",
     "status": {
       "new": "Novo",
       "contacted": "Contactado",
       "qualified": "Cualificado",
       "lost": "Perdido"
+    },
+    "sources": {
+      "web": "Web",
+      "referral": "Referido",
+      "linkedin": "LinkedIn",
+      "googleAds": "Google Ads",
+      "call": "Chamada",
+      "email": "Correo",
+      "event": "Evento",
+      "other": "Outro"
+    },
+    "form": {
+      "namePlaceholder": "Maria Garcia",
+      "emailPlaceholder": "maria@empresa.com",
+      "phonePlaceholder": "600 123 456",
+      "companyPlaceholder": "Empresa SL",
+      "selectSource": "Seleccionar...",
+      "notesPlaceholder": "Informacion adicional sobre este lead...",
+      "createLead": "Crear lead"
     }
   },
   "automations": {
@@ -439,7 +466,104 @@
     "runs": "Execucions",
     "lastRun": "Ultima execucion",
     "noAutomations": "Ainda non tes automatizacions",
-    "upgrade": "Actualiza o teu plan para usar automatizacions"
+    "upgrade": "Actualiza o teu plan para usar automatizacions",
+    "newRule": "Nova regra",
+    "createFromScratch": "Crear dende cero",
+    "emptyDescription": "Elixe unha plantilla de arriba ou crea unha regra personalizada dende cero.",
+    "triggers": {
+      "invoiceCreated": "Factura creada",
+      "invoicePaid": "Factura pagada",
+      "invoiceOverdue": "Factura vencida",
+      "quoteCreated": "Orzamento creado",
+      "quoteAccepted": "Orzamento aceptado",
+      "leadCreated": "Novo lead",
+      "dealStageChanged": "Deal cambia de etapa",
+      "clientCreated": "Novo cliente",
+      "paymentReceived": "Pago recibido",
+      "orderCreated": "Pedido creado",
+      "purchaseReceived": "Compra recibida no almacen",
+      "lowStock": "Stock por debaixo do minimo"
+    },
+    "actions": {
+      "sendEmail": "Enviar correo",
+      "createNotification": "Crear notificacion interna",
+      "sendWebhook": "Enviar webhook (HTTP POST)"
+    },
+    "templates": {
+      "title": "Plantillas rapidas",
+      "clickToUse": "— fai clic para usar",
+      "overdueReminder": {
+        "name": "Recordatorio de factura vencida",
+        "description": "Envia un correo automatico cando unha factura supera a data de vencemento"
+      },
+      "welcomeClient": {
+        "name": "Benvida a novo cliente",
+        "description": "Sauda automaticamente a cada cliente novo que se da de alta"
+      },
+      "newLeadAlert": {
+        "name": "Alerta de novo lead",
+        "description": "Recibe unha notificacion interna cada vez que entra un lead novo"
+      },
+      "paymentConfirmation": {
+        "name": "Confirmacion de pago recibido",
+        "description": "Envia un correo de confirmacion automatico ao recibir un pago"
+      },
+      "quoteWebhook": {
+        "name": "Webhook ao aceptar orzamento",
+        "description": "Notifica ao teu CRM ou Zapier cando un cliente acepta un orzamento"
+      },
+      "lowStockAlert": {
+        "name": "Alerta de stock baixo",
+        "description": "Recibe unha notificacion interna cando o stock dun produto cae por debaixo do minimo"
+      },
+      "newOrderNotif": {
+        "name": "Notificacion de novo pedido",
+        "description": "Avisa internamente cando chega un novo pedido de cliente"
+      },
+      "purchaseReceivedAlert": {
+        "name": "Alerta de compra recibida",
+        "description": "Notifica cando unha orde de compra queda completamente recibida no almacen"
+      }
+    },
+    "form": {
+      "editTitle": "Editar automatizacion",
+      "newTitle": "Nova automatizacion",
+      "triggerLabel": "Cando ocorra isto (trigger) *",
+      "selectEvent": "Seleccionar evento...",
+      "actionLabel": "Executar esta accion *",
+      "emailConfig": "Config do correo",
+      "subject": "Asunto",
+      "body": "Corpo",
+      "notifConfig": "Config de notificacion",
+      "notifTitleLabel": "Titulo",
+      "message": "Mensaxe",
+      "webhookConfig": "Config do webhook",
+      "namePlaceholder": "Recordatorio de pago",
+      "nameRequired": "Nome obrigatorio",
+      "selectTrigger": "Selecciona un trigger",
+      "selectAction": "Selecciona unha accion",
+      "invalidUrl": "URL invalida"
+    },
+    "stats": {
+      "totalRules": "Total regras",
+      "totalExecutions": "Execucions totais",
+      "executedCount": "Executada {count} veces",
+      "noExecutions": "Sen execucions ainda",
+      "last": "ultima",
+      "testNow": "Probar agora",
+      "pause": "Pausar",
+      "activate": "Activar"
+    },
+    "logs": {
+      "title": "Historial de execucions",
+      "noLogs": "Sen execucions rexistradas ainda"
+    },
+    "planWall": {
+      "title": "As automatizacions son de pago",
+      "description": "Co plan FREE non podes crear automatizacions. Actualiza a STARTER ou superior para desbloquear fluxos automaticos de correo, notificacions e webhooks.",
+      "viewPlans": "Ver plans",
+      "upgradeStarter": "Actualizar a Starter"
+    }
   },
   "accounting": {
     "title": "Contabilidade",
@@ -456,7 +580,109 @@
     "stock": "Stock actual",
     "movements": "Movementos",
     "lowStock": "Stock baixo",
-    "noStock": "Sen stock"
+    "noStock": "Sen stock",
+    "tabs": {
+      "stock": "Stock",
+      "alerts": "Alertas",
+      "movements": "Movementos",
+      "valuation": "Valoracion",
+      "warehouses": "Almacens"
+    },
+    "summary": {
+      "products": "Produtos",
+      "lowStock": "Stock baixo",
+      "outOfStock": "Sen stock",
+      "totalValue": "Valor total"
+    },
+    "moveType": {
+      "purchase": "Compra",
+      "sale": "Venda",
+      "adjustmentIn": "Axuste entrada",
+      "adjustmentOut": "Axuste saida",
+      "return": "Devolucion",
+      "transferOut": "Transferencia saida",
+      "transferIn": "Transferencia entrada",
+      "in": "Entrada"
+    },
+    "stockTab": {
+      "searchProduct": "Buscar produto...",
+      "allWarehouses": "Todos os almacens",
+      "physicalInventory": "Inventario fisico",
+      "noProducts": "Non hai produtos",
+      "product": "Produto",
+      "sku": "SKU",
+      "stockHeader": "Stock",
+      "minimum": "Minimo",
+      "value": "Valor",
+      "addMovement": "Engadir movemento",
+      "transfer": "Transferir",
+      "minStock": "Stock minimo"
+    },
+    "alertsTab": {
+      "description": "Produtos que alcanzaron ou estan por debaixo do seu stock minimo.",
+      "noAlerts": "Sen alertas activas",
+      "allAboveMin": "Todos os produtos estan por riba do seu stock minimo",
+      "stockLabel": "Stock:",
+      "minLabel": "Minimo:"
+    },
+    "movementsTab": {
+      "type": "Tipo",
+      "allTypes": "Todos os tipos",
+      "warehouse": "Almacen",
+      "quantity": "Cantidade",
+      "reference": "Referencia",
+      "noMovements": "Non hai movementos"
+    },
+    "valuationTab": {
+      "costValue": "Valor de custo",
+      "saleValue": "Valor de venda",
+      "avgMargin": "Marxe medio",
+      "noCostProducts": "Non hai produtos con custo definido",
+      "unitCost": "Custo ud.",
+      "unitPrice": "PVP ud.",
+      "margin": "Marxe",
+      "stockValue": "Valor stock"
+    },
+    "warehousesTab": {
+      "newWarehouse": "Novo almacen",
+      "noWarehouses": "Non hai almacens configurados",
+      "default": "Por defecto",
+      "setDefault": "Marcar como defecto",
+      "confirmDelete": "Eliminar \"{name}\"?"
+    },
+    "warehouseDialog": {
+      "editTitle": "Editar almacen"
+    },
+    "moveDialog": {
+      "title": "Movemento — {name}",
+      "warehouse": "Almacen",
+      "referencePlaceholder": "N factura, albaran...",
+      "saving": "Gardando...",
+      "register": "Rexistrar"
+    },
+    "transferDialog": {
+      "title": "Transferir — {name}",
+      "from": "Dende",
+      "to": "Cara",
+      "sourceWarehouse": "Almacen orixe",
+      "destWarehouse": "Almacen destino",
+      "completeAllFields": "Completa todos os campos",
+      "transferring": "Transferindo...",
+      "transfer": "Transferir"
+    },
+    "physicalDialog": {
+      "title": "Inventario fisico",
+      "helpText": "Introduce o reconto real. Crearanse axustes automaticos onde haxa diferenzas.",
+      "noTrackedProducts": "Non hai produtos con seguimento de stock activo",
+      "system": "Sistema:",
+      "applying": "Aplicando...",
+      "apply": "Aplicar inventario"
+    },
+    "minStockDialog": {
+      "title": "Stock minimo — {name}",
+      "helpText": "Xerarase unha alerta cando o stock baixe a este nivel. Deixa baleiro para desactivar.",
+      "noMinimum": "Sen minimo"
+    }
   },
   "settings": {
     "title": "Configuracion",
@@ -550,7 +776,29 @@
     "irpfWithheld": "IRPF retido",
     "approveAll": "Aprobar todas",
     "markPaid": "Marcar pagadas",
-    "loading": "Cargando nominas..."
+    "loading": "Cargando nominas...",
+    "generateSuccess": "{count} nominas xeradas",
+    "generateError": "Erro ao xerar nominas",
+    "approveSuccess": "{count} nominas aprobadas",
+    "paidSuccess": "{count} nominas marcadas como pagadas",
+    "confirmDeletePayroll": "Eliminar esta nomina? Esta accion non se pode desfacer.",
+    "deleteSuccess": "Nomina eliminada",
+    "sepaError": "Erro ao xerar SEPA XML",
+    "paidCount": "{count} pagadas",
+    "liquidToPay": "liquido a pagar",
+    "ssLabel": "SS: {amount}",
+    "toPayAEAT": "a ingresar na AEAT",
+    "noResultsForMonth": "Non hai nominas para {month} {year}",
+    "table": {
+      "employee": "Empregado",
+      "gross": "Bruto",
+      "ssEmployee": "SS empregado",
+      "irpf": "IRPF",
+      "net": "Neto",
+      "viewPayroll": "Ver nomina",
+      "approve": "Aprobar",
+      "markAsPaid": "Marcar pagada"
+    }
   },
   "projects": {
     "title": "Proxectos",
@@ -587,7 +835,46 @@
     "new": "Nova orde",
     "search": "Buscar por numero ou provedor...",
     "noResults": "Non hai ordes de compra",
-    "noResultsDesc": "Crea a tua primeira orde de compra a un provedor"
+    "noResultsDesc": "Crea a tua primeira orde de compra a un provedor",
+    "colNumber": "Numero",
+    "colSupplier": "Provedor",
+    "statusDraft": "Borrador",
+    "statusSent": "Enviada",
+    "statusPartialReceived": "Parcial",
+    "statusReceived": "Recibida",
+    "statusCancelled": "Cancelada",
+    "registerReception": "Rexistrar recepcion",
+    "confirmDelete": "Eliminar a orde {number}?",
+    "form": {
+      "dialogTitle": "Nova orde de compra",
+      "supplier": "Provedor *",
+      "selectSupplier": "Seleccionar provedor...",
+      "lines": "Linas",
+      "addLine": "Engadir lina",
+      "product": "Produto...",
+      "description": "Descricion *",
+      "qty": "Cant",
+      "price": "Prezo",
+      "vatPercent": "IVE %",
+      "notes": "Notas",
+      "notesPlaceholder": "Notas internas...",
+      "estimatedTotal": "Total estimado",
+      "creating": "Creando...",
+      "createOrder": "Crear orde",
+      "selectSupplierRequired": "Selecciona un provedor",
+      "addLineRequired": "Engade polo menos unha lina"
+    },
+    "createSuccess": "Orde de compra creada",
+    "createError": "Erro ao crear a orde",
+    "receive": {
+      "title": "Rexistrar recepcion — {number}",
+      "ordered": "Pedido: {quantity}",
+      "received": "Recibido",
+      "saving": "Gardando...",
+      "confirm": "Confirmar recepcion",
+      "success": "Recepcion rexistrada",
+      "error": "Erro ao rexistrar a recepcion"
+    }
   },
   "deliveryNotes": {
     "title": "Albarans",
@@ -608,7 +895,40 @@
     "subtitle": "Rexistra e xestiona o tempo de traballo",
     "new": "Rexistrar horas",
     "noResults": "Non hai entradas",
-    "noResultsDesc": "Rexistra a primeira entrada de tempo"
+    "noResultsDesc": "Rexistra a primeira entrada de tempo",
+    "summary": {
+      "today": "Hoxe",
+      "thisWeek": "Esta semana",
+      "thisMonth": "Este mes"
+    },
+    "loadError": "Erro ao cargar entradas",
+    "inProgress": "En curso",
+    "confirmDelete": "Eliminar esta entrada?",
+    "table": {
+      "employee": "Empregado",
+      "project": "Proxecto",
+      "clockIn": "Entrada",
+      "clockOut": "Saida"
+    },
+    "filter": {
+      "allEmployees": "Todos os empregados",
+      "allProjects": "Todos os proxectos"
+    },
+    "dialog": {
+      "title": "Rexistrar horas",
+      "description": "Rexistra unha entrada de tempo para un empregado",
+      "employee": "Empregado *",
+      "selectEmployee": "Seleccionar empregado",
+      "project": "Proxecto (opcional)",
+      "noProject": "Sen proxecto",
+      "date": "Data *",
+      "clockIn": "Entrada *",
+      "clockOut": "Saida *",
+      "break": "Descanso (min)",
+      "notesPlaceholder": "Notas opcionais...",
+      "submitting": "Rexistrando...",
+      "submit": "Rexistrar"
+    }
   },
   "errors": {
     "unauthorized": "Non tes permiso para realizar esta accion",

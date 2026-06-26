@@ -24,34 +24,35 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 
-const ENTITIES = [
-  { value: "ALL", label: "Todas las entidades" },
-  { value: "Invoice", label: "Facturas" },
-  { value: "Client", label: "Clientes" },
-  { value: "Product", label: "Productos" },
-  { value: "Quote", label: "Presupuestos" },
-  { value: "Employee", label: "Empleados" },
-  { value: "Project", label: "Proyectos" },
-  { value: "DeliveryNote", label: "Albaranes" },
-  { value: "Order", label: "Pedidos" },
-  { value: "Supplier", label: "Proveedores" },
+const ENTITY_VALUES = [
+  { value: "ALL", key: "all" },
+  { value: "Invoice", key: "invoices" },
+  { value: "Client", key: "clients" },
+  { value: "Product", key: "products" },
+  { value: "Quote", key: "quotes" },
+  { value: "Employee", key: "employees" },
+  { value: "Project", key: "projects" },
+  { value: "DeliveryNote", key: "deliveryNotes" },
+  { value: "Order", key: "orders" },
+  { value: "Supplier", key: "suppliers" },
 ];
 
-const ACTIONS = [
-  { value: "ALL", label: "Todas las acciones" },
-  { value: "CREATE", label: "Crear" },
-  { value: "UPDATE", label: "Actualizar" },
-  { value: "DELETE", label: "Eliminar" },
+const ACTION_VALUES = [
+  { value: "ALL", key: "all" },
+  { value: "CREATE", key: "create" },
+  { value: "UPDATE", key: "update" },
+  { value: "DELETE", key: "delete" },
 ];
 
-const ACTION_BADGE: Record<string, { label: string; variant: "success" | "info" | "destructive" }> = {
-  CREATE: { label: "Crear",      variant: "success" },
-  UPDATE: { label: "Actualizar", variant: "info" },
-  DELETE: { label: "Eliminar",   variant: "destructive" },
+const ACTION_BADGE_VARIANTS: Record<string, { key: string; variant: "success" | "info" | "destructive" }> = {
+  CREATE: { key: "create",  variant: "success" },
+  UPDATE: { key: "update",  variant: "info" },
+  DELETE: { key: "delete",  variant: "destructive" },
 };
 
 export function AuditView() {
   const t = useTranslations("audit");
+  const tCommon = useTranslations("common");
   const [entityFilter, setEntityFilter] = useState("ALL");
   const [actionFilter, setActionFilter] = useState("ALL");
   const [dateFrom, setDateFrom] = useState("");
@@ -90,9 +91,9 @@ export function AuditView() {
             <SelectValue placeholder="Entidad" />
           </SelectTrigger>
           <SelectContent>
-            {ENTITIES.map((e) => (
+            {ENTITY_VALUES.map((e) => (
               <SelectItem key={e.value} value={e.value}>
-                {e.label}
+                {t(`entities.${e.key}`)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -103,9 +104,9 @@ export function AuditView() {
             <SelectValue placeholder="Accion" />
           </SelectTrigger>
           <SelectContent>
-            {ACTIONS.map((a) => (
+            {ACTION_VALUES.map((a) => (
               <SelectItem key={a.value} value={a.value}>
-                {a.label}
+                {t(`actions.${a.key}`)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -143,7 +144,7 @@ export function AuditView() {
                 <AlertCircle className="h-6 w-6 text-destructive" />
               </div>
               <p className="font-medium text-destructive">
-                Error al cargar el registro
+                {t("errorLoading")}
               </p>
             </div>
           ) : logs.length === 0 ? (
@@ -162,19 +163,19 @@ export function AuditView() {
                 <thead>
                   <tr className="border-b border-border">
                     <th className="text-left font-medium text-muted-foreground px-4 py-3">
-                      Fecha/hora
+                      {t("table.dateTime")}
                     </th>
                     <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">
-                      Usuario
+                      {t("table.user")}
                     </th>
                     <th className="text-left font-medium text-muted-foreground px-4 py-3">
-                      Accion
+                      {t("table.action")}
                     </th>
                     <th className="text-left font-medium text-muted-foreground px-4 py-3">
-                      Entidad
+                      {t("table.entity")}
                     </th>
                     <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">
-                      ID
+                      {t("table.id")}
                     </th>
                     <th className="px-4 py-3 w-10" />
                   </tr>
@@ -182,8 +183,8 @@ export function AuditView() {
                 <tbody>
                   <AnimatePresence>
                     {logs.map((log: any, i: number) => {
-                      const ab = ACTION_BADGE[log.action] ?? {
-                        label: log.action,
+                      const abDef = ACTION_BADGE_VARIANTS[log.action] ?? {
+                        key: log.action,
                         variant: "info" as const,
                       };
                       const isExpanded = expandedRow === log.id;
@@ -218,10 +219,10 @@ export function AuditView() {
                             {log.user?.name ??
                               log.userName ??
                               log.userId ??
-                              "Sistema"}
+                              t("system")}
                           </td>
                           <td className="px-4 py-3">
-                            <Badge variant={ab.variant}>{ab.label}</Badge>
+                            <Badge variant={abDef.variant}>{t(`actions.${abDef.key}`)}</Badge>
                           </td>
                           <td className="px-4 py-3">{log.entity ?? log.entityType}</td>
                           <td className="px-4 py-3 hidden lg:table-cell font-mono text-xs text-muted-foreground">
@@ -270,7 +271,7 @@ export function AuditView() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between text-sm text-muted-foreground">
           <span>
-            Pagina {page} de {totalPages}
+            {t("pageOf", { page, totalPages })}
           </span>
           <div className="flex gap-2">
             <Button
@@ -279,7 +280,7 @@ export function AuditView() {
               disabled={page <= 1}
               onClick={() => setPage((p) => p - 1)}
             >
-              Anterior
+              {tCommon("previous")}
             </Button>
             <Button
               variant="outline"
@@ -287,7 +288,7 @@ export function AuditView() {
               disabled={page >= totalPages}
               onClick={() => setPage((p) => p + 1)}
             >
-              Siguiente
+              {tCommon("next")}
             </Button>
           </div>
         </div>
@@ -297,6 +298,7 @@ export function AuditView() {
 }
 
 function ExpandedDetail({ log }: { log: any }) {
+  const t = useTranslations("audit");
   if (!log) return null;
 
   const oldData = log.oldData;
@@ -311,12 +313,12 @@ function ExpandedDetail({ log }: { log: any }) {
       className="border-t border-border bg-muted/20 px-6 py-4"
     >
       <p className="text-xs font-medium text-muted-foreground mb-2">
-        Detalles del cambio
+        {t("detail.title")}
       </p>
       <div className="grid gap-4 md:grid-cols-2">
         {oldData && (
           <div>
-            <p className="text-xs font-medium mb-1">Datos anteriores</p>
+            <p className="text-xs font-medium mb-1">{t("detail.oldData")}</p>
             <pre className="text-xs bg-muted p-3 rounded-lg overflow-auto max-h-48">
               {JSON.stringify(oldData, null, 2)}
             </pre>
@@ -324,7 +326,7 @@ function ExpandedDetail({ log }: { log: any }) {
         )}
         {newData && (
           <div>
-            <p className="text-xs font-medium mb-1">Datos nuevos</p>
+            <p className="text-xs font-medium mb-1">{t("detail.newData")}</p>
             <pre className="text-xs bg-muted p-3 rounded-lg overflow-auto max-h-48">
               {JSON.stringify(newData, null, 2)}
             </pre>
@@ -332,7 +334,7 @@ function ExpandedDetail({ log }: { log: any }) {
         )}
         {changes && !oldData && !newData && (
           <div className="md:col-span-2">
-            <p className="text-xs font-medium mb-1">Cambios</p>
+            <p className="text-xs font-medium mb-1">{t("detail.changes")}</p>
             <pre className="text-xs bg-muted p-3 rounded-lg overflow-auto max-h-48">
               {JSON.stringify(changes, null, 2)}
             </pre>
