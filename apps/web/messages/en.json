@@ -914,6 +914,20 @@
       "proDesc": "10 usuarios",
       "enterprise": "Enterprise",
       "enterpriseDesc": "Usuarios ilimitados"
+    },
+    "planLabel": "Current plan",
+    "team": {
+      "title": "Team",
+      "memberCount": "{count} members",
+      "invite": "Invite member",
+      "rolesGuide": "Role guide",
+      "guide": {
+        "owner": "Full access. Can manage billing and delete company.",
+        "admin": "Full access except billing and company deletion.",
+        "accountant": "Accounting, invoices and bank access only.",
+        "sales": "CRM, clients, quotes and pipeline access.",
+        "employee": "Can only view own data, clock hours and view payslips."
+      }
     }
   },
   "billing": {

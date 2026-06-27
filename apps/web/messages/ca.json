@@ -914,6 +914,20 @@
       "proDesc": "10 usuarios",
       "enterprise": "Enterprise",
       "enterpriseDesc": "Usuarios ilimitados"
+    },
+    "planLabel": "Pla actual",
+    "team": {
+      "title": "Equip",
+      "memberCount": "{count} membres",
+      "invite": "Convidar membre",
+      "rolesGuide": "Guia de rols",
+      "guide": {
+        "owner": "Acces complet. Pot gestionar facturacio i eliminar empresa.",
+        "admin": "Acces complet excepte facturacio i eliminacio.",
+        "accountant": "Nomes comptabilitat, factures i banc.",
+        "sales": "CRM, clients, pressupostos i pipeline.",
+        "employee": "Nomes pot veure les seves dades i fitxar hores."
+      }
     }
   },
   "billing": {

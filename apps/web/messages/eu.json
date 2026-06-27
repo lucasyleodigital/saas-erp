@@ -914,6 +914,20 @@
       "proDesc": "10 usuarios",
       "enterprise": "Enterprise",
       "enterpriseDesc": "Usuarios ilimitados"
+    },
+    "planLabel": "Uneko plana",
+    "team": {
+      "title": "Taldea",
+      "memberCount": "{count} kide",
+      "invite": "Kidea gonbidatu",
+      "rolesGuide": "Rol gida",
+      "guide": {
+        "owner": "Sarbide osoa. Fakturazioa kudeatu eta enpresa ezabatu dezake.",
+        "admin": "Sarbide osoa fakturazioa eta ezabatzea izan ezik.",
+        "accountant": "Kontabilitatea, fakturak eta bankua soilik.",
+        "sales": "CRM, bezeroak, aurrekontuak eta pipeline.",
+        "employee": "Bere datuak ikusi, orduak erregistratu eta nominak ikusi soilik."
+      }
     }
   },
   "billing": {

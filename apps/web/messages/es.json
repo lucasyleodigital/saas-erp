@@ -914,6 +914,20 @@
       "proDesc": "10 usuarios",
       "enterprise": "Enterprise",
       "enterpriseDesc": "Usuarios ilimitados"
+    },
+    "planLabel": "Plan actual",
+    "team": {
+      "title": "Equipo",
+      "memberCount": "{count} miembros",
+      "invite": "Invitar miembro",
+      "rolesGuide": "Guia de roles",
+      "guide": {
+        "owner": "Acceso completo. Puede gestionar facturacion y eliminar la empresa.",
+        "admin": "Acceso completo excepto facturacion y eliminacion de empresa.",
+        "accountant": "Solo acceso a contabilidad, facturas y banco.",
+        "sales": "Acceso a CRM, clientes, presupuestos y pipeline.",
+        "employee": "Solo puede ver sus datos, fichar horas y ver nominas."
+      }
     }
   },
   "billing": {
