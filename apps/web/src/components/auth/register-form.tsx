@@ -55,10 +55,16 @@ export function RegisterForm() {
       trackEvent("sign_up", { method: "email" });
       router.push(`/${locale}/dashboard`);
     } catch (err: any) {
-      const msg = err.response?.data?.message ?? t("error");
-      const errorText = Array.isArray(msg) ? msg[0] : msg;
+      let errorText: string;
+      if (err.response?.data?.message) {
+        const msg = err.response.data.message;
+        errorText = Array.isArray(msg) ? msg.join(", ") : msg;
+      } else if (err.message?.includes("Network")) {
+        errorText = "No se puede conectar con el servidor. Intentalo de nuevo.";
+      } else {
+        errorText = err.message ?? t("error");
+      }
       setFormError(errorText);
-      toast.error(errorText);
     }
   }
 
