@@ -48,26 +48,81 @@ export class EmailService {
   async sendWelcome(to: string, firstName: string, companyName: string) {
     await this.send(
       to,
-      `¡Bienvenido a YouWhole, ${firstName}!`,
+      `Bienvenido a YouWhole, ${firstName}!`,
       `
-      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 560px; margin: 0 auto; padding: 40px 32px; color: #111827;">
-        <div style="width: 40px; height: 40px; background: #6366f1; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
-          <span style="color: white; font-weight: bold; font-size: 18px;">E</span>
+      <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;margin:0;padding:0;background:#f8fafc;">
+        <!-- Header oscuro con logo -->
+        <div style="background:linear-gradient(135deg,#040c0a 0%,#061410 60%,#080f0c 100%);padding:40px 32px 32px;text-align:center;">
+          <img src="https://youwhole.com/logo.png" alt="YouWhole" width="140" height="40" style="display:inline-block;margin-bottom:20px;" />
+          <h1 style="color:#ffffff;font-size:26px;font-weight:700;margin:0 0 8px;">Bienvenido, ${firstName}!</h1>
+          <p style="color:#94a3b8;font-size:15px;margin:0;">Tu empresa esta lista para facturar</p>
         </div>
-        <h1 style="font-size: 24px; font-weight: 700; margin: 0 0 8px;">¡Bienvenido, ${firstName}!</h1>
-        <p style="color: #6b7280; margin: 0 0 24px; line-height: 1.6;">
-          Tu empresa <strong style="color: #111827;">${companyName}</strong> ya está lista en YouWhole.
-          Empieza creando tu primera factura o importando tus clientes.
-        </p>
-        <a href="${this.clientUrl}/dashboard"
-          style="display: inline-block; background: #6366f1; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 500; font-size: 15px;">
-          Ir al dashboard →
-        </a>
-        <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 32px 0;" />
-        <p style="color: #9ca3af; font-size: 12px; margin: 0;">
-          Si no has creado esta cuenta, puedes ignorar este email.
-          Responde a este mensaje si necesitas ayuda.
-        </p>
+
+        <!-- Contenido principal -->
+        <div style="max-width:560px;margin:0 auto;padding:32px;">
+          <div style="background:#ffffff;border-radius:12px;border:1px solid #e5e7eb;padding:32px;margin-bottom:24px;">
+            <p style="color:#374151;font-size:15px;line-height:1.7;margin:0 0 20px;">
+              <strong style="color:#0d9488;">${companyName}</strong> ya esta configurada en YouWhole.
+              Tienes 14 dias de prueba gratis del plan Pro con todas las funcionalidades.
+            </p>
+
+            <p style="color:#6b7280;font-size:14px;font-weight:600;margin:0 0 12px;">Tus primeros pasos:</p>
+
+            <table style="width:100%;border-collapse:collapse;">
+              <tr>
+                <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;">
+                  <span style="display:inline-block;width:24px;height:24px;background:#0d9488;color:white;border-radius:50%;text-align:center;line-height:24px;font-size:12px;font-weight:700;margin-right:10px;">1</span>
+                  <span style="color:#374151;font-size:14px;">Completa los datos de tu empresa</span>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;">
+                  <span style="display:inline-block;width:24px;height:24px;background:#0d9488;color:white;border-radius:50%;text-align:center;line-height:24px;font-size:12px;font-weight:700;margin-right:10px;">2</span>
+                  <span style="color:#374151;font-size:14px;">Anade tus primeros clientes</span>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;">
+                  <span style="display:inline-block;width:24px;height:24px;background:#0d9488;color:white;border-radius:50%;text-align:center;line-height:24px;font-size:12px;font-weight:700;margin-right:10px;">3</span>
+                  <span style="color:#374151;font-size:14px;">Crea tu primera factura con VeriFactu</span>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:10px 12px;">
+                  <span style="display:inline-block;width:24px;height:24px;background:#0d9488;color:white;border-radius:50%;text-align:center;line-height:24px;font-size:12px;font-weight:700;margin-right:10px;">4</span>
+                  <span style="color:#374151;font-size:14px;">Importa tus datos desde Excel si vienes de otro programa</span>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- CTA -->
+          <div style="text-align:center;margin-bottom:32px;">
+            <a href="${this.clientUrl}/es/dashboard"
+              style="display:inline-block;background:linear-gradient(135deg,#0d9488 0%,#0f766e 100%);color:white;padding:14px 36px;border-radius:10px;text-decoration:none;font-weight:600;font-size:15px;box-shadow:0 4px 14px rgba(13,148,136,0.3);">
+              Entrar a mi cuenta
+            </a>
+          </div>
+
+          <!-- Info extra -->
+          <div style="background:#f0fdf9;border-left:4px solid #0d9488;padding:16px 20px;border-radius:0 8px 8px 0;margin-bottom:24px;">
+            <p style="margin:0;font-size:13px;color:#374151;line-height:1.6;">
+              <strong>Necesitas ayuda?</strong> Dentro de la app tienes un centro de ayuda con guias paso a paso para cada seccion. Tambien puedes escribirnos a
+              <a href="mailto:hola@youwhole.com" style="color:#0d9488;text-decoration:none;font-weight:500;">hola@youwhole.com</a>
+              o llamar al <a href="tel:+34624029617" style="color:#0d9488;text-decoration:none;font-weight:500;">624 029 617</a>.
+            </p>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="text-align:center;padding:24px 32px 32px;border-top:1px solid #e5e7eb;">
+          <p style="margin:0 0 4px;font-size:13px;color:#6b7280;font-weight:500;">YouWhole</p>
+          <p style="margin:0;font-size:12px;color:#9ca3af;">
+            El ERP todo en uno para autonomos y pymes espanolas<br/>
+            <a href="https://youwhole.com" style="color:#0d9488;text-decoration:none;">youwhole.com</a> ·
+            Hecho por <a href="https://lucasyleodigital.com" style="color:#9ca3af;text-decoration:none;">Lucas y Leo Digital</a>
+          </p>
+        </div>
       </div>
       `
     );
