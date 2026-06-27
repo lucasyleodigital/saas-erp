@@ -69,6 +69,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
       items: [
         { href: "/dashboard", label: "Inicio", icon: LayoutDashboard },
         { href: "/control-horario", label: "Fichaje", icon: Timer },
+        { href: "/nominas", label: "Mis nominas", icon: Banknote },
         { href: "/configuracion", label: t("settings"), icon: Settings },
       ],
     },

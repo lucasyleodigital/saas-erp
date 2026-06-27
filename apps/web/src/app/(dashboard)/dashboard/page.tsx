@@ -6,11 +6,13 @@ import { RecentInvoices } from "@/components/dashboard/recent-invoices";
 import { TopClients } from "@/components/dashboard/top-clients";
 import { DealsFunnel } from "@/components/dashboard/deals-funnel";
 import { QuickActions } from "@/components/dashboard/quick-actions";
+import { DashboardRouter } from "@/components/dashboard/dashboard-router";
 
 export default async function DashboardPage() {
   const t = await getTranslations("dashboard");
 
   return (
+    <DashboardRouter>
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">{t("title")}</h1>
@@ -45,6 +47,7 @@ export default async function DashboardPage() {
         </Suspense>
       </div>
     </div>
+    </DashboardRouter>
   );
 }
 
