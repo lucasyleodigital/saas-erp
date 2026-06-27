@@ -5,6 +5,10 @@ import {
   useTimeEntries,
   useCreateTimeEntry,
   useDeleteTimeEntry,
+  useClockIn,
+  useClockOut,
+  useActiveClocks,
+  useTimeSummary,
 } from "@/hooks/use-time-tracking";
 import { useEmployees } from "@/hooks/use-employees";
 import { useProjects } from "@/hooks/use-projects";
@@ -29,6 +33,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { formatDate } from "@/lib/utils";
+import { api } from "@/lib/api";
+import { toast } from "sonner";
 import {
   Plus,
   Timer,
@@ -36,6 +42,11 @@ import {
   CalendarDays,
   Trash2,
   AlertCircle,
+  LogIn,
+  LogOut,
+  Download,
+  Zap,
+  Users,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
@@ -44,10 +55,16 @@ export function TimeTrackingView() {
   const t = useTranslations("timeTracking");
   const tCommon = useTranslations("common");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [clockEmployee, setClockEmployee] = useState("");
   const [filterEmployee, setFilterEmployee] = useState("");
   const [filterProject, setFilterProject] = useState("");
   const [filterFrom, setFilterFrom] = useState("");
   const [filterTo, setFilterTo] = useState("");
+
+  const clockIn = useClockIn();
+  const clockOut = useClockOut();
+  const { data: activeClocks = [] } = useActiveClocks();
+  const { data: summaryData } = useTimeSummary();
 
   const params: Record<string, any> = {};
   if (filterEmployee) params.employeeId = filterEmployee;
@@ -79,18 +96,85 @@ export function TimeTrackingView() {
             {t("subtitle")}
           </p>
         </div>
-        <Button onClick={() => setDialogOpen(true)} className="gap-2">
-          <Plus className="h-4 w-4" />
-          {t("new")}
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => {
+              const now = new Date();
+              const url = `/time-entries/report?year=${now.getFullYear()}&month=${now.getMonth() + 1}`;
+              api.get(url).then((r) => {
+                const rows = r.data?.rows ?? [];
+                if (!rows.length) { toast.error("Sin datos para exportar"); return; }
+                const csv = ["Empleado,NIF,Fecha,Entrada,Salida,Pausa (min),Total (h),Horas extra (min),Proyecto"]
+                  .concat(rows.map((r: any) => `${r.employee},${r.nif},${r.date},${r.clockIn},${r.clockOut},${r.breakMinutes},${r.totalHours},${r.overtimeMinutes},${r.project}`))
+                  .join("\n");
+                const blob = new Blob([csv], { type: "text/csv" });
+                const a = document.createElement("a");
+                a.href = URL.createObjectURL(blob);
+                a.download = `control-horario-${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}.csv`;
+                a.click();
+              }).catch(() => toast.error("Error al exportar"));
+            }}
+            className="gap-2"
+          >
+            <Download className="h-4 w-4" /> Exportar mes
+          </Button>
+          <Button onClick={() => setDialogOpen(true)} className="gap-2">
+            <Plus className="h-4 w-4" />
+            {t("new")}
+          </Button>
+        </div>
       </div>
 
+      {/* Quick clock in/out */}
+      <Card className="border-primary/20 bg-primary/5">
+        <CardContent className="p-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            <div className="flex items-center gap-2 flex-1">
+              <Users className="h-5 w-5 text-primary shrink-0" />
+              <EmployeeFilter value={clockEmployee} onChange={setClockEmployee} />
+            </div>
+            <div className="flex gap-2">
+              <Button
+                className="gap-2"
+                onClick={() => { if (clockEmployee) clockIn.mutate({ employeeId: clockEmployee }); }}
+                disabled={!clockEmployee || clockIn.isPending}
+              >
+                <LogIn className="h-4 w-4" /> Fichar entrada
+              </Button>
+              <Button
+                variant="outline"
+                className="gap-2"
+                onClick={() => { if (clockEmployee) clockOut.mutate({ employeeId: clockEmployee }); }}
+                disabled={!clockEmployee || clockOut.isPending}
+              >
+                <LogOut className="h-4 w-4" /> Fichar salida
+              </Button>
+            </div>
+          </div>
+          {(activeClocks as any[]).length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {(activeClocks as any[]).map((c: any) => (
+                <Badge key={c.id} variant="success" className="gap-1.5 py-1">
+                  <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                  {c.employee?.firstName} {c.employee?.lastName}
+                  <span className="text-xs opacity-70">
+                    desde {new Date(c.clockIn).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}
+                  </span>
+                </Badge>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Summary cards */}
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 grid-cols-2 sm:grid-cols-4">
         {[
-          { label: t("summary.today"), value: todayHours, icon: Clock },
-          { label: t("summary.thisWeek"), value: weekHours, icon: CalendarDays },
-          { label: t("summary.thisMonth"), value: monthHours, icon: Timer },
+          { label: "Hoy", value: summaryData?.today ?? todayHours, icon: Clock, color: "text-blue-600", bg: "bg-blue-500/10" },
+          { label: "Semana", value: summaryData?.week ?? weekHours, icon: CalendarDays, color: "text-emerald-600", bg: "bg-emerald-500/10" },
+          { label: "Mes", value: summaryData?.month ?? monthHours, icon: Timer, color: "text-purple-600", bg: "bg-purple-500/10" },
+          { label: "Horas extra", value: summaryData?.overtime ?? 0, icon: Zap, color: "text-amber-600", bg: "bg-amber-500/10" },
         ].map((s, i) => (
           <motion.div
             key={s.label}
@@ -99,16 +183,14 @@ export function TimeTrackingView() {
             transition={{ delay: i * 0.06 }}
           >
             <Card>
-              <CardContent className="p-5">
+              <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <s.icon className="h-5 w-5 text-primary" />
+                  <div className={`h-10 w-10 rounded-lg ${s.bg} flex items-center justify-center`}>
+                    <s.icon className={`h-5 w-5 ${s.color}`} />
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">{s.label}</p>
-                    <p className="text-lg font-semibold">
-                      {s.value.toFixed(1)} h
-                    </p>
+                    <p className="text-lg font-semibold">{s.value.toFixed(1)} h</p>
                   </div>
                 </div>
               </CardContent>
