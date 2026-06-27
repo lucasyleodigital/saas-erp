@@ -23,13 +23,13 @@ export class TimeEntriesController {
   }
 
   @Post("clock-in")
-  clockIn(@CurrentUser() u: JwtPayload, @Body() body: { employeeId: string; projectId?: string }) {
-    return this.svc.clockIn(u.companyId, body.employeeId, body.projectId);
+  clockIn(@CurrentUser() u: JwtPayload, @Body() body: { employeeId: string; projectId?: string; latitude?: number; longitude?: number; method?: string }) {
+    return this.svc.clockIn(u.companyId, body.employeeId, body);
   }
 
   @Post("clock-out")
-  clockOut(@CurrentUser() u: JwtPayload, @Body() body: { employeeId: string; breakMinutes?: number }) {
-    return this.svc.clockOut(u.companyId, body.employeeId, body.breakMinutes ?? 0);
+  clockOut(@CurrentUser() u: JwtPayload, @Body() body: { employeeId: string; breakMinutes?: number; latitude?: number; longitude?: number }) {
+    return this.svc.clockOut(u.companyId, body.employeeId, body);
   }
 
   @Get("active")
@@ -55,6 +55,16 @@ export class TimeEntriesController {
   @Get("missed")
   getMissedClocks(@CurrentUser() u: JwtPayload) {
     return this.svc.getMissedClocks(u.companyId);
+  }
+
+  @Get("qr-token")
+  getQrToken(@CurrentUser() u: JwtPayload) {
+    return this.svc.generateQrToken(u.companyId);
+  }
+
+  @Post("clock-qr")
+  clockByQr(@Body() body: { token: string; employeeId: string; action: "in" | "out"; latitude?: number; longitude?: number }) {
+    return this.svc.clockByQr(body);
   }
 
   @Delete(":id")

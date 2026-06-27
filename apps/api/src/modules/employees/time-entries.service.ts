@@ -55,7 +55,7 @@ export class TimeEntriesService {
     });
   }
 
-  async clockIn(companyId: string, employeeId: string, projectId?: string) {
+  async clockIn(companyId: string, employeeId: string, opts?: { projectId?: string; latitude?: number; longitude?: number; method?: string }) {
     const now = new Date();
     const open = await this.prisma.timeEntry.findFirst({
       where: { companyId, employeeId, clockOut: null },
@@ -66,15 +66,18 @@ export class TimeEntriesService {
       data: {
         companyId,
         employeeId,
-        projectId: projectId || null,
+        projectId: opts?.projectId || null,
         date: now,
         clockIn: now,
+        latitude: opts?.latitude,
+        longitude: opts?.longitude,
+        method: opts?.method ?? "WEB",
       },
       include: { employee: { select: { firstName: true, lastName: true } } },
     });
   }
 
-  async clockOut(companyId: string, employeeId: string, breakMinutes = 0) {
+  async clockOut(companyId: string, employeeId: string, opts?: { breakMinutes?: number; latitude?: number; longitude?: number }) {
     const open = await this.prisma.timeEntry.findFirst({
       where: { companyId, employeeId, clockOut: null },
       orderBy: { clockIn: "desc" },
@@ -82,13 +85,20 @@ export class TimeEntriesService {
     if (!open) throw new NotFoundException("No hay fichaje abierto");
 
     const now = new Date();
+    const breakMinutes = opts?.breakMinutes ?? 0;
     const totalMinutes = Math.round((now.getTime() - open.clockIn.getTime()) / 60000) - breakMinutes;
-    const STANDARD_DAY = 480; // 8 hours in minutes
+    const STANDARD_DAY = 480;
     const overtimeMinutes = Math.max(0, totalMinutes - STANDARD_DAY);
 
     return this.prisma.timeEntry.update({
       where: { id: open.id },
-      data: { clockOut: now, breakMinutes, totalMinutes, notes: overtimeMinutes > 0 ? `Horas extra: ${(overtimeMinutes / 60).toFixed(1)}h` : open.notes },
+      data: {
+        clockOut: now,
+        breakMinutes,
+        totalMinutes,
+        locationOut: opts?.latitude ? { latitude: opts.latitude, longitude: opts.longitude } : undefined,
+        notes: overtimeMinutes > 0 ? `Horas extra: ${(overtimeMinutes / 60).toFixed(1)}h` : open.notes,
+      },
       include: { employee: { select: { firstName: true, lastName: true } } },
     });
   }
@@ -246,6 +256,41 @@ export class TimeEntriesService {
         id: emp.id,
         name: `${emp.firstName} ${emp.lastName}`,
       }));
+  }
+
+  async generateQrToken(companyId: string) {
+    const payload = { companyId, ts: Date.now(), type: "clock-qr" };
+    const token = Buffer.from(JSON.stringify(payload)).toString("base64url");
+    return { token, expiresIn: "24h" };
+  }
+
+  async clockByQr(data: { token: string; employeeId: string; action: "in" | "out"; latitude?: number; longitude?: number }) {
+    let payload: any;
+    try {
+      payload = JSON.parse(Buffer.from(data.token, "base64url").toString("utf8"));
+    } catch {
+      throw new NotFoundException("Token QR invalido");
+    }
+    if (payload.type !== "clock-qr" || !payload.companyId) {
+      throw new NotFoundException("Token QR invalido");
+    }
+    const age = Date.now() - (payload.ts ?? 0);
+    if (age > 24 * 60 * 60 * 1000) {
+      throw new NotFoundException("Token QR expirado. Genera uno nuevo.");
+    }
+
+    if (data.action === "in") {
+      return this.clockIn(payload.companyId, data.employeeId, {
+        latitude: data.latitude,
+        longitude: data.longitude,
+        method: "QR",
+      });
+    } else {
+      return this.clockOut(payload.companyId, data.employeeId, {
+        latitude: data.latitude,
+        longitude: data.longitude,
+      });
+    }
   }
 
   async remove(companyId: string, id: string) {

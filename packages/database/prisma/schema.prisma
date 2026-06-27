@@ -1065,6 +1065,10 @@ model TimeEntry {
   clockOut     DateTime?
   breakMinutes Int       @default(0)
   totalMinutes Int?
+  latitude     Float?
+  longitude    Float?
+  locationOut  Json?
+  method       String?
   notes        String?
   createdAt    DateTime  @default(now())
 

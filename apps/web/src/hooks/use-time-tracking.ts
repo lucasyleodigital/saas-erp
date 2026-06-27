@@ -36,11 +36,24 @@ export function useDeleteTimeEntry() {
   });
 }
 
+function getLocation(): Promise<{ latitude: number; longitude: number } | null> {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) return resolve(null);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => resolve({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }),
+      () => resolve(null),
+      { timeout: 5000, enableHighAccuracy: true },
+    );
+  });
+}
+
 export function useClockIn() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (data: { employeeId: string; projectId?: string }) =>
-      api.post("/time-entries/clock-in", data).then((r) => r.data),
+    mutationFn: async (data: { employeeId: string; projectId?: string; method?: string }) => {
+      const loc = await getLocation();
+      return api.post("/time-entries/clock-in", { ...data, ...loc, method: data.method ?? "WEB" }).then((r) => r.data);
+    },
     onSuccess: (data: any) => {
       qc.invalidateQueries({ queryKey: ["time-entries"] });
       toast.success(`Entrada fichada: ${data.employee?.firstName ?? ""}`);
@@ -52,8 +65,10 @@ export function useClockIn() {
 export function useClockOut() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (data: { employeeId: string; breakMinutes?: number }) =>
-      api.post("/time-entries/clock-out", data).then((r) => r.data),
+    mutationFn: async (data: { employeeId: string; breakMinutes?: number }) => {
+      const loc = await getLocation();
+      return api.post("/time-entries/clock-out", { ...data, ...loc }).then((r) => r.data);
+    },
     onSuccess: (data: any) => {
       const hours = ((data.totalMinutes ?? 0) / 60).toFixed(1);
       toast.success(`Salida fichada: ${hours}h trabajadas`);

@@ -49,6 +49,8 @@ import {
   Download,
   Zap,
   Users,
+  QrCode,
+  MapPin,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
@@ -100,6 +102,19 @@ export function TimeTrackingView() {
           </p>
         </div>
         <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => {
+              api.get("/time-entries/qr-token").then((r) => {
+                const url = `${window.location.origin}/es/control-horario?qr=${r.data.token}`;
+                navigator.clipboard.writeText(url);
+                toast.success("Enlace QR copiado. Genera un codigo QR con este enlace para que tus empleados fichen.");
+              }).catch(() => toast.error("Error al generar QR"));
+            }}
+            className="gap-2"
+          >
+            <QrCode className="h-4 w-4" /> QR
+          </Button>
           <Button
             variant="outline"
             onClick={() => {
@@ -161,6 +176,7 @@ export function TimeTrackingView() {
                 <Badge key={c.id} variant="success" className="gap-1.5 py-1">
                   <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
                   {c.employee?.firstName} {c.employee?.lastName}
+                  {c.latitude && <MapPin className="h-3 w-3 opacity-50" />}
                   <span className="text-xs opacity-70">
                     desde {new Date(c.clockIn).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}
                   </span>
