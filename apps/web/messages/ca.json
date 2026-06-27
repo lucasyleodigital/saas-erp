@@ -998,7 +998,23 @@
     "all": "Tots",
     "pendingLeaves": "Absencies pendents",
     "monthlyCost": "Cost mensual",
-    "annualCost": "Cost anual"
+    "annualCost": "Cost anual",
+    "detail": {
+      "tabs": {
+        "profile": "Fitxa",
+        "schedule": "Horari",
+        "leaves": "Absencies"
+      },
+      "personalData": "Dades personals",
+      "workData": "Dades laborals",
+      "nif": "NIF",
+      "ssNumber": "N. Seguretat Social",
+      "noPosition": "Sense posicio",
+      "notFound": "Empleat no trobat",
+      "generateClockLink": "Generar enllac de fitxatge",
+      "clockLinkCopied": "Enllac de fitxatge copiat",
+      "clockLinkError": "Error en generar enllac"
+    }
   },
   "payroll": {
     "title": "Nomines",

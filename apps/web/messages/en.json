@@ -998,7 +998,23 @@
     "all": "All",
     "pendingLeaves": "Pending leaves",
     "monthlyCost": "Monthly cost",
-    "annualCost": "Annual cost"
+    "annualCost": "Annual cost",
+    "detail": {
+      "tabs": {
+        "profile": "Profile",
+        "schedule": "Schedule",
+        "leaves": "Leaves"
+      },
+      "personalData": "Personal data",
+      "workData": "Work data",
+      "nif": "Tax ID",
+      "ssNumber": "Social Security No.",
+      "noPosition": "No position assigned",
+      "notFound": "Employee not found",
+      "generateClockLink": "Generate clock-in link",
+      "clockLinkCopied": "Clock-in link copied to clipboard",
+      "clockLinkError": "Error generating link"
+    }
   },
   "payroll": {
     "title": "Payroll",

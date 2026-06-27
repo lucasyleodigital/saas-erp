@@ -28,6 +28,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { formatCurrency, formatDate, cn } from "@/lib/utils";
+import { api } from "@/lib/api";
+import { toast } from "sonner";
 import {
   ArrowLeft,
   User,
@@ -132,6 +134,21 @@ export function EmployeeDetailView({ id }: { id: string }) {
           </div>
         </div>
 
+        <Button
+          variant="outline"
+          size="sm"
+          className="gap-2"
+          onClick={async () => {
+            try {
+              const r = await api.post(`/employees/${id}/generate-clock-token`);
+              const url = `${window.location.origin}/fichar/${r.data.token}`;
+              await navigator.clipboard.writeText(url);
+              toast.success(t("detail.clockLinkCopied"));
+            } catch { toast.error(t("detail.clockLinkError")); }
+          }}
+        >
+          <Clock className="h-4 w-4" /> {t("detail.generateClockLink")}
+        </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="gap-1">

@@ -998,7 +998,23 @@
     "all": "Denak",
     "pendingLeaves": "Absentzia zain",
     "monthlyCost": "Hileko kostua",
-    "annualCost": "Urteko kostua"
+    "annualCost": "Urteko kostua",
+    "detail": {
+      "tabs": {
+        "profile": "Fitxa",
+        "schedule": "Ordutegia",
+        "leaves": "Absentziak"
+      },
+      "personalData": "Datu pertsonalak",
+      "workData": "Lan-datuak",
+      "nif": "NAN",
+      "ssNumber": "Gizarte Segurantza Zk.",
+      "noPosition": "Posturik gabe",
+      "notFound": "Langilea ez da aurkitu",
+      "generateClockLink": "Fitxatze esteka sortu",
+      "clockLinkCopied": "Fitxatze esteka kopiatuta",
+      "clockLinkError": "Errorea esteka sortzean"
+    }
   },
   "payroll": {
     "title": "Nominak",

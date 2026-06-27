@@ -990,7 +990,23 @@
     "all": "Todos",
     "pendingLeaves": "Ausencias pendentes",
     "monthlyCost": "Custo mensual",
-    "annualCost": "Custo anual"
+    "annualCost": "Custo anual",
+    "detail": {
+      "tabs": {
+        "profile": "Ficha",
+        "schedule": "Horario",
+        "leaves": "Ausencias"
+      },
+      "personalData": "Datos persoais",
+      "workData": "Datos laborais",
+      "nif": "NIF",
+      "ssNumber": "N. Seguridade Social",
+      "noPosition": "Sen posto",
+      "notFound": "Empregado non atopado",
+      "generateClockLink": "Xerar enlace de fichaxe",
+      "clockLinkCopied": "Enlace de fichaxe copiado",
+      "clockLinkError": "Erro ao xerar enlace"
+    }
   },
   "payroll": {
     "title": "Nominas",
