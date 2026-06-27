@@ -53,7 +53,7 @@ export class EmailService {
       <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;margin:0;padding:0;background:#f8fafc;">
         <!-- Header oscuro con logo -->
         <div style="background:linear-gradient(135deg,#040c0a 0%,#061410 60%,#080f0c 100%);padding:40px 32px 32px;text-align:center;">
-          <img src="https://youwhole.com/logo.png" alt="YouWhole" width="140" height="40" style="display:inline-block;margin-bottom:20px;" />
+          <img src="https://youwhole.com/logo.png" alt="YouWhole" width="160" style="display:inline-block;margin-bottom:20px;max-height:50px;object-fit:contain;" />
           <h1 style="color:#ffffff;font-size:26px;font-weight:700;margin:0 0 8px;">Bienvenido, ${firstName}!</h1>
           <p style="color:#94a3b8;font-size:15px;margin:0;">Tu empresa esta lista para facturar</p>
         </div>
