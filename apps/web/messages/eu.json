@@ -408,7 +408,11 @@
       "type": "Mota",
       "salePrice": "Salmenta-prezioa (€) *",
       "cost": "Kostua (€)"
-    }
+    },
+    "emptyTitle": "No hay productos",
+    "emptyDescription": "Anade tu primer producto o servicio",
+    "emptyAction": "Nuevo producto",
+    "vatSuffix": "%% IVA"
   },
   "pipeline": {
     "title": "Salmenta-pipeline",
@@ -584,18 +588,106 @@
     "profitLoss": "Emaitzen kontua",
     "vatReport": "BEZ txostena",
     "journalEntries": "Eguneroko liburua",
-    "accounts": "Kontu-plana",
+    "accounts": {
+      "code": "Kodea",
+      "type": "Mota",
+      "group": "Taldea",
+      "empty": "Kontu-plana hutsik",
+      "emptyHint": "PGC plana automatikoki sortzen da lehen idazpena erregistratzean"
+    },
     "upgrade": "Eguneratu PRO planera kontabilitaterako",
-    "tabs": { "pyl": "Galera eta Irabaziak", "vat": "BEZ Hiruhilekoa", "journal": "Eguneroko Liburua", "accounts": "Kontu-plana", "libro": "Faktura Liburua", "modelo130": "130 Eredua", "modelo347": "347 Eredua", "retenciones": "PFEZ Atxikipenak" },
-    "pyl": { "revenue": "Diru-sarrerak", "expenses": "Gastuak", "netResult": "Emaitza garbia", "margin": "Marjina", "monthlyEvolution": "Hileko bilakaera" },
-    "vat": { "base": "Oinarria", "vatRate": "BEZ", "annual303": "Deklaratzeko BEZ guztira", "repairHint": "BEZ 0 agertzen bada faktura existenteekin, sakatu Konpondu", "repairTaxes": "Zergak konpondu", "repairing": "Konpontzen..." },
-    "journal": { "newEntry": "Kontabilitate-idazpen berria", "dateRequired": "Data *", "descriptionRequired": "Deskribapena *", "account": "Kontua", "accountPlaceholder": "Kontua...", "conceptPlaceholder": "Kontzeptua", "debit": "Zorra", "credit": "Hartzekoena", "addLine": "Lerroa gehitu", "balanced": "Orekatuta", "unbalanced": "Desorekeatuta", "createEntry": "Idazpena sortu", "noEntries": "Idazpenik ez", "createFirst": "Sortu lehen kontabilitate-idazpena", "entry": "Idazpena", "type": "Mota", "locked": "Blokeatuta" },
-    "accounts": { "code": "Kodea", "type": "Mota", "group": "Taldea", "empty": "Kontu-plana hutsik", "emptyHint": "PGC plana automatikoki sortzen da lehen idazpena erregistratzean" },
-    "libro": { "issued": "Emandako Fakturak", "received": "Jasotako Fakturak", "number": "Zenbakia", "client": "Bezeroa", "supplier": "Hornitzailea", "cifNif": "IFK/NAN", "base": "Oinarria" },
-    "modelo130": { "title": "130 Eredua - PFEZ zatikako ordainketa", "description": "Estimazio zuzen sinplifikatua. Autonomoek hiruhilero aurkeztu behar dute.", "revenue": "Diru-sarrerak", "expenses": "Gastuak", "netIncome": "Errendimendu garbia", "previousPayments": "Aurreko ordainketak", "toPay": "Ordaintzeko", "totalSubtitle": "Metatutako PFEZ zatikako ordainketak" },
-    "modelo347": { "title": "347 Eredua - Hirugarrenekin eragiketak", "description": "3.005,06 EUR gainetiko eragiketen urteko adierazpena.", "clientHeader": "Bezeroak", "supplierHeader": "Hornitzaileak", "totalOps": "Eragiketa guztira" },
-    "retenciones": { "title": "Praktikatutako PFEZ atxikipenak", "description": "Emandako fakturetan aplikatutako atxikipenen laburpena.", "client": "Bezeroa", "base": "Oinarria", "irpfRate": "PFEZ %", "retention": "Atxikipena" },
-    "months": { "jan": "Urt", "feb": "Ots", "mar": "Mar", "apr": "Api", "may": "Mai", "jun": "Eka", "jul": "Uzt", "aug": "Abu", "sep": "Ira", "oct": "Urr", "nov": "Aza", "dec": "Abe" }
+    "tabs": {
+      "pyl": "Galera eta Irabaziak",
+      "vat": "BEZ Hiruhilekoa",
+      "journal": "Eguneroko Liburua",
+      "accounts": "Kontu-plana",
+      "libro": "Faktura Liburua",
+      "modelo130": "130 Eredua",
+      "modelo347": "347 Eredua",
+      "retenciones": "PFEZ Atxikipenak"
+    },
+    "pyl": {
+      "revenue": "Diru-sarrerak",
+      "expenses": "Gastuak",
+      "netResult": "Emaitza garbia",
+      "margin": "Marjina",
+      "monthlyEvolution": "Hileko bilakaera"
+    },
+    "vat": {
+      "base": "Oinarria",
+      "vatRate": "BEZ",
+      "annual303": "Deklaratzeko BEZ guztira",
+      "repairHint": "BEZ 0 agertzen bada faktura existenteekin, sakatu Konpondu",
+      "repairTaxes": "Zergak konpondu",
+      "repairing": "Konpontzen..."
+    },
+    "journal": {
+      "newEntry": "Kontabilitate-idazpen berria",
+      "dateRequired": "Data *",
+      "descriptionRequired": "Deskribapena *",
+      "account": "Kontua",
+      "accountPlaceholder": "Kontua...",
+      "conceptPlaceholder": "Kontzeptua",
+      "debit": "Zorra",
+      "credit": "Hartzekoena",
+      "addLine": "Lerroa gehitu",
+      "balanced": "Orekatuta",
+      "unbalanced": "Desorekeatuta",
+      "createEntry": "Idazpena sortu",
+      "noEntries": "Idazpenik ez",
+      "createFirst": "Sortu lehen kontabilitate-idazpena",
+      "entry": "Idazpena",
+      "type": "Mota",
+      "locked": "Blokeatuta"
+    },
+    "libro": {
+      "issued": "Emandako Fakturak",
+      "received": "Jasotako Fakturak",
+      "number": "Zenbakia",
+      "client": "Bezeroa",
+      "supplier": "Hornitzailea",
+      "cifNif": "IFK/NAN",
+      "base": "Oinarria"
+    },
+    "modelo130": {
+      "title": "130 Eredua - PFEZ zatikako ordainketa",
+      "description": "Estimazio zuzen sinplifikatua. Autonomoek hiruhilero aurkeztu behar dute.",
+      "revenue": "Diru-sarrerak",
+      "expenses": "Gastuak",
+      "netIncome": "Errendimendu garbia",
+      "previousPayments": "Aurreko ordainketak",
+      "toPay": "Ordaintzeko",
+      "totalSubtitle": "Metatutako PFEZ zatikako ordainketak"
+    },
+    "modelo347": {
+      "title": "347 Eredua - Hirugarrenekin eragiketak",
+      "description": "3.005,06 EUR gainetiko eragiketen urteko adierazpena.",
+      "clientHeader": "Bezeroak",
+      "supplierHeader": "Hornitzaileak",
+      "totalOps": "Eragiketa guztira"
+    },
+    "retenciones": {
+      "title": "Praktikatutako PFEZ atxikipenak",
+      "description": "Emandako fakturetan aplikatutako atxikipenen laburpena.",
+      "client": "Bezeroa",
+      "base": "Oinarria",
+      "irpfRate": "PFEZ %",
+      "retention": "Atxikipena"
+    },
+    "months": {
+      "jan": "Urt",
+      "feb": "Ots",
+      "mar": "Mar",
+      "apr": "Api",
+      "may": "Mai",
+      "jun": "Eka",
+      "jul": "Uzt",
+      "aug": "Abu",
+      "sep": "Ira",
+      "oct": "Urr",
+      "nov": "Aza",
+      "dec": "Abe"
+    }
   },
   "inventory": {
     "title": "Inbentarioa",
@@ -715,7 +807,29 @@
     "notifications": "Jakinarazpenak",
     "language": "Hizkuntza",
     "theme": "Itxura",
-    "saveSuccess": "Konfigurazioa gordeta"
+    "saveSuccess": "Konfigurazioa gordeta",
+    "user": {
+      "subtitle": "Gestiona tu perfil personal y seguridad",
+      "personalData": "Datos personales",
+      "firstName": "Nombre",
+      "lastName": "Apellidos",
+      "emailReadonly": "El email no se puede cambiar por seguridad",
+      "saveChanges": "Guardar cambios",
+      "currentPassword": "Contrasena actual",
+      "newPassword": "Nueva contrasena",
+      "confirmNewPassword": "Confirmar nueva contrasena",
+      "passwordHint": "Minimo 8 caracteres, una mayuscula y un numero",
+      "passwordMinLength": "La contrasena debe tener minimo 8 caracteres",
+      "passwordMismatch": "Las contrasenas no coinciden",
+      "changePassword": "Cambiar contrasena",
+      "twoFactorTitle": "Autenticacion en dos pasos (2FA)",
+      "twoFactorDescription": "Anade una capa extra de seguridad con Google Authenticator.",
+      "configure2FA": "Configurar 2FA",
+      "twoFactorComingSoon": "Proximamente",
+      "notifPreferences": "Preferencias de notificaciones",
+      "notifDetailedComingSoon": "Proximamente",
+      "notifComingSoon": "Proximamente"
+    }
   },
   "company": {
     "title": "Nire enpresa",
@@ -727,7 +841,80 @@
     "email": "Emaila",
     "website": "Webgunea",
     "logo": "Logotipoa",
-    "saveSuccess": "Enpresaren datuak eguneratuta"
+    "saveSuccess": "Enpresaren datuak eguneratuta",
+    "pageSubtitle": "Datos y configuracion de tu empresa",
+    "companyData": "Datos de la empresa",
+    "saveError": "Error al guardar",
+    "changePlan": "Cambiar plan",
+    "planAndBilling": "Planes y facturacion",
+    "form": {
+      "tradeName": "Nombre comercial *",
+      "legalName": "Razon social",
+      "cifNif": "CIF / NIF",
+      "contactEmail": "Email de contacto",
+      "logoUrl": "URL del logo",
+      "logoHint": "Introduce la URL de tu logo (PNG o SVG)",
+      "saveData": "Guardar datos"
+    },
+    "fiscal": {
+      "title": "Configuracion fiscal",
+      "entityType": "Tipo de entidad",
+      "types": {
+        "autonomo": "Autonomo",
+        "sl": "Sociedad Limitada (SL)",
+        "sa": "Sociedad Anonima (SA)",
+        "cooperativa": "Cooperativa",
+        "asociacion": "Asociacion",
+        "comunidadBienes": "Comunidad de bienes"
+      },
+      "taxRegime": "Regimen fiscal",
+      "regimes": {
+        "simplified": "Estimacion directa simplificada",
+        "normal": "Estimacion directa normal",
+        "modules": "Modulos"
+      },
+      "irpfRate": "Tipo de IRPF",
+      "rates": {
+        "new7": "7%% (nuevos autonomos)",
+        "general15": "15%% (general)",
+        "modules1": "1%%",
+        "modules2": "2%%"
+      },
+      "autoApplyIrpf": "Aplicar IRPF automaticamente",
+      "autonomoStartDate": "Fecha de alta como autonomo",
+      "autonomoStartDateHint": "Para calcular si aplica el 7%%",
+      "save": "Guardar configuracion fiscal",
+      "savedSuccess": "Configuracion fiscal guardada"
+    },
+    "appearance": {
+      "title": "Apariencia de facturas",
+      "primaryColor": "Color principal",
+      "invoiceFooter": "Pie de pagina",
+      "paymentTerms": "Condiciones de pago",
+      "save": "Guardar apariencia",
+      "savedSuccess": "Apariencia guardada"
+    },
+    "bank": {
+      "title": "Cuentas bancarias",
+      "hint": "Aparecen en tus facturas como datos de pago",
+      "accountName": "Nombre de la cuenta",
+      "addAccount": "Anadir cuenta",
+      "addedSuccess": "Cuenta bancaria anadida",
+      "addError": "Error al anadir",
+      "confirmDelete": "Eliminar esta cuenta?",
+      "deletedSuccess": "Cuenta eliminada",
+      "deleteError": "Error al eliminar"
+    },
+    "plans": {
+      "free": "Gratuito",
+      "freeDesc": "5 clientes, 10 facturas/mes",
+      "starter": "Starter",
+      "starterDesc": "3 usuarios",
+      "pro": "Pro",
+      "proDesc": "10 usuarios",
+      "enterprise": "Enterprise",
+      "enterpriseDesc": "Usuarios ilimitados"
+    }
   },
   "billing": {
     "title": "Planak eta fakturazioa",
@@ -753,7 +940,20 @@
     "title": "Jakinarazpenak",
     "markAllRead": "Dena irakurrita markatu",
     "noNotifications": "Ez duzu jakinarazpenik",
-    "viewAll": "Denak ikusi"
+    "viewAll": "Denak ikusi",
+    "totalCount": "{count} notificaciones",
+    "clearRead": "Limpiar leidas",
+    "unread": "No leidas",
+    "empty": "Sin notificaciones",
+    "noNotificationsYet": "No tienes notificaciones todavia",
+    "allRead": "Todo leido",
+    "markAll": "Marcar todo leido",
+    "timeAgo": {
+      "now": "ahora",
+      "minutes": "{m} min",
+      "hours": "{h} h",
+      "days": "{d} d"
+    }
   },
   "verifactu": {
     "title": "VeriFactu",
@@ -954,10 +1154,37 @@
     "noResultsDesc": "Ez da auditoria-sarrerarik aurkitu iragazki hauekin",
     "errorLoading": "Errorea erregistroa kargatzean",
     "system": "Sistema",
-    "entities": { "all": "Entitate guztiak", "invoices": "Fakturak", "clients": "Bezeroak", "products": "Produktuak", "quotes": "Aurrekontuak", "employees": "Langileak", "projects": "Proiektuak", "deliveryNotes": "Albaranak", "orders": "Eskariak", "suppliers": "Hornitzaileak" },
-    "actions": { "all": "Ekintza guztiak", "create": "Sorrera", "update": "Aldaketa", "delete": "Ezabatzea" },
-    "table": { "user": "Erabiltzailea", "action": "Ekintza", "entity": "Entitatea", "id": "ID", "dateTime": "Data eta ordua" },
-    "detail": { "title": "Aldaketaren xehetasunak", "oldData": "Aurreko datuak", "newData": "Datu berriak", "changes": "Egindako aldaketak" }
+    "entities": {
+      "all": "Entitate guztiak",
+      "invoices": "Fakturak",
+      "clients": "Bezeroak",
+      "products": "Produktuak",
+      "quotes": "Aurrekontuak",
+      "employees": "Langileak",
+      "projects": "Proiektuak",
+      "deliveryNotes": "Albaranak",
+      "orders": "Eskariak",
+      "suppliers": "Hornitzaileak"
+    },
+    "actions": {
+      "all": "Ekintza guztiak",
+      "create": "Sorrera",
+      "update": "Aldaketa",
+      "delete": "Ezabatzea"
+    },
+    "table": {
+      "user": "Erabiltzailea",
+      "action": "Ekintza",
+      "entity": "Entitatea",
+      "id": "ID",
+      "dateTime": "Data eta ordua"
+    },
+    "detail": {
+      "title": "Aldaketaren xehetasunak",
+      "oldData": "Aurreko datuak",
+      "newData": "Datu berriak",
+      "changes": "Egindako aldaketak"
+    }
   },
   "timeTracking": {
     "title": "Orduen kontrola",

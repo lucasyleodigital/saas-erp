@@ -408,7 +408,11 @@
       "type": "Tipo",
       "salePrice": "Precio venta (€) *",
       "cost": "Coste (€)"
-    }
+    },
+    "emptyTitle": "No hay productos",
+    "emptyDescription": "Anade tu primer producto o servicio",
+    "emptyAction": "Nuevo producto",
+    "vatSuffix": "%% IVA"
   },
   "pipeline": {
     "title": "Pipeline de ventas",
@@ -584,7 +588,13 @@
     "profitLoss": "Cuenta de resultados",
     "vatReport": "Informe de IVA",
     "journalEntries": "Libro diario",
-    "accounts": "Plan de cuentas",
+    "accounts": {
+      "code": "Codigo",
+      "type": "Tipo",
+      "group": "Grupo",
+      "empty": "Plan de cuentas vacio",
+      "emptyHint": "El plan PGC se crea automaticamente al registrar el primer asiento"
+    },
     "upgrade": "Actualiza a PRO para acceder a contabilidad",
     "tabs": {
       "pyl": "Perdidas y Ganancias",
@@ -630,13 +640,6 @@
       "type": "Tipo",
       "locked": "Bloqueado"
     },
-    "accounts": {
-      "code": "Codigo",
-      "type": "Tipo",
-      "group": "Grupo",
-      "empty": "Plan de cuentas vacio",
-      "emptyHint": "El plan PGC se crea automaticamente al registrar el primer asiento"
-    },
     "libro": {
       "issued": "Facturas Emitidas",
       "received": "Facturas Recibidas",
@@ -672,9 +675,18 @@
       "retention": "Retencion"
     },
     "months": {
-      "jan": "Ene", "feb": "Feb", "mar": "Mar", "apr": "Abr",
-      "may": "May", "jun": "Jun", "jul": "Jul", "aug": "Ago",
-      "sep": "Sep", "oct": "Oct", "nov": "Nov", "dec": "Dic"
+      "jan": "Ene",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Abr",
+      "may": "May",
+      "jun": "Jun",
+      "jul": "Jul",
+      "aug": "Ago",
+      "sep": "Sep",
+      "oct": "Oct",
+      "nov": "Nov",
+      "dec": "Dic"
     }
   },
   "inventory": {
@@ -795,7 +807,29 @@
     "notifications": "Notificaciones",
     "language": "Idioma",
     "theme": "Apariencia",
-    "saveSuccess": "Configuración guardada"
+    "saveSuccess": "Configuración guardada",
+    "user": {
+      "subtitle": "Gestiona tu perfil personal y seguridad",
+      "personalData": "Datos personales",
+      "firstName": "Nombre",
+      "lastName": "Apellidos",
+      "emailReadonly": "El email no se puede cambiar por seguridad",
+      "saveChanges": "Guardar cambios",
+      "currentPassword": "Contrasena actual",
+      "newPassword": "Nueva contrasena",
+      "confirmNewPassword": "Confirmar nueva contrasena",
+      "passwordHint": "Minimo 8 caracteres, una mayuscula y un numero",
+      "passwordMinLength": "La contrasena debe tener minimo 8 caracteres",
+      "passwordMismatch": "Las contrasenas no coinciden",
+      "changePassword": "Cambiar contrasena",
+      "twoFactorTitle": "Autenticacion en dos pasos (2FA)",
+      "twoFactorDescription": "Anade una capa extra de seguridad con Google Authenticator.",
+      "configure2FA": "Configurar 2FA",
+      "twoFactorComingSoon": "Proximamente",
+      "notifPreferences": "Preferencias de notificaciones",
+      "notifDetailedComingSoon": "Proximamente",
+      "notifComingSoon": "Proximamente"
+    }
   },
   "company": {
     "title": "Mi Empresa",
@@ -807,7 +841,80 @@
     "email": "Email",
     "website": "Sitio web",
     "logo": "Logo",
-    "saveSuccess": "Datos de empresa actualizados"
+    "saveSuccess": "Datos de empresa actualizados",
+    "pageSubtitle": "Datos y configuracion de tu empresa",
+    "companyData": "Datos de la empresa",
+    "saveError": "Error al guardar",
+    "changePlan": "Cambiar plan",
+    "planAndBilling": "Planes y facturacion",
+    "form": {
+      "tradeName": "Nombre comercial *",
+      "legalName": "Razon social",
+      "cifNif": "CIF / NIF",
+      "contactEmail": "Email de contacto",
+      "logoUrl": "URL del logo",
+      "logoHint": "Introduce la URL de tu logo (PNG o SVG)",
+      "saveData": "Guardar datos"
+    },
+    "fiscal": {
+      "title": "Configuracion fiscal",
+      "entityType": "Tipo de entidad",
+      "types": {
+        "autonomo": "Autonomo",
+        "sl": "Sociedad Limitada (SL)",
+        "sa": "Sociedad Anonima (SA)",
+        "cooperativa": "Cooperativa",
+        "asociacion": "Asociacion",
+        "comunidadBienes": "Comunidad de bienes"
+      },
+      "taxRegime": "Regimen fiscal",
+      "regimes": {
+        "simplified": "Estimacion directa simplificada",
+        "normal": "Estimacion directa normal",
+        "modules": "Modulos"
+      },
+      "irpfRate": "Tipo de IRPF",
+      "rates": {
+        "new7": "7%% (nuevos autonomos)",
+        "general15": "15%% (general)",
+        "modules1": "1%%",
+        "modules2": "2%%"
+      },
+      "autoApplyIrpf": "Aplicar IRPF automaticamente",
+      "autonomoStartDate": "Fecha de alta como autonomo",
+      "autonomoStartDateHint": "Para calcular si aplica el 7%%",
+      "save": "Guardar configuracion fiscal",
+      "savedSuccess": "Configuracion fiscal guardada"
+    },
+    "appearance": {
+      "title": "Apariencia de facturas",
+      "primaryColor": "Color principal",
+      "invoiceFooter": "Pie de pagina",
+      "paymentTerms": "Condiciones de pago",
+      "save": "Guardar apariencia",
+      "savedSuccess": "Apariencia guardada"
+    },
+    "bank": {
+      "title": "Cuentas bancarias",
+      "hint": "Aparecen en tus facturas como datos de pago",
+      "accountName": "Nombre de la cuenta",
+      "addAccount": "Anadir cuenta",
+      "addedSuccess": "Cuenta bancaria anadida",
+      "addError": "Error al anadir",
+      "confirmDelete": "Eliminar esta cuenta?",
+      "deletedSuccess": "Cuenta eliminada",
+      "deleteError": "Error al eliminar"
+    },
+    "plans": {
+      "free": "Gratuito",
+      "freeDesc": "5 clientes, 10 facturas/mes",
+      "starter": "Starter",
+      "starterDesc": "3 usuarios",
+      "pro": "Pro",
+      "proDesc": "10 usuarios",
+      "enterprise": "Enterprise",
+      "enterpriseDesc": "Usuarios ilimitados"
+    }
   },
   "billing": {
     "title": "Planes y facturación",
@@ -833,7 +940,20 @@
     "title": "Notificaciones",
     "markAllRead": "Marcar todo como leído",
     "noNotifications": "No tienes notificaciones",
-    "viewAll": "Ver todas"
+    "viewAll": "Ver todas",
+    "totalCount": "{count} notificaciones",
+    "clearRead": "Limpiar leidas",
+    "unread": "No leidas",
+    "empty": "Sin notificaciones",
+    "noNotificationsYet": "No tienes notificaciones todavia",
+    "allRead": "Todo leido",
+    "markAll": "Marcar todo leido",
+    "timeAgo": {
+      "now": "ahora",
+      "minutes": "{m} min",
+      "hours": "{h} h",
+      "days": "{d} d"
+    }
   },
   "verifactu": {
     "title": "VeriFactu",
@@ -1087,10 +1207,37 @@
     "noResultsDesc": "No se encontraron entradas de auditoria con estos filtros",
     "errorLoading": "Error al cargar el registro",
     "system": "Sistema",
-    "entities": { "all": "Todas las entidades", "invoices": "Facturas", "clients": "Clientes", "products": "Productos", "quotes": "Presupuestos", "employees": "Empleados", "projects": "Proyectos", "deliveryNotes": "Albaranes", "orders": "Pedidos", "suppliers": "Proveedores" },
-    "actions": { "all": "Todas las acciones", "create": "Creacion", "update": "Modificacion", "delete": "Eliminacion" },
-    "table": { "user": "Usuario", "action": "Accion", "entity": "Entidad", "id": "ID", "dateTime": "Fecha y hora" },
-    "detail": { "title": "Detalles del cambio", "oldData": "Datos anteriores", "newData": "Datos nuevos", "changes": "Cambios realizados" }
+    "entities": {
+      "all": "Todas las entidades",
+      "invoices": "Facturas",
+      "clients": "Clientes",
+      "products": "Productos",
+      "quotes": "Presupuestos",
+      "employees": "Empleados",
+      "projects": "Proyectos",
+      "deliveryNotes": "Albaranes",
+      "orders": "Pedidos",
+      "suppliers": "Proveedores"
+    },
+    "actions": {
+      "all": "Todas las acciones",
+      "create": "Creacion",
+      "update": "Modificacion",
+      "delete": "Eliminacion"
+    },
+    "table": {
+      "user": "Usuario",
+      "action": "Accion",
+      "entity": "Entidad",
+      "id": "ID",
+      "dateTime": "Fecha y hora"
+    },
+    "detail": {
+      "title": "Detalles del cambio",
+      "oldData": "Datos anteriores",
+      "newData": "Datos nuevos",
+      "changes": "Cambios realizados"
+    }
   },
   "timeTracking": {
     "title": "Control de horas",

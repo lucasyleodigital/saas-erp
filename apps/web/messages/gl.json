@@ -395,6 +395,15 @@
       "category": "Categoria",
       "createSuccess": "Produto creado correctamente",
       "updateSuccess": "Produto actualizado correctamente"
+    },
+    "emptyTitle": "No hay productos",
+    "emptyDescription": "Anade tu primer producto o servicio",
+    "emptyAction": "Nuevo producto",
+    "vatSuffix": "%% IVA",
+    "type": {
+      "service": "Servicio",
+      "physical": "Producto fisico",
+      "digital": "Digital"
     }
   },
   "pipeline": {
@@ -571,18 +580,106 @@
     "profitLoss": "Conta de resultados",
     "vatReport": "Informe de IVE",
     "journalEntries": "Libro diario",
-    "accounts": "Plan de contas",
+    "accounts": {
+      "code": "Codigo",
+      "type": "Tipo",
+      "group": "Grupo",
+      "empty": "Plan de contas baleiro",
+      "emptyHint": "O plan PGC crease automaticamente ao rexistrar o primeiro asento"
+    },
     "upgrade": "Actualiza a PRO para acceder a contabilidade",
-    "tabs": { "pyl": "Perdas e Ganancias", "vat": "IVE Trimestral", "journal": "Libro Diario", "accounts": "Plan de Contas", "libro": "Libro Facturas", "modelo130": "Modelo 130", "modelo347": "Modelo 347", "retenciones": "Retencions IRPF" },
-    "pyl": { "revenue": "Ingresos", "expenses": "Gastos", "netResult": "Resultado neto", "margin": "Marxe", "monthlyEvolution": "Evolucion mensual" },
-    "vat": { "base": "Base", "vatRate": "IVE", "annual303": "Total IVE a declarar", "repairHint": "Se o IVE sale a 0 con facturas existentes, preme Reparar", "repairTaxes": "Reparar impostos", "repairing": "Reparando..." },
-    "journal": { "newEntry": "Novo asento contable", "dateRequired": "Data *", "descriptionRequired": "Descricion *", "account": "Conta", "accountPlaceholder": "Conta...", "conceptPlaceholder": "Concepto", "debit": "Debe", "credit": "Haber", "addLine": "Engadir lina", "balanced": "Cadrado", "unbalanced": "Descadrado", "createEntry": "Crear asento", "noEntries": "Sen asentos", "createFirst": "Crea o primeiro asento contable", "entry": "Asento", "type": "Tipo", "locked": "Bloqueado" },
-    "accounts": { "code": "Codigo", "type": "Tipo", "group": "Grupo", "empty": "Plan de contas baleiro", "emptyHint": "O plan PGC crease automaticamente ao rexistrar o primeiro asento" },
-    "libro": { "issued": "Facturas Emitidas", "received": "Facturas Recibidas", "number": "Numero", "client": "Cliente", "supplier": "Provedor", "cifNif": "CIF/NIF", "base": "Base" },
-    "modelo130": { "title": "Modelo 130 - Pagamento fraccionado IRPF", "description": "Estimacion directa simplificada. Autonomos obrigados a presentar trimestralmente.", "revenue": "Ingresos", "expenses": "Gastos", "netIncome": "Rto. neto", "previousPayments": "Pagamentos ant.", "toPay": "A ingresar", "totalSubtitle": "Pagamentos fraccionados IRPF acumulados" },
-    "modelo347": { "title": "Modelo 347 - Operacions con terceiros", "description": "Declaracion anual de operacions superiores a 3.005,06 EUR.", "clientHeader": "Clientes", "supplierHeader": "Provedores", "totalOps": "Total operacions" },
-    "retenciones": { "title": "Retencions IRPF practicadas", "description": "Resumo de retencions aplicadas en facturas emitidas.", "client": "Cliente", "base": "Base", "irpfRate": "% IRPF", "retention": "Retencion" },
-    "months": { "jan": "Xan", "feb": "Feb", "mar": "Mar", "apr": "Abr", "may": "Mai", "jun": "Xun", "jul": "Xul", "aug": "Ago", "sep": "Set", "oct": "Out", "nov": "Nov", "dec": "Dec" }
+    "tabs": {
+      "pyl": "Perdas e Ganancias",
+      "vat": "IVE Trimestral",
+      "journal": "Libro Diario",
+      "accounts": "Plan de Contas",
+      "libro": "Libro Facturas",
+      "modelo130": "Modelo 130",
+      "modelo347": "Modelo 347",
+      "retenciones": "Retencions IRPF"
+    },
+    "pyl": {
+      "revenue": "Ingresos",
+      "expenses": "Gastos",
+      "netResult": "Resultado neto",
+      "margin": "Marxe",
+      "monthlyEvolution": "Evolucion mensual"
+    },
+    "vat": {
+      "base": "Base",
+      "vatRate": "IVE",
+      "annual303": "Total IVE a declarar",
+      "repairHint": "Se o IVE sale a 0 con facturas existentes, preme Reparar",
+      "repairTaxes": "Reparar impostos",
+      "repairing": "Reparando..."
+    },
+    "journal": {
+      "newEntry": "Novo asento contable",
+      "dateRequired": "Data *",
+      "descriptionRequired": "Descricion *",
+      "account": "Conta",
+      "accountPlaceholder": "Conta...",
+      "conceptPlaceholder": "Concepto",
+      "debit": "Debe",
+      "credit": "Haber",
+      "addLine": "Engadir lina",
+      "balanced": "Cadrado",
+      "unbalanced": "Descadrado",
+      "createEntry": "Crear asento",
+      "noEntries": "Sen asentos",
+      "createFirst": "Crea o primeiro asento contable",
+      "entry": "Asento",
+      "type": "Tipo",
+      "locked": "Bloqueado"
+    },
+    "libro": {
+      "issued": "Facturas Emitidas",
+      "received": "Facturas Recibidas",
+      "number": "Numero",
+      "client": "Cliente",
+      "supplier": "Provedor",
+      "cifNif": "CIF/NIF",
+      "base": "Base"
+    },
+    "modelo130": {
+      "title": "Modelo 130 - Pagamento fraccionado IRPF",
+      "description": "Estimacion directa simplificada. Autonomos obrigados a presentar trimestralmente.",
+      "revenue": "Ingresos",
+      "expenses": "Gastos",
+      "netIncome": "Rto. neto",
+      "previousPayments": "Pagamentos ant.",
+      "toPay": "A ingresar",
+      "totalSubtitle": "Pagamentos fraccionados IRPF acumulados"
+    },
+    "modelo347": {
+      "title": "Modelo 347 - Operacions con terceiros",
+      "description": "Declaracion anual de operacions superiores a 3.005,06 EUR.",
+      "clientHeader": "Clientes",
+      "supplierHeader": "Provedores",
+      "totalOps": "Total operacions"
+    },
+    "retenciones": {
+      "title": "Retencions IRPF practicadas",
+      "description": "Resumo de retencions aplicadas en facturas emitidas.",
+      "client": "Cliente",
+      "base": "Base",
+      "irpfRate": "% IRPF",
+      "retention": "Retencion"
+    },
+    "months": {
+      "jan": "Xan",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Abr",
+      "may": "Mai",
+      "jun": "Xun",
+      "jul": "Xul",
+      "aug": "Ago",
+      "sep": "Set",
+      "oct": "Out",
+      "nov": "Nov",
+      "dec": "Dec"
+    }
   },
   "inventory": {
     "title": "Inventario",
@@ -702,7 +799,29 @@
     "notifications": "Notificacions",
     "language": "Idioma",
     "theme": "Aparencia",
-    "saveSuccess": "Configuracion gardada"
+    "saveSuccess": "Configuracion gardada",
+    "user": {
+      "subtitle": "Gestiona tu perfil personal y seguridad",
+      "personalData": "Datos personales",
+      "firstName": "Nombre",
+      "lastName": "Apellidos",
+      "emailReadonly": "El email no se puede cambiar por seguridad",
+      "saveChanges": "Guardar cambios",
+      "currentPassword": "Contrasena actual",
+      "newPassword": "Nueva contrasena",
+      "confirmNewPassword": "Confirmar nueva contrasena",
+      "passwordHint": "Minimo 8 caracteres, una mayuscula y un numero",
+      "passwordMinLength": "La contrasena debe tener minimo 8 caracteres",
+      "passwordMismatch": "Las contrasenas no coinciden",
+      "changePassword": "Cambiar contrasena",
+      "twoFactorTitle": "Autenticacion en dos pasos (2FA)",
+      "twoFactorDescription": "Anade una capa extra de seguridad con Google Authenticator.",
+      "configure2FA": "Configurar 2FA",
+      "twoFactorComingSoon": "Proximamente",
+      "notifPreferences": "Preferencias de notificaciones",
+      "notifDetailedComingSoon": "Proximamente",
+      "notifComingSoon": "Proximamente"
+    }
   },
   "company": {
     "title": "A mina empresa",
@@ -714,7 +833,80 @@
     "email": "Correo",
     "website": "Sitio web",
     "logo": "Logotipo",
-    "saveSuccess": "Datos da empresa actualizados"
+    "saveSuccess": "Datos da empresa actualizados",
+    "pageSubtitle": "Datos y configuracion de tu empresa",
+    "companyData": "Datos de la empresa",
+    "saveError": "Error al guardar",
+    "changePlan": "Cambiar plan",
+    "planAndBilling": "Planes y facturacion",
+    "form": {
+      "tradeName": "Nombre comercial *",
+      "legalName": "Razon social",
+      "cifNif": "CIF / NIF",
+      "contactEmail": "Email de contacto",
+      "logoUrl": "URL del logo",
+      "logoHint": "Introduce la URL de tu logo (PNG o SVG)",
+      "saveData": "Guardar datos"
+    },
+    "fiscal": {
+      "title": "Configuracion fiscal",
+      "entityType": "Tipo de entidad",
+      "types": {
+        "autonomo": "Autonomo",
+        "sl": "Sociedad Limitada (SL)",
+        "sa": "Sociedad Anonima (SA)",
+        "cooperativa": "Cooperativa",
+        "asociacion": "Asociacion",
+        "comunidadBienes": "Comunidad de bienes"
+      },
+      "taxRegime": "Regimen fiscal",
+      "regimes": {
+        "simplified": "Estimacion directa simplificada",
+        "normal": "Estimacion directa normal",
+        "modules": "Modulos"
+      },
+      "irpfRate": "Tipo de IRPF",
+      "rates": {
+        "new7": "7%% (nuevos autonomos)",
+        "general15": "15%% (general)",
+        "modules1": "1%%",
+        "modules2": "2%%"
+      },
+      "autoApplyIrpf": "Aplicar IRPF automaticamente",
+      "autonomoStartDate": "Fecha de alta como autonomo",
+      "autonomoStartDateHint": "Para calcular si aplica el 7%%",
+      "save": "Guardar configuracion fiscal",
+      "savedSuccess": "Configuracion fiscal guardada"
+    },
+    "appearance": {
+      "title": "Apariencia de facturas",
+      "primaryColor": "Color principal",
+      "invoiceFooter": "Pie de pagina",
+      "paymentTerms": "Condiciones de pago",
+      "save": "Guardar apariencia",
+      "savedSuccess": "Apariencia guardada"
+    },
+    "bank": {
+      "title": "Cuentas bancarias",
+      "hint": "Aparecen en tus facturas como datos de pago",
+      "accountName": "Nombre de la cuenta",
+      "addAccount": "Anadir cuenta",
+      "addedSuccess": "Cuenta bancaria anadida",
+      "addError": "Error al anadir",
+      "confirmDelete": "Eliminar esta cuenta?",
+      "deletedSuccess": "Cuenta eliminada",
+      "deleteError": "Error al eliminar"
+    },
+    "plans": {
+      "free": "Gratuito",
+      "freeDesc": "5 clientes, 10 facturas/mes",
+      "starter": "Starter",
+      "starterDesc": "3 usuarios",
+      "pro": "Pro",
+      "proDesc": "10 usuarios",
+      "enterprise": "Enterprise",
+      "enterpriseDesc": "Usuarios ilimitados"
+    }
   },
   "billing": {
     "title": "Plans e facturacion",
@@ -740,7 +932,20 @@
     "title": "Notificacions",
     "markAllRead": "Marcar todo como lido",
     "noNotifications": "Non tes notificacions",
-    "viewAll": "Ver todas"
+    "viewAll": "Ver todas",
+    "totalCount": "{count} notificaciones",
+    "clearRead": "Limpiar leidas",
+    "unread": "No leidas",
+    "empty": "Sin notificaciones",
+    "noNotificationsYet": "No tienes notificaciones todavia",
+    "allRead": "Todo leido",
+    "markAll": "Marcar todo leido",
+    "timeAgo": {
+      "now": "ahora",
+      "minutes": "{m} min",
+      "hours": "{h} h",
+      "days": "{d} d"
+    }
   },
   "verifactu": {
     "title": "VeriFactu",
@@ -901,10 +1106,37 @@
     "noResultsDesc": "Non se atoparon entradas de auditoria con estes filtros",
     "errorLoading": "Erro ao cargar o rexistro",
     "system": "Sistema",
-    "entities": { "all": "Todas as entidades", "invoices": "Facturas", "clients": "Clientes", "products": "Produtos", "quotes": "Orzamentos", "employees": "Empregados", "projects": "Proxectos", "deliveryNotes": "Albarans", "orders": "Pedidos", "suppliers": "Provedores" },
-    "actions": { "all": "Todas as accions", "create": "Creacion", "update": "Modificacion", "delete": "Eliminacion" },
-    "table": { "user": "Usuario", "action": "Accion", "entity": "Entidade", "id": "ID", "dateTime": "Data e hora" },
-    "detail": { "title": "Detalles do cambio", "oldData": "Datos anteriores", "newData": "Datos novos", "changes": "Cambios realizados" }
+    "entities": {
+      "all": "Todas as entidades",
+      "invoices": "Facturas",
+      "clients": "Clientes",
+      "products": "Produtos",
+      "quotes": "Orzamentos",
+      "employees": "Empregados",
+      "projects": "Proxectos",
+      "deliveryNotes": "Albarans",
+      "orders": "Pedidos",
+      "suppliers": "Provedores"
+    },
+    "actions": {
+      "all": "Todas as accions",
+      "create": "Creacion",
+      "update": "Modificacion",
+      "delete": "Eliminacion"
+    },
+    "table": {
+      "user": "Usuario",
+      "action": "Accion",
+      "entity": "Entidade",
+      "id": "ID",
+      "dateTime": "Data e hora"
+    },
+    "detail": {
+      "title": "Detalles do cambio",
+      "oldData": "Datos anteriores",
+      "newData": "Datos novos",
+      "changes": "Cambios realizados"
+    }
   },
   "timeTracking": {
     "title": "Control de horas",
