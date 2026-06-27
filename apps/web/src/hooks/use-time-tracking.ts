@@ -84,3 +84,18 @@ export function useMonthlyReport(year: number, month: number) {
     queryFn: () => api.get("/time-entries/report", { params: { year, month } }).then((r) => r.data),
   });
 }
+
+export function useWeeklyView(weekStart?: string) {
+  return useQuery({
+    queryKey: ["time-entries", "weekly", weekStart],
+    queryFn: () => api.get("/time-entries/weekly", { params: weekStart ? { weekStart } : {} }).then((r) => r.data),
+  });
+}
+
+export function useMissedClocks() {
+  return useQuery({
+    queryKey: ["time-entries", "missed"],
+    queryFn: () => api.get("/time-entries/missed").then((r) => r.data),
+    refetchInterval: 300000,
+  });
+}

@@ -47,6 +47,16 @@ export class TimeEntriesController {
     return this.svc.getMonthlyReport(u.companyId, Number(year) || new Date().getFullYear(), Number(month) || new Date().getMonth() + 1);
   }
 
+  @Get("weekly")
+  getWeeklyView(@CurrentUser() u: JwtPayload, @Query("weekStart") weekStart: string) {
+    return this.svc.getWeeklyView(u.companyId, weekStart);
+  }
+
+  @Get("missed")
+  getMissedClocks(@CurrentUser() u: JwtPayload) {
+    return this.svc.getMissedClocks(u.companyId);
+  }
+
   @Delete(":id")
   remove(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
     return this.svc.remove(u.companyId, id);

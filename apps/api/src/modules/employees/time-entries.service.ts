@@ -164,6 +164,90 @@ export class TimeEntriesService {
     return { year, month, totalEntries: rows.length, rows };
   }
 
+  async getWeeklyView(companyId: string, weekStart: string) {
+    const start = weekStart ? new Date(weekStart) : (() => {
+      const d = new Date();
+      d.setDate(d.getDate() - d.getDay() + 1);
+      d.setHours(0, 0, 0, 0);
+      return d;
+    })();
+    const end = new Date(start);
+    end.setDate(end.getDate() + 6);
+    end.setHours(23, 59, 59, 999);
+
+    const employees = await this.prisma.employee.findMany({
+      where: { companyId, status: "ACTIVE" },
+      select: { id: true, firstName: true, lastName: true, schedule: true, workingHours: true },
+      orderBy: { firstName: "asc" },
+    });
+
+    const entries = await this.prisma.timeEntry.findMany({
+      where: { companyId, date: { gte: start, lte: end } },
+      select: { employeeId: true, date: true, clockIn: true, clockOut: true, totalMinutes: true, breakMinutes: true },
+      orderBy: { date: "asc" },
+    });
+
+    const days = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(start);
+      d.setDate(d.getDate() + i);
+      return d.toISOString().slice(0, 10);
+    });
+
+    const rows = employees.map((emp) => {
+      const empEntries = entries.filter((e) => e.employeeId === emp.id);
+      const dailyHours = days.map((day) => {
+        const dayEntries = empEntries.filter((e) => e.date.toISOString().slice(0, 10) === day);
+        const totalMin = dayEntries.reduce((s, e) => s + (e.totalMinutes ?? 0), 0);
+        const hasOpen = dayEntries.some((e) => !e.clockOut);
+        return {
+          date: day,
+          hours: Math.round((totalMin / 60) * 10) / 10,
+          entries: dayEntries.length,
+          hasOpen,
+          clockIn: dayEntries[0]?.clockIn?.toISOString().slice(11, 16) ?? null,
+          clockOut: dayEntries[dayEntries.length - 1]?.clockOut?.toISOString().slice(11, 16) ?? null,
+        };
+      });
+      const weekTotal = dailyHours.reduce((s, d) => s + d.hours, 0);
+      const expectedHours = Number(emp.workingHours ?? 40);
+      return {
+        employee: { id: emp.id, name: `${emp.firstName} ${emp.lastName}`, schedule: emp.schedule },
+        days: dailyHours,
+        weekTotal: Math.round(weekTotal * 10) / 10,
+        expectedHours,
+        overtime: Math.round(Math.max(0, weekTotal - expectedHours) * 10) / 10,
+      };
+    });
+
+    return { weekStart: start.toISOString().slice(0, 10), days, rows };
+  }
+
+  async getMissedClocks(companyId: string) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const dayOfWeek = today.getDay();
+    if (dayOfWeek === 0 || dayOfWeek === 6) return [];
+
+    const employees = await this.prisma.employee.findMany({
+      where: { companyId, status: "ACTIVE" },
+      select: { id: true, firstName: true, lastName: true, schedule: true },
+    });
+
+    const todayEntries = await this.prisma.timeEntry.findMany({
+      where: { companyId, date: { gte: today } },
+      select: { employeeId: true },
+    });
+
+    const employeesWithEntries = new Set(todayEntries.map((e) => e.employeeId));
+
+    return employees
+      .filter((emp) => !employeesWithEntries.has(emp.id))
+      .map((emp) => ({
+        id: emp.id,
+        name: `${emp.firstName} ${emp.lastName}`,
+      }));
+  }
+
   async remove(companyId: string, id: string) {
     const entry = await this.prisma.timeEntry.findFirst({ where: { id, companyId } });
     if (!entry) throw new NotFoundException("Entrada no encontrada");

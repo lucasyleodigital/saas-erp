@@ -9,6 +9,8 @@ import {
   useClockOut,
   useActiveClocks,
   useTimeSummary,
+  useWeeklyView,
+  useMissedClocks,
 } from "@/hooks/use-time-tracking";
 import { useEmployees } from "@/hooks/use-employees";
 import { useProjects } from "@/hooks/use-projects";
@@ -55,6 +57,7 @@ export function TimeTrackingView() {
   const t = useTranslations("timeTracking");
   const tCommon = useTranslations("common");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [tab, setTab] = useState<"list" | "week">("list");
   const [clockEmployee, setClockEmployee] = useState("");
   const [filterEmployee, setFilterEmployee] = useState("");
   const [filterProject, setFilterProject] = useState("");
@@ -199,6 +202,22 @@ export function TimeTrackingView() {
         ))}
       </div>
 
+      {/* Missed clocks warning */}
+      <MissedClocksAlert />
+
+      {/* Tabs */}
+      <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg w-fit">
+        <button onClick={() => setTab("list")} className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${tab === "list" ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
+          <Clock className="h-3.5 w-3.5" /> Registros
+        </button>
+        <button onClick={() => setTab("week")} className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${tab === "week" ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
+          <CalendarDays className="h-3.5 w-3.5" /> Vista semanal
+        </button>
+      </div>
+
+      {tab === "week" && <WeeklyCalendar />}
+
+      {tab === "list" && <>
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
         <EmployeeFilter value={filterEmployee} onChange={setFilterEmployee} />
@@ -364,6 +383,123 @@ export function TimeTrackingView() {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
       />
+      </>}
+    </div>
+  );
+}
+
+/* ─── Missed Clocks Alert ────────────────────────────────── */
+
+function MissedClocksAlert() {
+  const { data: missed = [] } = useMissedClocks();
+  if ((missed as any[]).length === 0) return null;
+
+  return (
+    <Card className="border-amber-500/30 bg-amber-500/5">
+      <CardContent className="p-4">
+        <div className="flex items-start gap-3">
+          <AlertCircle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+              Empleados sin fichar hoy
+            </p>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {(missed as any[]).map((emp: any) => (
+                <Badge key={emp.id} variant="secondary" className="text-xs">
+                  {emp.name}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+/* ─── Weekly Calendar ────────────────────────────────────── */
+
+function WeeklyCalendar() {
+  const [weekOffset, setWeekOffset] = useState(0);
+  const weekStart = (() => {
+    const d = new Date();
+    d.setDate(d.getDate() - d.getDay() + 1 + weekOffset * 7);
+    return d.toISOString().slice(0, 10);
+  })();
+
+  const { data, isLoading } = useWeeklyView(weekStart);
+  const days: string[] = data?.days ?? [];
+  const rows: any[] = data?.rows ?? [];
+
+  const dayNames = ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"];
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={() => setWeekOffset((w) => w - 1)}>Anterior</Button>
+          <Button variant="outline" size="sm" onClick={() => setWeekOffset(0)}>Esta semana</Button>
+          <Button variant="outline" size="sm" onClick={() => setWeekOffset((w) => w + 1)}>Siguiente</Button>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          {days[0] ? new Date(days[0]).toLocaleDateString("es-ES", { day: "numeric", month: "short" }) : ""} - {days[6] ? new Date(days[6]).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" }) : ""}
+        </p>
+      </div>
+
+      {isLoading ? (
+        <div className="h-48 bg-muted/40 rounded-xl animate-pulse" />
+      ) : rows.length === 0 ? (
+        <Card><CardContent className="p-8 text-center text-muted-foreground">Sin empleados activos</CardContent></Card>
+      ) : (
+        <Card>
+          <CardContent className="p-0 overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b bg-muted/30">
+                  <th className="text-left px-4 py-3 font-medium text-muted-foreground sticky left-0 bg-muted/30 min-w-[150px]">Empleado</th>
+                  {days.map((day, i) => {
+                    const isToday = day === new Date().toISOString().slice(0, 10);
+                    return (
+                      <th key={day} className={`text-center px-3 py-3 font-medium min-w-[80px] ${isToday ? "text-primary bg-primary/5" : "text-muted-foreground"}`}>
+                        <div>{dayNames[i]}</div>
+                        <div className="text-xs font-normal">{new Date(day).getDate()}</div>
+                      </th>
+                    );
+                  })}
+                  <th className="text-right px-4 py-3 font-medium text-muted-foreground min-w-[80px]">Total</th>
+                  <th className="text-right px-4 py-3 font-medium text-amber-600 min-w-[80px]">Extra</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((row: any) => (
+                  <tr key={row.employee.id} className="border-b last:border-0 hover:bg-muted/20">
+                    <td className="px-4 py-3 font-medium sticky left-0 bg-background">{row.employee.name}</td>
+                    {row.days.map((day: any) => {
+                      const isToday = day.date === new Date().toISOString().slice(0, 10);
+                      return (
+                        <td key={day.date} className={`text-center px-3 py-3 ${isToday ? "bg-primary/5" : ""}`}>
+                          {day.hours > 0 ? (
+                            <div>
+                              <span className={`font-semibold ${day.hours >= 8 ? "text-emerald-600" : "text-amber-600"}`}>{day.hours}h</span>
+                              {day.clockIn && <div className="text-xs text-muted-foreground">{day.clockIn}-{day.clockOut ?? "..."}</div>}
+                            </div>
+                          ) : day.hasOpen ? (
+                            <span className="h-2 w-2 rounded-full bg-green-500 inline-block animate-pulse" title="Fichado" />
+                          ) : (
+                            <span className="text-muted-foreground/30">-</span>
+                          )}
+                        </td>
+                      );
+                    })}
+                    <td className="text-right px-4 py-3 font-bold">{row.weekTotal}h</td>
+                    <td className="text-right px-4 py-3 font-bold text-amber-600">{row.overtime > 0 ? `${row.overtime}h` : "-"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
