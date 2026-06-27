@@ -32,9 +32,15 @@ async function bootstrap() {
   app.use(cookieParser());
   app.use(compression());
 
-  // CORS
+  // CORS - accept www and non-www variants
+  const corsOrigins = [clientUrl];
+  if (clientUrl.includes("youwhole.com")) {
+    corsOrigins.push("https://www.youwhole.com");
+    corsOrigins.push("https://youwhole.com");
+    corsOrigins.push("https://saas-erp-pi.vercel.app");
+  }
   app.enableCors({
-    origin: [clientUrl],
+    origin: corsOrigins,
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
