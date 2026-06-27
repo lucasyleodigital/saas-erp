@@ -263,4 +263,16 @@ export class EmployeesService {
       monthlySalaryCost: Number(salarySum._sum.salary ?? 0) / 12,
     };
   }
+
+  async generateClockToken(companyId: string, employeeId: string) {
+    const employee = await this.prisma.employee.findFirst({ where: { id: employeeId, companyId } });
+    if (!employee) throw new NotFoundException("Empleado no encontrado");
+
+    const token = employee.clockToken ?? crypto.randomUUID();
+    if (!employee.clockToken) {
+      await this.prisma.employee.update({ where: { id: employeeId }, data: { clockToken: token } });
+    }
+
+    return { token, employeeName: `${employee.firstName} ${employee.lastName}` };
+  }
 }

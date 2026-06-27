@@ -132,4 +132,9 @@ export class EmployeesController {
   ) {
     return this.employeesService.deleteLeaveRequest(u.companyId, requestId);
   }
+
+  @Post(":id/generate-clock-token")
+  async generateClockToken(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
+    return this.employeesService.generateClockToken(u.companyId, id);
+  }
 }

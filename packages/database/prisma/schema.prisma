@@ -1040,6 +1040,7 @@ model Employee {
   postalCode           String?
   workingHours         Decimal        @default(40) @db.Decimal(4, 1)
   schedule             Json?
+  clockToken           String?        @unique
   status               EmployeeStatus @default(ACTIVE)
   avatar               String?
   notes                String?

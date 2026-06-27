@@ -35,7 +35,7 @@ export function middleware(request: NextRequest) {
     ? localeMatch[1]
     : routing.defaultLocale;
 
-  const isPublicPath = PUBLIC_PATHS.includes(pathWithoutLocale);
+  const isPublicPath = PUBLIC_PATHS.includes(pathWithoutLocale) || pathWithoutLocale.startsWith("/fichar");
   const isAuthPath =
     pathWithoutLocale === "/login" || pathWithoutLocale === "/registro";
 
@@ -57,7 +57,7 @@ export function middleware(request: NextRequest) {
 
   // These pages live at root (no locale prefix) — bypass intl middleware
   const NO_LOCALE_PATHS = ["/", "/auth/callback", "/privacidad", "/aviso-legal", "/terminos", "/cookies", "/ayuda", "/sobre-nosotros", "/contacto"];
-  if (NO_LOCALE_PATHS.includes(pathWithoutLocale) || NO_LOCALE_PATHS.includes(pathname)) {
+  if (NO_LOCALE_PATHS.includes(pathWithoutLocale) || NO_LOCALE_PATHS.includes(pathname) || pathname.startsWith("/fichar")) {
     return NextResponse.next();
   }
 
