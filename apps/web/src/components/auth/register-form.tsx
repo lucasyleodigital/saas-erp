@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -37,6 +38,8 @@ export function RegisterForm() {
   const segments = pathname.split("/");
   const locale   = LOCALES.includes(segments[1] ?? "") ? segments[1]! : "es";
 
+  const [formError, setFormError] = useState("");
+
   const {
     register,
     handleSubmit,
@@ -44,21 +47,28 @@ export function RegisterForm() {
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   async function onSubmit(data: FormData) {
+    setFormError("");
     try {
       await registerAction(data);
       const { data: me } = await api.get("/auth/me");
       setUser(me);
       trackEvent("sign_up", { method: "email" });
-      toast.success("¡Cuenta creada! Bienvenido al YouWhole");
       router.push(`/${locale}/dashboard`);
     } catch (err: any) {
       const msg = err.response?.data?.message ?? t("error");
-      toast.error(Array.isArray(msg) ? msg[0] : msg);
+      const errorText = Array.isArray(msg) ? msg[0] : msg;
+      setFormError(errorText);
+      toast.error(errorText);
     }
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      {formError && (
+        <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-4 py-3 text-sm text-destructive">
+          {formError}
+        </div>
+      )}
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1.5">
           <Label htmlFor="firstName">{t("firstName")} *</Label>

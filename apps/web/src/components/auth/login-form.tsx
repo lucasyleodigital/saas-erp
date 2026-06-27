@@ -34,6 +34,8 @@ export function LoginForm() {
   const segments = pathname.split("/");
   const locale = LOCALES.includes(segments[1] ?? "") ? segments[1]! : "es";
 
+  const [formError, setFormError] = useState("");
+
   const {
     register,
     handleSubmit,
@@ -41,6 +43,7 @@ export function LoginForm() {
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   async function onSubmit(data: FormData) {
+    setFormError("");
     try {
       await loginAction(data.email, data.password);
       const { data: me } = await api.get("/auth/me");
@@ -48,12 +51,18 @@ export function LoginForm() {
       router.push(`/${locale}/dashboard`);
     } catch (err: any) {
       const msg = err.response?.data?.message ?? t("error");
-      toast.error(Array.isArray(msg) ? msg[0] : msg);
+      const errorText = Array.isArray(msg) ? msg[0] : msg;
+      setFormError(errorText);
     }
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      {formError && (
+        <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-4 py-3 text-sm text-destructive">
+          {formError}
+        </div>
+      )}
       <div className="space-y-1.5">
         <label className="text-sm font-medium" htmlFor="email">
           {t("email")}
