@@ -28,10 +28,11 @@ export class EmailService {
     attachments?: Array<{ filename: string; content: Buffer }>,
   ) {
     if (!this.resend) {
-      console.log(`📧 [EMAIL SKIPPED] To: ${to} | Subject: ${subject}${attachments?.length ? ` | ${attachments.length} attachment(s)` : ""}`);
+      console.warn(`[EMAIL SKIPPED] No RESEND_API_KEY | To: ${to} | Subject: ${subject}`);
       return;
     }
-    await this.resend.emails.send({
+    console.log(`[EMAIL SENDING] To: ${to} | From: ${this.from} | Subject: ${subject}`);
+    const result = await this.resend.emails.send({
       from: this.from,
       to,
       subject,
@@ -41,6 +42,7 @@ export class EmailService {
         content: a.content,
       })),
     });
+    console.log(`[EMAIL SENT] To: ${to} | Result:`, JSON.stringify(result));
   }
 
   async sendWelcome(to: string, firstName: string, companyName: string) {

@@ -73,7 +73,7 @@ export class AuthService {
     // Send welcome email (fire-and-forget)
     this.email
       .sendWelcome(user.email, dto.firstName, dto.companyName)
-      .catch(() => {});
+      .catch((err) => console.error("[EMAIL] Welcome email failed:", err?.message ?? err));
 
     return tokens;
   }
