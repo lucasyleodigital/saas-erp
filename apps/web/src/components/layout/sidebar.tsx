@@ -60,8 +60,22 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
   // Strip locale prefix to compare paths
   const pathWithoutLocale = pathname.replace(/^\/(es|ca|eu|gl|en)/, "") || "/";
 
+  const isEmployee = currentUser?.role === "EMPLOYEE";
+
+  // Employee portal - limited sidebar
+  const employeeNavItems = [
+    {
+      group: "Mi portal",
+      items: [
+        { href: "/dashboard", label: "Inicio", icon: LayoutDashboard },
+        { href: "/control-horario", label: "Fichaje", icon: Timer },
+        { href: "/configuracion", label: t("settings"), icon: Settings },
+      ],
+    },
+  ];
+
   // Nav items defined inside component to use translations
-  const navItems = [
+  const navItems = isEmployee ? employeeNavItems : [
     {
       group: t("groupMain"),
       items: [

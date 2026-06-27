@@ -147,7 +147,31 @@ export function EmployeeDetailView({ id }: { id: string }) {
             } catch { toast.error(t("detail.clockLinkError")); }
           }}
         >
-          <Clock className="h-4 w-4" /> {t("detail.generateClockLink")}
+          <Clock className="h-4 w-4" /> Enlace fichaje
+        </Button>
+        <Button
+          variant="default"
+          size="sm"
+          className="gap-2"
+          onClick={async () => {
+            if (!employee.email) {
+              toast.error("El empleado necesita un email para activar el portal");
+              return;
+            }
+            const password = prompt("Introduce una contrasena temporal para el empleado (minimo 8 caracteres):");
+            if (!password || password.length < 8) {
+              toast.error("La contrasena debe tener minimo 8 caracteres");
+              return;
+            }
+            try {
+              const r = await api.post(`/employees/${id}/activate-portal`, { password });
+              toast.success(`Portal activado para ${r.data.email}. Contrasena: ${password}`);
+            } catch (e: any) {
+              toast.error(e?.response?.data?.message ?? "Error al activar portal");
+            }
+          }}
+        >
+          <LogIn className="h-4 w-4" /> Activar portal
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

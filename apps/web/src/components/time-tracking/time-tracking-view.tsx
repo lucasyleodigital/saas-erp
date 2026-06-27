@@ -54,6 +54,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { useGpsConsent, GpsConsentBanner } from "./gps-consent";
 
 export function TimeTrackingView() {
   const t = useTranslations("timeTracking");
@@ -70,6 +71,7 @@ export function TimeTrackingView() {
   const clockOut = useClockOut();
   const { data: activeClocks = [] } = useActiveClocks();
   const { data: summaryData } = useTimeSummary();
+  const { consented: gpsConsented, accept: acceptGps, reject: rejectGps } = useGpsConsent();
 
   const params: Record<string, any> = {};
   if (filterEmployee) params.employeeId = filterEmployee;
@@ -143,6 +145,11 @@ export function TimeTrackingView() {
           </Button>
         </div>
       </div>
+
+      {/* GPS consent */}
+      {gpsConsented === null && (
+        <GpsConsentBanner onAccept={acceptGps} onReject={rejectGps} />
+      )}
 
       {/* Quick clock in/out */}
       <Card className="border-primary/20 bg-primary/5">

@@ -1,5 +1,6 @@
-import { Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
+import { Injectable, NotFoundException, BadRequestException, ConflictException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
+import * as bcrypt from "bcryptjs";
 
 @Injectable()
 export class EmployeesService {
@@ -274,5 +275,40 @@ export class EmployeesService {
     }
 
     return { token, employeeName: `${employee.firstName} ${employee.lastName}` };
+  }
+
+  async activatePortalAccess(companyId: string, employeeId: string, password: string) {
+    const employee = await this.prisma.employee.findFirst({ where: { id: employeeId, companyId } });
+    if (!employee) throw new NotFoundException("Empleado no encontrado");
+    if (!employee.email) throw new BadRequestException("El empleado necesita un email para activar el portal");
+
+    const existingUser = await this.prisma.user.findUnique({ where: { email: employee.email } });
+    if (existingUser) {
+      const membership = await this.prisma.userCompany.findFirst({
+        where: { userId: existingUser.id, companyId },
+      });
+      if (membership) throw new ConflictException("Este empleado ya tiene acceso al portal");
+
+      await this.prisma.userCompany.create({
+        data: { userId: existingUser.id, companyId, role: "EMPLOYEE" },
+      });
+      return { activated: true, email: employee.email, existing: true };
+    }
+
+    const hashed = await bcrypt.hash(password, 12);
+    const user = await this.prisma.user.create({
+      data: {
+        email: employee.email,
+        password: hashed,
+        firstName: employee.firstName,
+        lastName: employee.lastName,
+      },
+    });
+
+    await this.prisma.userCompany.create({
+      data: { userId: user.id, companyId, role: "EMPLOYEE" },
+    });
+
+    return { activated: true, email: employee.email, password };
   }
 }

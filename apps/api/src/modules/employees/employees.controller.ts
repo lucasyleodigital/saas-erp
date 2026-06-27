@@ -137,4 +137,16 @@ export class EmployeesController {
   async generateClockToken(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
     return this.employeesService.generateClockToken(u.companyId, id);
   }
+
+  @Post(":id/activate-portal")
+  async activatePortal(
+    @CurrentUser() u: JwtPayload,
+    @Param("id") id: string,
+    @Body("password") password: string,
+  ) {
+    if (!password || password.length < 8) {
+      throw new (require("@nestjs/common").BadRequestException)("La contrasena debe tener minimo 8 caracteres");
+    }
+    return this.employeesService.activatePortalAccess(u.companyId, id, password);
+  }
 }
