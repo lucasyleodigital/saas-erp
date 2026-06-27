@@ -135,4 +135,26 @@ export class AdminService {
       data: { isActive: !company.isActive },
     });
   }
+
+  async deleteCompany(companyId: string) {
+    const company = await this.prisma.company.findUnique({ where: { id: companyId } });
+    if (!company) throw new NotFoundException("Empresa no encontrada");
+
+    // Delete user memberships and then orphan users
+    const memberships = await this.prisma.userCompany.findMany({ where: { companyId } });
+    const userIds = memberships.map((m) => m.userId);
+
+    await this.prisma.company.delete({ where: { id: companyId } });
+
+    // Delete users that have no other company memberships
+    for (const userId of userIds) {
+      const remaining = await this.prisma.userCompany.count({ where: { userId } });
+      if (remaining === 0) {
+        await this.prisma.refreshToken.deleteMany({ where: { userId } });
+        await this.prisma.user.delete({ where: { id: userId } });
+      }
+    }
+
+    return { deleted: true, companyName: company.name };
+  }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Param, Query, Body, UseGuards } from "@nestjs/common";
+import { Controller, Get, Post, Patch, Delete, Param, Query, Body, UseGuards } from "@nestjs/common";
 import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
 import { AdminService } from "./admin.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
@@ -46,5 +46,11 @@ export class AdminController {
   toggleActive(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
     this.svc.assertSuperAdmin(u.role);
     return this.svc.toggleCompanyActive(id);
+  }
+
+  @Delete("companies/:id")
+  deleteCompany(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
+    this.svc.assertSuperAdmin(u.role);
+    return this.svc.deleteCompany(id);
   }
 }

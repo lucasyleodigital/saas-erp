@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
   Shield, Users, Building2, FileText, Search, LogIn,
-  ChevronRight, ArrowLeft, ToggleLeft, ToggleRight,
+  ChevronRight, ArrowLeft, ToggleLeft, ToggleRight, Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -66,6 +66,18 @@ export default function AdminPage() {
     } catch { toast.error("Error al cambiar plan"); }
   }
 
+  async function deleteCompany(companyId: string, companyName: string) {
+    if (!confirm(`ELIMINAR "${companyName}" y todos sus datos (facturas, clientes, productos)? Esta accion NO se puede deshacer.`)) return;
+    if (!confirm(`Seguro? Se eliminara TODO de "${companyName}".`)) return;
+    try {
+      await api.delete(`/admin/companies/${companyId}`);
+      toast.success(`Empresa "${companyName}" eliminada`);
+      setDetail(null);
+      api.get("/admin/companies", { params: { page, search: search || undefined } }).then((r) => setCompanies(r.data));
+      api.get("/admin/dashboard").then((r) => setDashboard(r.data));
+    } catch (e: any) { toast.error(e?.response?.data?.message ?? "Error al eliminar"); }
+  }
+
   async function toggleActive(companyId: string) {
     try {
       await api.patch(`/admin/companies/${companyId}/toggle-active`);
@@ -114,6 +126,9 @@ export default function AdminPage() {
             </Button>
             <Button size="sm" onClick={() => impersonate(detail.id, detail.name)} className="gap-2">
               <LogIn className="h-4 w-4" /> Entrar como
+            </Button>
+            <Button variant="destructive" size="sm" onClick={() => deleteCompany(detail.id, detail.name)} className="gap-2">
+              <Trash2 className="h-4 w-4" /> Eliminar
             </Button>
           </div>
         </div>
@@ -257,6 +272,9 @@ export default function AdminPage() {
                           </Button>
                           <Button variant="ghost" size="icon" className="h-8 w-8" title="Ver detalle" onClick={() => loadDetail(c.id)}>
                             <ChevronRight className="h-4 w-4" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" title="Eliminar" onClick={() => deleteCompany(c.id, c.name)}>
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       </td>
