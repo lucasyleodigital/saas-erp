@@ -96,7 +96,7 @@ export class AuthService {
       .filter(Boolean);
   }
 
-  async login(userId: string, email: string, companyId?: string) {
+  async login(userId: string, email: string, companyId?: string): Promise<AuthTokens> {
     const userCompany = companyId
       ? await this.prisma.userCompany.findFirst({
           where: { userId, companyId },
@@ -105,7 +105,14 @@ export class AuthService {
           where: { userId, isDefault: true },
         });
 
-    if (!userCompany) throw new UnauthorizedException("Sin empresa asociada");
+    if (!userCompany) {
+      const anyMembership = await this.prisma.userCompany.findFirst({ where: { userId } });
+      if (anyMembership) {
+        await this.prisma.userCompany.update({ where: { id: anyMembership.id }, data: { isDefault: true } });
+        return this.login(userId, email);
+      }
+      throw new UnauthorizedException("Sin empresa asociada");
+    }
 
     let role = userCompany.role;
     if (this.platformAdmins.includes(email.toLowerCase()) && role !== "SUPER_ADMIN") {

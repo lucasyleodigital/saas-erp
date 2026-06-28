@@ -5,6 +5,9 @@ import {
   useEmployees,
   useEmployeeStats,
   useDeleteEmployee,
+  useLeaveRequests,
+  useApproveLeave,
+  useRejectLeave,
   EMPLOYEE_STATUS_CONFIG,
   CONTRACT_LABELS,
 } from "@/hooks/use-employees";
@@ -287,7 +290,72 @@ export function EmployeesView() {
         </div>
       )}
 
+      <PendingLeaveRequests />
+
       <EmployeeDialog open={dialogOpen} onOpenChange={setDialogOpen} />
     </div>
+  );
+}
+
+function PendingLeaveRequests() {
+  const { data } = useLeaveRequests({ status: "PENDING" });
+  const approve = useApproveLeave();
+  const reject = useRejectLeave();
+
+  const requests = data ?? [];
+  if (requests.length === 0) return null;
+
+  const LEAVE_TYPES: Record<string, string> = {
+    VACATION: "Vacaciones",
+    SICK: "Baja medica",
+    PERSONAL: "Asuntos propios",
+    MATERNITY: "Maternidad/Paternidad",
+    OTHER: "Otro",
+  };
+
+  return (
+    <Card className="border-amber-500/20 bg-amber-500/5">
+      <CardContent className="p-5">
+        <h3 className="font-semibold text-sm mb-3 flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
+          Solicitudes pendientes ({requests.length})
+        </h3>
+        <div className="space-y-3">
+          {requests.map((req: any) => (
+            <div key={req.id} className="flex items-center justify-between p-3 rounded-lg bg-background border">
+              <div>
+                <p className="text-sm font-medium">
+                  {req.employee?.firstName ?? ""} {req.employee?.lastName ?? ""}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {LEAVE_TYPES[req.type] ?? req.type} · {new Date(req.startDate).toLocaleDateString("es-ES")} - {new Date(req.endDate).toLocaleDateString("es-ES")} · {req.days} dias
+                </p>
+                {req.reason && <p className="text-xs text-muted-foreground mt-0.5">Motivo: {req.reason}</p>}
+              </div>
+              <div className="flex gap-2 shrink-0">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="text-green-600 border-green-200 hover:bg-green-50 gap-1 h-8"
+                  onClick={() => approve.mutate(req.id)}
+                  disabled={approve.isPending}
+                >
+                  Aprobar
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="text-red-600 border-red-200 hover:bg-red-50 gap-1 h-8"
+                  onClick={() => reject.mutate(req.id)}
+                  disabled={reject.isPending}
+                >
+                  Rechazar
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 }
