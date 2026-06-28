@@ -36,9 +36,15 @@ export function useDeleteTimeEntry() {
   });
 }
 
+const GPS_KEY = "youwhole_gps_consent";
+
 function getLocation(): Promise<{ latitude: number; longitude: number } | null> {
+  if (typeof window === "undefined") return Promise.resolve(null);
+  const consent = localStorage.getItem(GPS_KEY);
+  if (consent !== "true") return Promise.resolve(null);
+  if (!navigator.geolocation) return Promise.resolve(null);
+
   return new Promise((resolve) => {
-    if (!navigator.geolocation) return resolve(null);
     navigator.geolocation.getCurrentPosition(
       (pos) => resolve({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }),
       () => resolve(null),
@@ -56,7 +62,8 @@ export function useClockIn() {
     },
     onSuccess: (data: any) => {
       qc.invalidateQueries({ queryKey: ["time-entries"] });
-      toast.success(`Entrada fichada: ${data.employee?.firstName ?? ""}`);
+      const hasGps = localStorage.getItem(GPS_KEY) === "true";
+      toast.success(`Entrada fichada: ${data.employee?.firstName ?? ""}${hasGps ? " (con GPS)" : ""}`);
     },
     onError: (err: any) => toast.error(err?.response?.data?.message ?? "Error al fichar"),
   });

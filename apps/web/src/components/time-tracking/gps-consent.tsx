@@ -25,7 +25,12 @@ export function useGpsConsent() {
     setConsented(false);
   }
 
-  return { consented, accept, reject };
+  function reset() {
+    localStorage.removeItem(GPS_CONSENT_KEY);
+    setConsented(null);
+  }
+
+  return { consented, accept, reject, reset };
 }
 
 export function GpsConsentBanner({ onAccept, onReject }: { onAccept: () => void; onReject: () => void }) {

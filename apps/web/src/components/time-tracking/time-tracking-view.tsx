@@ -151,6 +151,32 @@ export function TimeTrackingView() {
         <GpsConsentBanner onAccept={acceptGps} onReject={rejectGps} />
       )}
 
+      {/* GPS status indicator */}
+      {gpsConsented !== null && (
+        <div className="flex items-center justify-between px-3 py-2 rounded-lg border border-border bg-muted/20 text-sm">
+          <div className="flex items-center gap-2">
+            <MapPin className={`h-4 w-4 ${gpsConsented ? "text-green-600" : "text-muted-foreground"}`} />
+            <span className="text-muted-foreground">
+              GPS: {gpsConsented ? "Activado" : "Desactivado"}
+            </span>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-xs h-7"
+            onClick={() => {
+              if (gpsConsented) {
+                rejectGps();
+              } else {
+                acceptGps();
+              }
+            }}
+          >
+            {gpsConsented ? "Desactivar" : "Activar"}
+          </Button>
+        </div>
+      )}
+
       {/* Quick clock in/out */}
       <Card className="border-primary/20 bg-primary/5">
         <CardContent className="p-4">
