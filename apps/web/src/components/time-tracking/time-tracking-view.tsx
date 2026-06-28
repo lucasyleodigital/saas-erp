@@ -55,6 +55,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useGpsConsent, GpsConsentBanner } from "./gps-consent";
+import { useUser } from "@/hooks/use-user";
 
 export function TimeTrackingView() {
   const t = useTranslations("timeTracking");
@@ -66,6 +67,9 @@ export function TimeTrackingView() {
   const [filterProject, setFilterProject] = useState("");
   const [filterFrom, setFilterFrom] = useState("");
   const [filterTo, setFilterTo] = useState("");
+
+  const { data: currentUser } = useUser();
+  const isEmployee = currentUser?.role === "EMPLOYEE";
 
   const clockIn = useClockIn();
   const clockOut = useClockOut();
@@ -89,6 +93,11 @@ export function TimeTrackingView() {
   const todayHours = Number(summary.todayHours ?? summary.today ?? 0);
   const weekHours = Number(summary.weekHours ?? summary.week ?? 0);
   const monthHours = Number(summary.monthHours ?? summary.month ?? 0);
+
+  // Employee sees only their own simplified view
+  if (isEmployee) {
+    return <EmployeeClockView gpsConsented={gpsConsented} acceptGps={acceptGps} rejectGps={rejectGps} />;
+  }
 
   return (
     <div className="space-y-6">
@@ -479,6 +488,82 @@ function MissedClocksAlert() {
 }
 
 /* ─── Weekly Calendar ────────────────────────────────────── */
+
+function EmployeeClockView({ gpsConsented, acceptGps, rejectGps }: { gpsConsented: boolean | null; acceptGps: () => void; rejectGps: () => void }) {
+  const [acting, setActing] = useState(false);
+  const { data: summaryData } = useTimeSummary();
+
+  async function handleClock(action: "clock-in" | "clock-out") {
+    setActing(true);
+    try {
+      await api.post(`/my/${action}`, {});
+      toast.success(action === "clock-in" ? "Entrada fichada" : "Salida fichada");
+    } catch (e: any) {
+      toast.error(e?.response?.data?.message ?? "Error al fichar");
+    }
+    setActing(false);
+  }
+
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+
+  return (
+    <div className="space-y-6 max-w-lg mx-auto">
+      <div className="text-center">
+        <h1 className="text-xl font-bold flex items-center justify-center gap-2">
+          <Timer className="h-5 w-5" /> Fichaje
+        </h1>
+      </div>
+
+      {gpsConsented === null && (
+        <GpsConsentBanner onAccept={acceptGps} onReject={rejectGps} />
+      )}
+
+      {gpsConsented !== null && (
+        <div className="flex items-center justify-between px-3 py-2 rounded-lg border border-border bg-muted/20 text-sm">
+          <div className="flex items-center gap-2">
+            <MapPin className={`h-4 w-4 ${gpsConsented ? "text-green-600" : "text-muted-foreground"}`} />
+            <span className="text-muted-foreground">Ubicacion: {gpsConsented ? "Activada" : "Desactivada"}</span>
+          </div>
+          <button className="text-xs text-primary hover:underline" onClick={() => gpsConsented ? rejectGps() : acceptGps()}>
+            {gpsConsented ? "Desactivar" : "Activar"}
+          </button>
+        </div>
+      )}
+
+      <Card className="border-primary/20">
+        <CardContent className="p-6 text-center space-y-4">
+          <p className="text-4xl font-bold tabular-nums">{timeStr}</p>
+          <div className="grid grid-cols-2 gap-3">
+            <Button size="lg" className="h-14 text-base gap-2" onClick={() => handleClock("clock-in")} disabled={acting}>
+              <LogIn className="h-5 w-5" /> Entrada
+            </Button>
+            <Button size="lg" variant="outline" className="h-14 text-base gap-2" onClick={() => handleClock("clock-out")} disabled={acting}>
+              <LogOut className="h-5 w-5" /> Salida
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {[
+          { label: "Hoy", value: summaryData?.today ?? 0, icon: Clock },
+          { label: "Semana", value: summaryData?.week ?? 0, icon: CalendarDays },
+          { label: "Mes", value: summaryData?.month ?? 0, icon: Timer },
+          { label: "Extras", value: summaryData?.overtime ?? 0, icon: Zap },
+        ].map((kpi) => (
+          <Card key={kpi.label}>
+            <CardContent className="p-3 text-center">
+              <kpi.icon className="h-4 w-4 mx-auto mb-1 text-muted-foreground" />
+              <p className="text-lg font-bold">{kpi.value.toFixed(1)}h</p>
+              <p className="text-xs text-muted-foreground">{kpi.label}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function WeeklyCalendar() {
   const [weekOffset, setWeekOffset] = useState(0);
