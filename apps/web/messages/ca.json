@@ -409,10 +409,10 @@
       "salePrice": "Preu de venda (€) *",
       "cost": "Cost (€)"
     },
-    "emptyTitle": "No hay productos",
-    "emptyDescription": "Anade tu primer producto o servicio",
-    "emptyAction": "Nuevo producto",
-    "vatSuffix": "%% IVA"
+    "emptyTitle": "No hi ha productes",
+    "emptyDescription": "Afegeix el teu primer producte o servei",
+    "emptyAction": "Nou producte",
+    "vatSuffix": "% IVA"
   },
   "pipeline": {
     "title": "Pipeline de vendes",
@@ -463,11 +463,11 @@
       "other": "Altre"
     },
     "form": {
-      "namePlaceholder": "Maria Garcia",
-      "emailPlaceholder": "maria@empresa.com",
+      "namePlaceholder": "Nom del lead",
+      "emailPlaceholder": "correu@empresa.com",
       "phonePlaceholder": "600 123 456",
       "companyPlaceholder": "Empresa SL",
-      "selectSource": "Seleccionar...",
+      "selectSource": "Seleccionar origen",
       "notesPlaceholder": "Informacio addicional sobre aquest lead...",
       "createLead": "Crear lead"
     }
@@ -489,7 +489,7 @@
     "emptyDescription": "Tria una plantilla de dalt o crea una regla personalitzada des de zero.",
     "triggers": {
       "invoiceCreated": "Factura creada",
-      "invoicePaid": "Factura pagada",
+      "invoicePaid": "Factura cobrada",
       "invoiceOverdue": "Factura vencuda",
       "quoteCreated": "Pressupost creat",
       "quoteAccepted": "Pressupost acceptat",
@@ -504,7 +504,7 @@
     "actions": {
       "sendEmail": "Enviar correu",
       "createNotification": "Crear notificacio interna",
-      "sendWebhook": "Enviar webhook (HTTP POST)"
+      "sendWebhook": "Enviar webhook"
     },
     "templates": {
       "title": "Plantilles rapides",
@@ -554,19 +554,19 @@
       "notifConfig": "Config de notificacio",
       "notifTitleLabel": "Titol",
       "message": "Missatge",
-      "webhookConfig": "Config del webhook",
+      "webhookConfig": "Configuracio webhook",
       "namePlaceholder": "Recordatori de pagament",
       "nameRequired": "Nom obligatori",
-      "selectTrigger": "Selecciona un trigger",
+      "selectTrigger": "Seleccionar disparador",
       "selectAction": "Selecciona una accio",
-      "invalidUrl": "URL invalida"
+      "invalidUrl": "URL no valida"
     },
     "stats": {
       "totalRules": "Total regles",
       "totalExecutions": "Execucions totals",
       "executedCount": "Executada {count} vegades",
       "noExecutions": "Sense execucions encara",
-      "last": "ultima",
+      "last": "Ultima",
       "testNow": "Provar ara",
       "pause": "Pausar",
       "activate": "Activar"
@@ -754,7 +754,7 @@
       "avgMargin": "Marge mitja",
       "noCostProducts": "No hi ha productes amb cost definit",
       "unitCost": "Cost ud.",
-      "unitPrice": "PVP ud.",
+      "unitPrice": "Preu unitari",
       "margin": "Marge",
       "stockValue": "Valor estoc"
     },
@@ -763,7 +763,7 @@
       "noWarehouses": "No hi ha magatzems configurats",
       "default": "Per defecte",
       "setDefault": "Marcar com a defecte",
-      "confirmDelete": "Eliminar \"{name}\"?"
+      "confirmDelete": "Eliminar magatzem {name}?"
     },
     "warehouseDialog": {
       "editTitle": "Editar magatzem"
@@ -776,7 +776,7 @@
       "register": "Registrar"
     },
     "transferDialog": {
-      "title": "Transferir — {name}",
+      "title": "Transferir estoc",
       "from": "Des de",
       "to": "Cap a",
       "sourceWarehouse": "Magatzem origen",
@@ -789,7 +789,7 @@
       "title": "Inventari fisic",
       "helpText": "Introdueix el recompte real. Es crearan ajustos automatics on hi hagi diferencies.",
       "noTrackedProducts": "No hi ha productes amb seguiment d'estoc actiu",
-      "system": "Sistema:",
+      "system": "Sistema",
       "applying": "Aplicant...",
       "apply": "Aplicar inventari"
     },
@@ -809,26 +809,26 @@
     "theme": "Aparenca",
     "saveSuccess": "Configuracio desada",
     "user": {
-      "subtitle": "Gestiona tu perfil personal y seguridad",
-      "personalData": "Datos personales",
-      "firstName": "Nombre",
-      "lastName": "Apellidos",
-      "emailReadonly": "El email no se puede cambiar por seguridad",
-      "saveChanges": "Guardar cambios",
-      "currentPassword": "Contrasena actual",
-      "newPassword": "Nueva contrasena",
-      "confirmNewPassword": "Confirmar nueva contrasena",
-      "passwordHint": "Minimo 8 caracteres, una mayuscula y un numero",
-      "passwordMinLength": "La contrasena debe tener minimo 8 caracteres",
-      "passwordMismatch": "Las contrasenas no coinciden",
-      "changePassword": "Cambiar contrasena",
-      "twoFactorTitle": "Autenticacion en dos pasos (2FA)",
-      "twoFactorDescription": "Anade una capa extra de seguridad con Google Authenticator.",
+      "subtitle": "Gestiona el teu perfil personal i seguretat",
+      "personalData": "Dades personals",
+      "firstName": "Nom",
+      "lastName": "Cognoms",
+      "emailReadonly": "El correu no es pot canviar per seguretat",
+      "saveChanges": "Desar canvis",
+      "currentPassword": "Contrasenya actual",
+      "newPassword": "Nova contrasenya",
+      "confirmNewPassword": "Confirmar nova contrasenya",
+      "passwordHint": "Minim 8 caracters, una majuscula i un numero",
+      "passwordMinLength": "La contrasenya ha de tenir minim 8 caracters",
+      "passwordMismatch": "Les contrasenyes no coincideixen",
+      "changePassword": "Canviar contrasenya",
+      "twoFactorTitle": "Autenticacio en dos passos (2FA)",
+      "twoFactorDescription": "Afegeix una capa extra de seguretat amb Google Authenticator o Authy.",
       "configure2FA": "Configurar 2FA",
-      "twoFactorComingSoon": "Proximamente",
-      "notifPreferences": "Preferencias de notificaciones",
-      "notifDetailedComingSoon": "Proximamente",
-      "notifComingSoon": "Proximamente"
+      "twoFactorComingSoon": "Properament disponible",
+      "notifPreferences": "Preferencies de notificacions",
+      "notifDetailedComingSoon": "Properament disponible",
+      "notifComingSoon": "Properament"
     }
   },
   "company": {
@@ -842,78 +842,78 @@
     "website": "Lloc web",
     "logo": "Logotip",
     "saveSuccess": "Dades de l'empresa actualitzades",
-    "pageSubtitle": "Datos y configuracion de tu empresa",
-    "companyData": "Datos de la empresa",
-    "saveError": "Error al guardar",
-    "changePlan": "Cambiar plan",
-    "planAndBilling": "Planes y facturacion",
+    "pageSubtitle": "Dades i configuracio de la teva empresa",
+    "companyData": "Dades de l'empresa",
+    "saveError": "Error en desar",
+    "changePlan": "Canviar pla",
+    "planAndBilling": "Plans i facturacio",
     "form": {
-      "tradeName": "Nombre comercial *",
-      "legalName": "Razon social",
+      "tradeName": "Nom comercial *",
+      "legalName": "Rao social",
       "cifNif": "CIF / NIF",
-      "contactEmail": "Email de contacto",
+      "contactEmail": "Correu de contacte",
       "logoUrl": "URL del logo",
-      "logoHint": "Introduce la URL de tu logo (PNG o SVG)",
-      "saveData": "Guardar datos"
+      "logoHint": "Introdueix la URL del teu logo (PNG o SVG)",
+      "saveData": "Desar dades"
     },
     "fiscal": {
-      "title": "Configuracion fiscal",
-      "entityType": "Tipo de entidad",
+      "title": "Configuracio fiscal",
+      "entityType": "Tipus d'entitat",
       "types": {
-        "autonomo": "Autonomo",
-        "sl": "Sociedad Limitada (SL)",
-        "sa": "Sociedad Anonima (SA)",
+        "autonomo": "Autonom",
+        "sl": "Societat Limitada (SL)",
+        "sa": "Societat Anonima (SA)",
         "cooperativa": "Cooperativa",
-        "asociacion": "Asociacion",
-        "comunidadBienes": "Comunidad de bienes"
+        "asociacion": "Associacio",
+        "comunidadBienes": "Comunitat de bens"
       },
-      "taxRegime": "Regimen fiscal",
+      "taxRegime": "Regim fiscal",
       "regimes": {
-        "simplified": "Estimacion directa simplificada",
-        "normal": "Estimacion directa normal",
-        "modules": "Modulos"
+        "simplified": "Estimacio directa simplificada",
+        "normal": "Estimacio directa normal",
+        "modules": "Moduls"
       },
-      "irpfRate": "Tipo de IRPF",
+      "irpfRate": "Tipus IRPF",
       "rates": {
-        "new7": "7%% (nuevos autonomos)",
-        "general15": "15%% (general)",
+        "new7": "7% (nous autonoms, primers 2 anys)",
+        "general15": "15% (general)",
         "modules1": "1%%",
         "modules2": "2%%"
       },
-      "autoApplyIrpf": "Aplicar IRPF automaticamente",
-      "autonomoStartDate": "Fecha de alta como autonomo",
-      "autonomoStartDateHint": "Para calcular si aplica el 7%%",
-      "save": "Guardar configuracion fiscal",
-      "savedSuccess": "Configuracion fiscal guardada"
+      "autoApplyIrpf": "Aplicar IRPF automaticament en factures",
+      "autonomoStartDate": "Data d'alta com a autonom",
+      "autonomoStartDateHint": "Per calcular si aplica el 7%",
+      "save": "Desar configuracio fiscal",
+      "savedSuccess": "Configuracio fiscal desada"
     },
     "appearance": {
-      "title": "Apariencia de facturas",
+      "title": "Aparenca de factures",
       "primaryColor": "Color principal",
-      "invoiceFooter": "Pie de pagina",
-      "paymentTerms": "Condiciones de pago",
-      "save": "Guardar apariencia",
-      "savedSuccess": "Apariencia guardada"
+      "invoiceFooter": "Peu de pagina",
+      "paymentTerms": "Condicions de pagament",
+      "save": "Desar aparenca",
+      "savedSuccess": "Aparenca desada"
     },
     "bank": {
-      "title": "Cuentas bancarias",
-      "hint": "Aparecen en tus facturas como datos de pago",
-      "accountName": "Nombre de la cuenta",
-      "addAccount": "Anadir cuenta",
-      "addedSuccess": "Cuenta bancaria anadida",
-      "addError": "Error al anadir",
-      "confirmDelete": "Eliminar esta cuenta?",
-      "deletedSuccess": "Cuenta eliminada",
-      "deleteError": "Error al eliminar"
+      "title": "Comptes bancaris",
+      "hint": "Apareixen a les factures com a dades de pagament",
+      "accountName": "Nom del compte",
+      "addAccount": "Afegir compte",
+      "addedSuccess": "Compte bancari afegit",
+      "addError": "Error en afegir compte",
+      "confirmDelete": "Eliminar aquest compte bancari?",
+      "deletedSuccess": "Compte eliminat",
+      "deleteError": "Error en eliminar"
     },
     "plans": {
-      "free": "Gratuito",
-      "freeDesc": "5 clientes, 10 facturas/mes",
+      "free": "Gratuit",
+      "freeDesc": "Fins a 5 clients, 10 factures/mes",
       "starter": "Starter",
-      "starterDesc": "3 usuarios",
+      "starterDesc": "Fins a 3 usuaris, facturacio il·limitada",
       "pro": "Pro",
-      "proDesc": "10 usuarios",
+      "proDesc": "Fins a 10 usuaris, totes les funcionalitats",
       "enterprise": "Enterprise",
-      "enterpriseDesc": "Usuarios ilimitados"
+      "enterpriseDesc": "Usuaris il·limitats, suport prioritari"
     },
     "planLabel": "Pla actual",
     "team": {
@@ -937,7 +937,7 @@
     "usage": "Us",
     "upgrade": "Millorar pla",
     "plans": {
-      "free": "Gratis",
+      "free": "Gratuit",
       "starter": "Starter",
       "pro": "Pro",
       "enterprise": "Enterprise"
@@ -955,18 +955,18 @@
     "markAllRead": "Marcar tot com a llegit",
     "noNotifications": "No tens notificacions",
     "viewAll": "Veure totes",
-    "totalCount": "{count} notificaciones",
-    "clearRead": "Limpiar leidas",
-    "unread": "No leidas",
-    "empty": "Sin notificaciones",
-    "noNotificationsYet": "No tienes notificaciones todavia",
-    "allRead": "Todo leido",
-    "markAll": "Marcar todo leido",
+    "totalCount": "{count} notificacions",
+    "clearRead": "Netejar llegides",
+    "unread": "No llegides",
+    "empty": "Sense notificacions",
+    "noNotificationsYet": "Encara no tens notificacions",
+    "allRead": "Tot llegit",
+    "markAll": "Marcar tot com a llegit",
     "timeAgo": {
-      "now": "ahora",
-      "minutes": "{m} min",
-      "hours": "{h} h",
-      "days": "{d} d"
+      "now": "ara",
+      "minutes": "fa {m} min",
+      "hours": "fa {h} h",
+      "days": "fa {d} d"
     }
   },
   "verifactu": {
@@ -1062,11 +1062,11 @@
     "noResultsDesc": "Comenca creant el teu primer projecte",
     "all": "Tots",
     "active": "Actius",
-    "onHold": "En espera",
+    "onHold": "En pausa",
     "completed": "Completats",
     "cancelled": "Cancel·lats",
     "statusActive": "Actiu",
-    "statusOnHold": "En espera",
+    "statusOnHold": "En pausa",
     "statusCompleted": "Completat",
     "statusCancelled": "Cancel·lat",
     "errorLoading": "Error en carregar projectes",
@@ -1089,7 +1089,7 @@
       "hoursCol": "Hores",
       "linkedInvoices": "Factures vinculades",
       "noLinkedInvoices": "No hi ha factures vinculades a aquest projecte",
-      "invoiceNumber": "Numero"
+      "invoiceNumber": "Factura"
     },
     "form": {
       "dialogTitle": "Nou projecte",
@@ -1098,7 +1098,7 @@
       "client": "Client",
       "selectClient": "Seleccionar client",
       "budget": "Pressupost",
-      "hourlyRate": "Tarifa / hora",
+      "hourlyRate": "Tarifa per hora",
       "startDate": "Data inici",
       "endDate": "Data fi",
       "color": "Color",
@@ -1186,7 +1186,7 @@
     "colSupplier": "Proveidor",
     "statusDraft": "Esborrany",
     "statusSent": "Enviada",
-    "statusPartialReceived": "Parcial",
+    "statusPartialReceived": "Parcialment rebuda",
     "statusReceived": "Rebuda",
     "statusCancelled": "Cancel·lada",
     "registerReception": "Registrar recepcio",
@@ -1301,7 +1301,7 @@
       "project": "Projecte (opcional)",
       "noProject": "Sense projecte",
       "date": "Data *",
-      "clockIn": "Entrada *",
+      "clockIn": "Hora entrada",
       "clockOut": "Sortida *",
       "break": "Descans (min)",
       "notesPlaceholder": "Notes opcionals...",
