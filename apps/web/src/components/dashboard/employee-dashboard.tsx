@@ -50,7 +50,8 @@ export function EmployeeDashboard() {
     try {
       const loc = await getLocation(gpsConsented === true);
       await api.post(`/my/${action}`, loc ?? {});
-      toast.success(action === "clock-in" ? "Entrada fichada" : "Salida fichada");
+      const gpsMsg = loc ? " (con ubicacion)" : "";
+      toast.success((action === "clock-in" ? "Entrada fichada" : "Salida fichada") + gpsMsg);
       setTimeout(load, 1000);
     } catch (e: any) {
       toast.error(e?.response?.data?.message ?? "Error al fichar");
@@ -97,6 +98,24 @@ export function EmployeeDashboard() {
       {/* GPS consent */}
       {gpsConsented === null && (
         <GpsConsentBanner onAccept={acceptGps} onReject={rejectGps} />
+      )}
+
+      {/* GPS status */}
+      {gpsConsented !== null && (
+        <div className="flex items-center justify-between px-3 py-2 rounded-lg border border-border bg-muted/20 text-sm">
+          <div className="flex items-center gap-2">
+            <MapPin className={`h-4 w-4 ${gpsConsented ? "text-green-600" : "text-muted-foreground"}`} />
+            <span className="text-muted-foreground">
+              Ubicacion: {gpsConsented ? "Activada" : "Desactivada"}
+            </span>
+          </div>
+          <button
+            className="text-xs text-primary hover:underline"
+            onClick={() => gpsConsented ? rejectGps() : acceptGps()}
+          >
+            {gpsConsented ? "Desactivar" : "Activar"}
+          </button>
+        </div>
       )}
 
       {/* Clock section */}
