@@ -1041,6 +1041,8 @@ model Employee {
   workingHours         Decimal        @default(40) @db.Decimal(4, 1)
   schedule             Json?
   clockToken           String?        @unique
+  portalPassword       String?
+  portalActivatedAt    DateTime?
   status               EmployeeStatus @default(ACTIVE)
   avatar               String?
   notes                String?

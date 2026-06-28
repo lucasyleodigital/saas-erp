@@ -149,4 +149,17 @@ export class EmployeesController {
     }
     return this.employeesService.activatePortalAccess(u.companyId, id, password);
   }
+
+  @Get(":id/portal-credentials")
+  getPortalCredentials(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
+    return this.employeesService.getPortalCredentials(u.companyId, id);
+  }
+
+  @Post(":id/reset-portal-password")
+  resetPortalPassword(@CurrentUser() u: JwtPayload, @Param("id") id: string, @Body("password") password: string) {
+    if (!password || password.length < 8) {
+      throw new (require("@nestjs/common").BadRequestException)("Minimo 8 caracteres");
+    }
+    return this.employeesService.resetPortalPassword(u.companyId, id, password);
+  }
 }

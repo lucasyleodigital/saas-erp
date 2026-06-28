@@ -122,8 +122,8 @@ const MAIN_FEATURES = [
   },
   {
     icon: Timer,
-    title: "Control horario",
-    desc: "Registro de horas por empleado y proyecto. Calculo automatico de jornada, descansos y horas extra.",
+    title: "Control horario + GPS",
+    desc: "Fichaje con geolocalizacion, portal del empleado, calendario semanal, horas extra automaticas, exportar informe para Inspeccion de Trabajo y fichaje por QR.",
     color: "#e11d48",
     bg: "rgba(225,29,72,0.08)",
     border: "rgba(225,29,72,0.2)",

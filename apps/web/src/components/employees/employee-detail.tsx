@@ -158,20 +158,37 @@ export function EmployeeDetailView({ id }: { id: string }) {
               toast.error("El empleado necesita un email para activar el portal");
               return;
             }
-            const password = prompt("Introduce una contrasena temporal para el empleado (minimo 8 caracteres):");
+            try {
+              const creds = await api.get(`/employees/${id}/portal-credentials`);
+              if (creds.data.isActive) {
+                const action = confirm(`Portal ya activo.\nEmail: ${creds.data.email}\nContrasena: ${creds.data.password}\n\nPulsa OK para cambiar la contrasena o Cancelar para copiar los datos.`);
+                if (action) {
+                  const newPwd = prompt("Nueva contrasena (minimo 8 caracteres):");
+                  if (newPwd && newPwd.length >= 8) {
+                    await api.post(`/employees/${id}/reset-portal-password`, { password: newPwd });
+                    toast.success("Contrasena actualizada");
+                  }
+                } else {
+                  await navigator.clipboard.writeText(`Email: ${creds.data.email}\nContrasena: ${creds.data.password}`);
+                  toast.success("Credenciales copiadas al portapapeles");
+                }
+                return;
+              }
+            } catch {}
+            const password = prompt("Introduce una contrasena para el empleado (minimo 8 caracteres):");
             if (!password || password.length < 8) {
-              toast.error("La contrasena debe tener minimo 8 caracteres");
+              if (password) toast.error("Minimo 8 caracteres");
               return;
             }
             try {
-              const r = await api.post(`/employees/${id}/activate-portal`, { password });
-              toast.success(`Portal activado para ${r.data.email}. Contrasena: ${password}`);
+              await api.post(`/employees/${id}/activate-portal`, { password });
+              toast.success(`Portal activado. Email: ${employee.email} / Contrasena: ${password}`);
             } catch (e: any) {
               toast.error(e?.response?.data?.message ?? "Error al activar portal");
             }
           }}
         >
-          <LogIn className="h-4 w-4" /> Activar portal
+          <LogIn className="h-4 w-4" /> Portal empleado
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

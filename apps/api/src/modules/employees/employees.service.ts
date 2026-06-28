@@ -309,6 +309,42 @@ export class EmployeesService {
       data: { userId: user.id, companyId, role: "EMPLOYEE" },
     });
 
+    await this.prisma.employee.update({
+      where: { id: employeeId },
+      data: { portalPassword: password, portalActivatedAt: new Date() },
+    });
+
     return { activated: true, email: employee.email, password };
+  }
+
+  async getPortalCredentials(companyId: string, employeeId: string) {
+    const employee = await this.prisma.employee.findFirst({
+      where: { id: employeeId, companyId },
+      select: { email: true, portalPassword: true, portalActivatedAt: true },
+    });
+    if (!employee) throw new NotFoundException("Empleado no encontrado");
+    return {
+      email: employee.email,
+      password: employee.portalPassword,
+      activatedAt: employee.portalActivatedAt,
+      isActive: !!employee.portalActivatedAt,
+    };
+  }
+
+  async resetPortalPassword(companyId: string, employeeId: string, newPassword: string) {
+    const employee = await this.prisma.employee.findFirst({ where: { id: employeeId, companyId } });
+    if (!employee) throw new NotFoundException("Empleado no encontrado");
+    if (!employee.email) throw new BadRequestException("El empleado no tiene email");
+
+    const hashed = await bcrypt.hash(newPassword, 12);
+    const user = await this.prisma.user.findUnique({ where: { email: employee.email } });
+    if (user) {
+      await this.prisma.user.update({ where: { id: user.id }, data: { password: hashed } });
+    }
+    await this.prisma.employee.update({
+      where: { id: employeeId },
+      data: { portalPassword: newPassword },
+    });
+    return { reset: true, email: employee.email };
   }
 }
