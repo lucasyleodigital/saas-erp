@@ -489,6 +489,17 @@ function MissedClocksAlert() {
 
 /* ─── Weekly Calendar ────────────────────────────────────── */
 
+function getEmployeeLocation(allowed: boolean): Promise<{ latitude: number; longitude: number } | null> {
+  if (!allowed || typeof window === "undefined" || !navigator.geolocation) return Promise.resolve(null);
+  return new Promise((resolve) => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => resolve({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }),
+      () => resolve(null),
+      { timeout: 15000, enableHighAccuracy: false, maximumAge: 60000 },
+    );
+  });
+}
+
 function EmployeeClockView({ gpsConsented, acceptGps, rejectGps }: { gpsConsented: boolean | null; acceptGps: () => void; rejectGps: () => void }) {
   const [acting, setActing] = useState(false);
   const { data: summaryData } = useTimeSummary();
@@ -496,8 +507,10 @@ function EmployeeClockView({ gpsConsented, acceptGps, rejectGps }: { gpsConsente
   async function handleClock(action: "clock-in" | "clock-out") {
     setActing(true);
     try {
-      await api.post(`/my/${action}`, {});
-      toast.success(action === "clock-in" ? "Entrada fichada" : "Salida fichada");
+      const loc = await getEmployeeLocation(gpsConsented === true);
+      await api.post(`/my/${action}`, loc ?? {});
+      const gpsMsg = loc ? " (con ubicacion)" : "";
+      toast.success((action === "clock-in" ? "Entrada fichada" : "Salida fichada") + gpsMsg);
     } catch (e: any) {
       toast.error(e?.response?.data?.message ?? "Error al fichar");
     }
