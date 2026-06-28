@@ -603,7 +603,7 @@ function PortalButton({ employeeId, employeeEmail }: { employeeId: string; emplo
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Contrasena</span>
-                    <span className="font-mono font-medium">{creds.password ?? "***"}</span>
+                    <span className="font-mono font-medium">{creds.password ?? "(no guardada - cambiala abajo)"}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">URL</span>

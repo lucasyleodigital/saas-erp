@@ -323,11 +323,30 @@ export class EmployeesService {
       select: { email: true, portalPassword: true, portalActivatedAt: true },
     });
     if (!employee) throw new NotFoundException("Empleado no encontrado");
+
+    let isActive = !!employee.portalActivatedAt;
+
+    if (!isActive && employee.email) {
+      const user = await this.prisma.user.findUnique({ where: { email: employee.email } });
+      if (user) {
+        const membership = await this.prisma.userCompany.findFirst({
+          where: { userId: user.id, companyId, role: "EMPLOYEE" },
+        });
+        if (membership) {
+          isActive = true;
+          await this.prisma.employee.update({
+            where: { id: employeeId },
+            data: { portalActivatedAt: membership.createdAt },
+          });
+        }
+      }
+    }
+
     return {
       email: employee.email,
       password: employee.portalPassword,
       activatedAt: employee.portalActivatedAt,
-      isActive: !!employee.portalActivatedAt,
+      isActive,
     };
   }
 
