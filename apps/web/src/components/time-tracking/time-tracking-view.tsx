@@ -319,8 +319,8 @@ export function TimeTrackingView() {
                     <th className="text-right font-medium text-muted-foreground px-4 py-3">
                       {tCommon("total")}
                     </th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">
-                      {tCommon("notes")}
+                    <th className="text-center font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">
+                      GPS
                     </th>
                     <th className="px-4 py-3 w-10" />
                   </tr>
@@ -373,8 +373,20 @@ export function TimeTrackingView() {
                           <td className="px-4 py-3 text-right font-medium">
                             {totalH} h
                           </td>
-                          <td className="px-4 py-3 hidden lg:table-cell text-muted-foreground truncate max-w-[200px]">
-                            {entry.notes ?? "---"}
+                          <td className="px-4 py-3 hidden lg:table-cell text-center">
+                            {entry.latitude ? (
+                              <a
+                                href={`https://www.google.com/maps?q=${entry.latitude},${entry.longitude}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                                title={`${entry.latitude?.toFixed(4)}, ${entry.longitude?.toFixed(4)}`}
+                              >
+                                <MapPin className="h-3.5 w-3.5" /> Ver mapa
+                              </a>
+                            ) : (
+                              <span className="text-muted-foreground/40 text-xs">-</span>
+                            )}
                           </td>
                           <td className="px-4 py-3">
                             <Button

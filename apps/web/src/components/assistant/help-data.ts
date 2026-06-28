@@ -389,4 +389,70 @@ export const HELP_CATEGORIES: HelpCategory[] = [
       },
     ],
   },
+  {
+    id: "control-horario",
+    label: "Control horario",
+    icon: "Timer",
+    questions: [
+      {
+        q: "Como ficho la entrada y salida?",
+        a: "Hay 3 formas de fichar:\n\n1. Desde el dashboard (si eres empleado): botones grandes Entrada/Salida.\n2. Desde Control horario (si eres gestor): selecciona el empleado y pulsa Fichar entrada o Fichar salida.\n3. Desde el enlace de fichaje: el gestor genera un enlace unico para cada empleado que funciona sin login.\n\nAl fichar se registra la hora exacta y, si lo autorizas, tu ubicacion GPS.",
+      },
+      {
+        q: "Como funciona el GPS al fichar?",
+        a: "La primera vez que accedes al control horario, aparece un aviso de consentimiento GPS.\n\n- Si aceptas: al fichar entrada o salida, el navegador pide tu ubicacion y se guarda con el fichaje.\n- Si rechazas: fichas normalmente pero sin ubicacion.\n- Puedes cambiar tu decision en cualquier momento.\n\nEl gestor puede ver la ubicacion de cada fichaje con un enlace a Google Maps en la tabla de registros (columna GPS > 'Ver mapa').\n\nImportante: solo se registra la ubicacion al momento de fichar, NO hay rastreo continuo. Cumple con la LOPDGDD (Art. 90) y el RGPD.",
+      },
+      {
+        q: "Donde veo la ubicacion de los fichajes de mis empleados?",
+        a: "Ve a Control horario > pestana Registros. En la columna GPS veras 'Ver mapa' en los fichajes que tienen ubicacion. Al hacer clic se abre Google Maps con la posicion exacta donde ficho el empleado.",
+      },
+      {
+        q: "Que es la vista semanal?",
+        a: "En Control horario, pulsa la pestana 'Vista semanal'. Veras una tabla con todos los empleados y sus horas de cada dia de la semana:\n\n- Verde: 8h o mas (jornada completa)\n- Ambar: menos de 8h\n- Punto verde pulsante: empleado fichado ahora mismo\n- Columna Total: horas totales de la semana\n- Columna Extra: horas extra (lo que supere las horas contratadas)\n\nPuedes navegar entre semanas con los botones Anterior/Siguiente.",
+      },
+      {
+        q: "Como se calculan las horas extra?",
+        a: "Se calcula automaticamente:\n- Por dia: todo lo que supere 8 horas se marca como hora extra.\n- Por semana: se compara el total semanal con las horas contratadas del empleado (40h por defecto).\n\nLas horas extra aparecen en:\n- KPI 'Extras' en el dashboard\n- Columna 'Extra' en la vista semanal\n- El informe mensual exportable",
+      },
+      {
+        q: "Como exporto el informe para Inspeccion de Trabajo?",
+        a: "En Control horario, pulsa el boton 'Exportar mes'. Se descarga un archivo CSV con todos los fichajes del mes actual:\n\nEmpleado, NIF, Fecha, Entrada, Salida, Pausa (min), Total (h), Horas extra (min), Proyecto.\n\nEste formato es valido para presentar ante la Inspeccion de Trabajo.",
+      },
+      {
+        q: "Que pasa si un empleado no ficha?",
+        a: "Si un empleado activo no ha fichado durante el dia (de lunes a viernes), aparece un aviso amarillo en Control horario con la lista de empleados sin fichar. Este aviso se actualiza cada 5 minutos.",
+      },
+      {
+        q: "Que es el fichaje por QR?",
+        a: "El boton QR genera un enlace unico que puedes convertir en un codigo QR (usando cualquier generador gratuito como qr-code-generator.com). Imprime el QR y pegalo en la entrada de la oficina. Los empleados escanean con su movil y fichan directamente.",
+      },
+    ],
+  },
+  {
+    id: "portal-empleado",
+    label: "Portal del empleado",
+    icon: "UserCheck",
+    questions: [
+      {
+        q: "Como activo el acceso de un empleado?",
+        a: "1. Ve a Empleados y haz clic en el empleado.\n2. Pulsa el boton 'Portal empleado'.\n3. Introduce una contrasena (minimo 8 caracteres).\n4. Pulsa 'Activar'.\n\nEl empleado podra entrar en youwhole.com/login con su email y la contrasena que le has puesto.",
+      },
+      {
+        q: "Donde veo la contrasena del empleado?",
+        a: "En el detalle del empleado, pulsa 'Portal empleado'. Se abre un dialogo que muestra:\n- Email\n- Contrasena\n- URL de acceso\n\nPuedes copiar las credenciales al portapapeles o cambiar la contrasena desde ahi.",
+      },
+      {
+        q: "Que ve el empleado cuando entra?",
+        a: "El empleado ve un dashboard simplificado con:\n- Reloj grande + botones Entrada/Salida para fichar\n- KPIs: horas de hoy, semana, mes y horas extra\n- Fichajes recientes de la semana\n- Boton para solicitar dias (vacaciones, baja, asuntos propios)\n- Boton para ver sus nominas\n- Proximas ausencias aprobadas\n\nNo ve facturas, clientes, contabilidad ni ningun dato de la empresa.",
+      },
+      {
+        q: "Como solicita vacaciones un empleado?",
+        a: "Desde su portal, el empleado pulsa 'Solicitar dias' y rellena:\n- Tipo (Vacaciones, Baja medica, Asuntos propios, Maternidad/Paternidad)\n- Fecha desde y hasta\n- Motivo (opcional)\n\nLa solicitud queda como 'Pendiente' hasta que el gestor la apruebe o rechace desde Empleados > detalle > pestana Ausencias.",
+      },
+      {
+        q: "Como apruebo las solicitudes de dias?",
+        a: "Ve a Empleados > clic en el empleado > pestana 'Ausencias'. Ahi veras las solicitudes pendientes con botones para Aprobar o Rechazar cada una.",
+      },
+    ],
+  },
 ];
