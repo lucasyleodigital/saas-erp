@@ -149,47 +149,7 @@ export function EmployeeDetailView({ id }: { id: string }) {
         >
           <Clock className="h-4 w-4" /> Enlace fichaje
         </Button>
-        <Button
-          variant="default"
-          size="sm"
-          className="gap-2"
-          onClick={async () => {
-            if (!employee.email) {
-              toast.error("El empleado necesita un email para activar el portal");
-              return;
-            }
-            try {
-              const creds = await api.get(`/employees/${id}/portal-credentials`);
-              if (creds.data.isActive) {
-                const action = confirm(`Portal ya activo.\nEmail: ${creds.data.email}\nContrasena: ${creds.data.password}\n\nPulsa OK para cambiar la contrasena o Cancelar para copiar los datos.`);
-                if (action) {
-                  const newPwd = prompt("Nueva contrasena (minimo 8 caracteres):");
-                  if (newPwd && newPwd.length >= 8) {
-                    await api.post(`/employees/${id}/reset-portal-password`, { password: newPwd });
-                    toast.success("Contrasena actualizada");
-                  }
-                } else {
-                  await navigator.clipboard.writeText(`Email: ${creds.data.email}\nContrasena: ${creds.data.password}`);
-                  toast.success("Credenciales copiadas al portapapeles");
-                }
-                return;
-              }
-            } catch {}
-            const password = prompt("Introduce una contrasena para el empleado (minimo 8 caracteres):");
-            if (!password || password.length < 8) {
-              if (password) toast.error("Minimo 8 caracteres");
-              return;
-            }
-            try {
-              await api.post(`/employees/${id}/activate-portal`, { password });
-              toast.success(`Portal activado. Email: ${employee.email} / Contrasena: ${password}`);
-            } catch (e: any) {
-              toast.error(e?.response?.data?.message ?? "Error al activar portal");
-            }
-          }}
-        >
-          <LogIn className="h-4 w-4" /> Portal empleado
-        </Button>
+        <PortalButton employeeId={id} employeeEmail={employee.email} />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="gap-1">
@@ -563,5 +523,136 @@ export function EmployeeDetailView({ id }: { id: string }) {
         </div>
       )}
     </div>
+  );
+}
+
+function PortalButton({ employeeId, employeeEmail }: { employeeId: string; employeeEmail?: string | null }) {
+  const [open, setOpen] = useState(false);
+  const [creds, setCreds] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const [newPwd, setNewPwd] = useState("");
+
+  async function loadCreds() {
+    setLoading(true);
+    try {
+      const r = await api.get(`/employees/${employeeId}/portal-credentials`);
+      setCreds(r.data);
+    } catch {
+      setCreds({ isActive: false });
+    }
+    setLoading(false);
+    setOpen(true);
+  }
+
+  async function activate() {
+    if (!newPwd || newPwd.length < 8) {
+      toast.error("Minimo 8 caracteres");
+      return;
+    }
+    try {
+      const r = await api.post(`/employees/${employeeId}/activate-portal`, { password: newPwd });
+      setCreds({ isActive: true, email: r.data.email, password: newPwd });
+      toast.success("Portal activado");
+      setNewPwd("");
+    } catch (e: any) {
+      toast.error(e?.response?.data?.message ?? "Error");
+    }
+  }
+
+  async function resetPassword() {
+    if (!newPwd || newPwd.length < 8) {
+      toast.error("Minimo 8 caracteres");
+      return;
+    }
+    try {
+      await api.post(`/employees/${employeeId}/reset-portal-password`, { password: newPwd });
+      setCreds((prev: any) => ({ ...prev, password: newPwd }));
+      toast.success("Contrasena actualizada");
+      setNewPwd("");
+    } catch (e: any) {
+      toast.error(e?.response?.data?.message ?? "Error");
+    }
+  }
+
+  async function copyCredentials() {
+    if (creds?.email && creds?.password) {
+      await navigator.clipboard.writeText(`Email: ${creds.email}\nContrasena: ${creds.password}\nEntrar en: ${window.location.origin}/login`);
+      toast.success("Credenciales copiadas");
+    }
+  }
+
+  return (
+    <>
+      <Button variant="default" size="sm" className="gap-2" onClick={loadCreds} disabled={!employeeEmail}>
+        <LogIn className="h-4 w-4" /> Portal empleado
+      </Button>
+
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setOpen(false)}>
+          <div className="bg-background border rounded-xl p-6 max-w-sm w-full mx-4 space-y-4" onClick={(e) => e.stopPropagation()}>
+            <h3 className="font-bold text-lg">Portal del empleado</h3>
+
+            {loading ? (
+              <p className="text-sm text-muted-foreground">Cargando...</p>
+            ) : creds?.isActive ? (
+              <>
+                <div className="space-y-2 bg-muted/50 rounded-lg p-4">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Email</span>
+                    <span className="font-medium">{creds.email}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Contrasena</span>
+                    <span className="font-mono font-medium">{creds.password ?? "***"}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">URL</span>
+                    <span className="font-mono text-xs">{window.location.origin}/login</span>
+                  </div>
+                </div>
+
+                <Button className="w-full gap-2" onClick={copyCredentials}>
+                  Copiar credenciales
+                </Button>
+
+                <div className="border-t pt-3 space-y-2">
+                  <p className="text-xs text-muted-foreground">Cambiar contrasena:</p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={newPwd}
+                      onChange={(e) => setNewPwd(e.target.value)}
+                      placeholder="Nueva contrasena..."
+                      className="flex-1 h-9 rounded-lg border border-input bg-background px-3 text-sm"
+                    />
+                    <Button size="sm" variant="outline" onClick={resetPassword}>Cambiar</Button>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="text-sm text-muted-foreground">
+                  Este empleado no tiene acceso al portal. Introduce una contrasena para activarlo.
+                </p>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newPwd}
+                    onChange={(e) => setNewPwd(e.target.value)}
+                    placeholder="Contrasena (min 8 chars)..."
+                    className="flex-1 h-10 rounded-lg border border-input bg-background px-3 text-sm"
+                  />
+                  <Button onClick={activate}>Activar</Button>
+                </div>
+              </>
+            )}
+
+            <Button variant="ghost" className="w-full" onClick={() => setOpen(false)}>
+              Cerrar
+            </Button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
