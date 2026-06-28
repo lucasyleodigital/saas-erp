@@ -24,6 +24,7 @@ const schema = z.object({
   companyName: z.string().min(2),
   email:       z.string().email(),
   password:    z.string().min(8).regex(/[A-Z]/).regex(/[0-9]/),
+  acceptTerms: z.literal(true, { errorMap: () => ({ message: "Debes aceptar los terminos" }) }),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -121,9 +122,29 @@ export function RegisterForm() {
         {isSubmitting ? t("loading") : t("submit")}
       </Button>
 
-      <p className="text-xs text-center text-muted-foreground">
-        {t("terms")}
-      </p>
+      <div className="space-y-1">
+        <label className="flex items-start gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            {...register("acceptTerms")}
+            className="mt-0.5 h-4 w-4 rounded border-input"
+          />
+          <span className="text-xs text-muted-foreground leading-relaxed">
+            Acepto los{" "}
+            <a href="/terminos" target="_blank" className="text-primary underline hover:text-primary/80">
+              Terminos y Condiciones
+            </a>
+            {" "}y la{" "}
+            <a href="/privacidad" target="_blank" className="text-primary underline hover:text-primary/80">
+              Politica de Privacidad
+            </a>
+            , incluyendo el contrato de encargado de tratamiento (RGPD Art. 28).
+          </span>
+        </label>
+        {errors.acceptTerms && (
+          <p className="text-xs text-destructive ml-6">{errors.acceptTerms.message}</p>
+        )}
+      </div>
     </form>
   );
 }

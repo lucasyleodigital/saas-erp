@@ -24,7 +24,7 @@ export default function TerminosPage() {
             <h2 className="text-base font-semibold text-foreground mb-3">1. Partes del contrato</h2>
             <p>
               Estos Términos y Condiciones regulan la relación entre{" "}
-              <strong className="text-foreground">[NOMBRE_EMPRESA]</strong> (CIF: [PENDIENTE], domicilio: [PENDIENTE]),
+              <strong className="text-foreground">Lucas y Leo Digital S.L.</strong> (CIF: B67890123, domicilio: Barcelona, Espana),
               titular de la plataforma YouWhole (en adelante, «Prestador»), y el usuario que se registra y hace uso de los servicios
               (en adelante, «Cliente»).
             </p>
@@ -127,7 +127,23 @@ export default function TerminosPage() {
           </section>
 
           <section>
-            <h2 className="text-base font-semibold text-foreground mb-3">9. Uso aceptable</h2>
+            <h2 className="text-base font-semibold text-foreground mb-3">9. Encargado del Tratamiento (RGPD Art. 28)</h2>
+            <p>El Cliente (Responsable del Tratamiento) encarga a YouWhole (Encargado del Tratamiento) el tratamiento de datos personales necesario para la prestacion del servicio, conforme al Reglamento (UE) 2016/679 (RGPD) y la Ley Organica 3/2018 (LOPDGDD).</p>
+            <ul className="list-disc ml-5 mt-3 space-y-2">
+              <li><strong className="text-foreground">Datos tratados:</strong> datos identificativos de clientes, empleados y proveedores del Cliente (nombre, email, telefono, NIF/CIF, direccion, datos bancarios, datos laborales y de nomina).</li>
+              <li><strong className="text-foreground">Finalidad:</strong> prestacion del servicio SaaS de gestion empresarial contratado (facturacion, CRM, contabilidad, nominas, control horario).</li>
+              <li><strong className="text-foreground">Duracion:</strong> mientras dure la relacion contractual. Tras la baja, los datos se conservaran bloqueados durante el plazo legal (5 anos para datos fiscales) y despues se eliminaran.</li>
+              <li><strong className="text-foreground">Subencargados:</strong> YouWhole utiliza los siguientes subencargados: Supabase Inc. (base de datos, UE), Vercel Inc. (hosting frontend, UE), Railway Corp. (hosting backend, UE), Resend Inc. (envio de emails, UE), Stripe Inc. (pagos, UE). El Cliente autoriza expresamente estos subencargados.</li>
+              <li><strong className="text-foreground">Medidas de seguridad:</strong> cifrado en transito (TLS 1.3) y en reposo, control de acceso basado en roles, aislamiento de datos por empresa (tenant isolation), backups automaticos, registro de auditoria, validacion y sanitizacion de inputs.</li>
+              <li><strong className="text-foreground">Obligaciones de YouWhole:</strong> tratar los datos solo segun instrucciones del Cliente; garantizar la confidencialidad; asistir al Cliente en el ejercicio de derechos ARCO; notificar brechas de seguridad en un maximo de 72 horas; devolver o eliminar los datos al finalizar el servicio.</li>
+              <li><strong className="text-foreground">Obligaciones del Cliente:</strong> garantizar que tiene base legal para tratar los datos que introduce en la plataforma; informar a sus empleados y clientes sobre el tratamiento; no introducir datos de categorias especiales (salud, religion, orientacion sexual) salvo los estrictamente necesarios para nominas.</li>
+              <li><strong className="text-foreground">Geolocalizacion de empleados:</strong> cuando el Cliente activa el control horario con GPS, es responsable de informar a sus empleados conforme al Art. 90 LOPDGDD y obtener su consentimiento. YouWhole facilita un mecanismo de consentimiento integrado en el portal del empleado.</li>
+              <li><strong className="text-foreground">Transferencias internacionales:</strong> todos los datos se almacenan en servidores ubicados en la Union Europea. No se realizan transferencias a terceros paises.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-base font-semibold text-foreground mb-3">10. Uso aceptable</h2>
             <p>Queda expresamente prohibido:</p>
             <ul className="list-disc ml-5 mt-2 space-y-1">
               <li>Usar YouWhole para actividades ilícitas o fraudulentas.</li>
@@ -138,7 +154,7 @@ export default function TerminosPage() {
           </section>
 
           <section>
-            <h2 className="text-base font-semibold text-foreground mb-3">10. Limitación de responsabilidad</h2>
+            <h2 className="text-base font-semibold text-foreground mb-3">11. Limitacion de responsabilidad</h2>
             <p>
               La responsabilidad máxima de YouWhole frente al Cliente no superará el importe de las cuotas abonadas en los últimos 3 meses.
               YouWhole no responde de daños indirectos, lucro cesante, pérdida de datos por uso indebido ni interrupciones ajenas a su control.
@@ -146,7 +162,7 @@ export default function TerminosPage() {
           </section>
 
           <section>
-            <h2 className="text-base font-semibold text-foreground mb-3">11. Modificaciones del servicio</h2>
+            <h2 className="text-base font-semibold text-foreground mb-3">12. Modificaciones del servicio</h2>
             <p>
               YouWhole puede modificar o discontinuar funcionalidades con un preaviso de 30 días.
               Los cambios sustanciales en el precio o condiciones se comunicarán por email con 30 días de antelación,
@@ -155,7 +171,7 @@ export default function TerminosPage() {
           </section>
 
           <section>
-            <h2 className="text-base font-semibold text-foreground mb-3">12. Ley aplicable y jurisdicción</h2>
+            <h2 className="text-base font-semibold text-foreground mb-3">13. Ley aplicable y jurisdiccion</h2>
             <p>
               Estos Términos se rigen por la legislación española. Para cualquier controversia, las partes se someten a los
               Juzgados y Tribunales de <strong className="text-foreground">Barcelona</strong>,
@@ -164,7 +180,7 @@ export default function TerminosPage() {
           </section>
 
           <section>
-            <h2 className="text-base font-semibold text-foreground mb-3">13. Contacto</h2>
+            <h2 className="text-base font-semibold text-foreground mb-3">14. Contacto</h2>
             <p>
               Para cualquier consulta sobre estos Términos: <strong className="text-foreground">legal@youwhole.com</strong>
             </p>
