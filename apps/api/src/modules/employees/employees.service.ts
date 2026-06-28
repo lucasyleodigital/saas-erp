@@ -339,6 +339,9 @@ export class EmployeesService {
         });
         if (membership) {
           isActive = true;
+          if (!membership.isDefault) {
+            await this.prisma.userCompany.update({ where: { id: membership.id }, data: { isDefault: true } });
+          }
           await this.prisma.employee.update({
             where: { id: employeeId },
             data: { portalActivatedAt: membership.createdAt },
