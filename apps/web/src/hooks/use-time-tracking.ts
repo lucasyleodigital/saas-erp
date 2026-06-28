@@ -41,14 +41,28 @@ const GPS_KEY = "youwhole_gps_consent";
 function getLocation(): Promise<{ latitude: number; longitude: number } | null> {
   if (typeof window === "undefined") return Promise.resolve(null);
   const consent = localStorage.getItem(GPS_KEY);
-  if (consent !== "true") return Promise.resolve(null);
-  if (!navigator.geolocation) return Promise.resolve(null);
+  if (consent !== "true") {
+    console.log("[GPS] Consentimiento no aceptado");
+    return Promise.resolve(null);
+  }
+  if (!navigator.geolocation) {
+    console.log("[GPS] Navegador no soporta geolocalizacion");
+    return Promise.resolve(null);
+  }
 
+  console.log("[GPS] Solicitando ubicacion...");
   return new Promise((resolve) => {
     navigator.geolocation.getCurrentPosition(
-      (pos) => resolve({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }),
-      () => resolve(null),
-      { timeout: 5000, enableHighAccuracy: true },
+      (pos) => {
+        console.log("[GPS] OK:", pos.coords.latitude, pos.coords.longitude);
+        resolve({ latitude: pos.coords.latitude, longitude: pos.coords.longitude });
+      },
+      (err) => {
+        console.warn("[GPS] Error:", err.code, err.message);
+        toast.error(`GPS: ${err.code === 1 ? "Permiso denegado por el navegador" : err.code === 2 ? "Ubicacion no disponible" : "Tiempo agotado"}`);
+        resolve(null);
+      },
+      { timeout: 15000, enableHighAccuracy: false, maximumAge: 60000 },
     );
   });
 }
