@@ -287,10 +287,15 @@ export class EmployeesService {
       const membership = await this.prisma.userCompany.findFirst({
         where: { userId: existingUser.id, companyId },
       });
-      if (membership) throw new ConflictException("Este empleado ya tiene acceso al portal");
+      if (membership) {
+        if (!membership.isDefault) {
+          await this.prisma.userCompany.update({ where: { id: membership.id }, data: { isDefault: true } });
+        }
+        throw new ConflictException("Este empleado ya tiene acceso al portal");
+      }
 
       await this.prisma.userCompany.create({
-        data: { userId: existingUser.id, companyId, role: "EMPLOYEE" },
+        data: { userId: existingUser.id, companyId, role: "EMPLOYEE", isDefault: true },
       });
       return { activated: true, email: employee.email, existing: true };
     }
@@ -306,7 +311,7 @@ export class EmployeesService {
     });
 
     await this.prisma.userCompany.create({
-      data: { userId: user.id, companyId, role: "EMPLOYEE" },
+      data: { userId: user.id, companyId, role: "EMPLOYEE", isDefault: true },
     });
 
     await this.prisma.employee.update({
