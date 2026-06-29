@@ -62,7 +62,18 @@
     "province": "Province",
     "postalCode": "Postal code",
     "city": "City",
-    "country": "Country"
+    "country": "Country",
+    "searchPlaceholder": "Search...",
+    "searching": "Searching...",
+    "noResultsFor": "No results for \"{query}\"",
+    "searchTypes": {
+      "client": "Client",
+      "invoice": "Invoice",
+      "quote": "Quote",
+      "product": "Product",
+      "employee": "Employee",
+      "delivery-note": "Delivery note"
+    }
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -300,6 +311,43 @@
       "updateSuccess": "Client updated successfully",
       "deleteConfirm": "Delete this client?",
       "deleteSuccess": "Client deleted"
+    },
+    "detail": {
+      "notFound": "Client not found",
+      "edit": "Edit",
+      "totalBilled": "Total billed",
+      "pendingBalance": "Outstanding balance",
+      "totalInvoices": "Total invoices",
+      "tabs": {
+        "invoices": "Invoices",
+        "deals": "Deals",
+        "data": "Details"
+      },
+      "noInvoices": "No invoices yet",
+      "noDeals": "No associated deals",
+      "invoiceNumber": "Number",
+      "invoiceDate": "Date",
+      "invoiceAmount": "Amount",
+      "invoiceStatus": "Status",
+      "legalName": "Legal name",
+      "cifNif": "Tax ID",
+      "email": "Email",
+      "phone": "Phone",
+      "mobile": "Mobile",
+      "web": "Website",
+      "address": "Address",
+      "city": "City",
+      "postalCode": "Postal code",
+      "country": "Country",
+      "internalNotes": "Internal notes",
+      "invoiceStatuses": {
+        "draft": "Draft",
+        "sent": "Sent",
+        "paid": "Paid",
+        "partial": "Partial",
+        "overdue": "Overdue",
+        "cancelled": "Cancelled"
+      }
     }
   },
   "invoices": {

@@ -11,6 +11,7 @@ import { useUnreadCount } from "@/hooks/use-notifications";
 import { useSearch, type SearchResult } from "@/hooks/use-search";
 import { useLocale } from "@/hooks/use-locale";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const TYPE_ICON: Record<string, React.ElementType> = {
   client: Users,
@@ -21,16 +22,8 @@ const TYPE_ICON: Record<string, React.ElementType> = {
   "delivery-note": Truck,
 };
 
-const TYPE_LABEL: Record<string, string> = {
-  client: "Cliente",
-  invoice: "Factura",
-  quote: "Presupuesto",
-  product: "Producto",
-  employee: "Empleado",
-  "delivery-note": "Albarán",
-};
-
 export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
+  const tCommon = useTranslations("common");
   const { theme, setTheme } = useTheme();
   const user = useAuthStore((s) => s.user);
   const { data: unreadCount = 0 } = useUnreadCount();
@@ -106,7 +99,7 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
             value={query}
             onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
             onFocus={() => setOpen(true)}
-            placeholder="Buscar..."
+            placeholder={tCommon("searchPlaceholder")}
             className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
           />
           {query ? (
@@ -121,10 +114,10 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
         {showDropdown && (
           <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-border rounded-lg shadow-lg overflow-hidden z-50 max-h-80 overflow-y-auto">
             {isFetching && results.length === 0 && (
-              <p className="text-sm text-muted-foreground px-4 py-3">Buscando...</p>
+              <p className="text-sm text-muted-foreground px-4 py-3">{tCommon("searching")}</p>
             )}
             {!isFetching && results.length === 0 && (
-              <p className="text-sm text-muted-foreground px-4 py-3">Sin resultados para &ldquo;{query}&rdquo;</p>
+              <p className="text-sm text-muted-foreground px-4 py-3">{tCommon("noResultsFor", { query })}</p>
             )}
             {results.map((r) => {
               const Icon = TYPE_ICON[r.type] ?? Search;
@@ -139,7 +132,7 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
                     <p className="text-sm font-medium truncate">{r.label}</p>
                     {r.sublabel && <p className="text-xs text-muted-foreground truncate">{r.sublabel}</p>}
                   </div>
-                  <span className="text-xs text-muted-foreground shrink-0">{TYPE_LABEL[r.type]}</span>
+                  <span className="text-xs text-muted-foreground shrink-0">{tCommon(`searchTypes.${r.type}`)}</span>
                 </button>
               );
             })}

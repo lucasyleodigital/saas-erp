@@ -62,7 +62,18 @@
     "province": "Provincia",
     "postalCode": "CP",
     "city": "Ciudad",
-    "country": "Pais"
+    "country": "Pais",
+    "searchPlaceholder": "Buscar...",
+    "searching": "Buscando...",
+    "noResultsFor": "Sin resultados para \"{query}\"",
+    "searchTypes": {
+      "client": "Cliente",
+      "invoice": "Factura",
+      "quote": "Presupuesto",
+      "product": "Producto",
+      "employee": "Empleado",
+      "delivery-note": "Albaran"
+    }
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -300,6 +311,43 @@
       "updateSuccess": "Cliente actualizado correctamente",
       "deleteConfirm": "¿Eliminar este cliente?",
       "deleteSuccess": "Cliente eliminado"
+    },
+    "detail": {
+      "notFound": "Cliente no encontrado",
+      "edit": "Editar",
+      "totalBilled": "Total facturado",
+      "pendingBalance": "Pendiente de cobro",
+      "totalInvoices": "Facturas totales",
+      "tabs": {
+        "invoices": "Facturas",
+        "deals": "Oportunidades",
+        "data": "Datos"
+      },
+      "noInvoices": "Sin facturas todavia",
+      "noDeals": "Sin oportunidades asociadas",
+      "invoiceNumber": "Numero",
+      "invoiceDate": "Fecha",
+      "invoiceAmount": "Importe",
+      "invoiceStatus": "Estado",
+      "legalName": "Razon social",
+      "cifNif": "CIF/NIF",
+      "email": "Email",
+      "phone": "Telefono",
+      "mobile": "Movil",
+      "web": "Web",
+      "address": "Direccion",
+      "city": "Ciudad",
+      "postalCode": "Codigo postal",
+      "country": "Pais",
+      "internalNotes": "Notas internas",
+      "invoiceStatuses": {
+        "draft": "Borrador",
+        "sent": "Enviada",
+        "paid": "Pagada",
+        "partial": "Parcial",
+        "overdue": "Vencida",
+        "cancelled": "Cancelada"
+      }
     }
   },
   "invoices": {

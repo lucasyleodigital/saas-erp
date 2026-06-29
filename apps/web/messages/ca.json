@@ -62,7 +62,18 @@
     "province": "Provincia",
     "postalCode": "CP",
     "city": "Ciutat",
-    "country": "Pais"
+    "country": "Pais",
+    "searchPlaceholder": "Cercar...",
+    "searching": "Cercant...",
+    "noResultsFor": "Sense resultats per a \"{query}\"",
+    "searchTypes": {
+      "client": "Client",
+      "invoice": "Factura",
+      "quote": "Pressupost",
+      "product": "Producte",
+      "employee": "Empleat",
+      "delivery-note": "Albara"
+    }
   },
   "nav": {
     "dashboard": "Tauler",
@@ -300,6 +311,43 @@
       "updateSuccess": "Client actualitzat correctament",
       "deleteConfirm": "Eliminar aquest client?",
       "deleteSuccess": "Client eliminat"
+    },
+    "detail": {
+      "notFound": "Client no trobat",
+      "edit": "Editar",
+      "totalBilled": "Total facturat",
+      "pendingBalance": "Pendent de cobrament",
+      "totalInvoices": "Factures totals",
+      "tabs": {
+        "invoices": "Factures",
+        "deals": "Oportunitats",
+        "data": "Dades"
+      },
+      "noInvoices": "Sense factures encara",
+      "noDeals": "Sense oportunitats associades",
+      "invoiceNumber": "Numero",
+      "invoiceDate": "Data",
+      "invoiceAmount": "Import",
+      "invoiceStatus": "Estat",
+      "legalName": "Rao social",
+      "cifNif": "CIF/NIF",
+      "email": "Correu",
+      "phone": "Telefon",
+      "mobile": "Mobil",
+      "web": "Web",
+      "address": "Adreca",
+      "city": "Ciutat",
+      "postalCode": "Codi postal",
+      "country": "Pais",
+      "internalNotes": "Notes internes",
+      "invoiceStatuses": {
+        "draft": "Esborrany",
+        "sent": "Enviada",
+        "paid": "Pagada",
+        "partial": "Parcial",
+        "overdue": "Vencuda",
+        "cancelled": "Cancel·lada"
+      }
     }
   },
   "invoices": {

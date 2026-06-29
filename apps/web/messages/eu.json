@@ -62,7 +62,18 @@
     "province": "Probintzia",
     "postalCode": "PK",
     "city": "Hiria",
-    "country": "Herrialdea"
+    "country": "Herrialdea",
+    "searchPlaceholder": "Bilatu...",
+    "searching": "Bilatzen...",
+    "noResultsFor": "\"{query}\" bilaketak emaitzarik gabe",
+    "searchTypes": {
+      "client": "Bezeroa",
+      "invoice": "Faktura",
+      "quote": "Aurrekontua",
+      "product": "Produktua",
+      "employee": "Langilea",
+      "delivery-note": "Albarana"
+    }
   },
   "nav": {
     "dashboard": "Aginte-mahaia",
@@ -300,6 +311,43 @@
       "updateSuccess": "Bezeroa zuzen eguneratuta",
       "deleteConfirm": "Bezero hau ezabatu?",
       "deleteSuccess": "Bezeroa ezabatuta"
+    },
+    "detail": {
+      "notFound": "Bezeroa ez da aurkitu",
+      "edit": "Editatu",
+      "totalBilled": "Guztira fakturatua",
+      "pendingBalance": "Kobratzeke",
+      "totalInvoices": "Faktura guztira",
+      "tabs": {
+        "invoices": "Fakturak",
+        "deals": "Aukerak",
+        "data": "Datuak"
+      },
+      "noInvoices": "Fakturarik gabe oraindik",
+      "noDeals": "Aukera loturarik gabe",
+      "invoiceNumber": "Zenbakia",
+      "invoiceDate": "Data",
+      "invoiceAmount": "Zenbatekoa",
+      "invoiceStatus": "Egoera",
+      "legalName": "Sozietate-izena",
+      "cifNif": "IFK/NAN",
+      "email": "Emaila",
+      "phone": "Telefonoa",
+      "mobile": "Mugikorra",
+      "web": "Weba",
+      "address": "Helbidea",
+      "city": "Hiria",
+      "postalCode": "Posta-kodea",
+      "country": "Herrialdea",
+      "internalNotes": "Barne-oharrak",
+      "invoiceStatuses": {
+        "draft": "Zirriborroa",
+        "sent": "Bidalita",
+        "paid": "Ordainduta",
+        "partial": "Partziala",
+        "overdue": "Iraungita",
+        "cancelled": "Bertan behera"
+      }
     }
   },
   "invoices": {

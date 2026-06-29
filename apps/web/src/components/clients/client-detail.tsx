@@ -10,17 +10,20 @@ import { formatCurrency, formatDate, getInitials } from "@/lib/utils";
 import { ArrowLeft, Edit, FileText, Briefcase, Info } from "lucide-react";
 import { LocaleLink as Link } from "@/components/ui/locale-link";
 import { ClientDialog } from "./client-dialog";
+import { useTranslations } from "next-intl";
 
-const STATUS_CONFIG: Record<string, { label: string; variant: string }> = {
-  DRAFT: { label: "Borrador", variant: "secondary" },
-  SENT: { label: "Enviada", variant: "info" },
-  PAID: { label: "Pagada", variant: "success" },
-  PARTIAL: { label: "Parcial", variant: "warning" },
-  OVERDUE: { label: "Vencida", variant: "destructive" },
-  CANCELLED: { label: "Cancelada", variant: "secondary" },
+const STATUS_VARIANTS: Record<string, string> = {
+  DRAFT: "secondary", SENT: "info", PAID: "success",
+  PARTIAL: "warning", OVERDUE: "destructive", CANCELLED: "secondary",
+};
+
+const STATUS_T_KEYS: Record<string, string> = {
+  DRAFT: "draft", SENT: "sent", PAID: "paid",
+  PARTIAL: "partial", OVERDUE: "overdue", CANCELLED: "cancelled",
 };
 
 export function ClientDetail({ id }: { id: string }) {
+  const t = useTranslations("clients");
   const { data: client, isLoading } = useClient(id);
   const [editOpen, setEditOpen] = useState(false);
 
@@ -36,7 +39,7 @@ export function ClientDetail({ id }: { id: string }) {
   if (!client) {
     return (
       <div className="text-center py-20 text-muted-foreground">
-        Cliente no encontrado
+        {t("detail.notFound")}
       </div>
     );
   }
@@ -77,7 +80,7 @@ export function ClientDetail({ id }: { id: string }) {
         </div>
         <Button variant="outline" size="sm" onClick={() => setEditOpen(true)}>
           <Edit className="h-4 w-4 mr-2" />
-          Editar
+          {t("detail.edit")}
         </Button>
       </div>
 
@@ -85,17 +88,17 @@ export function ClientDetail({ id }: { id: string }) {
       <div className="grid grid-cols-3 gap-4">
         {[
           {
-            label: "Total facturado",
+            label: t("detail.totalBilled"),
             value: formatCurrency(totalBilled),
             highlight: false,
           },
           {
-            label: "Pendiente de cobro",
+            label: t("detail.pendingBalance"),
             value: formatCurrency(pendingBalance),
             highlight: pendingBalance > 0,
           },
           {
-            label: "Facturas totales",
+            label: t("detail.totalInvoices"),
             value: String(totalInvoices),
             highlight: false,
           },
@@ -122,15 +125,15 @@ export function ClientDetail({ id }: { id: string }) {
         <TabsList>
           <TabsTrigger value="facturas">
             <FileText className="h-4 w-4 mr-2" />
-            Facturas
+            {t("detail.tabs.invoices")}
           </TabsTrigger>
           <TabsTrigger value="deals">
             <Briefcase className="h-4 w-4 mr-2" />
-            Oportunidades
+            {t("detail.tabs.deals")}
           </TabsTrigger>
           <TabsTrigger value="datos">
             <Info className="h-4 w-4 mr-2" />
-            Datos
+            {t("detail.tabs.data")}
           </TabsTrigger>
         </TabsList>
 
@@ -139,29 +142,30 @@ export function ClientDetail({ id }: { id: string }) {
             <CardContent className="p-0">
               {!client.invoices || client.invoices.length === 0 ? (
                 <div className="text-center py-10 text-muted-foreground text-sm">
-                  Sin facturas todavía
+                  {t("detail.noInvoices")}
                 </div>
               ) : (
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border">
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground">
-                        Número
+                        {t("detail.invoiceNumber")}
                       </th>
                       <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden sm:table-cell">
-                        Fecha
+                        {t("detail.invoiceDate")}
                       </th>
                       <th className="text-right px-4 py-3 font-medium text-muted-foreground">
-                        Importe
+                        {t("detail.invoiceAmount")}
                       </th>
                       <th className="text-center px-4 py-3 font-medium text-muted-foreground">
-                        Estado
+                        {t("detail.invoiceStatus")}
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     {client.invoices.map((inv: any) => {
-                      const sc = STATUS_CONFIG[inv.status] ?? { label: "Borrador", variant: "secondary" as const };
+                      const variant = STATUS_VARIANTS[inv.status] ?? "secondary";
+                      const statusKey = STATUS_T_KEYS[inv.status] ?? "draft";
                       return (
                         <tr
                           key={inv.id}
@@ -182,8 +186,8 @@ export function ClientDetail({ id }: { id: string }) {
                             {formatCurrency(Number(inv.total))}
                           </td>
                           <td className="px-4 py-3 text-center">
-                            <Badge variant={sc.variant as any}>
-                              {sc.label}
+                            <Badge variant={variant as any}>
+                              {t(`detail.invoiceStatuses.${statusKey}`)}
                             </Badge>
                           </td>
                         </tr>
@@ -200,7 +204,7 @@ export function ClientDetail({ id }: { id: string }) {
           <Card>
             <CardContent className="p-4">
               {!client.deals || client.deals.length === 0 ? (
-                <p className="text-sm text-muted-foreground">Sin oportunidades asociadas</p>
+                <p className="text-sm text-muted-foreground">{t("detail.noDeals")}</p>
               ) : (
                 <div className="space-y-3">
                   {client.deals.map((deal: any) => (
@@ -228,21 +232,21 @@ export function ClientDetail({ id }: { id: string }) {
             <CardContent className="p-6">
               <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-sm">
                 {[
-                  { label: "Razón social", value: client.legalName },
-                  { label: "CIF/NIF", value: client.cifNif },
-                  { label: "Email", value: client.email },
-                  { label: "Teléfono", value: client.phone },
-                  { label: "Móvil", value: client.mobile },
-                  { label: "Web", value: client.website },
-                  { label: "Dirección", value: client.address },
+                  { label: t("detail.legalName"), value: client.legalName },
+                  { label: t("detail.cifNif"), value: client.cifNif },
+                  { label: t("detail.email"), value: client.email },
+                  { label: t("detail.phone"), value: client.phone },
+                  { label: t("detail.mobile"), value: client.mobile },
+                  { label: t("detail.web"), value: client.website },
+                  { label: t("detail.address"), value: client.address },
                   {
-                    label: "Ciudad",
+                    label: t("detail.city"),
                     value: client.city
                       ? `${client.city}${client.province ? `, ${client.province}` : ""}`
                       : null,
                   },
-                  { label: "Código postal", value: client.postalCode },
-                  { label: "País", value: client.country },
+                  { label: t("detail.postalCode"), value: client.postalCode },
+                  { label: t("detail.country"), value: client.country },
                 ]
                   .filter((f) => f.value)
                   .map((field) => (
@@ -257,7 +261,7 @@ export function ClientDetail({ id }: { id: string }) {
               {client.notes && (
                 <div className="mt-6 pt-4 border-t border-border">
                   <p className="text-xs text-muted-foreground uppercase tracking-wide mb-2">
-                    Notas internas
+                    {t("detail.internalNotes")}
                   </p>
                   <p className="text-sm">{client.notes}</p>
                 </div>
