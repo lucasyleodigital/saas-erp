@@ -1217,6 +1217,46 @@
     "pendingLeaves": "Pending leaves",
     "monthlyCost": "Monthly cost",
     "annualCost": "Annual cost",
+    "table": {
+      "employee": "Employee",
+      "position": "Position",
+      "contract": "Contract",
+      "startDate": "Start date",
+      "annualSalary": "Annual salary",
+      "status": "Status",
+      "viewProfile": "View profile",
+      "delete": "Delete",
+      "confirmDelete": "Delete {name}?",
+      "page": "Page {page} of {totalPages}"
+    },
+    "statuses": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "onLeave": "On leave"
+    },
+    "contracts": {
+      "indefinido": "Permanent",
+      "temporal": "Temporary",
+      "practicas": "Internship",
+      "autonomo": "Freelance",
+      "obraServicio": "Project-based"
+    },
+    "leaveRequests": {
+      "title": "Pending requests ({count})",
+      "vacation": "Vacation",
+      "sick": "Sick leave",
+      "personal": "Personal leave",
+      "maternity": "Maternity/Paternity",
+      "other": "Other",
+      "reason": "Reason: {reason}",
+      "days": "{days} days",
+      "approve": "Approve",
+      "reject": "Reject"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
     "detail": {
       "tabs": {
         "profile": "Profile",

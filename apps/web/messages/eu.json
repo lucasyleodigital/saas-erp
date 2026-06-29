@@ -1215,6 +1215,46 @@
     "pendingLeaves": "Absentzia zain",
     "monthlyCost": "Hileko kostua",
     "annualCost": "Urteko kostua",
+    "table": {
+      "employee": "Langilea",
+      "position": "Kargua",
+      "contract": "Kontratua",
+      "startDate": "Alta",
+      "annualSalary": "Urteko soldata",
+      "status": "Egoera",
+      "viewProfile": "Fitxa ikusi",
+      "delete": "Ezabatu",
+      "confirmDelete": "{name} ezabatu?",
+      "page": "{page}. orrialdea {totalPages}(e)tik"
+    },
+    "statuses": {
+      "active": "Aktiboa",
+      "inactive": "Inaktiboa",
+      "onLeave": "Bajan"
+    },
+    "contracts": {
+      "indefinido": "Mugagabea",
+      "temporal": "Aldi baterakoa",
+      "practicas": "Praktikak",
+      "autonomo": "Autonomoa",
+      "obraServicio": "Obra eta zerbitzua"
+    },
+    "leaveRequests": {
+      "title": "Eskaera zain ({count})",
+      "vacation": "Oporrak",
+      "sick": "Baja medikoa",
+      "personal": "Gai pertsonalak",
+      "maternity": "Amatasuna/Aitatasuna",
+      "other": "Bestea",
+      "reason": "Arrazoia: {reason}",
+      "days": "{days} egun",
+      "approve": "Onartu",
+      "reject": "Ukatu"
+    },
+    "pagination": {
+      "previous": "Aurrekoa",
+      "next": "Hurrengoa"
+    },
     "detail": {
       "tabs": {
         "profile": "Fitxa",

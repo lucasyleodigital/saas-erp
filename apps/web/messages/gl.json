@@ -1207,6 +1207,46 @@
     "pendingLeaves": "Ausencias pendentes",
     "monthlyCost": "Custo mensual",
     "annualCost": "Custo anual",
+    "table": {
+      "employee": "Empregado",
+      "position": "Cargo",
+      "contract": "Contrato",
+      "startDate": "Alta",
+      "annualSalary": "Salario anual",
+      "status": "Estado",
+      "viewProfile": "Ver ficha",
+      "delete": "Eliminar",
+      "confirmDelete": "Eliminar a {name}?",
+      "page": "Paxina {page} de {totalPages}"
+    },
+    "statuses": {
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "onLeave": "De baixa"
+    },
+    "contracts": {
+      "indefinido": "Indefinido",
+      "temporal": "Temporal",
+      "practicas": "Practicas",
+      "autonomo": "Autonomo",
+      "obraServicio": "Obra e servizo"
+    },
+    "leaveRequests": {
+      "title": "Solicitudes pendentes ({count})",
+      "vacation": "Vacacións",
+      "sick": "Baixa medica",
+      "personal": "Asuntos propios",
+      "maternity": "Maternidade/Paternidade",
+      "other": "Outro",
+      "reason": "Motivo: {reason}",
+      "days": "{days} dias",
+      "approve": "Aprobar",
+      "reject": "Rexeitar"
+    },
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Seguinte"
+    },
     "detail": {
       "tabs": {
         "profile": "Ficha",

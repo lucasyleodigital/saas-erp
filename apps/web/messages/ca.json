@@ -1216,6 +1216,46 @@
     "pendingLeaves": "Absencies pendents",
     "monthlyCost": "Cost mensual",
     "annualCost": "Cost anual",
+    "table": {
+      "employee": "Empleat",
+      "position": "Carrec",
+      "contract": "Contracte",
+      "startDate": "Alta",
+      "annualSalary": "Salari anual",
+      "status": "Estat",
+      "viewProfile": "Veure fitxa",
+      "delete": "Eliminar",
+      "confirmDelete": "Eliminar {name}?",
+      "page": "Pagina {page} de {totalPages}"
+    },
+    "statuses": {
+      "active": "Actiu",
+      "inactive": "Inactiu",
+      "onLeave": "De baixa"
+    },
+    "contracts": {
+      "indefinido": "Indefinit",
+      "temporal": "Temporal",
+      "practicas": "Practiques",
+      "autonomo": "Autonom",
+      "obraServicio": "Obra i servei"
+    },
+    "leaveRequests": {
+      "title": "Sol·licituds pendents ({count})",
+      "vacation": "Vacances",
+      "sick": "Baixa medica",
+      "personal": "Assumptes propis",
+      "maternity": "Maternitat/Paternitat",
+      "other": "Altre",
+      "reason": "Motiu: {reason}",
+      "days": "{days} dies",
+      "approve": "Aprovar",
+      "reject": "Rebutjar"
+    },
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Seguent"
+    },
     "detail": {
       "tabs": {
         "profile": "Fitxa",

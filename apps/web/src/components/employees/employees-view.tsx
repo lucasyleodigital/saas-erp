@@ -8,8 +8,6 @@ import {
   useLeaveRequests,
   useApproveLeave,
   useRejectLeave,
-  EMPLOYEE_STATUS_CONFIG,
-  CONTRACT_LABELS,
 } from "@/hooks/use-employees";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,12 +37,26 @@ import { EmployeeDialog } from "./employee-dialog";
 import { LocaleLink as Link } from "@/components/ui/locale-link";
 import { useTranslations } from "next-intl";
 
-const STATUS_TABS = [
-  { key: undefined,   label: "Todos" },
-  { key: "ACTIVE",    label: "Activos" },
-  { key: "ON_LEAVE",  label: "De baja" },
-  { key: "INACTIVE",  label: "Inactivos" },
+const STATUS_TAB_KEYS = [
+  { key: undefined,   tKey: "all" as const },
+  { key: "ACTIVE",    tKey: "active" as const },
+  { key: "ON_LEAVE",  tKey: "onLeave" as const },
+  { key: "INACTIVE",  tKey: "inactive" as const },
 ];
+
+const STATUS_COLORS: Record<string, string> = {
+  ACTIVE:   "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
+  INACTIVE: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
+  ON_LEAVE: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+};
+
+const CONTRACT_KEYS: Record<string, string> = {
+  INDEFINIDO:    "indefinido",
+  TEMPORAL:      "temporal",
+  PRACTICAS:     "practicas",
+  AUTONOMO:      "autonomo",
+  OBRA_SERVICIO: "obraServicio",
+};
 
 function getInitials(firstName: string, lastName: string) {
   return `${firstName[0] ?? ""}${lastName[0] ?? ""}`.toUpperCase();
@@ -143,9 +155,9 @@ export function EmployeesView() {
       {/* Tabs + Search */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
         <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg overflow-x-auto">
-          {STATUS_TABS.map((tab) => (
+          {STATUS_TAB_KEYS.map((tab) => (
             <button
-              key={tab.label}
+              key={tab.tKey}
               onClick={() => { setStatus(tab.key); setPage(1); }}
               className={cn(
                 "px-3 py-1.5 text-sm rounded-md transition-colors whitespace-nowrap",
@@ -154,7 +166,7 @@ export function EmployeesView() {
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
-              {tab.label}
+              {t(tab.tKey)}
             </button>
           ))}
         </div>
@@ -191,18 +203,19 @@ export function EmployeesView() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border bg-muted/30">
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3">Empleado</th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">Cargo</th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">Contrato</th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">Alta</th>
-                    <th className="text-right font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">Salario anual</th>
-                    <th className="text-center font-medium text-muted-foreground px-4 py-3">Estado</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3">{t("table.employee")}</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">{t("table.position")}</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">{t("table.contract")}</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">{t("table.startDate")}</th>
+                    <th className="text-right font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">{t("table.annualSalary")}</th>
+                    <th className="text-center font-medium text-muted-foreground px-4 py-3">{t("table.status")}</th>
                     <th className="px-4 py-3 w-12" />
                   </tr>
                 </thead>
                 <tbody>
                   {employees.map((emp, i) => {
-                    const statusCfg = EMPLOYEE_STATUS_CONFIG[emp.status] ?? EMPLOYEE_STATUS_CONFIG.ACTIVE;
+                    const statusColor = STATUS_COLORS[emp.status] ?? STATUS_COLORS.ACTIVE;
+                    const statusTKey = emp.status === "ACTIVE" ? "active" : emp.status === "INACTIVE" ? "inactive" : "onLeave";
                     return (
                       <motion.tr
                         key={emp.id}
@@ -229,7 +242,7 @@ export function EmployeesView() {
                           </div>
                         </td>
                         <td className="px-4 py-3 hidden md:table-cell text-muted-foreground">
-                          {CONTRACT_LABELS[emp.contractType] ?? emp.contractType}
+                          {CONTRACT_KEYS[emp.contractType] ? t(`contracts.${CONTRACT_KEYS[emp.contractType]}`) : emp.contractType}
                         </td>
                         <td className="px-4 py-3 hidden md:table-cell text-muted-foreground">
                           {formatDate(emp.startDate)}
@@ -238,8 +251,8 @@ export function EmployeesView() {
                           {formatCurrency(Number(emp.salary))}
                         </td>
                         <td className="px-4 py-3 text-center">
-                          <span className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium", statusCfg!.color)}>
-                            {statusCfg!.label}
+                          <span className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium", statusColor)}>
+                            {t(`statuses.${statusTKey}`)}
                           </span>
                         </td>
                         <td className="px-4 py-3">
@@ -253,19 +266,19 @@ export function EmployeesView() {
                               <DropdownMenuItem asChild>
                                 <Link href={`/empleados/${emp.id}`}>
                                   <Eye className="h-4 w-4 mr-2" />
-                                  Ver ficha
+                                  {t("table.viewProfile")}
                                 </Link>
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem
                                 className="text-destructive focus:text-destructive"
                                 onClick={() => {
-                                  if (confirm(`¿Eliminar a ${emp.firstName} ${emp.lastName}?`))
+                                  if (confirm(t("table.confirmDelete", { name: `${emp.firstName} ${emp.lastName}` })))
                                     deleteEmployee.mutate(emp.id);
                                 }}
                               >
                                 <Trash2 className="h-4 w-4 mr-2" />
-                                Eliminar
+                                {t("table.delete")}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -282,10 +295,10 @@ export function EmployeesView() {
 
       {totalPages > 1 && (
         <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <span>Página {page} de {totalPages}</span>
+          <span>{t("table.page", { page, totalPages })}</span>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>Anterior</Button>
-            <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>Siguiente</Button>
+            <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>{t("pagination.previous")}</Button>
+            <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>{t("pagination.next")}</Button>
           </div>
         </div>
       )}
@@ -298,6 +311,7 @@ export function EmployeesView() {
 }
 
 function PendingLeaveRequests() {
+  const t = useTranslations("employees");
   const { data } = useLeaveRequests({ status: "PENDING" });
   const approve = useApproveLeave();
   const reject = useRejectLeave();
@@ -305,12 +319,12 @@ function PendingLeaveRequests() {
   const requests = data ?? [];
   if (requests.length === 0) return null;
 
-  const LEAVE_TYPES: Record<string, string> = {
-    VACATION: "Vacaciones",
-    SICK: "Baja medica",
-    PERSONAL: "Asuntos propios",
-    MATERNITY: "Maternidad/Paternidad",
-    OTHER: "Otro",
+  const LEAVE_TYPE_KEYS: Record<string, string> = {
+    VACATION: "vacation",
+    SICK: "sick",
+    PERSONAL: "personal",
+    MATERNITY: "maternity",
+    OTHER: "other",
   };
 
   return (
@@ -318,7 +332,7 @@ function PendingLeaveRequests() {
       <CardContent className="p-5">
         <h3 className="font-semibold text-sm mb-3 flex items-center gap-2">
           <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-          Solicitudes pendientes ({requests.length})
+          {t("leaveRequests.title", { count: requests.length })}
         </h3>
         <div className="space-y-3">
           {requests.map((req: any) => (
@@ -328,9 +342,9 @@ function PendingLeaveRequests() {
                   {req.employee?.firstName ?? ""} {req.employee?.lastName ?? ""}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {LEAVE_TYPES[req.type] ?? req.type} · {new Date(req.startDate).toLocaleDateString("es-ES")} - {new Date(req.endDate).toLocaleDateString("es-ES")} · {req.days} dias
+                  {LEAVE_TYPE_KEYS[req.type] ? t(`leaveRequests.${LEAVE_TYPE_KEYS[req.type]}`) : req.type} · {new Date(req.startDate).toLocaleDateString()} - {new Date(req.endDate).toLocaleDateString()} · {t("leaveRequests.days", { days: req.days })}
                 </p>
-                {req.reason && <p className="text-xs text-muted-foreground mt-0.5">Motivo: {req.reason}</p>}
+                {req.reason && <p className="text-xs text-muted-foreground mt-0.5">{t("leaveRequests.reason", { reason: req.reason })}</p>}
               </div>
               <div className="flex gap-2 shrink-0">
                 <Button
@@ -340,7 +354,7 @@ function PendingLeaveRequests() {
                   onClick={() => approve.mutate(req.id)}
                   disabled={approve.isPending}
                 >
-                  Aprobar
+                  {t("leaveRequests.approve")}
                 </Button>
                 <Button
                   size="sm"
@@ -349,7 +363,7 @@ function PendingLeaveRequests() {
                   onClick={() => reject.mutate(req.id)}
                   disabled={reject.isPending}
                 >
-                  Rechazar
+                  {t("leaveRequests.reject")}
                 </Button>
               </div>
             </div>
