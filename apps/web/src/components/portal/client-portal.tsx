@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, XCircle, CreditCard, FileText, ClipboardList, Building2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api/v1";
 
@@ -32,28 +33,19 @@ function fmtDate(d: string) {
   return new Date(d).toLocaleDateString("es-ES");
 }
 
-const _INV_STATUS = {
-  DRAFT:    { label: "Borrador",  color: "bg-gray-100 text-gray-600" },
-  SENT:     { label: "Pendiente", color: "bg-yellow-100 text-yellow-700" },
-  PAID:     { label: "Pagada",    color: "bg-green-100 text-green-700" },
-  PARTIAL:  { label: "Parcial",   color: "bg-blue-100 text-blue-700" },
-  OVERDUE:  { label: "Vencida",   color: "bg-red-100 text-red-700" },
-  CANCELLED:{ label: "Cancelada", color: "bg-gray-100 text-gray-500" },
+const INV_STATUS_COLORS: Record<string, string> = {
+  DRAFT: "bg-gray-100 text-gray-600", SENT: "bg-yellow-100 text-yellow-700",
+  PAID: "bg-green-100 text-green-700", PARTIAL: "bg-blue-100 text-blue-700",
+  OVERDUE: "bg-red-100 text-red-700", CANCELLED: "bg-gray-100 text-gray-500",
 };
-const INV_STATUS = _INV_STATUS as Record<string, { label: string; color: string }>;
-function getInvStatus(s: string) { return INV_STATUS[s] ?? _INV_STATUS.DRAFT; }
-
-const _QUOTE_STATUS = {
-  DRAFT:    { label: "Borrador",  color: "bg-gray-100 text-gray-600" },
-  SENT:     { label: "Pendiente", color: "bg-yellow-100 text-yellow-700" },
-  ACCEPTED: { label: "Aceptado",  color: "bg-green-100 text-green-700" },
-  REJECTED: { label: "Rechazado", color: "bg-red-100 text-red-700" },
-  EXPIRED:  { label: "Expirado",  color: "bg-gray-100 text-gray-500" },
+const QUOTE_STATUS_COLORS: Record<string, string> = {
+  DRAFT: "bg-gray-100 text-gray-600", SENT: "bg-yellow-100 text-yellow-700",
+  ACCEPTED: "bg-green-100 text-green-700", REJECTED: "bg-red-100 text-red-700",
+  EXPIRED: "bg-gray-100 text-gray-500",
 };
-const QUOTE_STATUS = _QUOTE_STATUS as Record<string, { label: string; color: string }>;
-function getQuoteStatus(s: string) { return QUOTE_STATUS[s] ?? _QUOTE_STATUS.DRAFT; }
 
 export function ClientPortal({ token }: { token: string }) {
+  const t = useTranslations("clientPortal");
   const searchParams = useSearchParams();
   const [data, setData] = useState<PortalData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -66,10 +58,10 @@ export function ClientPortal({ token }: { token: string }) {
   const fetchData = useCallback(async () => {
     try {
       const res = await fetch(`${API}/portal/${token}`);
-      if (!res.ok) throw new Error("Portal no encontrado o enlace inválido.");
+      if (!res.ok) throw new Error(t("notFound"));
       setData(await res.json());
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Error al cargar el portal.");
+      setError(e instanceof Error ? e.message : t("loadError"));
     } finally {
       setLoading(false);
     }
@@ -87,7 +79,7 @@ export function ClientPortal({ token }: { token: string }) {
       })
         .then(r => r.json())
         .then(result => {
-          if (result.paid) setSuccessMsg("¡Pago confirmado! La factura ha sido marcada como pagada.");
+          if (result.paid) setSuccessMsg(t("paymentConfirmed"));
         })
         .catch(() => {})
         .finally(() => fetchData());
@@ -106,10 +98,10 @@ export function ClientPortal({ token }: { token: string }) {
         body: JSON.stringify({ successUrl: origin, cancelUrl: origin }),
       });
       const result = await res.json();
-      if (!res.ok) throw new Error(result.message ?? "Error al iniciar el pago");
+      if (!res.ok) throw new Error(result.message ?? t("payError"));
       if (result.url) window.location.href = result.url;
     } catch (e: unknown) {
-      alert(e instanceof Error ? e.message : "Error al iniciar el pago");
+      alert(e instanceof Error ? e.message : t("payError"));
     } finally {
       setPayingId(null);
     }
@@ -125,7 +117,7 @@ export function ClientPortal({ token }: { token: string }) {
         const r = await res.json();
         throw new Error(r.message ?? "Error");
       }
-      setSuccessMsg(action === "accept" ? "Presupuesto aceptado." : "Presupuesto rechazado.");
+      setSuccessMsg(action === "accept" ? t("quoteAccepted") : t("quoteRejected"));
       fetchData();
     } catch (e: unknown) {
       alert(e instanceof Error ? e.message : "Error");
@@ -136,7 +128,7 @@ export function ClientPortal({ token }: { token: string }) {
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="text-gray-500 text-sm animate-pulse">Cargando portal...</div>
+      <div className="text-gray-500 text-sm animate-pulse">{t("loading")}</div>
     </div>
   );
 
@@ -145,7 +137,7 @@ export function ClientPortal({ token }: { token: string }) {
       <div className="text-center p-8">
         <XCircle className="h-12 w-12 text-red-400 mx-auto mb-3" />
         <h2 className="text-lg font-semibold text-gray-700">{error}</h2>
-        <p className="text-sm text-gray-500 mt-1">Contacta con la empresa para obtener un enlace válido.</p>
+        <p className="text-sm text-gray-500 mt-1">{t("contactCompany")}</p>
       </div>
     </div>
   );
@@ -173,8 +165,8 @@ export function ClientPortal({ token }: { token: string }) {
       <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
         {/* Welcome */}
         <div>
-          <h2 className="text-xl font-semibold">Hola, {data.name} 👋</h2>
-          <p className="text-gray-500 text-sm mt-1">Aquí puedes ver tus facturas y presupuestos.</p>
+          <h2 className="text-xl font-semibold">{t("hello", { name: data.name })}</h2>
+          <p className="text-gray-500 text-sm mt-1">{t("welcomeDesc")}</p>
         </div>
 
         {/* Success message */}
@@ -191,7 +183,7 @@ export function ClientPortal({ token }: { token: string }) {
             {pendingInvoices.length > 0 && (
               <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
                 <p className="text-sm font-medium text-yellow-800">
-                  {pendingInvoices.length} factura{pendingInvoices.length > 1 ? "s" : ""} pendiente{pendingInvoices.length > 1 ? "s" : ""}
+                  {pendingInvoices.length > 1 ? t("pendingInvoicesPlural", { count: pendingInvoices.length }) : t("pendingInvoices", { count: pendingInvoices.length })}
                 </p>
                 <p className="text-lg font-bold text-yellow-900 mt-1">
                   {fmt(pendingInvoices.reduce((s, i) => s + Number(i.total) - Number(i.paidAmount), 0))}
@@ -201,9 +193,9 @@ export function ClientPortal({ token }: { token: string }) {
             {pendingQuotes.length > 0 && (
               <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
                 <p className="text-sm font-medium text-blue-800">
-                  {pendingQuotes.length} presupuesto{pendingQuotes.length > 1 ? "s" : ""} por responder
+                  {pendingQuotes.length > 1 ? t("pendingQuotesPlural", { count: pendingQuotes.length }) : t("pendingQuotes", { count: pendingQuotes.length })}
                 </p>
-                <p className="text-xs text-blue-700 mt-1">Pendiente de aceptar o rechazar</p>
+                <p className="text-xs text-blue-700 mt-1">{t("pendingQuotesHint")}</p>
               </div>
             )}
           </div>
@@ -220,7 +212,7 @@ export function ClientPortal({ token }: { token: string }) {
             }`}
           >
             <FileText className="h-4 w-4" />
-            Facturas ({data.invoices.length})
+            {t("invoicesTab", { count: data.invoices.length })}
           </button>
           <button
             onClick={() => setTab("quotes")}
@@ -231,7 +223,7 @@ export function ClientPortal({ token }: { token: string }) {
             }`}
           >
             <ClipboardList className="h-4 w-4" />
-            Presupuestos ({data.quotes.length})
+            {t("quotesTab", { count: data.quotes.length })}
           </button>
         </div>
 
@@ -241,10 +233,10 @@ export function ClientPortal({ token }: { token: string }) {
             {data.invoices.length === 0 ? (
               <div className="text-center py-12 text-gray-400">
                 <FileText className="h-10 w-10 mx-auto mb-2 opacity-40" />
-                <p>No hay facturas disponibles</p>
+                <p>{t("noInvoices")}</p>
               </div>
             ) : data.invoices.map(inv => {
-              const cfg = getInvStatus(inv.status);
+              const invColor = INV_STATUS_COLORS[inv.status] ?? INV_STATUS_COLORS.DRAFT;
               const remaining = Math.max(0, Number(inv.total) - Number(inv.paidAmount));
               const canPay = ["SENT", "OVERDUE", "PARTIAL"].includes(inv.status);
               return (
@@ -252,18 +244,18 @@ export function ClientPortal({ token }: { token: string }) {
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <span className="font-semibold">{inv.number}</span>
-                      <Badge className={cfg.color}>{cfg.label}</Badge>
+                      <Badge className={invColor}>{t(`invoiceStatuses.${inv.status.toLowerCase()}`)}</Badge>
                     </div>
                     <p className="text-sm text-gray-500">
-                      Emitida: {fmtDate(inv.issueDate)}
-                      {inv.dueDate && ` · Vence: ${fmtDate(inv.dueDate)}`}
+                      {t("issued", { date: fmtDate(inv.issueDate) })}
+                      {inv.dueDate && ` · ${t("dueDate", { date: fmtDate(inv.dueDate) })}`}
                     </p>
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="text-right">
                       <p className="font-bold text-lg">{fmt(inv.total, inv.currency)}</p>
                       {inv.status === "PARTIAL" && (
-                        <p className="text-sm text-orange-600">Pendiente: {fmt(remaining, inv.currency)}</p>
+                        <p className="text-sm text-orange-600">{t("pending", { amount: fmt(remaining, inv.currency) })}</p>
                       )}
                     </div>
                     {canPay && (
@@ -274,7 +266,7 @@ export function ClientPortal({ token }: { token: string }) {
                         className="shrink-0"
                       >
                         <CreditCard className="h-4 w-4 mr-1" />
-                        {payingId === inv.id ? "Redirigiendo..." : "Pagar"}
+                        {payingId === inv.id ? t("redirecting") : t("pay")}
                       </Button>
                     )}
                   </div>
@@ -290,21 +282,21 @@ export function ClientPortal({ token }: { token: string }) {
             {data.quotes.length === 0 ? (
               <div className="text-center py-12 text-gray-400">
                 <ClipboardList className="h-10 w-10 mx-auto mb-2 opacity-40" />
-                <p>No hay presupuestos disponibles</p>
+                <p>{t("noQuotes")}</p>
               </div>
             ) : data.quotes.map(q => {
-              const cfg = getQuoteStatus(q.status);
+              const qColor = QUOTE_STATUS_COLORS[q.status] ?? QUOTE_STATUS_COLORS.DRAFT;
               const canAct = q.status === "SENT";
               return (
                 <div key={q.id} className="bg-white rounded-xl border p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <span className="font-semibold">{q.number}</span>
-                      <Badge className={cfg.color}>{cfg.label}</Badge>
+                      <Badge className={qColor}>{t(`quoteStatuses.${q.status.toLowerCase()}`)}</Badge>
                     </div>
                     <p className="text-sm text-gray-500">
-                      Emitido: {fmtDate(q.issueDate)}
-                      {q.validUntil && ` · Válido hasta: ${fmtDate(q.validUntil)}`}
+                      {t("issuedQuote", { date: fmtDate(q.issueDate) })}
+                      {q.validUntil && ` · ${t("validUntil", { date: fmtDate(q.validUntil) })}`}
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
@@ -316,7 +308,7 @@ export function ClientPortal({ token }: { token: string }) {
                           onClick={() => handleQuoteAction(q.id, "accept")}
                           disabled={actionId === q.id}
                         >
-                          <CheckCircle className="h-4 w-4 mr-1" /> Aceptar
+                          <CheckCircle className="h-4 w-4 mr-1" /> {t("accept")}
                         </Button>
                         <Button
                           size="sm" variant="outline"
@@ -324,7 +316,7 @@ export function ClientPortal({ token }: { token: string }) {
                           disabled={actionId === q.id}
                           className="text-red-600 border-red-200 hover:bg-red-50"
                         >
-                          <XCircle className="h-4 w-4 mr-1" /> Rechazar
+                          <XCircle className="h-4 w-4 mr-1" /> {t("reject")}
                         </Button>
                       </div>
                     )}
@@ -338,7 +330,7 @@ export function ClientPortal({ token }: { token: string }) {
         {/* Footer */}
         <div className="flex items-center justify-center gap-2 pt-4 text-xs text-gray-400">
           <Building2 className="h-3 w-3" />
-          <span>Portal gestionado por {data.company.legalName ?? data.company.name}</span>
+          <span>{t("managedBy", { company: data.company.legalName ?? data.company.name })}</span>
         </div>
       </div>
     </div>

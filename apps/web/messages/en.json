@@ -605,6 +605,18 @@
       "closed_won": "Closed won",
       "closed_lost": "Closed lost"
     },
+    "empty": {
+      "title": "Create your first pipeline",
+      "description": "A pipeline lets you track your sales opportunities from first contact to close. It is automatically created with 6 stages.",
+      "namePlaceholder": "Pipeline name",
+      "create": "Create pipeline",
+      "defaultName": "Sales pipeline"
+    },
+    "newPipeline": "New pipeline",
+    "newPipelinePrompt": "Name of the new pipeline:",
+    "dragHere": "Drag deals here",
+    "confirmDelete": "Delete \"{title}\"?",
+    "delete": "Delete",
     "form": {
       "name": "Deal name",
       "client": "Client",
@@ -2041,5 +2053,51 @@
     "download": "Download backup",
     "downloadSuccess": "Backup downloaded successfully",
     "downloadError": "Error downloading backup"
+  },
+  "clientPortal": {
+    "loading": "Loading portal...",
+    "notFound": "Portal not found or invalid link.",
+    "loadError": "Error loading portal.",
+    "contactCompany": "Contact the company for a valid link.",
+    "paymentConfirmed": "Payment confirmed! The invoice has been marked as paid.",
+    "quoteAccepted": "Quote accepted.",
+    "quoteRejected": "Quote rejected.",
+    "payError": "Error starting payment",
+    "hello": "Hello, {name}",
+    "welcomeDesc": "Here you can view your invoices and quotes.",
+    "invoicesTab": "Invoices ({count})",
+    "quotesTab": "Quotes ({count})",
+    "noInvoices": "No invoices available",
+    "noQuotes": "No quotes available",
+    "issued": "Issued: {date}",
+    "dueDate": "Due: {date}",
+    "issuedQuote": "Issued: {date}",
+    "validUntil": "Valid until: {date}",
+    "pending": "Pending: {amount}",
+    "pendingInvoices": "{count} pending invoice",
+    "pendingInvoicesPlural": "{count} pending invoices",
+    "pendingQuotes": "{count} quote to respond",
+    "pendingQuotesPlural": "{count} quotes to respond",
+    "pendingQuotesHint": "Pending acceptance or rejection",
+    "redirecting": "Redirecting...",
+    "pay": "Pay",
+    "accept": "Accept",
+    "reject": "Reject",
+    "managedBy": "Portal managed by {company}",
+    "invoiceStatuses": {
+      "draft": "Draft",
+      "sent": "Pending",
+      "paid": "Paid",
+      "partial": "Partial",
+      "overdue": "Overdue",
+      "cancelled": "Cancelled"
+    },
+    "quoteStatuses": {
+      "draft": "Draft",
+      "sent": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "expired": "Expired"
+    }
   }
 }

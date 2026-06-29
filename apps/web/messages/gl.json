@@ -597,6 +597,18 @@
       "closed_won": "Pechado ganado",
       "closed_lost": "Pechado perdido"
     },
+    "empty": {
+      "title": "Crea o teu primeiro pipeline",
+      "description": "Un pipeline permiteche facer seguimento das tuas oportunidades de venda dende o primeiro contacto ata o peche. Crease automaticamente con 6 etapas.",
+      "namePlaceholder": "Nome do pipeline",
+      "create": "Crear pipeline",
+      "defaultName": "Pipeline de vendas"
+    },
+    "newPipeline": "Novo pipeline",
+    "newPipelinePrompt": "Nome do novo pipeline:",
+    "dragHere": "Arrastra oportunidades aqui",
+    "confirmDelete": "Eliminar \"{title}\"?",
+    "delete": "Eliminar",
     "form": {
       "name": "Nome do lead",
       "client": "Cliente",
@@ -1901,5 +1913,51 @@
     "download": "Descargar backup",
     "downloadSuccess": "Backup descargado correctamente",
     "downloadError": "Erro ao descargar o backup"
+  },
+  "clientPortal": {
+    "loading": "Cargando portal...",
+    "notFound": "Portal non atopado ou enlace invalido.",
+    "loadError": "Erro ao cargar o portal.",
+    "contactCompany": "Contacta coa empresa para obter un enlace valido.",
+    "paymentConfirmed": "Pago confirmado! A factura foi marcada como pagada.",
+    "quoteAccepted": "Orzamento aceptado.",
+    "quoteRejected": "Orzamento rexeitado.",
+    "payError": "Erro ao iniciar o pago",
+    "hello": "Ola, {name}",
+    "welcomeDesc": "Aqui podes ver as tuas facturas e orzamentos.",
+    "invoicesTab": "Facturas ({count})",
+    "quotesTab": "Orzamentos ({count})",
+    "noInvoices": "Non hai facturas disponiveis",
+    "noQuotes": "Non hai orzamentos disponiveis",
+    "issued": "Emitida: {date}",
+    "dueDate": "Vence: {date}",
+    "issuedQuote": "Emitido: {date}",
+    "validUntil": "Valido ata: {date}",
+    "pending": "Pendente: {amount}",
+    "pendingInvoices": "{count} factura pendente",
+    "pendingInvoicesPlural": "{count} facturas pendentes",
+    "pendingQuotes": "{count} orzamento por responder",
+    "pendingQuotesPlural": "{count} orzamentos por responder",
+    "pendingQuotesHint": "Pendente de aceptar ou rexeitar",
+    "redirecting": "Redirixindo...",
+    "pay": "Pagar",
+    "accept": "Aceptar",
+    "reject": "Rexeitar",
+    "managedBy": "Portal xestionado por {company}",
+    "invoiceStatuses": {
+      "draft": "Borrador",
+      "sent": "Pendente",
+      "paid": "Pagada",
+      "partial": "Parcial",
+      "overdue": "Vencida",
+      "cancelled": "Cancelada"
+    },
+    "quoteStatuses": {
+      "draft": "Borrador",
+      "sent": "Pendente",
+      "accepted": "Aceptado",
+      "rejected": "Rexeitado",
+      "expired": "Expirado"
+    }
   }
 }

@@ -31,7 +31,7 @@ export function PipelineView() {
   const createPipeline = useCreatePipeline();
   const [dragging, setDragging] = useState<{ dealId: string; fromStageId: string } | null>(null);
   const [dealDialogOpen, setDealDialogOpen] = useState(false);
-  const [pipelineName, setPipelineName] = useState("Pipeline de ventas");
+  const [pipelineName, setPipelineName] = useState(t("empty.defaultName"));
 
   const [activePipelineIdx, setActivePipelineIdx] = useState(0);
   const pipeline = pipelines?.[activePipelineIdx] ?? pipelines?.[0];
@@ -64,31 +64,30 @@ export function PipelineView() {
         <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
           <GitBranch className="h-8 w-8 text-primary" />
         </div>
-        <h2 className="text-xl font-bold mb-2">Crea tu primer pipeline</h2>
+        <h2 className="text-xl font-bold mb-2">{t("empty.title")}</h2>
         <p className="text-sm text-muted-foreground mb-8 leading-relaxed">
-          Un pipeline te permite hacer seguimiento de tus oportunidades de venta desde el primer contacto hasta el cierre.
-          Se crea automáticamente con 6 etapas: Lead, Cualificado, Propuesta, Negociación, Ganado y Perdido.
+          {t("empty.description")}
         </p>
         <div className="flex gap-3 w-full mb-4">
           <Input
             value={pipelineName}
             onChange={(e) => setPipelineName(e.target.value)}
-            placeholder="Nombre del pipeline"
+            placeholder={t("empty.namePlaceholder")}
             className="flex-1"
           />
           <Button
-            onClick={() => createPipeline.mutate(pipelineName || "Pipeline de ventas")}
+            onClick={() => createPipeline.mutate(pipelineName || t("empty.defaultName"))}
             disabled={createPipeline.isPending}
           >
             <Plus className="h-4 w-4 mr-1.5" />
-            Crear pipeline
+            {t("empty.create")}
           </Button>
         </div>
         <div className="grid grid-cols-3 gap-2 w-full text-left mt-2">
-          {["Lead", "Cualificado", "Propuesta", "Negociación", "Ganado", "Perdido"].map((s) => (
+          {(["lead", "qualified", "proposal", "negotiation", "closed_won", "closed_lost"] as const).map((s) => (
             <div key={s} className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/50 rounded-lg px-2.5 py-1.5">
               <CheckCircle2 className="h-3 w-3 text-primary shrink-0" />
-              {s}
+              {t(`stages.${s}`)}
             </div>
           ))}
         </div>
@@ -112,11 +111,11 @@ export function PipelineView() {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={() => {
-            const name = prompt("Nombre del nuevo pipeline:", "Pipeline de ventas");
+            const name = prompt(t("newPipelinePrompt"), t("empty.defaultName"));
             if (name) createPipeline.mutate(name);
           }}>
             <Plus className="h-4 w-4 mr-1" />
-            Nuevo pipeline
+            {t("newPipeline")}
           </Button>
           <Button className="gap-2" onClick={() => setDealDialogOpen(true)}>
             <Plus className="h-4 w-4" />
@@ -181,7 +180,7 @@ export function PipelineView() {
               <div className="flex flex-col gap-2 min-h-[120px] rounded-xl bg-muted/30 p-2 border-2 border-dashed border-transparent transition-colors data-[over=true]:border-primary/40 data-[over=true]:bg-primary/5">
                 {stage.deals.length === 0 && (
                   <div className="flex items-center justify-center h-20 text-xs text-muted-foreground">
-                    Arrastra oportunidades aqui
+                    {t("dragHere")}
                   </div>
                 )}
                 {stage.deals.map((deal: any, i: number) => (
@@ -194,7 +193,7 @@ export function PipelineView() {
                     onDragStart={() => handleDragStart(deal.id, stage.id)}
                   >
                     <DealCard deal={deal} onDelete={() => {
-                      if (confirm(`Eliminar "${deal.title}"?`)) deleteDeal.mutate(deal.id);
+                      if (confirm(t("confirmDelete", { title: deal.title }))) deleteDeal.mutate(deal.id);
                     }} />
                   </motion.div>
                 ))}
@@ -208,6 +207,7 @@ export function PipelineView() {
 }
 
 function DealCard({ deal, onDelete }: { deal: any; onDelete: () => void }) {
+  const t = useTranslations("pipeline");
   return (
     <Card className="cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow border-border/60">
       <CardContent className="p-3 space-y-2">
@@ -222,7 +222,7 @@ function DealCard({ deal, onDelete }: { deal: any; onDelete: () => void }) {
             <DropdownMenuContent align="end">
               <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={onDelete}>
                 <Trash2 className="h-4 w-4 mr-2" />
-                Eliminar
+                {t("delete")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -605,6 +605,18 @@
       "closed_won": "Tancat guanyat",
       "closed_lost": "Tancat perdut"
     },
+    "empty": {
+      "title": "Crea el teu primer pipeline",
+      "description": "Un pipeline et permet fer seguiment de les teves oportunitats de venda des del primer contacte fins al tancament. Es crea automaticament amb 6 etapes.",
+      "namePlaceholder": "Nom del pipeline",
+      "create": "Crear pipeline",
+      "defaultName": "Pipeline de vendes"
+    },
+    "newPipeline": "Nou pipeline",
+    "newPipelinePrompt": "Nom del nou pipeline:",
+    "dragHere": "Arrossega oportunitats aqui",
+    "confirmDelete": "Eliminar \"{title}\"?",
+    "delete": "Eliminar",
     "form": {
       "name": "Nom del lead",
       "client": "Client",
@@ -2040,5 +2052,51 @@
     "download": "Descarregar backup",
     "downloadSuccess": "Backup descarregat correctament",
     "downloadError": "Error en descarregar el backup"
+  },
+  "clientPortal": {
+    "loading": "Carregant portal...",
+    "notFound": "Portal no trobat o enllac invalid.",
+    "loadError": "Error en carregar el portal.",
+    "contactCompany": "Contacta amb l'empresa per obtenir un enllac valid.",
+    "paymentConfirmed": "Pagament confirmat! La factura ha estat marcada com a pagada.",
+    "quoteAccepted": "Pressupost acceptat.",
+    "quoteRejected": "Pressupost rebutjat.",
+    "payError": "Error en iniciar el pagament",
+    "hello": "Hola, {name}",
+    "welcomeDesc": "Aqui pots veure les teves factures i pressupostos.",
+    "invoicesTab": "Factures ({count})",
+    "quotesTab": "Pressupostos ({count})",
+    "noInvoices": "No hi ha factures disponibles",
+    "noQuotes": "No hi ha pressupostos disponibles",
+    "issued": "Emesa: {date}",
+    "dueDate": "Venç: {date}",
+    "issuedQuote": "Emes: {date}",
+    "validUntil": "Valid fins: {date}",
+    "pending": "Pendent: {amount}",
+    "pendingInvoices": "{count} factura pendent",
+    "pendingInvoicesPlural": "{count} factures pendents",
+    "pendingQuotes": "{count} pressupost per respondre",
+    "pendingQuotesPlural": "{count} pressupostos per respondre",
+    "pendingQuotesHint": "Pendent d'acceptar o rebutjar",
+    "redirecting": "Redirigint...",
+    "pay": "Pagar",
+    "accept": "Acceptar",
+    "reject": "Rebutjar",
+    "managedBy": "Portal gestionat per {company}",
+    "invoiceStatuses": {
+      "draft": "Esborrany",
+      "sent": "Pendent",
+      "paid": "Pagada",
+      "partial": "Parcial",
+      "overdue": "Vencuda",
+      "cancelled": "Cancel·lada"
+    },
+    "quoteStatuses": {
+      "draft": "Esborrany",
+      "sent": "Pendent",
+      "accepted": "Acceptat",
+      "rejected": "Rebutjat",
+      "expired": "Expirat"
+    }
   }
 }

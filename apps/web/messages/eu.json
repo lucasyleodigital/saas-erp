@@ -605,6 +605,18 @@
       "closed_won": "Itxita irabazita",
       "closed_lost": "Itxita galduta"
     },
+    "empty": {
+      "title": "Sortu zure lehen pipeline-a",
+      "description": "Pipeline batek salmenta-aukerak jarraitzeko aukera ematen dizu lehen kontaktutik itxierara. Automatikoki sortzen da 6 etaparekin.",
+      "namePlaceholder": "Pipeline-aren izena",
+      "create": "Pipeline-a sortu",
+      "defaultName": "Salmenta pipeline-a"
+    },
+    "newPipeline": "Pipeline berria",
+    "newPipelinePrompt": "Pipeline berriaren izena:",
+    "dragHere": "Arrastatu aukerak hona",
+    "confirmDelete": "\"{title}\" ezabatu?",
+    "delete": "Ezabatu",
     "form": {
       "name": "Lead-aren izena",
       "client": "Bezeroa",
@@ -1986,5 +1998,51 @@
     "download": "Babeskopia deskargatu",
     "downloadSuccess": "Babeskopia ondo deskargatu da",
     "downloadError": "Errorea babeskopia deskargatzean"
+  },
+  "clientPortal": {
+    "loading": "Ataria kargatzen...",
+    "notFound": "Ataria ez da aurkitu edo esteka baliogabea da.",
+    "loadError": "Errorea ataria kargatzean.",
+    "contactCompany": "Jarri enpresarekin harremanetan esteka baliozkoa lortzeko.",
+    "paymentConfirmed": "Ordainketa berretsita! Faktura ordainduta gisa markatu da.",
+    "quoteAccepted": "Aurrekontua onartuta.",
+    "quoteRejected": "Aurrekontua ukatuta.",
+    "payError": "Errorea ordainketa hastean",
+    "hello": "Kaixo, {name}",
+    "welcomeDesc": "Hemen zure fakturak eta aurrekontuak ikusi ditzakezu.",
+    "invoicesTab": "Fakturak ({count})",
+    "quotesTab": "Aurrekontuak ({count})",
+    "noInvoices": "Ez dago fakturarik eskuragarri",
+    "noQuotes": "Ez dago aurrekonturik eskuragarri",
+    "issued": "Jaulkita: {date}",
+    "dueDate": "Iraungitzea: {date}",
+    "issuedQuote": "Jaulkita: {date}",
+    "validUntil": "Baliozkoa arte: {date}",
+    "pending": "Zain: {amount}",
+    "pendingInvoices": "Faktura {count} zain",
+    "pendingInvoicesPlural": "{count} faktura zain",
+    "pendingQuotes": "Aurrekontu {count} erantzuteko",
+    "pendingQuotesPlural": "{count} aurrekontu erantzuteko",
+    "pendingQuotesHint": "Onartzeke edo ukatzeke",
+    "redirecting": "Birbideratzen...",
+    "pay": "Ordaindu",
+    "accept": "Onartu",
+    "reject": "Ukatu",
+    "managedBy": "{company}(e)k kudeatutako ataria",
+    "invoiceStatuses": {
+      "draft": "Zirriborroa",
+      "sent": "Zain",
+      "paid": "Ordainduta",
+      "partial": "Partziala",
+      "overdue": "Iraungita",
+      "cancelled": "Bertan behera"
+    },
+    "quoteStatuses": {
+      "draft": "Zirriborroa",
+      "sent": "Zain",
+      "accepted": "Onartuta",
+      "rejected": "Ukatuta",
+      "expired": "Iraungita"
+    }
   }
 }
