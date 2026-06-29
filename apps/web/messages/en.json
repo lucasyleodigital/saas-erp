@@ -1253,6 +1253,11 @@
       "approve": "Approve",
       "reject": "Reject"
     },
+    "leaveStatuses": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
     "pagination": {
       "previous": "Previous",
       "next": "Next"
@@ -1587,6 +1592,34 @@
     "search": "Search delivery notes...",
     "noResults": "No delivery notes",
     "noResultsDesc": "Create your first delivery note or generate one from a quote",
+    "statuses": {
+      "all": "All",
+      "draft": "Draft",
+      "sent": "Sent",
+      "delivered": "Delivered",
+      "invoiced": "Invoiced",
+      "cancelled": "Cancelled"
+    },
+    "table": {
+      "number": "Number",
+      "client": "Client",
+      "issueDate": "Issue date",
+      "deliveryDate": "Delivery",
+      "amount": "Amount",
+      "status": "Status",
+      "viewDetail": "View detail",
+      "markSent": "Mark as sent",
+      "markDelivered": "Mark as delivered",
+      "convertToInvoice": "Convert to invoice",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "confirmDelete": "Delete delivery note {number}?",
+      "page": "Page {page} of {totalPages}"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
     "dialog": {
       "title": "New delivery note",
       "client": "Client *",

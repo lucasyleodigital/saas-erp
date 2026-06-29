@@ -1252,6 +1252,11 @@
       "approve": "Aprovar",
       "reject": "Rebutjar"
     },
+    "leaveStatuses": {
+      "pending": "Pendent",
+      "approved": "Aprovada",
+      "rejected": "Rebutjada"
+    },
     "pagination": {
       "previous": "Anterior",
       "next": "Seguent"
@@ -1586,6 +1591,34 @@
     "search": "Cercar albarans...",
     "noResults": "No hi ha albarans",
     "noResultsDesc": "Crea el teu primer albara o genera'l des d'un pressupost",
+    "statuses": {
+      "all": "Tots",
+      "draft": "Esborrany",
+      "sent": "Enviat",
+      "delivered": "Lliurat",
+      "invoiced": "Facturat",
+      "cancelled": "Cancel·lat"
+    },
+    "table": {
+      "number": "Numero",
+      "client": "Client",
+      "issueDate": "Emissio",
+      "deliveryDate": "Lliurament",
+      "amount": "Import",
+      "status": "Estat",
+      "viewDetail": "Veure detall",
+      "markSent": "Marcar com a enviat",
+      "markDelivered": "Marcar com a lliurat",
+      "convertToInvoice": "Convertir a factura",
+      "cancel": "Cancel·lar",
+      "delete": "Eliminar",
+      "confirmDelete": "Eliminar l'albara {number}?",
+      "page": "Pagina {page} de {totalPages}"
+    },
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Seguent"
+    },
     "dialog": {
       "title": "Nou albara",
       "client": "Client *",

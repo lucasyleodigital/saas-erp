@@ -1251,6 +1251,11 @@
       "approve": "Onartu",
       "reject": "Ukatu"
     },
+    "leaveStatuses": {
+      "pending": "Zain",
+      "approved": "Onartua",
+      "rejected": "Ukatua"
+    },
     "pagination": {
       "previous": "Aurrekoa",
       "next": "Hurrengoa"
@@ -1532,6 +1537,34 @@
     "search": "Albaranak bilatu...",
     "noResults": "Ez dago albaranik",
     "noResultsDesc": "Sortu zure lehen albarana edo sortu aurrekontu batetik",
+    "statuses": {
+      "all": "Denak",
+      "draft": "Zirriborroa",
+      "sent": "Bidalita",
+      "delivered": "Entregatuta",
+      "invoiced": "Fakturatuta",
+      "cancelled": "Bertan behera"
+    },
+    "table": {
+      "number": "Zenbakia",
+      "client": "Bezeroa",
+      "issueDate": "Jaulkipena",
+      "deliveryDate": "Entrega",
+      "amount": "Zenbatekoa",
+      "status": "Egoera",
+      "viewDetail": "Xehetasuna ikusi",
+      "markSent": "Bidalitako gisa markatu",
+      "markDelivered": "Entregatutako gisa markatu",
+      "convertToInvoice": "Faktura bihurtu",
+      "cancel": "Bertan behera utzi",
+      "delete": "Ezabatu",
+      "confirmDelete": "{number} albarana ezabatu?",
+      "page": "{page}. orrialdea {totalPages}(e)tik"
+    },
+    "pagination": {
+      "previous": "Aurrekoa",
+      "next": "Hurrengoa"
+    },
     "dialog": {
       "title": "Albaran berria",
       "client": "Bezeroa *",

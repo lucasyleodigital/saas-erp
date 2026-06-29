@@ -12,10 +12,6 @@ import {
   useApproveLeave,
   useRejectLeave,
   useDeleteLeaveRequest,
-  EMPLOYEE_STATUS_CONFIG,
-  CONTRACT_LABELS,
-  LEAVE_TYPE_LABELS,
-  LEAVE_STATUS_CONFIG,
 } from "@/hooks/use-employees";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -56,6 +52,36 @@ type Tab = typeof TAB_KEYS[number];
 
 const LOCALE_MAP: Record<string, string> = {
   es: "es-ES", en: "en-US", ca: "ca-ES", eu: "eu-ES", gl: "gl-ES",
+};
+
+const STATUS_COLORS: Record<string, string> = {
+  ACTIVE:   "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
+  INACTIVE: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
+  ON_LEAVE: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+};
+
+const STATUS_T_KEYS: Record<string, string> = {
+  ACTIVE: "active", INACTIVE: "inactive", ON_LEAVE: "onLeave",
+};
+
+const CONTRACT_T_KEYS: Record<string, string> = {
+  INDEFINIDO: "indefinido", TEMPORAL: "temporal", PRACTICAS: "practicas",
+  AUTONOMO: "autonomo", OBRA_SERVICIO: "obraServicio",
+};
+
+const LEAVE_TYPE_T_KEYS: Record<string, string> = {
+  VACATION: "vacation", SICK: "sick", PERSONAL: "personal",
+  MATERNITY: "maternity", PATERNITY: "maternity", OTHER: "other",
+};
+
+const LEAVE_STATUS_COLORS: Record<string, string> = {
+  PENDING:  "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+  APPROVED: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
+  REJECTED: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
+};
+
+const LEAVE_STATUS_T_KEYS: Record<string, string> = {
+  PENDING: "pending", APPROVED: "approved", REJECTED: "rejected",
 };
 
 function getInitials(first: string, last: string) {
@@ -105,7 +131,8 @@ export function EmployeeDetailView({ id }: { id: string }) {
 
   if (!employee) return <div className="text-center py-20 text-muted-foreground">{t("detail.notFound")}</div>;
 
-  const statusCfg = EMPLOYEE_STATUS_CONFIG[employee.status] ?? EMPLOYEE_STATUS_CONFIG.ACTIVE;
+  const statusColor = STATUS_COLORS[employee.status] ?? STATUS_COLORS.ACTIVE;
+  const statusTKey = STATUS_T_KEYS[employee.status] ?? "active";
   const entries = timeData?.entries ?? [];
   const leaves  = leaveData ?? [];
   const openEntry = entries.find((e) => !e.clockOut);
@@ -125,8 +152,8 @@ export function EmployeeDetailView({ id }: { id: string }) {
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-xl font-bold">{employee.firstName} {employee.lastName}</h1>
-                <span className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium", statusCfg!.color)}>
-                  {statusCfg!.label}
+                <span className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium", statusColor)}>
+                  {t(`statuses.${statusTKey}`)}
                 </span>
               </div>
               <p className="text-sm text-muted-foreground">{employee.position ?? t("detail.noPosition")}{employee.department ? ` · ${employee.department}` : ""}</p>
@@ -163,7 +190,7 @@ export function EmployeeDetailView({ id }: { id: string }) {
                 onClick={() => updateEmployee.mutate({ id, status: s })}
                 disabled={employee.status === s}
               >
-                {EMPLOYEE_STATUS_CONFIG[s]?.label}
+                {t(`statuses.${STATUS_T_KEYS[s]}`)}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
@@ -229,7 +256,7 @@ export function EmployeeDetailView({ id }: { id: string }) {
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
               {[
-                { label: t("detail.contract"),       value: CONTRACT_LABELS[employee.contractType] },
+                { label: t("detail.contract"),       value: CONTRACT_T_KEYS[employee.contractType] ? t(`contracts.${CONTRACT_T_KEYS[employee.contractType]}`) : employee.contractType },
                 { label: t("detail.startDate"),     value: formatDate(employee.startDate) },
                 { label: t("detail.hoursPerWeek"),   value: `${Number(employee.workingHours)}h` },
                 { label: t("detail.grossSalary"),  value: formatCurrency(Number(employee.salary)) },
@@ -397,8 +424,8 @@ export function EmployeeDetailView({ id }: { id: string }) {
                     onChange={(e) => setLeaveForm((f) => ({ ...f, type: e.target.value }))}
                     className="flex h-9 w-full rounded-lg border border-input bg-background px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                   >
-                    {Object.entries(LEAVE_TYPE_LABELS).map(([k, v]) => (
-                      <option key={k} value={k}>{v}</option>
+                    {Object.entries(LEAVE_TYPE_T_KEYS).map(([k, tKey]) => (
+                      <option key={k} value={k}>{t(`leaveRequests.${tKey}`)}</option>
                     ))}
                   </select>
                 </div>
@@ -459,19 +486,20 @@ export function EmployeeDetailView({ id }: { id: string }) {
                     </thead>
                     <tbody>
                       {leaves.map((leave) => {
-                        const lsCfg = LEAVE_STATUS_CONFIG[leave.status] ?? LEAVE_STATUS_CONFIG.PENDING;
+                        const lsColor = LEAVE_STATUS_COLORS[leave.status] ?? LEAVE_STATUS_COLORS.PENDING;
+                        const lsTKey = LEAVE_STATUS_T_KEYS[leave.status] ?? "pending";
                         return (
                           <tr key={leave.id} className="border-b border-border last:border-0">
                             <td className="px-4 py-3 font-medium">
-                              {LEAVE_TYPE_LABELS[leave.type] ?? leave.type}
+                              {LEAVE_TYPE_T_KEYS[leave.type] ? t(`leaveRequests.${LEAVE_TYPE_T_KEYS[leave.type]}`) : leave.type}
                             </td>
                             <td className="px-4 py-3 text-muted-foreground">
                               {formatDate(leave.startDate)} — {formatDate(leave.endDate)}
                             </td>
                             <td className="px-4 py-3 text-center font-medium">{leave.days}</td>
                             <td className="px-4 py-3 text-center">
-                              <span className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium", lsCfg!.color)}>
-                                {lsCfg!.label}
+                              <span className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium", lsColor)}>
+                                {t(`leaveStatuses.${lsTKey}`)}
                               </span>
                             </td>
                             <td className="px-4 py-3">

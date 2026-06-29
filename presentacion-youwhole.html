@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouWhole - Presentacion Comercial</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/tabler-icons.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#e5e5e5;overflow:hidden;height:100vh}
+  .deck{height:100vh;display:flex;flex-direction:column}
+  .slide{display:none;flex:1;padding:3rem 4rem;flex-direction:column;justify-content:center;overflow-y:auto}
+  .slide.active{display:flex}
+  .nav-bar{display:flex;align-items:center;justify-content:space-between;padding:1rem 4rem;border-bottom:1px solid rgba(255,255,255,0.06);background:rgba(0,0,0,0.4);backdrop-filter:blur(12px);position:sticky;top:0;z-index:10}
+  .nav-dots{display:flex;gap:6px}
+  .nav-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.15);cursor:pointer;border:none;transition:all .2s}
+  .nav-dot.active{background:#0d9488;box-shadow:0 0 8px rgba(13,148,136,0.5)}
+  .nav-dot:hover{background:rgba(255,255,255,0.3)}
+  .nav-btns{display:flex;gap:8px;align-items:center}
+  .nav-btns button{background:transparent;border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:8px 20px;font-size:13px;cursor:pointer;color:#e5e5e5;transition:all .2s}
+  .nav-btns button:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.2)}
+  .nav-btns button.primary{background:#0d9488;color:white;border-color:#0d9488}
+  .nav-btns button.primary:hover{background:#0f766e}
+  .nav-count{font-size:12px;color:rgba(255,255,255,0.3);margin:0 12px}
+  .badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;padding:6px 16px;border-radius:20px;background:rgba(13,148,136,0.12);color:#2dd4bf;border:1px solid rgba(13,148,136,0.25);margin-bottom:16px;width:fit-content}
+  .slide-title{font-size:32px;font-weight:600;margin-bottom:8px;line-height:1.3;color:white}
+  .slide-subtitle{font-size:16px;color:rgba(255,255,255,0.55);margin-bottom:2rem;line-height:1.7;max-width:640px}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  .grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+  .card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:1.25rem}
+  .card-accent{border-left:3px solid #0d9488;border-radius:0 12px 12px 0}
+  .card-icon{font-size:22px;color:#2dd4bf;margin-bottom:10px;display:block}
+  .card-title{font-size:14px;font-weight:600;margin-bottom:4px;color:white}
+  .card-desc{font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6}
+  .stat-num{font-size:36px;font-weight:600;color:#2dd4bf}
+  .stat-label{font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px}
+  .problem-card{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.12);border-radius:8px;padding:10px 14px;margin-bottom:8px}
+  .problem-card .card-title{color:#fca5a5;font-size:13px;font-weight:500}
+  .solution-card{background:rgba(13,148,136,0.06);border:1px solid rgba(13,148,136,0.12);border-radius:8px;padding:10px 14px;margin-bottom:8px}
+  .solution-card .card-title{color:#5eead4;font-size:13px;font-weight:500}
+  .price-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:1.5rem;text-align:center}
+  .price-card.featured{border:2px solid #0d9488;box-shadow:0 0 30px rgba(13,148,136,0.15)}
+  .price-amount{font-size:36px;font-weight:600;color:white}
+  .price-period{font-size:13px;color:rgba(255,255,255,0.4)}
+  .price-feat{font-size:12px;color:rgba(255,255,255,0.5);text-align:left;padding:5px 0;display:flex;align-items:center;gap:8px}
+  .timeline{display:flex;flex-direction:column;gap:20px;margin-top:12px}
+  .timeline-item{display:flex;gap:16px;align-items:flex-start}
+  .timeline-dot{width:40px;height:40px;border-radius:50%;background:rgba(13,148,136,0.12);border:1px solid rgba(13,148,136,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#2dd4bf;font-size:18px}
+  .check-list{list-style:none;padding:0}
+  .check-list li{font-size:15px;padding:8px 0;display:flex;align-items:center;gap:10px;color:rgba(255,255,255,0.6)}
+  .check-list li i{color:#2dd4bf;font-size:16px}
+  .compliance-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(13,148,136,0.1);color:#2dd4bf;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:500;border:1px solid rgba(13,148,136,0.2)}
+  .cta-btn{display:inline-flex;align-items:center;gap:8px;padding:14px 40px;font-size:16px;font-weight:600;border-radius:12px;cursor:pointer;transition:all .2s;text-decoration:none}
+  .cta-btn.primary{background:#0d9488;color:white;border:none;box-shadow:0 0 40px rgba(13,148,136,0.3)}
+  .cta-btn.primary:hover{background:#0f766e;transform:scale(1.02)}
+  .cta-btn.secondary{background:transparent;color:white;border:1px solid rgba(255,255,255,0.15)}
+  .cta-btn.secondary:hover{background:rgba(255,255,255,0.05)}
+  .lang-pill{display:inline-block;font-size:12px;padding:5px 12px;border-radius:6px;background:rgba(13,148,136,0.1);color:#5eead4;border:1px solid rgba(13,148,136,0.2)}
+  @media(max-width:900px){
+    .slide{padding:2rem}
+    .nav-bar{padding:1rem 2rem}
+    .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+    .slide-title{font-size:24px}
+  }
+  @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .slide.active>*{animation:fadeIn .4s ease-out both}
+  .slide.active>*:nth-child(2){animation-delay:.05s}
+  .slide.active>*:nth-child(3){animation-delay:.1s}
+  .slide.active>*:nth-child(4){animation-delay:.15s}
+</style>
+</head>
+<body>
+<div class="deck">
+  <div class="nav-bar">
+    <div style="display:flex;align-items:center;gap:16px">
+      <span style="font-weight:600;color:#2dd4bf;font-size:15px">YouWhole</span>
+      <div class="nav-dots" id="dots"></div>
+    </div>
+    <div class="nav-btns">
+      <span class="nav-count" id="counter">1 / 10</span>
+      <button onclick="go(-1)" id="prevBtn"><i class="ti ti-arrow-left"></i> Anterior</button>
+      <button onclick="go(1)" id="nextBtn" class="primary">Siguiente <i class="ti ti-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <!-- 1: Portada -->
+  <div class="slide active" id="s0">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+      <div class="badge"><i class="ti ti-shield-check"></i> VeriFactu certificado AEAT 2025</div>
+      <div style="font-size:52px;font-weight:700;color:white;margin-bottom:12px;letter-spacing:-1px">YouWhole</div>
+      <div style="font-size:20px;color:rgba(255,255,255,0.5);margin-bottom:40px;max-width:520px;line-height:1.7">El ERP todo en uno para autonomos y pymes espanolas. Facturacion, CRM, contabilidad y nominas en una sola plataforma.</div>
+      <div class="grid-4" style="width:100%;max-width:640px">
+        <div class="card" style="text-align:center"><div class="stat-num">15+</div><div class="stat-label">Modulos integrados</div></div>
+        <div class="card" style="text-align:center"><div class="stat-num">7</div><div class="stat-label">Idiomas para PDFs</div></div>
+        <div class="card" style="text-align:center"><div class="stat-num">20+</div><div class="stat-label">Divisas soportadas</div></div>
+        <div class="card" style="text-align:center"><div class="stat-num">0 EUR</div><div class="stat-label">Para empezar</div></div>
+      </div>
+      <div style="margin-top:32px;font-size:13px;color:rgba(255,255,255,0.25)">Creado por Lucas y Leo Digital &mdash; hola@youwhole.com &mdash; +34 624 029 617</div>
+    </div>
+  </div>
+
+  <!-- 2: El problema -->
+  <div class="slide" id="s1">
+    <div class="badge"><i class="ti ti-alert-triangle"></i> El problema</div>
+    <div class="slide-title">Las pymes espanolas pierden tiempo y dinero con herramientas fragmentadas</div>
+    <div class="slide-subtitle">La mayoria de autonomos y pymes usan 4-6 herramientas distintas que no se hablan entre si.</div>
+    <div class="grid-2" style="flex:1">
+      <div>
+        <div class="problem-card"><div class="card-title"><i class="ti ti-x" style="font-size:14px"></i> Excel para facturas + Word para presupuestos</div></div>
+        <div class="problem-card"><div class="card-title"><i class="ti ti-x" style="font-size:14px"></i> CRM separado (o ninguno)</div></div>
+        <div class="problem-card"><div class="card-title"><i class="ti ti-x" style="font-size:14px"></i> Contabilidad con el gestor a final de mes</div></div>
+        <div class="problem-card"><div class="card-title"><i class="ti ti-x" style="font-size:14px"></i> Sin cumplimiento VeriFactu</div></div>
+        <div class="problem-card"><div class="card-title"><i class="ti ti-x" style="font-size:14px"></i> Nominas en papel o servicios externos</div></div>
+        <div class="problem-card"><div class="card-title"><i class="ti ti-x" style="font-size:14px"></i> Sin vision global del negocio</div></div>
+      </div>
+      <div>
+        <div class="card" style="height:100%;display:flex;flex-direction:column;justify-content:center;gap:24px">
+          <div style="text-align:center"><div class="stat-num" style="color:#fca5a5">10+ h/sem</div><div class="stat-label">Tiempo perdido en tareas manuales</div></div>
+          <div style="text-align:center"><div class="stat-num" style="color:#fca5a5">200+ EUR</div><div class="stat-label">Coste mensual en herramientas sueltas</div></div>
+          <div style="text-align:center"><div class="stat-num" style="color:#fca5a5">30%</div><div class="stat-label">Facturas cobradas tarde o nunca</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3: La solucion -->
+  <div class="slide" id="s2">
+    <div class="badge"><i class="ti ti-check"></i> La solucion</div>
+    <div class="slide-title">Un solo panel para toda tu empresa</div>
+    <div class="slide-subtitle">YouWhole reemplaza todas tus herramientas por una plataforma integrada, disenada para el mercado espanol.</div>
+    <div class="grid-2" style="flex:1;gap:20px">
+      <div>
+        <div class="solution-card"><div class="card-title"><i class="ti ti-check" style="font-size:14px"></i> Facturacion electronica con VeriFactu</div></div>
+        <div class="solution-card"><div class="card-title"><i class="ti ti-check" style="font-size:14px"></i> CRM con pipeline Kanban</div></div>
+        <div class="solution-card"><div class="card-title"><i class="ti ti-check" style="font-size:14px"></i> Contabilidad PGC en tiempo real</div></div>
+        <div class="solution-card"><div class="card-title"><i class="ti ti-check" style="font-size:14px"></i> VeriFactu automatico desde el dia 1</div></div>
+        <div class="solution-card"><div class="card-title"><i class="ti ti-check" style="font-size:14px"></i> Nominas, RRHH y control horario</div></div>
+        <div class="solution-card"><div class="card-title"><i class="ti ti-check" style="font-size:14px"></i> Dashboard en tiempo real</div></div>
+      </div>
+      <div class="card" style="display:flex;flex-direction:column;justify-content:center;gap:24px">
+        <div style="text-align:center"><div class="stat-num">1</div><div class="stat-label">Una sola herramienta para todo</div></div>
+        <div style="text-align:center"><div class="stat-num">5 min</div><div class="stat-label">Setup completo, sin formacion</div></div>
+        <div style="text-align:center"><div class="stat-num">100%</div><div class="stat-label">Cumplimiento fiscal automatico</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4: Modulos -->
+  <div class="slide" id="s3">
+    <div class="badge"><i class="ti ti-apps"></i> Plataforma completa</div>
+    <div class="slide-title">15 modulos integrados, 0 integraciones necesarias</div>
+    <div class="slide-subtitle">Todo conectado. La factura genera el asiento contable, el CRM alimenta los presupuestos, las horas se vinculan a proyectos.</div>
+    <div class="grid-4" style="flex:1">
+      <div class="card"><div class="card-icon"><i class="ti ti-file-text"></i></div><div class="card-title">Facturacion</div><div class="card-desc">VeriFactu, recurrentes, multi-divisa, multi-idioma, Stripe</div></div>
+      <div class="card"><div class="card-icon"><i class="ti ti-users"></i></div><div class="card-title">CRM</div><div class="card-desc">Clientes, leads, pipeline Kanban, portal del cliente</div></div>
+      <div class="card"><div class="card-icon"><i class="ti ti-calculator"></i></div><div class="card-title">Contabilidad</div><div class="card-desc">PGC, libro diario, Modelo 130/303/347, banco</div></div>
+      <div class="card"><div class="card-icon"><i class="ti ti-clipboard-list"></i></div><div class="card-title">Presupuestos</div><div class="card-desc">Crear, enviar, convertir a factura con un clic</div></div>
+      <div class="card"><div class="card-icon"><i class="ti ti-truck"></i></div><div class="card-title">Albaranes</div><div class="card-desc">Notas de entrega con flujo a factura</div></div>
+      <div class="card"><div class="card-icon"><i class="ti ti-package"></i></div><div class="card-title">Inventario</div><div class="card-desc">Stock, minimos, alertas, movimientos</div></div>
+      <div class="card"><div class="card-icon"><i class="ti ti-coin"></i></div><div class="card-title">Nominas y RRHH</div><div class="card-desc">Empleados, contratos, IRPF, SS</div></div>
+      <div class="card"><div class="card-icon"><i class="ti ti-clock"></i></div><div class="card-title">Control horario</div><div class="card-desc">Registro de horas por proyecto y empleado</div></div>
+      <div class="card"><div class="card-icon"><i class="ti ti-folder"></i></div><div class="card-title">Proyectos</div><div class="card-desc">Presupuesto, rentabilidad, margen, horas</div></div>
+      <div class="card"><div class="card-icon"><i class="ti ti-bolt"></i></div><div class="card-title">Automatizaciones</div><div class="card-desc">Facturas recurrentes, recordatorios, webhooks</div></div>
+      <div class="card"><div class="card-icon"><i class="ti ti-chart-bar"></i></div><div class="card-title">Dashboard</div><div class="card-desc">KPIs en tiempo real, graficos, tendencias</div></div>
+      <div class="card"><div class="card-icon"><i class="ti ti-shield-check"></i></div><div class="card-title">VeriFactu</div><div class="card-desc">SHA256, XML, QR, envio AEAT automatico</div></div>
+    </div>
+  </div>
+
+  <!-- 5: VeriFactu -->
+  <div class="slide" id="s4">
+    <div class="compliance-badge"><i class="ti ti-shield-check"></i> Cumplimiento obligatorio desde 2025</div>
+    <div class="slide-title" style="margin-top:16px">VeriFactu: cumplimiento fiscal sin esfuerzo</div>
+    <div class="slide-subtitle">La Ley Antifraude 11/2021 obliga a registrar cada factura en la AEAT. Con YouWhole es automatico.</div>
+    <div class="timeline" style="flex:1">
+      <div class="timeline-item">
+        <div class="timeline-dot"><i class="ti ti-file-plus"></i></div>
+        <div><div class="card-title">1. Emites la factura</div><div class="card-desc" style="margin-top:4px">Creas la factura normalmente desde YouWhole. Sin pasos extra.</div></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"><i class="ti ti-lock"></i></div>
+        <div><div class="card-title">2. Firma automatica SHA256</div><div class="card-desc" style="margin-top:4px">Cada factura firma la anterior creando una cadena inmutable e infalsificable.</div></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"><i class="ti ti-building"></i></div>
+        <div><div class="card-title">3. Registro en AEAT</div><div class="card-desc" style="margin-top:4px">El XML certificado se envia directamente al sistema VERI*FACTU de Hacienda.</div></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"><i class="ti ti-qrcode"></i></div>
+        <div><div class="card-title">4. QR de verificacion</div><div class="card-desc" style="margin-top:4px">Cada factura incluye un codigo QR que cualquiera puede verificar en la AEAT.</div></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:20px;text-align:center;background:rgba(13,148,136,0.06);border-color:rgba(13,148,136,0.15)">
+      <div style="font-size:15px;font-weight:500;color:#5eead4">Sin configuracion, sin trabajo extra, sin riesgo de sancion</div>
+    </div>
+  </div>
+
+  <!-- 6: Autonomos -->
+  <div class="slide" id="s5">
+    <div class="badge"><i class="ti ti-user"></i> Disenado para autonomos</div>
+    <div class="slide-title">IRPF automatico y modelos fiscales integrados</div>
+    <div class="slide-subtitle">Si eres autonomo, YouWhole calcula todo por ti. Sin errores, sin calculadora.</div>
+    <div class="grid-2" style="flex:1;gap:20px">
+      <div>
+        <div class="card card-accent">
+          <div class="card-title" style="margin-bottom:12px">Factura con IRPF automatico</div>
+          <div style="font-size:14px">
+            <div style="display:flex;justify-content:space-between;padding:6px 0"><span style="color:rgba(255,255,255,0.45)">Base imponible</span><span>1.000,00 EUR</span></div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0"><span style="color:rgba(255,255,255,0.45)">+ IVA 21%</span><span>210,00 EUR</span></div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0;color:#fca5a5"><span>- IRPF 15%</span><span>-150,00 EUR</span></div>
+            <div style="display:flex;justify-content:space-between;padding:10px 0 0;border-top:1px solid rgba(255,255,255,0.08);font-weight:600;font-size:16px"><span>Total</span><span style="color:#2dd4bf">1.060,00 EUR</span></div>
+          </div>
+        </div>
+        <div class="card-desc" style="padding:12px 0">La retencion se aplica automaticamente segun tu configuracion (15% estandar o 7% nuevo autonomo).</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="card"><div class="card-icon"><i class="ti ti-report-analytics"></i></div><div class="card-title">Modelo 130</div><div class="card-desc">Pago fraccionado IRPF trimestral calculado automaticamente</div></div>
+        <div class="card"><div class="card-icon"><i class="ti ti-receipt-tax"></i></div><div class="card-title">Modelo 303</div><div class="card-desc">IVA trimestral con desglose de bases y cuotas</div></div>
+        <div class="card"><div class="card-icon"><i class="ti ti-users-group"></i></div><div class="card-title">Modelo 347</div><div class="card-desc">Operaciones con terceros > 3.005,06 EUR anuales</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7: Multi-idioma/divisa -->
+  <div class="slide" id="s6">
+    <div class="badge"><i class="ti ti-world"></i> Internacional</div>
+    <div class="slide-title">Factura en cualquier idioma y moneda</div>
+    <div class="slide-subtitle">PDFs en 7 idiomas y facturacion en 20+ divisas con tipos de cambio del BCE en tiempo real.</div>
+    <div class="grid-2" style="flex:1;gap:20px">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:14px">Idiomas del documento</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <span class="lang-pill">Espanol</span>
+          <span class="lang-pill">English</span>
+          <span class="lang-pill">Francais</span>
+          <span class="lang-pill">Deutsch</span>
+          <span class="lang-pill">Portugues</span>
+          <span class="lang-pill">Italiano</span>
+          <span class="lang-pill">Catala</span>
+        </div>
+        <div class="card-desc" style="margin-top:14px">Todas las etiquetas del PDF se traducen automaticamente: fecha, concepto, cantidad, total, condiciones de pago...</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:14px">Divisas con cambio BCE</div>
+        <div style="font-size:14px">
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06)"><span style="color:rgba(255,255,255,0.5)">EUR / USD</span><span style="color:#2dd4bf;font-weight:500">1,0842</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06)"><span style="color:rgba(255,255,255,0.5)">EUR / GBP</span><span style="color:#2dd4bf;font-weight:500">0,8401</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06)"><span style="color:rgba(255,255,255,0.5)">EUR / CHF</span><span style="color:#2dd4bf;font-weight:500">0,9382</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0"><span style="color:rgba(255,255,255,0.5)">EUR / MXN</span><span style="color:#2dd4bf;font-weight:500">18,4120</span></div>
+        </div>
+        <div class="card-desc" style="margin-top:14px">Tipos de cambio actualizados diariamente desde el Banco Central Europeo. Gratuito, sin API key.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8: Precios -->
+  <div class="slide" id="s7">
+    <div class="badge"><i class="ti ti-tag"></i> Sin letra pequena</div>
+    <div class="slide-title">Precios claros y transparentes</div>
+    <div class="slide-subtitle">14 dias de prueba gratis del plan Pro. Sin tarjeta de credito. Sin permanencia.</div>
+    <div class="grid-4" style="flex:1;align-items:start">
+      <div class="price-card">
+        <div class="card-title" style="margin-bottom:8px">Gratuito</div>
+        <div class="price-amount">0 EUR</div>
+        <div class="price-period">para siempre</div>
+        <div style="border-top:1px solid rgba(255,255,255,0.06);margin:14px 0;padding-top:14px">
+          <div class="price-feat"><i class="ti ti-check" style="color:#2dd4bf;font-size:14px"></i> 5 clientes</div>
+          <div class="price-feat"><i class="ti ti-check" style="color:#2dd4bf;font-size:14px"></i> 10 facturas/mes</div>
+          <div class="price-feat"><i class="ti ti-check" style="color:#2dd4bf;font-size:14px"></i> 1 usuario</div>
+          <div class="price-feat"><i class="ti ti-check" style="color:#2dd4bf;font-size:14px"></i> VeriFactu incluido</div>
+        </div>
+      </div>
+      <div class="price-card">
+        <div class="card-title" style="margin-bottom:8px">Starter</div>
+        <div class="price-amount">29 EUR</div>
+        <div class="price-period">/mes</div>
+        <div style="border-top:1px solid rgba(255,255,255,0.06);margin:14px 0;padding-top:14px">
+          <div class="price-feat"><i class="ti ti-check" style="color:#2dd4bf;font-size:14px"></i> Clientes ilimitados</div>
+          <div class="price-feat"><i class="ti ti-check" style="color:#2dd4bf;font-size:14px"></i> Facturas ilimitadas</div>
+          <div class="price-feat"><i class="ti ti-check" style="color:#2dd4bf;font-size:14px"></i> 3 usuarios</div>
+          <div class="price-feat"><i class="ti ti-check" style="color:#2dd4bf;font-size:14px"></i> CRM + pipeline</div>
+        </div>
+      </div>
+      <div class="price-card featured">
+        <div style="font-size:11px;background:#0d9488;color:white;padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:10px">Recomendado</div>
+        <div class="card-title" style="margin-bottom:8px">Pro</div>
+        <div class="price-amount">79 EUR</div>
+        <div class="price-period">/mes</div>
+        <div style="border-top:1px solid rgba(255,255,255,0.06);margin:14px 0;padding-top:14px">
+          <div class="price-feat"><i class="ti ti-check" style="color:#2dd4bf;font-size:14px"></i> Todo del Starter</div>
+          <div class="price-feat"><i class="ti ti-check" style="color:#2dd4bf;font-size:14px"></i> 10 usuarios</div>
+          <div class="price-feat"><i class="ti ti-check" style="color:#2dd4bf;font-size:14px"></i> Nominas y RRHH</div>
+          <div class="price-feat"><i class="ti ti-check" style="color:#2dd4bf;font-size:14px"></i> Soporte prioritario</div>
+        </div>
+      </div>
+      <div class="price-card">
+        <div class="card-title" style="margin-bottom:8px">Enterprise</div>
+        <div class="price-amount">A medida</div>
+        <div class="price-period">contactar</div>
+        <div style="border-top:1px solid rgba(255,255,255,0.06);margin:14px 0;padding-top:14px">
+          <div class="price-feat"><i class="ti ti-check" style="color:#2dd4bf;font-size:14px"></i> Todo del Pro</div>
+          <div class="price-feat"><i class="ti ti-check" style="color:#2dd4bf;font-size:14px"></i> Usuarios ilimitados</div>
+          <div class="price-feat"><i class="ti ti-check" style="color:#2dd4bf;font-size:14px"></i> Roles granulares</div>
+          <div class="price-feat"><i class="ti ti-check" style="color:#2dd4bf;font-size:14px"></i> Onboarding dedicado</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9: ROI -->
+  <div class="slide" id="s8">
+    <div class="badge"><i class="ti ti-trending-up"></i> Retorno de inversion</div>
+    <div class="slide-title">YouWhole se paga solo desde el primer mes</div>
+    <div class="slide-subtitle">Compara el coste de las herramientas que usas hoy con YouWhole Pro.</div>
+    <div class="grid-2" style="flex:1;gap:20px">
+      <div class="card" style="border-left:3px solid #ef4444;border-radius:0 12px 12px 0">
+        <div class="card-title" style="color:#fca5a5;margin-bottom:14px">Sin YouWhole</div>
+        <div style="font-size:14px">
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><span style="color:rgba(255,255,255,0.4)">Software facturacion</span><span>30-50 EUR/mes</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><span style="color:rgba(255,255,255,0.4)">CRM basico</span><span>25-40 EUR/mes</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><span style="color:rgba(255,255,255,0.4)">Contabilidad</span><span>20-35 EUR/mes</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><span style="color:rgba(255,255,255,0.4)">Nominas</span><span>30-60 EUR/mes</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><span style="color:rgba(255,255,255,0.4)">Inventario</span><span>15-30 EUR/mes</span></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0 0;margin-top:10px;border-top:1px solid rgba(255,255,255,0.08);font-weight:600"><span>Total estimado</span><span style="color:#fca5a5">120-215 EUR/mes</span></div>
+        </div>
+      </div>
+      <div class="card" style="border-left:3px solid #0d9488;border-radius:0 12px 12px 0">
+        <div class="card-title" style="color:#2dd4bf;margin-bottom:14px">Con YouWhole Pro</div>
+        <div style="font-size:14px">
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><span style="color:rgba(255,255,255,0.4)">Facturacion + VeriFactu</span><span style="color:#5eead4">Incluido</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><span style="color:rgba(255,255,255,0.4)">CRM + Pipeline</span><span style="color:#5eead4">Incluido</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><span style="color:rgba(255,255,255,0.4)">Contabilidad PGC</span><span style="color:#5eead4">Incluido</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><span style="color:rgba(255,255,255,0.4)">Nominas + RRHH</span><span style="color:#5eead4">Incluido</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><span style="color:rgba(255,255,255,0.4)">Inventario + Proyectos</span><span style="color:#5eead4">Incluido</span></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0 0;margin-top:10px;border-top:1px solid rgba(255,255,255,0.08);font-weight:600"><span>Total</span><span style="color:#2dd4bf">79 EUR/mes</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:20px;text-align:center;background:rgba(13,148,136,0.08);border-color:rgba(13,148,136,0.15)">
+      <span style="font-size:16px;font-weight:600;color:#5eead4">Ahorro estimado: 40-135 EUR/mes + 10 horas semanales de trabajo manual</span>
+    </div>
+  </div>
+
+  <!-- 10: CTA Final -->
+  <div class="slide" id="s9">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+      <div style="font-size:40px;font-weight:700;color:white;margin-bottom:10px;line-height:1.3">Empieza gratis hoy</div>
+      <div style="font-size:17px;color:rgba(255,255,255,0.45);margin-bottom:36px;max-width:460px;line-height:1.7">14 dias de prueba del plan Pro. Sin tarjeta de credito. Tu empresa facturando con VeriFactu en menos de 5 minutos.</div>
+      <ul class="check-list" style="margin-bottom:36px;text-align:left">
+        <li><i class="ti ti-check"></i> Setup en 5 minutos, sin formacion</li>
+        <li><i class="ti ti-check"></i> Importa tus datos desde Excel o CSV</li>
+        <li><i class="ti ti-check"></i> VeriFactu activo desde la primera factura</li>
+        <li><i class="ti ti-check"></i> Sin permanencia, cancela cuando quieras</li>
+        <li><i class="ti ti-check"></i> Soporte en espanol de lunes a viernes</li>
+      </ul>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center">
+        <a href="https://youwhole.com/registro" class="cta-btn primary">Crear cuenta gratis</a>
+        <a href="https://youwhole.com" class="cta-btn secondary">Ver demo en vivo</a>
+      </div>
+      <div style="margin-top:48px;font-size:14px;color:rgba(255,255,255,0.2)">
+        <div style="font-weight:600;margin-bottom:4px;color:rgba(255,255,255,0.35)">Lucas y Leo Digital</div>
+        <div>hola@youwhole.com &nbsp;|&nbsp; +34 624 029 617 &nbsp;|&nbsp; youwhole.com</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const slides=document.querySelectorAll('.slide'),dotsEl=document.getElementById('dots');
+let cur=0;const total=slides.length;
+for(let i=0;i<total;i++){const d=document.createElement('button');d.className='nav-dot'+(i===0?' active':'');d.onclick=()=>goTo(i);dotsEl.appendChild(d)}
+function goTo(n){slides[cur].classList.remove('active');dotsEl.children[cur].classList.remove('active');cur=Math.max(0,Math.min(n,total-1));slides[cur].classList.add('active');dotsEl.children[cur].classList.add('active');document.getElementById('counter').textContent=(cur+1)+' / '+total;document.getElementById('prevBtn').style.visibility=cur===0?'hidden':'visible';document.getElementById('nextBtn').innerHTML=cur===total-1?'Fin':'Siguiente <i class="ti ti-arrow-right"></i>'}
+function go(dir){if(cur+dir>=0&&cur+dir<total)goTo(cur+dir)}
+document.getElementById('prevBtn').style.visibility='hidden';
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(1)}if(e.key==='ArrowLeft'){e.preventDefault();go(-1)}});
+</script>
+</body>
+</html>

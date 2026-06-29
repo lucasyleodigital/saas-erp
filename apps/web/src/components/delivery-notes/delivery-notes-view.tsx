@@ -37,13 +37,13 @@ import { DeliveryNoteDialog } from "./delivery-note-dialog";
 import { LocaleLink as Link } from "@/components/ui/locale-link";
 import { useTranslations } from "next-intl";
 
-const STATUS_TABS = [
-  { key: undefined,   label: "Todos" },
-  { key: "DRAFT",     label: "Borrador" },
-  { key: "SENT",      label: "Enviado" },
-  { key: "DELIVERED", label: "Entregado" },
-  { key: "INVOICED",  label: "Facturado" },
-  { key: "CANCELLED", label: "Cancelado" },
+const STATUS_TAB_KEYS = [
+  { key: undefined,   tKey: "all" },
+  { key: "DRAFT",     tKey: "draft" },
+  { key: "SENT",      tKey: "sent" },
+  { key: "DELIVERED", tKey: "delivered" },
+  { key: "INVOICED",  tKey: "invoiced" },
+  { key: "CANCELLED", tKey: "cancelled" },
 ];
 
 export function DeliveryNotesView() {
@@ -90,9 +90,9 @@ export function DeliveryNotesView() {
       {/* Tabs + Search */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
         <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg overflow-x-auto">
-          {STATUS_TABS.map((tab) => (
+          {STATUS_TAB_KEYS.map((tab) => (
             <button
-              key={tab.label}
+              key={tab.tKey}
               onClick={() => { setStatus(tab.key); setPage(1); }}
               className={cn(
                 "px-3 py-1.5 text-sm rounded-md transition-colors whitespace-nowrap",
@@ -101,7 +101,7 @@ export function DeliveryNotesView() {
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
-              {tab.label}
+              {t(`statuses.${tab.tKey}`)}
             </button>
           ))}
         </div>
@@ -138,12 +138,12 @@ export function DeliveryNotesView() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border bg-muted/30">
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3">Número</th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3">Cliente</th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">Emisión</th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">Entrega</th>
-                    <th className="text-right font-medium text-muted-foreground px-4 py-3">Importe</th>
-                    <th className="text-center font-medium text-muted-foreground px-4 py-3">Estado</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3">{t("table.number")}</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3">{t("table.client")}</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">{t("table.issueDate")}</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">{t("table.deliveryDate")}</th>
+                    <th className="text-right font-medium text-muted-foreground px-4 py-3">{t("table.amount")}</th>
+                    <th className="text-center font-medium text-muted-foreground px-4 py-3">{t("table.status")}</th>
                     <th className="px-4 py-3 w-12" />
                   </tr>
                 </thead>
@@ -175,7 +175,7 @@ export function DeliveryNotesView() {
                         </td>
                         <td className="px-4 py-3 text-center">
                           <span className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium", cfg.color)}>
-                            {cfg.label}
+                            {t(`statuses.${n.status.toLowerCase()}`)}
                           </span>
                         </td>
                         <td className="px-4 py-3">
@@ -189,7 +189,7 @@ export function DeliveryNotesView() {
                               <DropdownMenuItem asChild>
                                 <Link href={`/albaranes/${n.id}`}>
                                   <Eye className="h-4 w-4 mr-2" />
-                                  Ver detalle
+                                  {t("table.viewDetail")}
                                 </Link>
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
@@ -198,7 +198,7 @@ export function DeliveryNotesView() {
                                   onClick={() => updateStatus.mutate({ id: n.id, status: "SENT" })}
                                 >
                                   <Send className="h-4 w-4 mr-2" />
-                                  Marcar como enviado
+                                  {t("table.markSent")}
                                 </DropdownMenuItem>
                               )}
                               {n.status === "SENT" && (
@@ -206,7 +206,7 @@ export function DeliveryNotesView() {
                                   onClick={() => updateStatus.mutate({ id: n.id, status: "DELIVERED" })}
                                 >
                                   <CheckCircle className="h-4 w-4 mr-2" />
-                                  Marcar como entregado
+                                  {t("table.markDelivered")}
                                 </DropdownMenuItem>
                               )}
                               {["SENT", "DELIVERED"].includes(n.status) && (
@@ -217,7 +217,7 @@ export function DeliveryNotesView() {
                                     disabled={convertToInvoice.isPending}
                                   >
                                     <ArrowRight className="h-4 w-4 mr-2" />
-                                    Convertir a factura
+                                    {t("table.convertToInvoice")}
                                   </DropdownMenuItem>
                                 </>
                               )}
@@ -226,19 +226,19 @@ export function DeliveryNotesView() {
                                   onClick={() => updateStatus.mutate({ id: n.id, status: "CANCELLED" })}
                                 >
                                   <XCircle className="h-4 w-4 mr-2" />
-                                  Cancelar
+                                  {t("table.cancel")}
                                 </DropdownMenuItem>
                               )}
                               <DropdownMenuSeparator />
                               <DropdownMenuItem
                                 className="text-destructive focus:text-destructive"
                                 onClick={() => {
-                                  if (confirm(`¿Eliminar el albarán ${n.number}?`))
+                                  if (confirm(t("table.confirmDelete", { number: n.number })))
                                     deleteNote.mutate(n.id);
                                 }}
                               >
                                 <Trash2 className="h-4 w-4 mr-2" />
-                                Eliminar
+                                {t("table.delete")}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -256,13 +256,13 @@ export function DeliveryNotesView() {
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <span>Página {page} de {totalPages}</span>
+          <span>{t("table.page", { page, totalPages })}</span>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
-              Anterior
+              {t("pagination.previous")}
             </Button>
             <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>
-              Siguiente
+              {t("pagination.next")}
             </Button>
           </div>
         </div>

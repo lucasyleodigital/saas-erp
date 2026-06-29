@@ -1243,6 +1243,11 @@
       "approve": "Aprobar",
       "reject": "Rexeitar"
     },
+    "leaveStatuses": {
+      "pending": "Pendente",
+      "approved": "Aprobada",
+      "rejected": "Rexeitada"
+    },
     "pagination": {
       "previous": "Anterior",
       "next": "Seguinte"
@@ -1484,6 +1489,34 @@
     "search": "Buscar albarans...",
     "noResults": "Non hai albarans",
     "noResultsDesc": "Crea o teu primeiro albaran ou xerao dende un orzamento",
+    "statuses": {
+      "all": "Todos",
+      "draft": "Borrador",
+      "sent": "Enviado",
+      "delivered": "Entregado",
+      "invoiced": "Facturado",
+      "cancelled": "Cancelado"
+    },
+    "table": {
+      "number": "Numero",
+      "client": "Cliente",
+      "issueDate": "Emision",
+      "deliveryDate": "Entrega",
+      "amount": "Importe",
+      "status": "Estado",
+      "viewDetail": "Ver detalle",
+      "markSent": "Marcar como enviado",
+      "markDelivered": "Marcar como entregado",
+      "convertToInvoice": "Converter a factura",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "confirmDelete": "Eliminar o albaran {number}?",
+      "page": "Paxina {page} de {totalPages}"
+    },
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Seguinte"
+    },
     "dialog": {
       "title": "Novo albaran",
       "client": "Cliente *",
