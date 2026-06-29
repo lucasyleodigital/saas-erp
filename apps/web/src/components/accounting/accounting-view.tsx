@@ -84,7 +84,7 @@ function JournalEntryDialog({
             </div>
             <div className="space-y-1.5">
               <Label>{t("journal.descriptionRequired")}</Label>
-              <Input {...register("description")} placeholder="Pago de proveedor..." />
+              <Input {...register("description")} placeholder={t("journal.descriptionPlaceholder")} />
               {errors.description && <p className="text-xs text-destructive">{errors.description.message}</p>}
             </div>
           </div>

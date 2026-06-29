@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   useCertificateInfo,
   useSaveCertificate,
@@ -40,6 +41,8 @@ function ConfiguredScreen({
   info: CertificateInfo;
   onReplace: () => void;
 }) {
+  const t = useTranslations("verifactu");
+  const tCommon = useTranslations("common");
   const deleteMut = useDeleteCertificate();
   const expiring = info.daysLeft !== null && info.daysLeft <= 30 && !info.isExpired;
 
@@ -56,12 +59,12 @@ function ConfiguredScreen({
           </div>
         )}
         <h2 className="text-xl font-bold">
-          {info.isExpired ? "Certificado caducado" : "Certificado configurado"}
+          {info.isExpired ? t("cert.expired") : t("cert.configured")}
         </h2>
         <p className="text-sm text-muted-foreground mt-1">
           {info.isExpired
-            ? "Debes subir un certificado nuevo para seguir generando VeriFactu"
-            : "Tus facturas se firman automáticamente con tu certificado digital"}
+            ? t("cert.expiredDesc")
+            : t("cert.configuredDesc")}
         </p>
       </div>
 
@@ -69,23 +72,23 @@ function ConfiguredScreen({
         <CardContent className="p-5 space-y-4">
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
-              <p className="text-xs text-muted-foreground">Empresa / Titular</p>
+              <p className="text-xs text-muted-foreground">{t("cert.holder")}</p>
               <p className="font-medium mt-0.5">{info.subject || "—"}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">CIF / NIF</p>
+              <p className="text-xs text-muted-foreground">{t("cert.cifNif")}</p>
               <p className="font-medium mt-0.5 font-mono">{info.nif || "—"}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Válido hasta</p>
+              <p className="text-xs text-muted-foreground">{t("cert.validUntil")}</p>
               <p className={cn("font-medium mt-0.5", info.isExpired ? "text-red-500" : expiring ? "text-amber-500" : "")}>
                 {formatDate(info.expiresAt)}
-                {info.isExpired && " (CADUCADO)"}
-                {expiring && ` (quedan ${info.daysLeft} días)`}
+                {info.isExpired && ` ${t("cert.expiredTag")}`}
+                {expiring && ` ${t("cert.daysLeft", { days: info.daysLeft ?? 0 })}`}
               </p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Subido el</p>
+              <p className="text-xs text-muted-foreground">{t("cert.uploadedAt")}</p>
               <p className="font-medium mt-0.5">{formatDate(info.uploadedAt)}</p>
             </div>
           </div>
@@ -103,8 +106,8 @@ function ConfiguredScreen({
             <AlertCircle className={cn("h-5 w-5 shrink-0 mt-0.5", info.isExpired ? "text-red-500" : "text-amber-500")} />
             <p className={cn("text-sm", info.isExpired ? "text-red-700 dark:text-red-300" : "text-amber-700 dark:text-amber-300")}>
               {info.isExpired
-                ? "Este certificado ha caducado. Renuévalo en la FNMT y súbelo de nuevo para que VeriFactu siga funcionando."
-                : `Tu certificado caduca en ${info.daysLeft} días. Renuévalo pronto para no interrumpir la firma automática.`}
+                ? t("cert.expiredWarning")
+                : t("cert.expiringWarning", { days: info.daysLeft ?? 0 })}
             </p>
           </CardContent>
         </Card>
@@ -113,7 +116,7 @@ function ConfiguredScreen({
       <div className="flex gap-3">
         <Button onClick={onReplace} className="flex-1 gap-2">
           <RefreshCw className="h-4 w-4" />
-          {info.isExpired ? "Subir certificado nuevo" : "Cambiar certificado"}
+          {info.isExpired ? t("cert.uploadNew") : t("cert.changeCert")}
         </Button>
         <Button
           variant="outline"
@@ -122,7 +125,7 @@ function ConfiguredScreen({
           disabled={deleteMut.isPending}
         >
           <Trash2 className="h-4 w-4" />
-          Eliminar
+          {tCommon("delete")}
         </Button>
       </div>
     </div>
@@ -132,21 +135,22 @@ function ConfiguredScreen({
 // ── Choose screen ────────────────────────────────────────────────────────────
 
 function ChooseScreen({ onSelect }: { onSelect: (s: Screen) => void }) {
+  const t = useTranslations("verifactu");
+
   return (
     <div className="space-y-6 max-w-lg mx-auto">
       <div className="text-center">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
           <Shield className="h-8 w-8 text-primary" />
         </div>
-        <h2 className="text-xl font-bold">Configura tu certificado digital</h2>
+        <h2 className="text-xl font-bold">{t("cert.configure")}</h2>
         <p className="text-sm text-muted-foreground mt-2 max-w-sm mx-auto">
-          El certificado digital es como un DNI electrónico de tu empresa.
-          Lo emite la FNMT (Fábrica Nacional de Moneda y Timbre) y permite firmar tus facturas para AEAT.
+          {t("cert.configureDesc")}
         </p>
       </div>
 
       <div className="space-y-3">
-        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">¿En qué situación estás?</p>
+        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t("cert.whichSituation")}</p>
 
         <button
           onClick={() => onSelect("upload")}
@@ -156,9 +160,9 @@ function ChooseScreen({ onSelect }: { onSelect: (s: Screen) => void }) {
             <Upload className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
           </div>
           <div className="flex-1">
-            <p className="font-semibold">Tengo el archivo .p12 o .pfx</p>
+            <p className="font-semibold">{t("cert.haveFile")}</p>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Ya lo he descargado de la FNMT o me lo ha dado mi gestor
+              {t("cert.haveFileDesc")}
             </p>
           </div>
           <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -172,9 +176,9 @@ function ChooseScreen({ onSelect }: { onSelect: (s: Screen) => void }) {
             <Monitor className="h-6 w-6 text-blue-600 dark:text-blue-400" />
           </div>
           <div className="flex-1">
-            <p className="font-semibold">Lo tengo instalado en el ordenador o el navegador</p>
+            <p className="font-semibold">{t("cert.installedInBrowser")}</p>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Lo uso para otros trámites pero no tengo el archivo .p12
+              {t("cert.installedInBrowserDesc")}
             </p>
           </div>
           <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -188,9 +192,9 @@ function ChooseScreen({ onSelect }: { onSelect: (s: Screen) => void }) {
             <HelpCircle className="h-6 w-6 text-amber-600 dark:text-amber-400" />
           </div>
           <div className="flex-1">
-            <p className="font-semibold">No tengo certificado digital</p>
+            <p className="font-semibold">{t("cert.noCert")}</p>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Necesito obtener uno. Te explico cómo en 4 pasos sencillos
+              {t("cert.noCertDesc")}
             </p>
           </div>
           <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -203,6 +207,8 @@ function ChooseScreen({ onSelect }: { onSelect: (s: Screen) => void }) {
 // ── Upload screen ─────────────────────────────────────────────────────────────
 
 function UploadScreen({ onBack, onSuccess }: { onBack: () => void; onSuccess: () => void }) {
+  const t = useTranslations("verifactu");
+  const tCommon = useTranslations("common");
   const [file, setFile] = useState<File | null>(null);
   const [password, setPassword] = useState("");
   const [showPwd, setShowPwd] = useState(false);
@@ -212,7 +218,7 @@ function UploadScreen({ onBack, onSuccess }: { onBack: () => void; onSuccess: ()
 
   function handleFile(f: File) {
     if (!f.name.match(/\.(p12|pfx)$/i)) {
-      alert("Por favor, selecciona un archivo .p12 o .pfx");
+      alert(t("cert.invalidFileType"));
       return;
     }
     setFile(f);
@@ -229,12 +235,13 @@ function UploadScreen({ onBack, onSuccess }: { onBack: () => void; onSuccess: ()
     <div className="space-y-6 max-w-lg mx-auto">
       <div>
         <button onClick={onBack} className="text-sm text-muted-foreground hover:text-foreground mb-4 flex items-center gap-1">
-          ← Volver
+          ← {tCommon("back")}
         </button>
-        <h2 className="text-xl font-bold">Sube tu certificado digital</h2>
+        <h2 className="text-xl font-bold">{t("cert.uploadTitle")}</h2>
         <p className="text-sm text-muted-foreground mt-1">
-          El archivo tiene extensión <strong>.p12</strong> o <strong>.pfx</strong>.
-          Lo habrás descargado de la sede de la FNMT o de tu gestor.
+          {t.rich("cert.uploadDesc", {
+            strong: (chunks) => <strong>{chunks}</strong>,
+          })}
         </p>
       </div>
 
@@ -266,30 +273,29 @@ function UploadScreen({ onBack, onSuccess }: { onBack: () => void; onSuccess: ()
               <CheckCircle2 className="h-10 w-10 mx-auto mb-3 text-emerald-500" />
               <p className="font-medium text-sm">{file.name}</p>
               <p className="text-xs text-muted-foreground mt-1">
-                {(file.size / 1024).toFixed(0)} KB — haz clic para cambiar
+                {t("cert.fileSize", { size: (file.size / 1024).toFixed(0) })}
               </p>
             </>
           ) : (
             <>
               <Upload className="h-10 w-10 mx-auto mb-3 text-muted-foreground" />
-              <p className="font-medium text-sm">Arrastra tu archivo .p12 o .pfx aquí</p>
-              <p className="text-xs text-muted-foreground mt-1">o haz clic para seleccionarlo</p>
+              <p className="font-medium text-sm">{t("cert.dragFile")}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t("cert.orClickToSelect")}</p>
             </>
           )}
         </div>
 
         {/* Password */}
         <div className="space-y-1.5">
-          <label className="text-sm font-medium">Contraseña del certificado</label>
+          <label className="text-sm font-medium">{t("cert.certPassword")}</label>
           <p className="text-xs text-muted-foreground">
-            Es la contraseña que pusiste al descargar o exportar el certificado.
-            Si no la recuerdas, tendrás que pedir uno nuevo a la FNMT.
+            {t("cert.certPasswordDesc")}
           </p>
           <div className="relative">
             <input
               type={showPwd ? "text" : "password"}
               required
-              placeholder="Contraseña del certificado"
+              placeholder={t("cert.certPasswordPlaceholder")}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full h-11 px-3 pr-10 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
@@ -309,18 +315,18 @@ function UploadScreen({ onBack, onSuccess }: { onBack: () => void; onSuccess: ()
             <CardContent className="p-4 flex items-start gap-3">
               <AlertCircle className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
               <p className="text-sm text-red-700 dark:text-red-300">
-                {(saveMut.error as any)?.response?.data?.message ?? "Error al guardar el certificado"}
+                {(saveMut.error as any)?.response?.data?.message ?? t("cert.saveError")}
               </p>
             </CardContent>
           </Card>
         )}
 
         <Button type="submit" className="w-full h-11" disabled={!file || !password || saveMut.isPending}>
-          {saveMut.isPending ? "Validando y guardando..." : "Guardar certificado"}
+          {saveMut.isPending ? t("cert.saving") : t("cert.saveCert")}
         </Button>
 
         <p className="text-xs text-center text-muted-foreground">
-          Tu certificado se almacena cifrado con AES-256. Nunca se comparte con terceros.
+          {t("cert.securityNote")}
         </p>
       </form>
     </div>
@@ -330,36 +336,39 @@ function UploadScreen({ onBack, onSuccess }: { onBack: () => void; onSuccess: ()
 // ── Guide: export from browser / Windows ─────────────────────────────────────
 
 function GuideExportScreen({ onBack, onGotFile }: { onBack: () => void; onGotFile: () => void }) {
+  const t = useTranslations("verifactu");
+  const tCommon = useTranslations("common");
+
   const steps = [
     {
-      title: "Chrome o Edge (Windows/Mac)",
+      title: t("cert.chromeTitle"),
       steps: [
-        "Abre Chrome → tres puntos arriba a la derecha → Configuración",
-        "Busca \"Privacidad y seguridad\" → Seguridad → Gestionar certificados",
-        "En la pestaña \"Personal\", selecciona tu certificado",
-        "Haz clic en \"Exportar\" y sigue el asistente",
-        "Elige guardar con clave privada y formato .p12 (PKCS#12)",
-        "Escribe una contraseña para protegerlo — la necesitarás aquí",
+        t("cert.chromeStep1"),
+        t("cert.chromeStep2"),
+        t("cert.chromeStep3"),
+        t("cert.chromeStep4"),
+        t("cert.chromeStep5"),
+        t("cert.chromeStep6"),
       ],
     },
     {
-      title: "Firefox",
+      title: t("cert.firefoxTitle"),
       steps: [
-        "Menú (tres rayas) → Ajustes → Privacidad y Seguridad",
-        "Baja hasta \"Certificados\" → Ver certificados",
-        "Pestaña \"Sus certificados\" → selecciona el tuyo",
-        "Haz clic en \"Copia de seguridad\" y guárdalo como .p12",
-        "Asigna una contraseña cuando te la pida",
+        t("cert.firefoxStep1"),
+        t("cert.firefoxStep2"),
+        t("cert.firefoxStep3"),
+        t("cert.firefoxStep4"),
+        t("cert.firefoxStep5"),
       ],
     },
     {
-      title: "Windows (sin navegador)",
+      title: t("cert.windowsTitle"),
       steps: [
-        "Pulsa Windows+R, escribe certmgr.msc y pulsa Enter",
-        "Expande \"Personal\" → \"Certificados\"",
-        "Haz clic derecho en tu certificado → Todas las tareas → Exportar",
-        "Asistente: Sí, exportar la clave privada → formato .PFX",
-        "Asigna una contraseña y guarda el archivo",
+        t("cert.windowsStep1"),
+        t("cert.windowsStep2"),
+        t("cert.windowsStep3"),
+        t("cert.windowsStep4"),
+        t("cert.windowsStep5"),
       ],
     },
   ];
@@ -368,12 +377,11 @@ function GuideExportScreen({ onBack, onGotFile }: { onBack: () => void; onGotFil
     <div className="space-y-6 max-w-lg mx-auto">
       <div>
         <button onClick={onBack} className="text-sm text-muted-foreground hover:text-foreground mb-4 flex items-center gap-1">
-          ← Volver
+          ← {tCommon("back")}
         </button>
-        <h2 className="text-xl font-bold">Cómo exportar tu certificado</h2>
+        <h2 className="text-xl font-bold">{t("cert.exportTitle")}</h2>
         <p className="text-sm text-muted-foreground mt-1">
-          Sigue las instrucciones de tu navegador o sistema para exportar el certificado
-          a un archivo .p12 o .pfx, y después súbelo aquí.
+          {t("cert.exportDesc")}
         </p>
       </div>
 
@@ -402,7 +410,7 @@ function GuideExportScreen({ onBack, onGotFile }: { onBack: () => void; onGotFil
 
       <Button onClick={onGotFile} className="w-full gap-2">
         <Upload className="h-4 w-4" />
-        Ya tengo el archivo .p12 — subir ahora
+        {t("cert.gotFileUploadNow")}
       </Button>
     </div>
   );
@@ -411,28 +419,31 @@ function GuideExportScreen({ onBack, onGotFile }: { onBack: () => void; onGotFil
 // ── Guide: get certificate from FNMT ─────────────────────────────────────────
 
 function GuideFnmtScreen({ onBack }: { onBack: () => void }) {
+  const t = useTranslations("verifactu");
+  const tCommon = useTranslations("common");
+
   const steps = [
     {
       num: "1",
-      title: "Solicita el certificado online",
-      desc: "Entra en sede.fnmt.es → Certificados → Certificado de representante de persona jurídica (para empresas) o Certificado de persona física (para autónomos con DNI). Haz clic en \"Solicitar certificado\" y anota el código que te dan.",
+      title: t("cert.fnmtStep1Title"),
+      desc: t("cert.fnmtStep1Desc"),
       link: "https://www.sede.fnmt.gob.es/certificados",
     },
     {
       num: "2",
-      title: "Acude a acreditar tu identidad",
-      desc: "Con ese código ve presencialmente a cualquier oficina de la AEAT, Registro Civil o Seguridad Social. Lleva tu DNI o NIE y el CIF de la empresa. El proceso dura 10-15 minutos.",
+      title: t("cert.fnmtStep2Title"),
+      desc: t("cert.fnmtStep2Desc"),
     },
     {
       num: "3",
-      title: "Descarga el certificado",
-      desc: "Después de la visita, vuelve a sede.fnmt.es → \"Descargar certificado\". Introduce el código que te dieron y descárgalo. Esto instala el certificado en tu navegador.",
+      title: t("cert.fnmtStep3Title"),
+      desc: t("cert.fnmtStep3Desc"),
       link: "https://www.sede.fnmt.gob.es/certificados/persona-juridica/obtener-certificado-de-representante/descarga",
     },
     {
       num: "4",
-      title: "Expórtalo a .p12 y súbelo aquí",
-      desc: "Con el certificado instalado en el navegador, sigue la guía de exportación (clic en \"Lo tengo en el navegador\") para obtener el archivo .p12. Luego sube ese archivo aquí.",
+      title: t("cert.fnmtStep4Title"),
+      desc: t("cert.fnmtStep4Desc"),
     },
   ];
 
@@ -440,12 +451,11 @@ function GuideFnmtScreen({ onBack }: { onBack: () => void }) {
     <div className="space-y-6 max-w-lg mx-auto">
       <div>
         <button onClick={onBack} className="text-sm text-muted-foreground hover:text-foreground mb-4 flex items-center gap-1">
-          ← Volver
+          ← {tCommon("back")}
         </button>
-        <h2 className="text-xl font-bold">Cómo obtener tu certificado digital</h2>
+        <h2 className="text-xl font-bold">{t("cert.obtainTitle")}</h2>
         <p className="text-sm text-muted-foreground mt-1">
-          Es más fácil de lo que parece. En total te llevará unos 30-60 minutos
-          (incluyendo el desplazamiento a la oficina).
+          {t("cert.obtainDesc")}
         </p>
       </div>
 
@@ -465,7 +475,7 @@ function GuideFnmtScreen({ onBack }: { onBack: () => void }) {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 text-sm text-primary hover:underline mt-2"
                 >
-                  Ir a sede.fnmt.es <ExternalLink className="h-3 w-3" />
+                  {t("cert.goToFnmt")} <ExternalLink className="h-3 w-3" />
                 </a>
               )}
             </div>
@@ -477,17 +487,16 @@ function GuideFnmtScreen({ onBack }: { onBack: () => void }) {
         <CardContent className="p-4 flex items-start gap-3">
           <Globe className="h-5 w-5 text-blue-500 shrink-0 mt-0.5" />
           <div className="text-sm text-blue-700 dark:text-blue-300">
-            <p className="font-medium">¿Tu gestor o asesoría lleva la contabilidad?</p>
+            <p className="font-medium">{t("cert.accountantQuestion")}</p>
             <p className="mt-0.5">
-              Puedes pedirle que te exporte el archivo .p12 del certificado que ya tienen de tu empresa.
-              Es la opción más rápida si ya tienen uno.
+              {t("cert.accountantDesc")}
             </p>
           </div>
         </CardContent>
       </Card>
 
       <Button onClick={onBack} variant="outline" className="w-full">
-        Volver — ya tengo el certificado
+        {t("cert.backHaveCert")}
       </Button>
     </div>
   );

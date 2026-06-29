@@ -147,7 +147,7 @@ export function EmployeeDetailView({ id }: { id: string }) {
             } catch { toast.error(t("detail.clockLinkError")); }
           }}
         >
-          <Clock className="h-4 w-4" /> Enlace fichaje
+          <Clock className="h-4 w-4" /> {t("detail.clockLink")}
         </Button>
         <PortalButton employeeId={id} employeeEmail={employee.email} />
         <DropdownMenu>
@@ -229,11 +229,11 @@ export function EmployeeDetailView({ id }: { id: string }) {
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
               {[
-                { label: "Contrato",       value: CONTRACT_LABELS[employee.contractType] },
-                { label: "Fecha alta",     value: formatDate(employee.startDate) },
-                { label: "Horas/semana",   value: `${Number(employee.workingHours)}h` },
-                { label: "Salario bruto",  value: formatCurrency(Number(employee.salary)) },
-                { label: "Coste mensual",  value: formatCurrency(Number(employee.salary) / 12) },
+                { label: t("detail.contract"),       value: CONTRACT_LABELS[employee.contractType] },
+                { label: t("detail.startDate"),     value: formatDate(employee.startDate) },
+                { label: t("detail.hoursPerWeek"),   value: `${Number(employee.workingHours)}h` },
+                { label: t("detail.grossSalary"),  value: formatCurrency(Number(employee.salary)) },
+                { label: t("detail.monthlyCost"),  value: formatCurrency(Number(employee.salary) / 12) },
               ].map(({ label, value }) => (
                 <div key={label} className="flex justify-between">
                   <span className="text-muted-foreground">{label}</span>
@@ -247,19 +247,19 @@ export function EmployeeDetailView({ id }: { id: string }) {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm flex items-center gap-2">
-                  <CreditCard className="h-4 w-4" /> Datos bancarios
+                  <CreditCard className="h-4 w-4" /> {t("detail.bankData")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-1 text-sm">
                 {employee.bankHolder && (
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Titular</span>
+                    <span className="text-muted-foreground">{t("detail.holder")}</span>
                     <span className="font-medium">{employee.bankHolder}</span>
                   </div>
                 )}
                 {employee.bankAccount && (
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">IBAN</span>
+                    <span className="text-muted-foreground">{t("detail.iban")}</span>
                     <span className="font-mono text-xs">{employee.bankAccount}</span>
                   </div>
                 )}
@@ -270,7 +270,7 @@ export function EmployeeDetailView({ id }: { id: string }) {
           {employee.notes && (
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm">Notas</CardTitle>
+                <CardTitle className="text-sm">{tCommon("notes")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">{employee.notes}</p>
@@ -287,11 +287,11 @@ export function EmployeeDetailView({ id }: { id: string }) {
           <Card>
             <CardContent className="p-4 flex items-center justify-between gap-4">
               <div>
-                <p className="font-medium">Fichaje hoy</p>
+                <p className="font-medium">{t("detail.clockToday")}</p>
                 <p className="text-xs text-muted-foreground">
                   {openEntry
-                    ? `Entrada registrada a las ${new Date(openEntry.clockIn).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}`
-                    : "Sin fichaje abierto"}
+                    ? t("detail.clockedInAt", { time: new Date(openEntry.clockIn).toLocaleTimeString(dateLocale, { hour: "2-digit", minute: "2-digit" }) })
+                    : t("detail.noOpenClock")}
                 </p>
               </div>
               <div className="flex gap-2">
@@ -303,7 +303,7 @@ export function EmployeeDetailView({ id }: { id: string }) {
                     disabled={clockIn.isPending}
                   >
                     <LogIn className="h-4 w-4" />
-                    Registrar entrada
+                    {t("detail.clockIn")}
                   </Button>
                 ) : (
                   <Button
@@ -314,7 +314,7 @@ export function EmployeeDetailView({ id }: { id: string }) {
                     disabled={clockOut.isPending}
                   >
                     <LogOut className="h-4 w-4" />
-                    Registrar salida
+                    {t("detail.clockOut")}
                   </Button>
                 )}
               </div>
@@ -325,7 +325,7 @@ export function EmployeeDetailView({ id }: { id: string }) {
           {timeData && (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Clock className="h-4 w-4" />
-              Total mes actual: <span className="font-medium text-foreground">{timeData.summary}</span>
+              {t("detail.totalCurrentMonth")} <span className="font-medium text-foreground">{timeData.summary}</span>
             </div>
           )}
 
@@ -335,18 +335,18 @@ export function EmployeeDetailView({ id }: { id: string }) {
               {entries.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-10 text-center">
                   <Clock className="h-8 w-8 text-muted-foreground mb-2" />
-                  <p className="text-sm text-muted-foreground">Sin fichajes este mes</p>
+                  <p className="text-sm text-muted-foreground">{t("detail.noClockThisMonth")}</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-border bg-muted/30">
-                        <th className="text-left font-medium text-muted-foreground px-4 py-3">Fecha</th>
-                        <th className="text-center font-medium text-muted-foreground px-4 py-3">Entrada</th>
-                        <th className="text-center font-medium text-muted-foreground px-4 py-3">Salida</th>
-                        <th className="text-center font-medium text-muted-foreground px-4 py-3">Descanso</th>
-                        <th className="text-right font-medium text-muted-foreground px-4 py-3">Total</th>
+                        <th className="text-left font-medium text-muted-foreground px-4 py-3">{tCommon("date")}</th>
+                        <th className="text-center font-medium text-muted-foreground px-4 py-3">{t("detail.entry")}</th>
+                        <th className="text-center font-medium text-muted-foreground px-4 py-3">{t("detail.exit")}</th>
+                        <th className="text-center font-medium text-muted-foreground px-4 py-3">{t("detail.breakTime")}</th>
+                        <th className="text-right font-medium text-muted-foreground px-4 py-3">{tCommon("total")}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -354,12 +354,12 @@ export function EmployeeDetailView({ id }: { id: string }) {
                         <tr key={entry.id} className="border-b border-border last:border-0">
                           <td className="px-4 py-3">{formatDate(entry.date)}</td>
                           <td className="px-4 py-3 text-center">
-                            {new Date(entry.clockIn).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}
+                            {new Date(entry.clockIn).toLocaleTimeString(dateLocale, { hour: "2-digit", minute: "2-digit" })}
                           </td>
                           <td className="px-4 py-3 text-center">
                             {entry.clockOut
-                              ? new Date(entry.clockOut).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })
-                              : <span className="text-amber-500 font-medium">Abierto</span>}
+                              ? new Date(entry.clockOut).toLocaleTimeString(dateLocale, { hour: "2-digit", minute: "2-digit" })
+                              : <span className="text-amber-500 font-medium">{t("detail.open")}</span>}
                           </td>
                           <td className="px-4 py-3 text-center text-muted-foreground">
                             {entry.breakMinutes > 0 ? `${entry.breakMinutes}m` : "—"}
@@ -385,13 +385,13 @@ export function EmployeeDetailView({ id }: { id: string }) {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm flex items-center gap-2">
-                <Plus className="h-4 w-4" /> Nueva solicitud de ausencia
+                <Plus className="h-4 w-4" /> {t("detail.newLeaveRequest")}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
                 <div className="space-y-1.5">
-                  <Label className="text-xs">Tipo</Label>
+                  <Label className="text-xs">{t("detail.type")}</Label>
                   <select
                     value={leaveForm.type}
                     onChange={(e) => setLeaveForm((f) => ({ ...f, type: e.target.value }))}
@@ -403,7 +403,7 @@ export function EmployeeDetailView({ id }: { id: string }) {
                   </select>
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-xs">Desde</Label>
+                  <Label className="text-xs">{tCommon("from")}</Label>
                   <Input
                     type="date"
                     className="h-9"
@@ -412,7 +412,7 @@ export function EmployeeDetailView({ id }: { id: string }) {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-xs">Hasta</Label>
+                  <Label className="text-xs">{tCommon("to")}</Label>
                   <Input
                     type="date"
                     className="h-9"
@@ -430,7 +430,7 @@ export function EmployeeDetailView({ id }: { id: string }) {
                       setLeaveForm({ type: "VACATION", startDate: "", endDate: "", reason: "" });
                     }}
                   >
-                    Solicitar
+                    {t("detail.requestLeave")}
                   </Button>
                 </div>
               </div>
@@ -443,17 +443,17 @@ export function EmployeeDetailView({ id }: { id: string }) {
               {leaves.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-10 text-center">
                   <CalendarOff className="h-8 w-8 text-muted-foreground mb-2" />
-                  <p className="text-sm text-muted-foreground">Sin solicitudes de ausencia</p>
+                  <p className="text-sm text-muted-foreground">{t("detail.noLeaveRequests")}</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-border bg-muted/30">
-                        <th className="text-left font-medium text-muted-foreground px-4 py-3">Tipo</th>
-                        <th className="text-left font-medium text-muted-foreground px-4 py-3">Período</th>
-                        <th className="text-center font-medium text-muted-foreground px-4 py-3">Días</th>
-                        <th className="text-center font-medium text-muted-foreground px-4 py-3">Estado</th>
+                        <th className="text-left font-medium text-muted-foreground px-4 py-3">{t("detail.type")}</th>
+                        <th className="text-left font-medium text-muted-foreground px-4 py-3">{t("detail.period")}</th>
+                        <th className="text-center font-medium text-muted-foreground px-4 py-3">{t("detail.days")}</th>
+                        <th className="text-center font-medium text-muted-foreground px-4 py-3">{tCommon("status")}</th>
                         <th className="px-4 py-3 w-28" />
                       </tr>
                     </thead>
@@ -502,7 +502,7 @@ export function EmployeeDetailView({ id }: { id: string }) {
                                     size="icon"
                                     className="h-7 w-7 text-muted-foreground hover:text-destructive"
                                     onClick={() => {
-                                      if (confirm("¿Eliminar esta solicitud?"))
+                                      if (confirm(t("detail.confirmDeleteLeave")))
                                         deleteLeave.mutate(leave.id);
                                     }}
                                   >
@@ -527,6 +527,8 @@ export function EmployeeDetailView({ id }: { id: string }) {
 }
 
 function PortalButton({ employeeId, employeeEmail }: { employeeId: string; employeeEmail?: string | null }) {
+  const t = useTranslations("employees");
+  const tCommon = useTranslations("common");
   const [open, setOpen] = useState(false);
   const [creds, setCreds] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -546,13 +548,13 @@ function PortalButton({ employeeId, employeeEmail }: { employeeId: string; emplo
 
   async function activate() {
     if (!newPwd || newPwd.length < 8) {
-      toast.error("Minimo 8 caracteres");
+      toast.error(t("detail.portal.minChars"));
       return;
     }
     try {
       const r = await api.post(`/employees/${employeeId}/activate-portal`, { password: newPwd });
       setCreds({ isActive: true, email: r.data.email, password: newPwd });
-      toast.success("Portal activado");
+      toast.success(t("detail.portal.activated"));
       setNewPwd("");
     } catch (e: any) {
       toast.error(e?.response?.data?.message ?? "Error");
@@ -561,13 +563,13 @@ function PortalButton({ employeeId, employeeEmail }: { employeeId: string; emplo
 
   async function resetPassword() {
     if (!newPwd || newPwd.length < 8) {
-      toast.error("Minimo 8 caracteres");
+      toast.error(t("detail.portal.minChars"));
       return;
     }
     try {
       await api.post(`/employees/${employeeId}/reset-portal-password`, { password: newPwd });
       setCreds((prev: any) => ({ ...prev, password: newPwd }));
-      toast.success("Contrasena actualizada");
+      toast.success(t("detail.portal.passwordUpdated"));
       setNewPwd("");
     } catch (e: any) {
       toast.error(e?.response?.data?.message ?? "Error");
@@ -576,34 +578,34 @@ function PortalButton({ employeeId, employeeEmail }: { employeeId: string; emplo
 
   async function copyCredentials() {
     if (creds?.email && creds?.password) {
-      await navigator.clipboard.writeText(`Email: ${creds.email}\nContrasena: ${creds.password}\nEntrar en: ${window.location.origin}/login`);
-      toast.success("Credenciales copiadas");
+      await navigator.clipboard.writeText(`${tCommon("email")}: ${creds.email}\n${t("detail.portal.password")}: ${creds.password}\nURL: ${window.location.origin}/login`);
+      toast.success(t("detail.portal.credentialsCopied"));
     }
   }
 
   return (
     <>
       <Button variant="default" size="sm" className="gap-2" onClick={loadCreds} disabled={!employeeEmail}>
-        <LogIn className="h-4 w-4" /> Portal empleado
+        <LogIn className="h-4 w-4" /> {t("detail.employeePortal")}
       </Button>
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setOpen(false)}>
           <div className="bg-background border rounded-xl p-6 max-w-sm w-full mx-4 space-y-4" onClick={(e) => e.stopPropagation()}>
-            <h3 className="font-bold text-lg">Portal del empleado</h3>
+            <h3 className="font-bold text-lg">{t("detail.portal.title")}</h3>
 
             {loading ? (
-              <p className="text-sm text-muted-foreground">Cargando...</p>
+              <p className="text-sm text-muted-foreground">{tCommon("loading")}</p>
             ) : creds?.isActive ? (
               <>
                 <div className="space-y-2 bg-muted/50 rounded-lg p-4">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Email</span>
+                    <span className="text-muted-foreground">{tCommon("email")}</span>
                     <span className="font-medium">{creds.email}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Contrasena</span>
-                    <span className="font-mono font-medium">{creds.password ?? "(no guardada - cambiala abajo)"}</span>
+                    <span className="text-muted-foreground">{t("detail.portal.password")}</span>
+                    <span className="font-mono font-medium">{creds.password ?? t("detail.portal.notSaved")}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">URL</span>
@@ -612,43 +614,43 @@ function PortalButton({ employeeId, employeeEmail }: { employeeId: string; emplo
                 </div>
 
                 <Button className="w-full gap-2" onClick={copyCredentials}>
-                  Copiar credenciales
+                  {t("detail.portal.copyCredentials")}
                 </Button>
 
                 <div className="border-t pt-3 space-y-2">
-                  <p className="text-xs text-muted-foreground">Cambiar contrasena:</p>
+                  <p className="text-xs text-muted-foreground">{t("detail.portal.changePassword")}</p>
                   <div className="flex gap-2">
                     <input
                       type="text"
                       value={newPwd}
                       onChange={(e) => setNewPwd(e.target.value)}
-                      placeholder="Nueva contrasena..."
+                      placeholder={t("detail.portal.newPasswordPlaceholder")}
                       className="flex-1 h-9 rounded-lg border border-input bg-background px-3 text-sm"
                     />
-                    <Button size="sm" variant="outline" onClick={resetPassword}>Cambiar</Button>
+                    <Button size="sm" variant="outline" onClick={resetPassword}>{t("detail.portal.change")}</Button>
                   </div>
                 </div>
               </>
             ) : (
               <>
                 <p className="text-sm text-muted-foreground">
-                  Este empleado no tiene acceso al portal. Introduce una contrasena para activarlo.
+                  {t("detail.portal.noAccess")}
                 </p>
                 <div className="flex gap-2">
                   <input
                     type="text"
                     value={newPwd}
                     onChange={(e) => setNewPwd(e.target.value)}
-                    placeholder="Contrasena (min 8 chars)..."
+                    placeholder={t("detail.portal.passwordPlaceholder")}
                     className="flex-1 h-10 rounded-lg border border-input bg-background px-3 text-sm"
                   />
-                  <Button onClick={activate}>Activar</Button>
+                  <Button onClick={activate}>{t("detail.portal.activate")}</Button>
                 </div>
               </>
             )}
 
             <Button variant="ghost" className="w-full" onClick={() => setOpen(false)}>
-              Cerrar
+              {tCommon("close")}
             </Button>
           </div>
         </div>

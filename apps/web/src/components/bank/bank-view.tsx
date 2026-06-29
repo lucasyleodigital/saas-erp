@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { useTranslations } from "next-intl";
 import {
   useBankAccounts,
   useCreateBankAccount,
@@ -46,6 +47,8 @@ function CreateAccountDialog({
   open: boolean;
   onOpenChange: (o: boolean) => void;
 }) {
+  const t = useTranslations("bank");
+  const tCommon = useTranslations("common");
   const create = useCreateBankAccount();
   const [form, setForm] = useState({
     name: "",
@@ -71,12 +74,12 @@ function CreateAccountDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Building2 className="h-5 w-5 text-primary" />
-            Nueva cuenta bancaria
+            {t("newAccount")}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
-            <Label>Nombre de la cuenta *</Label>
+            <Label>{t("accountNameRequired")}</Label>
             <Input
               value={form.name}
               onChange={(e) => handleChange("name", e.target.value)}
@@ -85,7 +88,7 @@ function CreateAccountDialog({
             />
           </div>
           <div className="space-y-1.5">
-            <Label>IBAN *</Label>
+            <Label>{t("ibanRequired")}</Label>
             <Input
               value={form.iban}
               onChange={(e) => handleChange("iban", e.target.value)}
@@ -95,7 +98,7 @@ function CreateAccountDialog({
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label>BIC / SWIFT</Label>
+              <Label>{t("bicSwift")}</Label>
               <Input
                 value={form.bic}
                 onChange={(e) => handleChange("bic", e.target.value)}
@@ -103,7 +106,7 @@ function CreateAccountDialog({
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Banco</Label>
+              <Label>{t("bankName")}</Label>
               <Input
                 value={form.bankName}
                 onChange={(e) => handleChange("bankName", e.target.value)}
@@ -117,13 +120,13 @@ function CreateAccountDialog({
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              Cancelar
+              {tCommon("cancel")}
             </Button>
             <Button type="submit" disabled={create.isPending}>
               {create.isPending && (
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
               )}
-              Crear cuenta
+              {t("createAccount")}
             </Button>
           </DialogFooter>
         </form>
@@ -135,6 +138,8 @@ function CreateAccountDialog({
 // ─── Account Card ────────────────────────────────────────────────────────────
 
 function AccountCard({ account }: { account: any }) {
+  const t = useTranslations("bank");
+  const tCommon = useTranslations("common");
   const importStatement = useImportBankStatement();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [expanded, setExpanded] = useState(false);
@@ -203,7 +208,7 @@ function AccountCard({ account }: { account: any }) {
               ) : (
                 <Upload className="h-3.5 w-3.5" />
               )}
-              Importar extracto
+              {t("importStatement")}
             </Button>
             <Button
               variant="ghost"
@@ -212,9 +217,9 @@ function AccountCard({ account }: { account: any }) {
               onClick={() => setExpanded(!expanded)}
             >
               {expanded ? (
-                <><ChevronUp className="h-3.5 w-3.5" /> Ocultar</>
+                <><ChevronUp className="h-3.5 w-3.5" /> {t("hide")}</>
               ) : (
-                <><ChevronDown className="h-3.5 w-3.5" /> Movimientos</>
+                <><ChevronDown className="h-3.5 w-3.5" /> {t("transactions")}</>
               )}
             </Button>
           </div>
@@ -228,33 +233,33 @@ function AccountCard({ account }: { account: any }) {
               </div>
             ) : transactions.length === 0 ? (
               <div className="p-8 text-center text-sm text-muted-foreground">
-                Sin movimientos. Importa un extracto CSV o Excel.
+                {t("noTransactions")}
               </div>
             ) : (
               <>
               <div className="flex items-center justify-between px-4 py-2 bg-muted/20 border-b">
-                <p className="text-xs text-muted-foreground">{transactions.length} movimientos</p>
+                <p className="text-xs text-muted-foreground">{t("transactionCount", { count: transactions.length })}</p>
                 <Button
                   variant="ghost"
                   size="sm"
                   className="text-xs text-destructive hover:text-destructive gap-1 h-7"
                   onClick={() => {
-                    if (confirm("Eliminar todos los movimientos de esta cuenta?")) {
+                    if (confirm(t("confirmClearAll"))) {
                       clearTx.mutate(account.id);
                     }
                   }}
                   disabled={clearTx.isPending}
                 >
-                  <Trash2 className="h-3 w-3" /> Limpiar todo
+                  <Trash2 className="h-3 w-3" /> {t("clearAll")}
                 </Button>
               </div>
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b bg-muted/30">
-                    <th className="text-left px-4 py-2.5 text-xs font-medium text-muted-foreground">Fecha</th>
-                    <th className="text-left px-4 py-2.5 text-xs font-medium text-muted-foreground">Concepto</th>
-                    <th className="text-right px-4 py-2.5 text-xs font-medium text-muted-foreground">Importe</th>
-                    <th className="text-center px-4 py-2.5 text-xs font-medium text-muted-foreground">Estado</th>
+                    <th className="text-left px-4 py-2.5 text-xs font-medium text-muted-foreground">{tCommon("date")}</th>
+                    <th className="text-left px-4 py-2.5 text-xs font-medium text-muted-foreground">{t("concept")}</th>
+                    <th className="text-right px-4 py-2.5 text-xs font-medium text-muted-foreground">{tCommon("amount")}</th>
+                    <th className="text-center px-4 py-2.5 text-xs font-medium text-muted-foreground">{tCommon("status")}</th>
                     <th className="w-10" />
                   </tr>
                 </thead>
@@ -289,11 +294,11 @@ function AccountCard({ account }: { account: any }) {
                         <td className="px-4 py-2.5 text-center">
                           {tx.isReconciled ? (
                             <span className="inline-flex items-center gap-1 text-xs text-green-700 bg-green-100 rounded-full px-2 py-0.5">
-                              <CheckCircle className="h-3 w-3" /> Conciliado
+                              <CheckCircle className="h-3 w-3" /> {t("reconciled")}
                             </span>
                           ) : (
                             <span className="inline-flex items-center gap-1 text-xs text-amber-700 bg-amber-100 rounded-full px-2 py-0.5">
-                              <Clock className="h-3 w-3" /> Pendiente
+                              <Clock className="h-3 w-3" /> {tCommon("pending")}
                             </span>
                           )}
                         </td>
@@ -324,6 +329,7 @@ function AccountCard({ account }: { account: any }) {
 // ─── Main View ───────────────────────────────────────────────────────────────
 
 export function BankView() {
+  const t = useTranslations("bank");
   const [dialogOpen, setDialogOpen] = useState(false);
   const { data: accounts, isLoading } = useBankAccounts();
 
@@ -336,15 +342,15 @@ export function BankView() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <CreditCard className="h-6 w-6 text-primary" />
-            Cuentas bancarias
+            {t("title")}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Gestiona tus cuentas e importa extractos bancarios
+            {t("subtitle")}
           </p>
         </div>
         <Button className="gap-2" onClick={() => setDialogOpen(true)}>
           <Plus className="h-4 w-4" />
-          Nueva cuenta
+          {t("newAccountShort")}
         </Button>
       </div>
 
@@ -360,16 +366,15 @@ export function BankView() {
           <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
             <Building2 className="h-8 w-8 text-primary" />
           </div>
-          <p className="font-semibold text-lg">Sin cuentas bancarias</p>
+          <p className="font-semibold text-lg">{t("empty")}</p>
           <p className="text-sm text-muted-foreground mt-1 max-w-xs">
-            Crea tu primera cuenta bancaria para empezar a importar
-            movimientos y llevar el control de tus finanzas.
+            {t("emptyDescription")}
           </p>
           <Button
             className="mt-6 gap-2"
             onClick={() => setDialogOpen(true)}
           >
-            <Plus className="h-4 w-4" /> Crear cuenta
+            <Plus className="h-4 w-4" /> {t("createAccount")}
           </Button>
         </div>
       ) : (

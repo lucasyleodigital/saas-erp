@@ -10,6 +10,7 @@ import { ArrowLeft, Download, Send, CheckCircle, Shield, ExternalLink, Copy } fr
 import { downloadInvoicePdf } from "@/lib/pdf/download-pdf";
 import { LocaleLink as Link } from "@/components/ui/locale-link";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 const STATUS_CONFIG: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info" }> = {
   DRAFT: { label: "Borrador", variant: "secondary" },
@@ -25,6 +26,8 @@ export function InvoiceDetail({ id }: { id: string }) {
   const updateStatus = useUpdateInvoiceStatus();
   const registerPayment = useRegisterPayment();
   const generateVerifactu = useGenerateVerifactu();
+  const t = useTranslations("invoices");
+  const tCommon = useTranslations("common");
 
   if (isLoading) {
     return (
@@ -39,12 +42,12 @@ export function InvoiceDetail({ id }: { id: string }) {
   if (!invoice) {
     return (
       <div className="text-center py-20 text-muted-foreground">
-        Factura no encontrada
+        {t("detail.notFound")}
       </div>
     );
   }
 
-  const config = STATUS_CONFIG[invoice.status] ?? { label: "Borrador", variant: "secondary" as const };
+  const config = STATUS_CONFIG[invoice.status] ?? { label: "DRAFT", variant: "secondary" as const };
   const pendingAmount = Number(invoice.total) - Number(invoice.paidAmount ?? 0);
 
   return (
@@ -60,7 +63,7 @@ export function InvoiceDetail({ id }: { id: string }) {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-xl font-bold font-mono">{invoice.number}</h1>
-              <Badge variant={config.variant as any}>{config.label}</Badge>
+              <Badge variant={config.variant as any}>{t(`detail.status${invoice.status.charAt(0) + invoice.status.slice(1).toLowerCase()}`)}</Badge>
             </div>
             <p className="text-sm text-muted-foreground">{invoice.client?.name}</p>
           </div>
@@ -74,7 +77,7 @@ export function InvoiceDetail({ id }: { id: string }) {
               try {
                 await downloadInvoicePdf(id);
               } catch {
-                toast.error("Error al descargar el PDF");
+                toast.error(t("detail.pdfDownloadError"));
               }
             }}
           >
@@ -89,7 +92,7 @@ export function InvoiceDetail({ id }: { id: string }) {
               disabled={updateStatus.isPending}
             >
               <Send className="h-4 w-4" />
-              Enviar
+              {t("detail.send")}
             </Button>
           )}
           {["SENT", "PARTIAL", "OVERDUE"].includes(invoice.status) && (
@@ -106,7 +109,7 @@ export function InvoiceDetail({ id }: { id: string }) {
               }
             >
               <CheckCircle className="h-4 w-4" />
-              Registrar pago completo
+              {t("detail.registerFullPayment")}
             </Button>
           )}
         </div>
@@ -121,7 +124,7 @@ export function InvoiceDetail({ id }: { id: string }) {
               <div className="flex justify-between mb-8">
                 <div>
                   <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
-                    Emisor
+                    {t("detail.issuer")}
                   </p>
                   <p className="font-semibold">
                     {invoice.company?.legalName ?? invoice.company?.name ?? "—"}
@@ -135,7 +138,7 @@ export function InvoiceDetail({ id }: { id: string }) {
                 </div>
                 <div className="text-right">
                   <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
-                    Receptor
+                    {t("detail.recipient")}
                   </p>
                   <p className="font-semibold">
                     {invoice.client?.legalName ?? invoice.client?.name ?? "—"}
@@ -149,23 +152,23 @@ export function InvoiceDetail({ id }: { id: string }) {
               {/* Dates */}
               <div className="grid grid-cols-3 gap-4 mb-8 text-sm">
                 <div>
-                  <p className="text-muted-foreground mb-1">Número</p>
+                  <p className="text-muted-foreground mb-1">{t("detail.number")}</p>
                   <p className="font-mono font-medium">{invoice.number}</p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground mb-1">Fecha emisión</p>
+                  <p className="text-muted-foreground mb-1">{t("detail.issueDate")}</p>
                   <p>{formatDate(invoice.issueDate)}</p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground mb-1">Vencimiento</p>
+                  <p className="text-muted-foreground mb-1">{t("detail.dueDate")}</p>
                   <p>{invoice.dueDate ? formatDate(invoice.dueDate) : "—"}</p>
                 </div>
               </div>
 
               {/* Line items */}
               {(() => {
-                const ivaTaxes = (invoice.taxes ?? []).filter((t: any) => Number(t.rate) > 0);
-                const irpfTaxes = (invoice.taxes ?? []).filter((t: any) => Number(t.rate) < 0);
+                const ivaTaxes = (invoice.taxes ?? []).filter((tx: any) => Number(tx.rate) > 0);
+                const irpfTaxes = (invoice.taxes ?? []).filter((tx: any) => Number(tx.rate) < 0);
                 const hasIrpf = irpfTaxes.length > 0;
                 const irpfRate = hasIrpf ? Math.abs(Number(irpfTaxes[0].rate)) : 0;
                 const ivaRate = ivaTaxes.length > 0 ? Number(ivaTaxes[0].rate) : 0;
@@ -176,13 +179,13 @@ export function InvoiceDetail({ id }: { id: string }) {
                       <table className="w-full text-sm mb-6">
                         <thead>
                           <tr className="border-b border-border text-muted-foreground">
-                            <th className="text-left py-2 pr-4 font-medium">Descripcion</th>
-                            <th className="text-right py-2 px-2 font-medium">Cant.</th>
-                            <th className="text-right py-2 px-2 font-medium">Precio</th>
-                            <th className="text-right py-2 px-2 font-medium">Dto.</th>
-                            {ivaRate > 0 && <th className="text-right py-2 px-2 font-medium">IVA</th>}
-                            {hasIrpf && <th className="text-right py-2 px-2 font-medium">IRPF</th>}
-                            <th className="text-right py-2 pl-2 font-medium">Importe</th>
+                            <th className="text-left py-2 pr-4 font-medium">{tCommon("description")}</th>
+                            <th className="text-right py-2 px-2 font-medium">{t("detail.qty")}</th>
+                            <th className="text-right py-2 px-2 font-medium">{t("detail.price")}</th>
+                            <th className="text-right py-2 px-2 font-medium">{t("detail.discount")}</th>
+                            {ivaRate > 0 && <th className="text-right py-2 px-2 font-medium">{tCommon("tax")}</th>}
+                            {hasIrpf && <th className="text-right py-2 px-2 font-medium">{t("detail.irpf")}</th>}
+                            <th className="text-right py-2 pl-2 font-medium">{tCommon("amount")}</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -217,42 +220,42 @@ export function InvoiceDetail({ id }: { id: string }) {
                     <div className="flex justify-end">
                       <div className="w-72 space-y-1.5 text-sm">
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">Base imponible</span>
+                          <span className="text-muted-foreground">{t("detail.taxBase")}</span>
                           <span>{formatCurrency(Number(invoice.subtotal))}</span>
                         </div>
-                        {ivaTaxes.map((t: any) => (
-                          <div key={t.id} className="flex justify-between">
+                        {ivaTaxes.map((tx: any) => (
+                          <div key={tx.id} className="flex justify-between">
                             <span className="text-muted-foreground">
-                              {t.tax?.name ?? `IVA ${t.rate}%`} (s/{formatCurrency(Number(t.base ?? invoice.subtotal))})
+                              {tx.tax?.name ?? `IVA ${tx.rate}%`} (s/{formatCurrency(Number(tx.base ?? invoice.subtotal))})
                             </span>
-                            <span>{formatCurrency(Number(t.amount))}</span>
+                            <span>{formatCurrency(Number(tx.amount))}</span>
                           </div>
                         ))}
                         {ivaTaxes.length === 0 && Number(invoice.taxAmount) > 0 && (
                           <div className="flex justify-between">
-                            <span className="text-muted-foreground">IVA</span>
+                            <span className="text-muted-foreground">{tCommon("tax")}</span>
                             <span>{formatCurrency(Number(invoice.taxAmount))}</span>
                           </div>
                         )}
-                        {irpfTaxes.map((t: any) => (
-                          <div key={t.id} className="flex justify-between text-red-600">
-                            <span>Retencion {t.tax?.name ?? `IRPF ${Math.abs(Number(t.rate))}%`}</span>
-                            <span>{formatCurrency(Number(t.amount))}</span>
+                        {irpfTaxes.map((tx: any) => (
+                          <div key={tx.id} className="flex justify-between text-red-600">
+                            <span>{t("detail.withholding")} {tx.tax?.name ?? `IRPF ${Math.abs(Number(tx.rate))}%`}</span>
+                            <span>{formatCurrency(Number(tx.amount))}</span>
                           </div>
                         ))}
                         <div className="flex justify-between font-bold text-base border-t border-border pt-2 mt-2">
-                          <span>Total factura</span>
+                          <span>{t("detail.invoiceTotal")}</span>
                           <span>{formatCurrency(Number(invoice.total))}</span>
                         </div>
                         {Number(invoice.paidAmount ?? 0) > 0 && (
                           <>
                             <div className="flex justify-between text-emerald-600 text-xs">
-                              <span>Cobrado</span>
+                              <span>{t("detail.collected")}</span>
                               <span>{formatCurrency(Number(invoice.paidAmount))}</span>
                             </div>
                             {pendingAmount > 0 && (
                               <div className="flex justify-between font-semibold text-amber-600 text-xs">
-                                <span>Pendiente</span>
+                                <span>{tCommon("pending")}</span>
                                 <span>{formatCurrency(pendingAmount)}</span>
                               </div>
                             )}
@@ -266,7 +269,7 @@ export function InvoiceDetail({ id }: { id: string }) {
 
               {invoice.notes && (
                 <div className="mt-6 pt-4 border-t border-border">
-                  <p className="text-xs text-muted-foreground mb-1">Notas</p>
+                  <p className="text-xs text-muted-foreground mb-1">{tCommon("notes")}</p>
                   <p className="text-sm">{invoice.notes}</p>
                 </div>
               )}
@@ -279,11 +282,11 @@ export function InvoiceDetail({ id }: { id: string }) {
           {/* Payment history */}
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm">Historial de pagos</CardTitle>
+              <CardTitle className="text-sm">{t("detail.paymentHistory")}</CardTitle>
             </CardHeader>
             <CardContent>
               {!invoice.payments || invoice.payments.length === 0 ? (
-                <p className="text-sm text-muted-foreground">Sin pagos registrados</p>
+                <p className="text-sm text-muted-foreground">{t("detail.noPayments")}</p>
               ) : (
                 <div className="space-y-2">
                   {invoice.payments.map((p: any) => (
@@ -313,11 +316,11 @@ export function InvoiceDetail({ id }: { id: string }) {
               {invoice.verifactu ? (
                 <div className="space-y-3">
                   <Badge variant={"success" as any} className="w-full justify-center">
-                    ✓ Generado
+                    {t("detail.verifactuGenerated")}
                   </Badge>
                   <div className="text-xs space-y-1.5">
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Estado</span>
+                      <span className="text-muted-foreground">{tCommon("status")}</span>
                       <span className="font-medium">{invoice.verifactu.status}</span>
                     </div>
                     {invoice.verifactu.hash && (
@@ -333,7 +336,7 @@ export function InvoiceDetail({ id }: { id: string }) {
                             className="h-6 w-6 shrink-0"
                             onClick={() => {
                               navigator.clipboard.writeText(invoice.verifactu!.hash);
-                              toast.success("Hash copiado");
+                              toast.success(t("detail.hashCopied"));
                             }}
                           >
                             <Copy className="h-3 w-3" />
@@ -350,7 +353,7 @@ export function InvoiceDetail({ id }: { id: string }) {
                       >
                         <a href={invoice.verifactu.qrCode} target="_blank" rel="noopener noreferrer">
                           <ExternalLink className="h-3 w-3" />
-                          Verificar en AEAT
+                          {t("detail.verifyAeat")}
                         </a>
                       </Button>
                     )}
@@ -359,7 +362,7 @@ export function InvoiceDetail({ id }: { id: string }) {
               ) : (
                 <div className="space-y-2">
                   <p className="text-xs text-muted-foreground">
-                    Genera el registro VeriFactu para cumplir con la normativa AEAT.
+                    {t("detail.verifactuHint")}
                   </p>
                   {["SENT", "PAID"].includes(invoice.status) && (
                     <Button
@@ -370,12 +373,12 @@ export function InvoiceDetail({ id }: { id: string }) {
                       onClick={() => generateVerifactu.mutate(id)}
                     >
                       <Shield className="h-3 w-3" />
-                      {generateVerifactu.isPending ? "Generando..." : "Generar VeriFactu"}
+                      {generateVerifactu.isPending ? tCommon("generating") : t("detail.generateVerifactu")}
                     </Button>
                   )}
                   {invoice.status === "DRAFT" && (
                     <p className="text-xs text-amber-600 bg-amber-50 dark:bg-amber-950/20 rounded p-2">
-                      Envía la factura primero para poder generar VeriFactu.
+                      {t("detail.sendFirstForVerifactu")}
                     </p>
                   )}
                 </div>
@@ -387,16 +390,16 @@ export function InvoiceDetail({ id }: { id: string }) {
           <Card>
             <CardContent className="p-4 space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Serie</span>
+                <span className="text-muted-foreground">{t("detail.series")}</span>
                 <span className="font-mono">{invoice.series?.prefix ?? "—"}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Moneda</span>
+                <span className="text-muted-foreground">{t("detail.currency")}</span>
                 <span>{invoice.currency ?? "EUR"}</span>
               </div>
               {invoice.client?.email && (
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Email cliente</span>
+                  <span className="text-muted-foreground">{t("detail.clientEmail")}</span>
                   <a
                     href={`mailto:${invoice.client.email}`}
                     className="text-primary hover:underline text-xs truncate max-w-[140px]"

@@ -119,8 +119,8 @@ export function TimeTrackingView() {
               api.get("/time-entries/qr-token").then((r) => {
                 const url = `${window.location.origin}/es/control-horario?qr=${r.data.token}`;
                 navigator.clipboard.writeText(url);
-                toast.success("Enlace QR copiado. Genera un codigo QR con este enlace para que tus empleados fichen.");
-              }).catch(() => toast.error("Error al generar QR"));
+                toast.success(t("qrLinkCopied"));
+              }).catch(() => toast.error(t("qrError")));
             }}
             className="gap-2"
           >
@@ -133,7 +133,7 @@ export function TimeTrackingView() {
               const url = `/time-entries/report?year=${now.getFullYear()}&month=${now.getMonth() + 1}`;
               api.get(url).then((r) => {
                 const rows = r.data?.rows ?? [];
-                if (!rows.length) { toast.error("Sin datos para exportar"); return; }
+                if (!rows.length) { toast.error(t("noExportData")); return; }
                 const csv = ["Empleado,NIF,Fecha,Entrada,Salida,Pausa (min),Total (h),Horas extra (min),Proyecto"]
                   .concat(rows.map((r: any) => `${r.employee},${r.nif},${r.date},${r.clockIn},${r.clockOut},${r.breakMinutes},${r.totalHours},${r.overtimeMinutes},${r.project}`))
                   .join("\n");
@@ -142,11 +142,11 @@ export function TimeTrackingView() {
                 a.href = URL.createObjectURL(blob);
                 a.download = `control-horario-${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}.csv`;
                 a.click();
-              }).catch(() => toast.error("Error al exportar"));
+              }).catch(() => toast.error(t("exportError")));
             }}
             className="gap-2"
           >
-            <Download className="h-4 w-4" /> Exportar mes
+            <Download className="h-4 w-4" /> {t("exportMonth")}
           </Button>
           <Button onClick={() => setDialogOpen(true)} className="gap-2">
             <Plus className="h-4 w-4" />
@@ -166,7 +166,7 @@ export function TimeTrackingView() {
           <div className="flex items-center gap-2">
             <MapPin className={`h-4 w-4 ${gpsConsented ? "text-green-600" : "text-muted-foreground"}`} />
             <span className="text-muted-foreground">
-              GPS: {gpsConsented ? "Activado" : "Desactivado"}
+              GPS: {gpsConsented ? t("gpsEnabled") : t("gpsDisabled")}
             </span>
           </div>
           <Button
@@ -181,7 +181,7 @@ export function TimeTrackingView() {
               }
             }}
           >
-            {gpsConsented ? "Desactivar" : "Activar"}
+            {gpsConsented ? t("deactivate") : t("activate")}
           </Button>
         </div>
       )}
@@ -200,7 +200,7 @@ export function TimeTrackingView() {
                 onClick={() => { if (clockEmployee) clockIn.mutate({ employeeId: clockEmployee }); }}
                 disabled={!clockEmployee || clockIn.isPending}
               >
-                <LogIn className="h-4 w-4" /> Fichar entrada
+                <LogIn className="h-4 w-4" /> {t("clockIn")}
               </Button>
               <Button
                 variant="outline"
@@ -208,7 +208,7 @@ export function TimeTrackingView() {
                 onClick={() => { if (clockEmployee) clockOut.mutate({ employeeId: clockEmployee }); }}
                 disabled={!clockEmployee || clockOut.isPending}
               >
-                <LogOut className="h-4 w-4" /> Fichar salida
+                <LogOut className="h-4 w-4" /> {t("clockOut")}
               </Button>
             </div>
           </div>
@@ -232,10 +232,10 @@ export function TimeTrackingView() {
       {/* Summary cards */}
       <div className="grid gap-4 grid-cols-2 sm:grid-cols-4">
         {[
-          { label: "Hoy", value: summaryData?.today ?? todayHours, icon: Clock, color: "text-blue-600", bg: "bg-blue-500/10" },
-          { label: "Semana", value: summaryData?.week ?? weekHours, icon: CalendarDays, color: "text-emerald-600", bg: "bg-emerald-500/10" },
-          { label: "Mes", value: summaryData?.month ?? monthHours, icon: Timer, color: "text-purple-600", bg: "bg-purple-500/10" },
-          { label: "Horas extra", value: summaryData?.overtime ?? 0, icon: Zap, color: "text-amber-600", bg: "bg-amber-500/10" },
+          { label: t("summary.today"), value: summaryData?.today ?? todayHours, icon: Clock, color: "text-blue-600", bg: "bg-blue-500/10" },
+          { label: t("week"), value: summaryData?.week ?? weekHours, icon: CalendarDays, color: "text-emerald-600", bg: "bg-emerald-500/10" },
+          { label: t("month"), value: summaryData?.month ?? monthHours, icon: Timer, color: "text-purple-600", bg: "bg-purple-500/10" },
+          { label: t("overtime"), value: summaryData?.overtime ?? 0, icon: Zap, color: "text-amber-600", bg: "bg-amber-500/10" },
         ].map((s, i) => (
           <motion.div
             key={s.label}
@@ -266,10 +266,10 @@ export function TimeTrackingView() {
       {/* Tabs */}
       <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg w-fit">
         <button onClick={() => setTab("list")} className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${tab === "list" ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
-          <Clock className="h-3.5 w-3.5" /> Registros
+          <Clock className="h-3.5 w-3.5" /> {t("records")}
         </button>
         <button onClick={() => setTab("week")} className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${tab === "week" ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
-          <CalendarDays className="h-3.5 w-3.5" /> Vista semanal
+          <CalendarDays className="h-3.5 w-3.5" /> {t("weeklyView")}
         </button>
       </div>
 
@@ -461,6 +461,7 @@ export function TimeTrackingView() {
 /* ─── Missed Clocks Alert ────────────────────────────────── */
 
 function MissedClocksAlert() {
+  const t = useTranslations("timeTracking");
   const { data: missed = [] } = useMissedClocks();
   if ((missed as any[]).length === 0) return null;
 
@@ -471,7 +472,7 @@ function MissedClocksAlert() {
           <AlertCircle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
           <div>
             <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
-              Empleados sin fichar hoy
+              {t("missedClocks")}
             </p>
             <div className="flex flex-wrap gap-2 mt-2">
               {(missed as any[]).map((emp: any) => (
@@ -501,6 +502,7 @@ function getEmployeeLocation(allowed: boolean): Promise<{ latitude: number; long
 }
 
 function EmployeeClockView({ gpsConsented, acceptGps, rejectGps }: { gpsConsented: boolean | null; acceptGps: () => void; rejectGps: () => void }) {
+  const t = useTranslations("timeTracking");
   const [acting, setActing] = useState(false);
   const { data: summaryData } = useTimeSummary();
 
@@ -509,10 +511,10 @@ function EmployeeClockView({ gpsConsented, acceptGps, rejectGps }: { gpsConsente
     try {
       const loc = await getEmployeeLocation(gpsConsented === true);
       await api.post(`/my/${action}`, loc ?? {});
-      const gpsMsg = loc ? " (con ubicacion)" : "";
-      toast.success((action === "clock-in" ? "Entrada fichada" : "Salida fichada") + gpsMsg);
+      const gpsMsg = loc ? ` ${t("withLocation")}` : "";
+      toast.success((action === "clock-in" ? t("clockedIn") : t("clockedOut")) + gpsMsg);
     } catch (e: any) {
-      toast.error(e?.response?.data?.message ?? "Error al fichar");
+      toast.error(e?.response?.data?.message ?? t("clockError"));
     }
     setActing(false);
   }
@@ -524,7 +526,7 @@ function EmployeeClockView({ gpsConsented, acceptGps, rejectGps }: { gpsConsente
     <div className="space-y-6 max-w-lg mx-auto">
       <div className="text-center">
         <h1 className="text-xl font-bold flex items-center justify-center gap-2">
-          <Timer className="h-5 w-5" /> Fichaje
+          <Timer className="h-5 w-5" /> {t("clocking")}
         </h1>
       </div>
 
@@ -536,10 +538,10 @@ function EmployeeClockView({ gpsConsented, acceptGps, rejectGps }: { gpsConsente
         <div className="flex items-center justify-between px-3 py-2 rounded-lg border border-border bg-muted/20 text-sm">
           <div className="flex items-center gap-2">
             <MapPin className={`h-4 w-4 ${gpsConsented ? "text-green-600" : "text-muted-foreground"}`} />
-            <span className="text-muted-foreground">Ubicacion: {gpsConsented ? "Activada" : "Desactivada"}</span>
+            <span className="text-muted-foreground">{gpsConsented ? t("locationEnabled") : t("locationDisabled")}</span>
           </div>
           <button className="text-xs text-primary hover:underline" onClick={() => gpsConsented ? rejectGps() : acceptGps()}>
-            {gpsConsented ? "Desactivar" : "Activar"}
+            {gpsConsented ? t("deactivate") : t("activate")}
           </button>
         </div>
       )}
@@ -549,10 +551,10 @@ function EmployeeClockView({ gpsConsented, acceptGps, rejectGps }: { gpsConsente
           <p className="text-4xl font-bold tabular-nums">{timeStr}</p>
           <div className="grid grid-cols-2 gap-3">
             <Button size="lg" className="h-14 text-base gap-2" onClick={() => handleClock("clock-in")} disabled={acting}>
-              <LogIn className="h-5 w-5" /> Entrada
+              <LogIn className="h-5 w-5" /> {t("table.clockIn")}
             </Button>
             <Button size="lg" variant="outline" className="h-14 text-base gap-2" onClick={() => handleClock("clock-out")} disabled={acting}>
-              <LogOut className="h-5 w-5" /> Salida
+              <LogOut className="h-5 w-5" /> {t("table.clockOut")}
             </Button>
           </div>
         </CardContent>
@@ -560,10 +562,10 @@ function EmployeeClockView({ gpsConsented, acceptGps, rejectGps }: { gpsConsente
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          { label: "Hoy", value: summaryData?.today ?? 0, icon: Clock },
-          { label: "Semana", value: summaryData?.week ?? 0, icon: CalendarDays },
-          { label: "Mes", value: summaryData?.month ?? 0, icon: Timer },
-          { label: "Extras", value: summaryData?.overtime ?? 0, icon: Zap },
+          { label: t("summary.today"), value: summaryData?.today ?? 0, icon: Clock },
+          { label: t("week"), value: summaryData?.week ?? 0, icon: CalendarDays },
+          { label: t("month"), value: summaryData?.month ?? 0, icon: Timer },
+          { label: t("extras"), value: summaryData?.overtime ?? 0, icon: Zap },
         ].map((kpi) => (
           <Card key={kpi.label}>
             <CardContent className="p-3 text-center">
@@ -579,6 +581,8 @@ function EmployeeClockView({ gpsConsented, acceptGps, rejectGps }: { gpsConsente
 }
 
 function WeeklyCalendar() {
+  const t = useTranslations("timeTracking");
+  const tCommon = useTranslations("common");
   const [weekOffset, setWeekOffset] = useState(0);
   const weekStart = (() => {
     const d = new Date();
@@ -590,15 +594,15 @@ function WeeklyCalendar() {
   const days: string[] = data?.days ?? [];
   const rows: any[] = data?.rows ?? [];
 
-  const dayNames = ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"];
+  const dayNames = [t("days.mon"), t("days.tue"), t("days.wed"), t("days.thu"), t("days.fri"), t("days.sat"), t("days.sun")];
 
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => setWeekOffset((w) => w - 1)}>Anterior</Button>
-          <Button variant="outline" size="sm" onClick={() => setWeekOffset(0)}>Esta semana</Button>
-          <Button variant="outline" size="sm" onClick={() => setWeekOffset((w) => w + 1)}>Siguiente</Button>
+          <Button variant="outline" size="sm" onClick={() => setWeekOffset((w) => w - 1)}>{tCommon("previous")}</Button>
+          <Button variant="outline" size="sm" onClick={() => setWeekOffset(0)}>{t("thisWeek")}</Button>
+          <Button variant="outline" size="sm" onClick={() => setWeekOffset((w) => w + 1)}>{tCommon("next")}</Button>
         </div>
         <p className="text-sm text-muted-foreground">
           {days[0] ? new Date(days[0]).toLocaleDateString("es-ES", { day: "numeric", month: "short" }) : ""} - {days[6] ? new Date(days[6]).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" }) : ""}
@@ -608,14 +612,14 @@ function WeeklyCalendar() {
       {isLoading ? (
         <div className="h-48 bg-muted/40 rounded-xl animate-pulse" />
       ) : rows.length === 0 ? (
-        <Card><CardContent className="p-8 text-center text-muted-foreground">Sin empleados activos</CardContent></Card>
+        <Card><CardContent className="p-8 text-center text-muted-foreground">{t("noActiveEmployees")}</CardContent></Card>
       ) : (
         <Card>
           <CardContent className="p-0 overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b bg-muted/30">
-                  <th className="text-left px-4 py-3 font-medium text-muted-foreground sticky left-0 bg-muted/30 min-w-[150px]">Empleado</th>
+                  <th className="text-left px-4 py-3 font-medium text-muted-foreground sticky left-0 bg-muted/30 min-w-[150px]">{t("table.employee")}</th>
                   {days.map((day, i) => {
                     const isToday = day === new Date().toISOString().slice(0, 10);
                     return (
@@ -625,8 +629,8 @@ function WeeklyCalendar() {
                       </th>
                     );
                   })}
-                  <th className="text-right px-4 py-3 font-medium text-muted-foreground min-w-[80px]">Total</th>
-                  <th className="text-right px-4 py-3 font-medium text-amber-600 min-w-[80px]">Extra</th>
+                  <th className="text-right px-4 py-3 font-medium text-muted-foreground min-w-[80px]">{tCommon("total")}</th>
+                  <th className="text-right px-4 py-3 font-medium text-amber-600 min-w-[80px]">{t("extra")}</th>
                 </tr>
               </thead>
               <tbody>
