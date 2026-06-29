@@ -19,6 +19,7 @@ import { useClients } from "@/hooks/use-clients";
 import { useProducts } from "@/hooks/use-products";
 import { formatCurrency } from "@/lib/utils";
 import { Plus, Trash2, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const lineSchema = z.object({
   productId: z.string().optional(),
@@ -44,6 +45,7 @@ interface DeliveryNoteDialogProps {
 }
 
 export function DeliveryNoteDialog({ open, onOpenChange }: DeliveryNoteDialogProps) {
+  const t = useTranslations("deliveryNotes.dialog");
   const createNote = useCreateDeliveryNote();
   const { data: clientsData } = useClients({ limit: 200 } as any);
   const { data: productsData } = useProducts();
@@ -107,19 +109,19 @@ export function DeliveryNoteDialog({ open, onOpenChange }: DeliveryNoteDialogPro
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Nuevo albarán</DialogTitle>
+          <DialogTitle>{t("title")}</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* Cliente + Fechas */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="sm:col-span-1 space-y-1.5">
-              <Label>Cliente *</Label>
+              <Label>{t("client")}</Label>
               <select
                 {...register("clientId")}
                 className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
               >
-                <option value="">Seleccionar cliente...</option>
+                <option value="">{t("selectClient")}</option>
                 {clients.map((c: any) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
@@ -131,11 +133,11 @@ export function DeliveryNoteDialog({ open, onOpenChange }: DeliveryNoteDialogPro
               )}
             </div>
             <div className="space-y-1.5">
-              <Label>Fecha emisión</Label>
+              <Label>{t("issueDate")}</Label>
               <Input type="date" {...register("issueDate")} />
             </div>
             <div className="space-y-1.5">
-              <Label>Fecha entrega</Label>
+              <Label>{t("deliveryDate")}</Label>
               <Input type="date" {...register("deliveryDate")} />
             </div>
           </div>
@@ -143,7 +145,7 @@ export function DeliveryNoteDialog({ open, onOpenChange }: DeliveryNoteDialogPro
           {/* Líneas */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label>Líneas del albarán</Label>
+              <Label>{t("lines")}</Label>
               <Button
                 type="button"
                 variant="outline"
@@ -151,16 +153,16 @@ export function DeliveryNoteDialog({ open, onOpenChange }: DeliveryNoteDialogPro
                 onClick={() => append({ description: "", quantity: 1, unitPrice: 0 })}
               >
                 <Plus className="h-3 w-3 mr-1" />
-                Añadir línea
+                {t("addLine")}
               </Button>
             </div>
 
             <div className="grid grid-cols-12 gap-2 px-1 text-xs font-medium text-muted-foreground hidden sm:grid">
-              <div className="col-span-4">Descripción</div>
-              <div className="col-span-2">Producto</div>
-              <div className="col-span-2 text-right">Cantidad</div>
-              <div className="col-span-2 text-right">Precio</div>
-              <div className="col-span-1 text-right">Dto%</div>
+              <div className="col-span-4">{t("description")}</div>
+              <div className="col-span-2">{t("product")}</div>
+              <div className="col-span-2 text-right">{t("quantity")}</div>
+              <div className="col-span-2 text-right">{t("price")}</div>
+              <div className="col-span-1 text-right">{t("discount")}</div>
               <div className="col-span-1" />
             </div>
 
@@ -169,7 +171,7 @@ export function DeliveryNoteDialog({ open, onOpenChange }: DeliveryNoteDialogPro
                 <div className="col-span-12 sm:col-span-4">
                   <Input
                     {...register(`items.${index}.description`)}
-                    placeholder="Descripción del servicio o producto"
+                    placeholder={t("descriptionPlaceholder")}
                   />
                   {errors.items?.[index]?.description && (
                     <p className="text-xs text-destructive mt-0.5">
@@ -183,7 +185,7 @@ export function DeliveryNoteDialog({ open, onOpenChange }: DeliveryNoteDialogPro
                     onChange={(e) => handleProductChange(index, e.target.value)}
                     defaultValue=""
                   >
-                    <option value="">— Producto</option>
+                    <option value="">{t("selectProduct")}</option>
                     {products.map((p: any) => (
                       <option key={p.id} value={p.id}>
                         {p.name}
@@ -242,15 +244,15 @@ export function DeliveryNoteDialog({ open, onOpenChange }: DeliveryNoteDialogPro
           <div className="flex justify-end">
             <div className="w-full max-w-xs space-y-1.5 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Subtotal</span>
+                <span className="text-muted-foreground">{t("subtotal")}</span>
                 <span>{formatCurrency(subtotal)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">IVA 21%</span>
+                <span className="text-muted-foreground">{t("iva")}</span>
                 <span>{formatCurrency(iva)}</span>
               </div>
               <div className="flex justify-between font-semibold text-base border-t border-border pt-1.5">
-                <span>Total</span>
+                <span>{t("total")}</span>
                 <span>{formatCurrency(total)}</span>
               </div>
             </div>
@@ -258,10 +260,10 @@ export function DeliveryNoteDialog({ open, onOpenChange }: DeliveryNoteDialogPro
 
           {/* Notas */}
           <div className="space-y-1.5">
-            <Label>Notas</Label>
+            <Label>{t("notes")}</Label>
             <textarea
               {...register("notes")}
-              placeholder="Observaciones, instrucciones de entrega..."
+              placeholder={t("notesPlaceholder")}
               rows={2}
               className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-none placeholder:text-muted-foreground"
             />
@@ -269,11 +271,11 @@ export function DeliveryNoteDialog({ open, onOpenChange }: DeliveryNoteDialogPro
 
           <DialogFooter className="gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancelar
+              {t("cancel")}
             </Button>
             <Button type="submit" disabled={createNote.isPending}>
               {createNote.isPending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-              Crear albarán
+              {t("create")}
             </Button>
           </DialogFooter>
         </form>

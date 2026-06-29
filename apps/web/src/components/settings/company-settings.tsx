@@ -393,7 +393,7 @@ export function CompanySettings() {
                 />
                 <div className="h-8 flex-1 rounded" style={{ backgroundColor: invoiceColor }} />
               </div>
-              <p className="text-xs text-muted-foreground">Color de cabeceras, totales y acentos en el PDF</p>
+              <p className="text-xs text-muted-foreground">{t("appearance.colorHint")}</p>
             </div>
           </div>
 

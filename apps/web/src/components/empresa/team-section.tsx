@@ -217,7 +217,7 @@ export function TeamSection({ currentRole }: { currentRole: string }) {
                       <div>
                         <p className="text-sm font-medium">{inv.email}</p>
                         <p className="text-xs text-muted-foreground">
-                          Expira {formatDate(inv.expiresAt)}
+                          {t("expires", { date: formatDate(inv.expiresAt) })}
                         </p>
                       </div>
                     </div>

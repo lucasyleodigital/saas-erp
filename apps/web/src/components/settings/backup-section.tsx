@@ -12,8 +12,10 @@ import {
 } from "@/components/ui/card";
 import { HardDrive, Download, Loader2, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 export function BackupSection() {
+  const t = useTranslations("backup");
   const [downloading, setDownloading] = useState(false);
   const [lastBackup, setLastBackup] = useState<string | null>(() => {
     if (typeof window !== "undefined") {
@@ -42,9 +44,9 @@ export function BackupSection() {
       localStorage.setItem("lastBackupDate", now);
       setLastBackup(now);
 
-      toast.success("Backup descargado correctamente");
+      toast.success(t("downloadSuccess"));
     } catch {
-      toast.error("Error al descargar el backup");
+      toast.error(t("downloadError"));
     } finally {
       setDownloading(false);
     }
@@ -55,10 +57,10 @@ export function BackupSection() {
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <HardDrive className="h-6 w-6" />
-          Backup
+          {t("title")}
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Descarga y gestiona copias de seguridad de tus datos
+          {t("subtitle")}
         </p>
       </div>
 
@@ -66,10 +68,10 @@ export function BackupSection() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Download className="h-5 w-5" />
-            Backup completo
+            {t("fullBackup")}
           </CardTitle>
           <CardDescription>
-            Descarga todos los datos de tu empresa en formato JSON
+            {t("fullBackupDesc")}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -77,7 +79,7 @@ export function BackupSection() {
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <CheckCircle2 className="h-4 w-4 text-emerald-500" />
               <span>
-                Ultimo backup:{" "}
+                {t("lastBackup")}:{" "}
                 {new Date(lastBackup).toLocaleDateString("es-ES", {
                   day: "2-digit",
                   month: "2-digit",
@@ -97,12 +99,12 @@ export function BackupSection() {
             {downloading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Descargando...
+                {t("downloading")}
               </>
             ) : (
               <>
                 <Download className="h-4 w-4" />
-                Descargar backup
+                {t("download")}
               </>
             )}
           </Button>

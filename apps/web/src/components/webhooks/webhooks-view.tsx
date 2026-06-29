@@ -21,15 +21,16 @@ import {
 import { cn } from "@/lib/utils";
 import { Zap, Plus, Trash2, Globe, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const AVAILABLE_EVENTS = [
-  { value: "INVOICE_CREATED", label: "Factura creada" },
-  { value: "INVOICE_PAID", label: "Factura pagada" },
-  { value: "CLIENT_CREATED", label: "Cliente creado" },
-  { value: "QUOTE_ACCEPTED", label: "Presupuesto aceptado" },
-  { value: "PAYMENT_RECEIVED", label: "Pago recibido" },
+  "INVOICE_CREATED",
+  "INVOICE_PAID",
+  "CLIENT_CREATED",
+  "QUOTE_ACCEPTED",
+  "PAYMENT_RECEIVED",
 ] as const;
 
 // ─── Create Webhook Dialog ───────────────────────────────────────────────────
@@ -41,6 +42,7 @@ function CreateWebhookDialog({
   open: boolean;
   onOpenChange: (o: boolean) => void;
 }) {
+  const t = useTranslations("webhooks");
   const create = useCreateWebhook();
   const [url, setUrl] = useState("");
   const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
@@ -67,34 +69,34 @@ function CreateWebhookDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Zap className="h-5 w-5 text-primary" />
-            Nuevo webhook
+            {t("new")}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
-            <Label>URL del endpoint *</Label>
+            <Label>{t("endpointUrl")}</Label>
             <Input
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://api.tudominio.com/webhook"
+              placeholder={t("endpointPlaceholder")}
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label>Eventos</Label>
+            <Label>{t("events")}</Label>
             <p className="text-xs text-muted-foreground">
-              Selecciona los eventos que disparan el webhook
+              {t("eventsHint")}
             </p>
             <div className="flex flex-wrap gap-2">
               {AVAILABLE_EVENTS.map((event) => {
-                const isSelected = selectedEvents.includes(event.value);
+                const isSelected = selectedEvents.includes(event);
                 return (
                   <button
-                    key={event.value}
+                    key={event}
                     type="button"
-                    onClick={() => toggleEvent(event.value)}
+                    onClick={() => toggleEvent(event)}
                     className={cn(
                       "rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors",
                       isSelected
@@ -102,7 +104,7 @@ function CreateWebhookDialog({
                         : "border-border bg-background text-muted-foreground hover:border-primary/50"
                     )}
                   >
-                    {event.label}
+                    {t(`eventLabels.${event}`)}
                   </button>
                 );
               })}
@@ -115,7 +117,7 @@ function CreateWebhookDialog({
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              Cancelar
+              {t("cancel")}
             </Button>
             <Button
               type="submit"
@@ -124,7 +126,7 @@ function CreateWebhookDialog({
               {create.isPending && (
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
               )}
-              Crear webhook
+              {t("create")}
             </Button>
           </DialogFooter>
         </form>
@@ -136,6 +138,7 @@ function CreateWebhookDialog({
 // ─── Webhook Card ────────────────────────────────────────────────────────────
 
 function WebhookCard({ webhook }: { webhook: any }) {
+  const t = useTranslations("webhooks");
   const remove = useDeleteWebhook();
 
   return (
@@ -149,12 +152,9 @@ function WebhookCard({ webhook }: { webhook: any }) {
             </div>
             <div className="flex items-center gap-1.5 flex-wrap">
               {(webhook.events ?? []).map((event: string) => {
-                const config = AVAILABLE_EVENTS.find(
-                  (e) => e.value === event
-                );
                 return (
                   <Badge key={event} variant="secondary" className="text-[10px]">
-                    {config?.label ?? event}
+                    {t(`eventLabels.${event}`)}
                   </Badge>
                 );
               })}
@@ -182,6 +182,7 @@ function WebhookCard({ webhook }: { webhook: any }) {
 // ─── Main View ───────────────────────────────────────────────────────────────
 
 export function WebhooksView() {
+  const t = useTranslations("webhooks");
   const [dialogOpen, setDialogOpen] = useState(false);
   const { data: webhooks, isLoading } = useWebhooks();
 
@@ -194,15 +195,15 @@ export function WebhooksView() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Zap className="h-6 w-6 text-primary" />
-            Webhooks
+            {t("title")}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Recibe notificaciones HTTP cuando ocurran eventos en tu cuenta
+            {t("subtitle")}
           </p>
         </div>
         <Button className="gap-2" onClick={() => setDialogOpen(true)}>
           <Plus className="h-4 w-4" />
-          Nuevo webhook
+          {t("new")}
         </Button>
       </div>
 
@@ -218,16 +219,15 @@ export function WebhooksView() {
           <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
             <Globe className="h-8 w-8 text-primary" />
           </div>
-          <p className="font-semibold text-lg">Sin webhooks configurados</p>
+          <p className="font-semibold text-lg">{t("emptyTitle")}</p>
           <p className="text-sm text-muted-foreground mt-1 max-w-xs">
-            Los webhooks permiten que sistemas externos reciban
-            notificaciones automaticas cuando ocurren eventos en tu cuenta.
+            {t("emptyDesc")}
           </p>
           <Button
             className="mt-6 gap-2"
             onClick={() => setDialogOpen(true)}
           >
-            <Plus className="h-4 w-4" /> Crear webhook
+            <Plus className="h-4 w-4" /> {t("create")}
           </Button>
         </div>
       ) : (

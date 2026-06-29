@@ -13,6 +13,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -23,43 +24,30 @@ interface CalendarEvent {
   amount?: number;
 }
 
-const EVENT_CONFIG: Record<
+const EVENT_STYLE: Record<
   CalendarEvent["type"],
-  { label: string; variant: "warning" | "success" | "info"; dotColor: string }
+  { labelKey: string; variant: "warning" | "success" | "info"; dotColor: string }
 > = {
   invoice_due: {
-    label: "Vencimiento",
+    labelKey: "events.invoiceDue",
     variant: "warning",
     dotColor: "bg-amber-500",
   },
   invoice_issued: {
-    label: "Emitida",
+    labelKey: "events.invoiceIssued",
     variant: "success",
     dotColor: "bg-teal-500",
   },
   quote_expiry: {
-    label: "Presupuesto expira",
+    labelKey: "events.quoteExpiry",
     variant: "info",
     dotColor: "bg-blue-500",
   },
 };
 
-const MONTH_NAMES = [
-  "Enero",
-  "Febrero",
-  "Marzo",
-  "Abril",
-  "Mayo",
-  "Junio",
-  "Julio",
-  "Agosto",
-  "Septiembre",
-  "Octubre",
-  "Noviembre",
-  "Diciembre",
-];
+const MONTH_KEYS = ["1","2","3","4","5","6","7","8","9","10","11","12"];
 
-const DAY_LABELS = ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"];
+const DAY_KEYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
 // ─── Calendar helpers ────────────────────────────────────────────────────────
 
@@ -113,7 +101,7 @@ function DayCell({
               key={i}
               className={cn(
                 "h-1.5 w-1.5 rounded-full",
-                EVENT_CONFIG[event.type]?.dotColor ?? "bg-muted-foreground"
+                EVENT_STYLE[event.type]?.dotColor ?? "bg-muted-foreground"
               )}
             />
           ))}
@@ -131,10 +119,11 @@ function DayCell({
 // ─── Event List ──────────────────────────────────────────────────────────────
 
 function EventList({ events, day }: { events: CalendarEvent[]; day: number }) {
+  const t = useTranslations("calendar");
   if (events.length === 0) {
     return (
       <p className="text-sm text-muted-foreground text-center py-4">
-        Sin eventos para el dia {day}
+        {t("noEventsDay", { day })}
       </p>
     );
   }
@@ -142,7 +131,7 @@ function EventList({ events, day }: { events: CalendarEvent[]; day: number }) {
   return (
     <div className="space-y-2">
       {events.map((event, i) => {
-        const config = EVENT_CONFIG[event.type];
+        const config = EVENT_STYLE[event.type];
         return (
           <motion.div
             key={i}
@@ -158,7 +147,7 @@ function EventList({ events, day }: { events: CalendarEvent[]; day: number }) {
               <div>
                 <p className="text-sm font-medium">{event.title}</p>
                 <Badge variant={config?.variant ?? "secondary"} className="mt-0.5">
-                  {config?.label ?? event.type}
+                  {config ? t(config.labelKey) : event.type}
                 </Badge>
               </div>
             </div>
@@ -175,6 +164,7 @@ function EventList({ events, day }: { events: CalendarEvent[]; day: number }) {
 // ─── Main View ───────────────────────────────────────────────────────────────
 
 export function CalendarView() {
+  const t = useTranslations("calendar");
   const today = new Date();
   const [month, setMonth] = useState(today.getMonth() + 1);
   const [year, setYear] = useState(today.getFullYear());
@@ -227,10 +217,10 @@ export function CalendarView() {
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <CalendarIcon className="h-6 w-6 text-primary" />
-          Calendario
+          {t("title")}
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Vencimientos, emisiones y fechas clave de tu facturacion
+          {t("subtitle")}
         </p>
       </div>
 
@@ -242,7 +232,7 @@ export function CalendarView() {
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <h2 className="text-lg font-semibold">
-              {MONTH_NAMES[month - 1]} {year}
+              {t(`months.${month}`)} {year}
             </h2>
             <Button variant="ghost" size="icon" onClick={nextMonth}>
               <ChevronRight className="h-4 w-4" />
@@ -259,12 +249,12 @@ export function CalendarView() {
               <div className="hidden md:block">
                 {/* Day headers */}
                 <div className="grid grid-cols-7 gap-1 mb-1">
-                  {DAY_LABELS.map((label) => (
+                  {DAY_KEYS.map((key) => (
                     <div
-                      key={label}
+                      key={key}
                       className="text-center text-xs font-medium text-muted-foreground py-1"
                     >
-                      {label}
+                      {t(`days.${key}`)}
                     </div>
                   ))}
                 </div>
@@ -309,11 +299,12 @@ export function CalendarView() {
                           day === todayDay && "text-primary"
                         )}
                       >
-                        {day} de {MONTH_NAMES[month - 1]}
-                        {day === todayDay && " (Hoy)"}
+                        {t("dayOf", { day, month: t(`months.${month}`) })}
+                        {day === todayDay && ` (${t("today")})`}
                       </p>
                       {dayEvents.map((event, ei) => {
-                        const config = EVENT_CONFIG[event.type];
+                        const EVENT_COLORS: Record<string, string> = { DUE_DATE: "bg-red-500", ISSUED: "bg-emerald-500", QUOTE_EXPIRY: "bg-amber-500" };
+                        const config = { dotColor: EVENT_COLORS[event.type] ?? "bg-blue-500" };
                         return (
                           <div
                             key={ei}
@@ -341,7 +332,7 @@ export function CalendarView() {
                 })}
                 {Object.keys(eventsByDay).length === 0 && (
                   <p className="text-sm text-muted-foreground text-center py-8">
-                    Sin eventos este mes
+                    {t("noEventsMonth")}
                   </p>
                 )}
               </div>
@@ -350,11 +341,11 @@ export function CalendarView() {
 
           {/* Legend */}
           <div className="flex items-center gap-4 mt-4 pt-3 border-t flex-wrap">
-            {Object.entries(EVENT_CONFIG).map(([, config]) => (
-              <div key={config.label} className="flex items-center gap-1.5">
+            {Object.entries(EVENT_STYLE).map(([key, config]) => (
+              <div key={key} className="flex items-center gap-1.5">
                 <div className={cn("h-2 w-2 rounded-full", config.dotColor)} />
                 <span className="text-xs text-muted-foreground">
-                  {config.label}
+                  {t(config.labelKey)}
                 </span>
               </div>
             ))}
@@ -367,7 +358,7 @@ export function CalendarView() {
         <Card>
           <CardContent className="p-4">
             <h3 className="text-sm font-semibold mb-3">
-              {selectedDay} de {MONTH_NAMES[month - 1]} {year}
+              {t("dayOf", { day: selectedDay, month: t(`months.${month}`) })} {year}
             </h3>
             <EventList
               events={eventsByDay[selectedDay] ?? []}

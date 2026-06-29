@@ -14,22 +14,24 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { LocaleLink as Link } from "@/components/ui/locale-link";
 import { useCertificateInfo } from "@/hooks/use-verifactu";
+import { useTranslations } from "next-intl";
 
 const _STATUS_MAP = {
-  GENERATED: { label: "Generado",  variant: "secondary",    icon: Clock },
-  SIGNED:    { label: "Firmado",   variant: "info",         icon: Clock },
-  SENT:      { label: "Enviado",   variant: "info",         icon: Clock },
-  ACCEPTED:  { label: "Aceptado",  variant: "success",      icon: CheckCircle2 },
-  REJECTED:  { label: "Rechazado", variant: "destructive",  icon: AlertCircle },
+  GENERATED: { labelKey: "statusLabels.GENERATED",  variant: "secondary",    icon: Clock },
+  SIGNED:    { labelKey: "statusLabels.SIGNED",   variant: "info",         icon: Clock },
+  SENT:      { labelKey: "statusLabels.SENT",   variant: "info",         icon: Clock },
+  ACCEPTED:  { labelKey: "statusLabels.ACCEPTED",  variant: "success",      icon: CheckCircle2 },
+  REJECTED:  { labelKey: "statusLabels.REJECTED", variant: "destructive",  icon: AlertCircle },
 };
 
-const STATUS_CONFIG = _STATUS_MAP as Record<string, { label: string; variant: any; icon: any }>;
+const STATUS_CONFIG = _STATUS_MAP as Record<string, { labelKey: string; variant: any; icon: any }>;
 
 function getStatusConfig(status: string) {
   return STATUS_CONFIG[status] ?? _STATUS_MAP.GENERATED;
 }
 
 export function VerifactuView() {
+  const t = useTranslations("verifactuView");
   const { data, isLoading } = useVerifactuRecords();
   const { data: certInfo } = useCertificateInfo();
 
@@ -47,13 +49,13 @@ export function VerifactuView() {
             VeriFactu
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Registro de facturas conforme a la normativa AEAT 2025
+            {t("subtitle")}
           </p>
         </div>
         <Button variant="outline" size="sm" asChild className="gap-2">
           <Link href="/verifactu/certificado">
             <Settings className="h-4 w-4" />
-            Certificado digital
+            {t("digitalCert")}
           </Link>
         </Button>
       </div>
@@ -62,25 +64,25 @@ export function VerifactuView() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-4">
-            <p className="text-xs text-muted-foreground">Total registros</p>
+            <p className="text-xs text-muted-foreground">{t("totalRecords")}</p>
             <p className="text-2xl font-bold mt-1">{stats?.total ?? 0}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <p className="text-xs text-muted-foreground">Generados</p>
+            <p className="text-xs text-muted-foreground">{t("generated")}</p>
             <p className="text-2xl font-bold mt-1 text-blue-500">{stats?.generated ?? 0}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <p className="text-xs text-muted-foreground">Enviados</p>
+            <p className="text-xs text-muted-foreground">{t("sentRecords")}</p>
             <p className="text-2xl font-bold mt-1 text-amber-500">{stats?.sent ?? 0}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <p className="text-xs text-muted-foreground">Aceptados</p>
+            <p className="text-xs text-muted-foreground">{t("accepted")}</p>
             <p className="text-2xl font-bold mt-1 text-emerald-500">{stats?.accepted ?? 0}</p>
           </CardContent>
         </Card>
@@ -93,15 +95,15 @@ export function VerifactuView() {
             <div className="flex items-start gap-3">
               <ShieldAlert className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
               <div className="text-sm">
-                <p className="font-medium text-amber-700 dark:text-amber-300">Certificado digital no configurado</p>
+                <p className="font-medium text-amber-700 dark:text-amber-300">{t("certNotConfigured")}</p>
                 <p className="text-amber-600 dark:text-amber-400 mt-0.5">
-                  Para que las facturas se firmen y envíen a AEAT necesitas subir tu certificado digital. Tarda menos de 5 minutos.
+                  {t("certNotConfiguredDesc")}
                 </p>
               </div>
             </div>
             <Button size="sm" asChild className="shrink-0 gap-2">
               <Link href="/verifactu/certificado">
-                Configurar ahora
+                {t("configureNow")}
               </Link>
             </Button>
           </CardContent>
@@ -112,14 +114,14 @@ export function VerifactuView() {
             <div className="flex items-start gap-3">
               <ShieldAlert className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
               <div className="text-sm">
-                <p className="font-medium text-red-700 dark:text-red-300">Certificado caducado</p>
+                <p className="font-medium text-red-700 dark:text-red-300">{t("certExpired")}</p>
                 <p className="text-red-600 dark:text-red-400 mt-0.5">
-                  Tu certificado caducó el {new Date(certInfo.expiresAt!).toLocaleDateString("es-ES")}. Renuévalo para seguir enviando a AEAT.
+                  {t("certExpiredDesc", { date: new Date(certInfo.expiresAt!).toLocaleDateString("es-ES") })}
                 </p>
               </div>
             </div>
             <Button size="sm" variant="destructive" asChild className="shrink-0">
-              <Link href="/verifactu/certificado">Renovar</Link>
+              <Link href="/verifactu/certificado">{t("renew")}</Link>
             </Button>
           </CardContent>
         </Card>
@@ -130,15 +132,15 @@ export function VerifactuView() {
               <AlertCircle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
               <div className="text-sm">
                 <p className="font-medium text-amber-700 dark:text-amber-300">
-                  Certificado caduca en {certInfo.daysLeft} días
+                  {t("certExpiring", { days: certInfo.daysLeft ?? 0 })}
                 </p>
                 <p className="text-amber-600 dark:text-amber-400 mt-0.5">
-                  Renuévalo antes del {new Date(certInfo.expiresAt!).toLocaleDateString("es-ES")} para no interrumpir el servicio.
+                  {t("certExpiringDesc", { date: new Date(certInfo.expiresAt!).toLocaleDateString("es-ES") })}
                 </p>
               </div>
             </div>
             <Button size="sm" variant="outline" asChild className="shrink-0">
-              <Link href="/verifactu/certificado">Ver certificado</Link>
+              <Link href="/verifactu/certificado">{t("viewCert")}</Link>
             </Button>
           </CardContent>
         </Card>
@@ -148,10 +150,10 @@ export function VerifactuView() {
             <ShieldCheck className="h-5 w-5 text-emerald-500 shrink-0" />
             <div className="text-sm">
               <p className="font-medium text-emerald-700 dark:text-emerald-300">
-                Certificado activo — {certInfo.subject}
+                {t("certActive", { subject: certInfo.subject })}
               </p>
               <p className="text-emerald-600 dark:text-emerald-400 mt-0.5">
-                Válido hasta {new Date(certInfo.expiresAt!).toLocaleDateString("es-ES")} · Las facturas se firman automáticamente
+                {t("certActiveDesc", { date: new Date(certInfo.expiresAt!).toLocaleDateString("es-ES") })}
               </p>
             </div>
           </CardContent>
@@ -164,11 +166,10 @@ export function VerifactuView() {
           <Shield className="h-5 w-5 text-blue-500 shrink-0 mt-0.5" />
           <div className="text-sm">
             <p className="font-medium text-blue-700 dark:text-blue-300">
-              Normativa VeriFactu (AEAT)
+              {t("regulation")}
             </p>
             <p className="text-blue-600 dark:text-blue-400 mt-0.5">
-              Desde julio 2025 es obligatorio generar el registro VeriFactu para cada factura emitida.
-              El código QR incluido en la factura permite a tus clientes verificarla en la AEAT.
+              {t("regulationDesc")}
             </p>
           </div>
         </CardContent>
@@ -177,7 +178,7 @@ export function VerifactuView() {
       {/* Records table */}
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm">Historial de registros</CardTitle>
+          <CardTitle className="text-sm">{t("recordHistory")}</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           {isLoading ? (
@@ -189,14 +190,14 @@ export function VerifactuView() {
           ) : records.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <Shield className="h-10 w-10 text-muted-foreground mb-3" />
-              <p className="font-medium">Sin registros VeriFactu</p>
+              <p className="font-medium">{t("noRecords")}</p>
               <p className="text-sm text-muted-foreground mt-1 mb-4">
-                Genera el primer registro desde el detalle de una factura enviada o pagada
+                {t("noRecordsDesc")}
               </p>
               <Button variant="outline" size="sm" asChild>
                 <Link href="/facturas">
                   <FileText className="h-4 w-4 mr-2" />
-                  Ir a Facturas
+                  {t("goToInvoices")}
                 </Link>
               </Button>
             </div>
@@ -205,12 +206,12 @@ export function VerifactuView() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border bg-muted/30">
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3">Factura</th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">Cliente</th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">Fecha</th>
-                    <th className="text-right font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">Importe</th>
-                    <th className="text-left font-medium text-muted-foreground px-4 py-3">Hash</th>
-                    <th className="text-center font-medium text-muted-foreground px-4 py-3">Estado</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3">{t("invoice")}</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">{t("client")}</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">{t("date")}</th>
+                    <th className="text-right font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">{t("amount")}</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-3">{t("hash")}</th>
+                    <th className="text-center font-medium text-muted-foreground px-4 py-3">{t("status")}</th>
                     <th className="px-4 py-3 w-20" />
                   </tr>
                 </thead>
@@ -254,7 +255,7 @@ export function VerifactuView() {
                               className="h-5 w-5"
                               onClick={() => {
                                 navigator.clipboard.writeText(record.hash);
-                                toast.success("Hash copiado");
+                                toast.success(t("hashCopied"));
                               }}
                             >
                               <Copy className="h-3 w-3" />
@@ -264,13 +265,13 @@ export function VerifactuView() {
                         <td className="px-4 py-3 text-center">
                           <Badge variant={cfg.variant} className="gap-1">
                             <Icon className="h-3 w-3" />
-                            {cfg.label}
+                            {t(cfg.labelKey)}
                           </Badge>
                         </td>
                         <td className="px-4 py-3 text-right">
                           {record.qrCode && (
                             <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-                              <a href={record.qrCode} target="_blank" rel="noopener noreferrer" title="Verificar en AEAT">
+                              <a href={record.qrCode} target="_blank" rel="noopener noreferrer" title={t("verifyAeat")}>
                                 <ExternalLink className="h-4 w-4" />
                               </a>
                             </Button>

@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { ArrowRight, CheckCircle2, AlertCircle, ChevronLeft } from "lucide-react";
 import type { FieldDef, PreviewResult } from "@/hooks/use-import";
+import { useTranslations } from "next-intl";
 
 interface Props {
   preview: PreviewResult;
@@ -17,6 +18,7 @@ interface Props {
 }
 
 export function ColumnMapper({ preview, fileName, onConfirm, onBack, isPending }: Props) {
+  const t = useTranslations("columnMapper");
   const { columns, sample, suggestions, fields } = preview;
   const [mapping, setMapping] = useState<Record<string, string>>(suggestions);
 
@@ -36,7 +38,7 @@ export function ColumnMapper({ preview, fileName, onConfirm, onBack, isPending }
         <div className="min-w-0">
           <p className="font-medium text-sm truncate">{fileName}</p>
           <p className="text-xs text-muted-foreground">
-            {columns.length} columnas detectadas · {sample.length > 0 ? `${sample.length} filas de muestra` : "sin datos"}
+            {t("columnsDetected", { count: columns.length })} · {sample.length > 0 ? t("sampleRows", { count: sample.length }) : t("noData")}
           </p>
         </div>
       </div>
@@ -44,9 +46,9 @@ export function ColumnMapper({ preview, fileName, onConfirm, onBack, isPending }
       {/* Mapping table */}
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm">Mapea las columnas de tu archivo</CardTitle>
+          <CardTitle className="text-sm">{t("mapTitle")}</CardTitle>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Hemos sugerido el mapeo automáticamente. Corrígelo si algún campo no es correcto.
+            {t("mapHint")}
           </p>
         </CardHeader>
         <CardContent className="p-0">
@@ -54,9 +56,9 @@ export function ColumnMapper({ preview, fileName, onConfirm, onBack, isPending }
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-muted/30">
-                  <th className="text-left font-medium text-muted-foreground px-4 py-2 w-1/3">Campo del sistema</th>
-                  <th className="text-left font-medium text-muted-foreground px-4 py-2 w-1/3">Columna de tu archivo</th>
-                  <th className="text-left font-medium text-muted-foreground px-4 py-2 w-1/3">Valor de ejemplo</th>
+                  <th className="text-left font-medium text-muted-foreground px-4 py-2 w-1/3">{t("systemField")}</th>
+                  <th className="text-left font-medium text-muted-foreground px-4 py-2 w-1/3">{t("sourceColumn")}</th>
+                  <th className="text-left font-medium text-muted-foreground px-4 py-2 w-1/3">{t("sampleValue")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -71,7 +73,7 @@ export function ColumnMapper({ preview, fileName, onConfirm, onBack, isPending }
                           <span className="font-medium">{field.label}</span>
                           {field.required && (
                             <Badge variant="outline" className="text-[10px] px-1 py-0 border-primary/40 text-primary">
-                              obligatorio
+                              {t("required")}
                             </Badge>
                           )}
                         </div>
@@ -89,7 +91,7 @@ export function ColumnMapper({ preview, fileName, onConfirm, onBack, isPending }
                               : "border-border",
                           )}
                         >
-                          <option value="">— no mapear —</option>
+                          <option value="">{t("noMap")}</option>
                           {columns.map((col) => (
                             <option key={col} value={col}>{col}</option>
                           ))}
@@ -103,7 +105,7 @@ export function ColumnMapper({ preview, fileName, onConfirm, onBack, isPending }
                               ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
                               : "bg-muted text-muted-foreground",
                           )}>
-                            {preview || "(vacío)"}
+                            {preview || t("empty")}
                           </span>
                         ) : (
                           <span className="text-muted-foreground text-xs">—</span>
@@ -123,8 +125,7 @@ export function ColumnMapper({ preview, fileName, onConfirm, onBack, isPending }
         <div className="flex items-start gap-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg px-3 py-2">
           <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
           <span>
-            Campos obligatorios sin mapear:{" "}
-            <strong>{requiredUnmapped.map((f) => f.label).join(", ")}</strong>
+            {t("unmappedRequired", { fields: requiredUnmapped.map((f) => f.label).join(", ") })}
           </span>
         </div>
       )}
@@ -132,7 +133,7 @@ export function ColumnMapper({ preview, fileName, onConfirm, onBack, isPending }
       {canImport && (
         <div className="flex items-center gap-2 text-sm text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800 rounded-lg px-3 py-2">
           <CheckCircle2 className="h-4 w-4 shrink-0" />
-          <span>Todo listo. Pulsa "Importar" para comenzar.</span>
+          <span>{t("allReady")}</span>
         </div>
       )}
 
@@ -142,7 +143,7 @@ export function ColumnMapper({ preview, fileName, onConfirm, onBack, isPending }
           disabled={!canImport || isPending}
           className="gap-2"
         >
-          {isPending ? "Importando..." : "Importar"}
+          {isPending ? t("importing") : t("import")}
           {!isPending && <ArrowRight className="h-4 w-4" />}
         </Button>
       </div>

@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { useCreateDeal } from "@/hooks/use-deals";
 import { useClients } from "@/hooks/use-clients";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const schema = z.object({
   title: z.string().min(1, "El título es obligatorio"),
@@ -31,6 +32,7 @@ interface DealDialogProps {
 }
 
 export function DealDialog({ open, onOpenChange, stages }: DealDialogProps) {
+  const t = useTranslations("pipelineDialog");
   const createDeal = useCreateDeal();
   const { data: clientsData } = useClients({ limit: 200 } as any);
   const clients = clientsData?.data ?? [];
@@ -56,19 +58,19 @@ export function DealDialog({ open, onOpenChange, stages }: DealDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Nuevo lead</DialogTitle>
+          <DialogTitle>{t("title")}</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-1.5">
-            <Label>Título *</Label>
-            <Input {...register("title")} placeholder="Nombre del lead" />
+            <Label>{t("dealTitle")}</Label>
+            <Input {...register("title")} placeholder={t("dealTitlePlaceholder")} />
             {errors.title && <p className="text-xs text-destructive">{errors.title.message}</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label>Etapa *</Label>
+              <Label>{t("stage")}</Label>
               <select
                 {...register("stageId")}
                 className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
@@ -79,18 +81,18 @@ export function DealDialog({ open, onOpenChange, stages }: DealDialogProps) {
               </select>
             </div>
             <div className="space-y-1.5">
-              <Label>Valor (€)</Label>
+              <Label>{t("value")}</Label>
               <Input type="number" step="0.01" min="0" {...register("value")} />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <Label>Cliente</Label>
+            <Label>{t("client")}</Label>
             <select
               {...register("clientId")}
               className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
             >
-              <option value="">Sin cliente asignado</option>
+              <option value="">{t("noClient")}</option>
               {clients.map((c: any) => (
                 <option key={c.id} value={c.id}>{c.name}</option>
               ))}
@@ -98,17 +100,17 @@ export function DealDialog({ open, onOpenChange, stages }: DealDialogProps) {
           </div>
 
           <div className="space-y-1.5">
-            <Label>Fecha de cierre estimada</Label>
+            <Label>{t("closeDate")}</Label>
             <Input type="date" {...register("closeDate")} />
           </div>
 
           <DialogFooter className="gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancelar
+              {t("cancel")}
             </Button>
             <Button type="submit" disabled={createDeal.isPending}>
               {createDeal.isPending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-              Crear lead
+              {t("create")}
             </Button>
           </DialogFooter>
         </form>

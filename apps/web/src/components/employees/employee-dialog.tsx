@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCreateEmployee } from "@/hooks/use-employees";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const schema = z.object({
   firstName:    z.string().min(1, "Obligatorio"),
@@ -38,15 +39,16 @@ interface EmployeeDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const CONTRACT_OPTIONS = [
-  { value: "INDEFINIDO",    label: "Indefinido" },
-  { value: "TEMPORAL",      label: "Temporal" },
-  { value: "PRACTICAS",     label: "Prácticas" },
-  { value: "AUTONOMO",      label: "Autónomo" },
-  { value: "OBRA_SERVICIO", label: "Obra y servicio" },
+const CONTRACT_KEYS = [
+  { value: "INDEFINIDO",    key: "indefinido" },
+  { value: "TEMPORAL",      key: "temporal" },
+  { value: "PRACTICAS",     key: "practicas" },
+  { value: "AUTONOMO",      key: "autonomo" },
+  { value: "OBRA_SERVICIO", key: "obraServicio" },
 ];
 
 export function EmployeeDialog({ open, onOpenChange }: EmployeeDialogProps) {
+  const t = useTranslations("employees.dialog");
   const createEmployee = useCreateEmployee();
   const today = new Date().toISOString().split("T")[0]!;
 
@@ -86,35 +88,35 @@ export function EmployeeDialog({ open, onOpenChange }: EmployeeDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Nuevo empleado</DialogTitle>
+          <DialogTitle>{t("title")}</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* Datos personales */}
           <div>
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Datos personales</p>
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">{t("personalData")}</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label>Nombre *</Label>
+                <Label>{t("firstName")}</Label>
                 <Input {...register("firstName")} placeholder="Juan" />
                 {errors.firstName && <p className="text-xs text-destructive">{errors.firstName.message}</p>}
               </div>
               <div className="space-y-1.5">
-                <Label>Apellidos *</Label>
+                <Label>{t("lastName")}</Label>
                 <Input {...register("lastName")} placeholder="García López" />
                 {errors.lastName && <p className="text-xs text-destructive">{errors.lastName.message}</p>}
               </div>
               <div className="space-y-1.5">
-                <Label>Email</Label>
+                <Label>{t("email")}</Label>
                 <Input type="email" {...register("email")} placeholder="juan@empresa.com" />
                 {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
               </div>
               <div className="space-y-1.5">
-                <Label>Teléfono</Label>
+                <Label>{t("phone")}</Label>
                 <Input {...register("phone")} placeholder="612345678" />
               </div>
               <div className="space-y-1.5">
-                <Label>NIF/NIE</Label>
+                <Label>{t("nifNie")}</Label>
                 <Input {...register("nif")} placeholder="12345678A" />
               </div>
             </div>
@@ -122,34 +124,34 @@ export function EmployeeDialog({ open, onOpenChange }: EmployeeDialogProps) {
 
           {/* Datos laborales */}
           <div>
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Datos laborales</p>
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">{t("workData")}</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label>Cargo</Label>
+                <Label>{t("position")}</Label>
                 <Input {...register("position")} placeholder="Desarrollador Senior" />
               </div>
               <div className="space-y-1.5">
-                <Label>Departamento</Label>
+                <Label>{t("department")}</Label>
                 <Input {...register("department")} placeholder="Tecnología" />
               </div>
               <div className="space-y-1.5">
-                <Label>Tipo de contrato</Label>
+                <Label>{t("contractType")}</Label>
                 <select
                   {...register("contractType")}
                   className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                 >
-                  {CONTRACT_OPTIONS.map((o) => (
-                    <option key={o.value} value={o.value}>{o.label}</option>
+                  {CONTRACT_KEYS.map((o) => (
+                    <option key={o.value} value={o.value}>{t(`contracts.${o.key}`)}</option>
                   ))}
                 </select>
               </div>
               <div className="space-y-1.5">
-                <Label>Fecha de alta *</Label>
+                <Label>{t("startDate")}</Label>
                 <Input type="date" {...register("startDate")} />
                 {errors.startDate && <p className="text-xs text-destructive">{errors.startDate.message}</p>}
               </div>
               <div className="space-y-1.5">
-                <Label>Salario bruto anual (€) *</Label>
+                <Label>{t("salary")}</Label>
                 <Input
                   type="number"
                   step="0.01"
@@ -160,7 +162,7 @@ export function EmployeeDialog({ open, onOpenChange }: EmployeeDialogProps) {
                 {errors.salary && <p className="text-xs text-destructive">{errors.salary.message}</p>}
               </div>
               <div className="space-y-1.5">
-                <Label>Horas semanales</Label>
+                <Label>{t("workingHours")}</Label>
                 <Input
                   type="number"
                   step="0.5"
@@ -175,11 +177,11 @@ export function EmployeeDialog({ open, onOpenChange }: EmployeeDialogProps) {
 
           <DialogFooter className="gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancelar
+              {t("cancel")}
             </Button>
             <Button type="submit" disabled={createEmployee.isPending}>
               {createEmployee.isPending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-              Crear empleado
+              {t("create")}
             </Button>
           </DialogFooter>
         </form>

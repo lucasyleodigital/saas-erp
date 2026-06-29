@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 // Static fallback while loading or no data
 const PLACEHOLDER = [
@@ -24,6 +25,7 @@ const PLACEHOLDER = [
 ];
 
 export function RevenueChart() {
+  const t = useTranslations("dashboard.revenueChart");
   const { data, isLoading } = useRevenueChart();
   const chartData = data?.length ? data : PLACEHOLDER;
 
@@ -31,15 +33,15 @@ export function RevenueChart() {
     <Card>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle>Ingresos vs Gastos</CardTitle>
+          <CardTitle>{t("title")}</CardTitle>
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <span className="flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-primary" />
-              Ingresos
+              {t("revenue")}
             </span>
             <span className="flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-muted-foreground" />
-              Gastos
+              {t("expenses")}
             </span>
           </div>
         </div>
@@ -82,7 +84,7 @@ export function RevenueChart() {
                       {payload.map((p) => (
                         <div key={p.name} className="flex items-center justify-between gap-6 text-xs">
                           <span className="text-muted-foreground">
-                            {p.name === "revenue" ? "Ingresos" : "Gastos"}
+                            {p.name === "revenue" ? t("revenue") : t("expenses")}
                           </span>
                           <span className="font-medium">{formatCurrency(p.value as number)}</span>
                         </div>

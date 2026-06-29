@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { useGpsConsent, GpsConsentBanner } from "@/components/time-tracking/gps-consent";
+import { useTranslations } from "next-intl";
 
 function getLocation(allowed: boolean): Promise<{ latitude: number; longitude: number } | null> {
   if (!allowed) return Promise.resolve(null);
@@ -31,6 +32,7 @@ function getLocation(allowed: boolean): Promise<{ latitude: number; longitude: n
 }
 
 export function EmployeeDashboard() {
+  const t = useTranslations("dashboard.employee");
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [acting, setActing] = useState(false);
@@ -50,17 +52,17 @@ export function EmployeeDashboard() {
     try {
       const loc = await getLocation(gpsConsented === true);
       await api.post(`/my/${action}`, loc ?? {});
-      const gpsMsg = loc ? " (con ubicacion)" : "";
-      toast.success((action === "clock-in" ? "Entrada fichada" : "Salida fichada") + gpsMsg);
+      const gpsMsg = loc ? t("withLocation") : "";
+      toast.success((action === "clock-in" ? t("clockedInSuccess") : t("clockedOutSuccess")) + gpsMsg);
       setTimeout(load, 1000);
     } catch (e: any) {
-      toast.error(e?.response?.data?.message ?? "Error al fichar");
+      toast.error(e?.response?.data?.message ?? t("clockError"));
     }
     setActing(false);
   }
 
   function loadPayslips() {
-    api.get("/my/payslips").then((r) => { setPayslips(r.data); setShowPayslips(true); }).catch(() => toast.error("Error al cargar nominas"));
+    api.get("/my/payslips").then((r) => { setPayslips(r.data); setShowPayslips(true); }).catch(() => toast.error(t("payslips.loadError")));
   }
 
   if (loading) {
@@ -74,7 +76,7 @@ export function EmployeeDashboard() {
   if (!data) {
     return (
       <div className="text-center py-16 text-muted-foreground">
-        No se pudo cargar tu portal. Contacta con tu empresa.
+        {t("loadError")}
       </div>
     );
   }
@@ -89,7 +91,7 @@ export function EmployeeDashboard() {
         <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3 text-primary font-bold text-xl">
           {data.employee.firstName[0]}{data.employee.lastName?.[0] ?? ""}
         </div>
-        <h1 className="text-xl font-bold">Hola, {data.employee.firstName}!</h1>
+        <h1 className="text-xl font-bold">{t("hello", { name: data.employee.firstName })}</h1>
         {data.employee.position && (
           <p className="text-sm text-muted-foreground">{data.employee.position}</p>
         )}
@@ -106,14 +108,14 @@ export function EmployeeDashboard() {
           <div className="flex items-center gap-2">
             <MapPin className={`h-4 w-4 ${gpsConsented ? "text-green-600" : "text-muted-foreground"}`} />
             <span className="text-muted-foreground">
-              Ubicacion: {gpsConsented ? "Activada" : "Desactivada"}
+              {t("location")}: {gpsConsented ? t("locationOn") : t("locationOff")}
             </span>
           </div>
           <button
             className="text-xs text-primary hover:underline"
             onClick={() => gpsConsented ? rejectGps() : acceptGps()}
           >
-            {gpsConsented ? "Desactivar" : "Activar"}
+            {gpsConsented ? t("disable") : t("enable")}
           </button>
         </div>
       )}
@@ -127,7 +129,7 @@ export function EmployeeDashboard() {
               <div className="flex items-center justify-center gap-2 text-sm mt-2">
                 <span className="h-2.5 w-2.5 rounded-full bg-green-500 animate-pulse" />
                 <span className="text-green-600 font-medium">
-                  Fichado desde las {new Date(data.activeEntry.clockIn).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}
+                  {t("clockedSince", { time: new Date(data.activeEntry.clockIn).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" }) })}
                 </span>
               </div>
             )}
@@ -141,7 +143,7 @@ export function EmployeeDashboard() {
               disabled={acting || data.isClockedIn}
             >
               {acting ? <Loader2 className="h-5 w-5 animate-spin" /> : <LogIn className="h-5 w-5" />}
-              Entrada
+              {t("clockIn")}
             </Button>
             <Button
               size="lg"
@@ -151,7 +153,7 @@ export function EmployeeDashboard() {
               disabled={acting || !data.isClockedIn}
             >
               {acting ? <Loader2 className="h-5 w-5 animate-spin" /> : <LogOut className="h-5 w-5" />}
-              Salida
+              {t("clockOut")}
             </Button>
           </div>
         </CardContent>
@@ -160,10 +162,10 @@ export function EmployeeDashboard() {
       {/* KPIs */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          { label: "Hoy", value: `${data.summary?.today ?? 0}h`, icon: Clock, color: "text-blue-600", bg: "bg-blue-500/10" },
-          { label: "Semana", value: `${data.summary?.week ?? 0}h`, icon: CalendarDays, color: "text-emerald-600", bg: "bg-emerald-500/10" },
-          { label: "Mes", value: `${data.summary?.month ?? 0}h`, icon: Briefcase, color: "text-purple-600", bg: "bg-purple-500/10" },
-          { label: "Extras", value: `${data.summary?.overtime ?? 0}h`, icon: Zap, color: "text-amber-600", bg: "bg-amber-500/10" },
+          { label: t("today"), value: `${data.summary?.today ?? 0}h`, icon: Clock, color: "text-blue-600", bg: "bg-blue-500/10" },
+          { label: t("week"), value: `${data.summary?.week ?? 0}h`, icon: CalendarDays, color: "text-emerald-600", bg: "bg-emerald-500/10" },
+          { label: t("month"), value: `${data.summary?.month ?? 0}h`, icon: Briefcase, color: "text-purple-600", bg: "bg-purple-500/10" },
+          { label: t("overtime"), value: `${data.summary?.overtime ?? 0}h`, icon: Zap, color: "text-amber-600", bg: "bg-amber-500/10" },
         ].map((kpi) => (
           <Card key={kpi.label}>
             <CardContent className="p-3 text-center">
@@ -179,7 +181,7 @@ export function EmployeeDashboard() {
       {data.recentEntries?.length > 0 && (
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm">Fichajes recientes</CardTitle>
+            <CardTitle className="text-sm">{t("recentEntries")}</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             <div className="divide-y">
@@ -200,10 +202,10 @@ export function EmployeeDashboard() {
       {/* Quick actions */}
       <div className="grid grid-cols-2 gap-3">
         <Button variant="outline" className="h-12 gap-2" onClick={() => setLeaveDialog(true)}>
-          <CalendarOff className="h-4 w-4" /> Solicitar dias
+          <CalendarOff className="h-4 w-4" /> {t("requestDays")}
         </Button>
         <Button variant="outline" className="h-12 gap-2" onClick={loadPayslips}>
-          <Receipt className="h-4 w-4" /> Ver nominas
+          <Receipt className="h-4 w-4" /> {t("viewPayslips")}
         </Button>
       </div>
 
@@ -212,7 +214,7 @@ export function EmployeeDashboard() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm flex items-center gap-2">
-              <CalendarOff className="h-4 w-4" /> Proximas ausencias
+              <CalendarOff className="h-4 w-4" /> {t("upcomingAbsences")}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -220,14 +222,14 @@ export function EmployeeDashboard() {
               <div key={i} className="flex items-center justify-between text-sm py-1.5">
                 <Badge variant="secondary" className="text-xs">{l.type}</Badge>
                 <span>{l.startDate} - {l.endDate}</span>
-                <span className="font-medium">{l.days} dias</span>
+                <span className="font-medium">{t("daysCount", { days: l.days })}</span>
               </div>
             ))}
           </CardContent>
         </Card>
       )}
       {data.pendingLeaves > 0 && (
-        <p className="text-sm text-amber-600 text-center">{data.pendingLeaves} solicitud(es) pendiente(s) de aprobacion</p>
+        <p className="text-sm text-amber-600 text-center">{t("pendingRequests", { count: data.pendingLeaves })}</p>
       )}
 
       {/* Leave request dialog */}
@@ -240,6 +242,7 @@ export function EmployeeDashboard() {
 }
 
 function LeaveRequestDialog({ open, onOpenChange, onSuccess }: { open: boolean; onOpenChange: (o: boolean) => void; onSuccess: () => void }) {
+  const t = useTranslations("dashboard.employee.leaveDialog");
   const [type, setType] = useState("VACATION");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -252,14 +255,14 @@ function LeaveRequestDialog({ open, onOpenChange, onSuccess }: { open: boolean; 
     setSubmitting(true);
     try {
       await api.post("/my/leaves", { type, startDate, endDate, reason: reason || undefined });
-      toast.success("Solicitud enviada. Tu empresa la revisara.");
+      toast.success(t("success"));
       onOpenChange(false);
       onSuccess();
       setStartDate("");
       setEndDate("");
       setReason("");
     } catch (err: any) {
-      toast.error(err?.response?.data?.message ?? "Error al enviar solicitud");
+      toast.error(err?.response?.data?.message ?? t("error"));
     }
     setSubmitting(false);
   }
@@ -268,38 +271,38 @@ function LeaveRequestDialog({ open, onOpenChange, onSuccess }: { open: boolean; 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-sm">
         <DialogHeader>
-          <DialogTitle>Solicitar dias</DialogTitle>
+          <DialogTitle>{t("title")}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
-            <Label>Tipo</Label>
+            <Label>{t("type")}</Label>
             <select value={type} onChange={(e) => setType(e.target.value)} className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
-              <option value="VACATION">Vacaciones</option>
-              <option value="SICK">Baja medica</option>
-              <option value="PERSONAL">Asuntos propios</option>
-              <option value="MATERNITY">Maternidad/Paternidad</option>
-              <option value="OTHER">Otro</option>
+              <option value="VACATION">{t("vacation")}</option>
+              <option value="SICK">{t("sick")}</option>
+              <option value="PERSONAL">{t("personal")}</option>
+              <option value="MATERNITY">{t("maternity")}</option>
+              <option value="OTHER">{t("other")}</option>
             </select>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label>Desde</Label>
+              <Label>{t("from")}</Label>
               <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} required />
             </div>
             <div className="space-y-1.5">
-              <Label>Hasta</Label>
+              <Label>{t("to")}</Label>
               <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required />
             </div>
           </div>
           <div className="space-y-1.5">
-            <Label>Motivo (opcional)</Label>
-            <Input value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Viaje familiar..." />
+            <Label>{t("reason")}</Label>
+            <Input value={reason} onChange={(e) => setReason(e.target.value)} placeholder={t("reasonPlaceholder")} />
           </div>
           <DialogFooter className="gap-2">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>{t("cancel")}</Button>
             <Button type="submit" disabled={submitting}>
               {submitting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-              Enviar solicitud
+              {t("submit")}
             </Button>
           </DialogFooter>
         </form>
@@ -309,30 +312,29 @@ function LeaveRequestDialog({ open, onOpenChange, onSuccess }: { open: boolean; 
 }
 
 function PayslipsDialog({ open, onOpenChange, payslips }: { open: boolean; onOpenChange: (o: boolean) => void; payslips: any[] }) {
-  const MONTHS = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-  const STATUS_LABELS: Record<string, string> = { DRAFT: "Borrador", APPROVED: "Aprobada", PAID: "Pagada" };
+  const t = useTranslations("dashboard.employee.payslips");
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Mis nominas</DialogTitle>
+          <DialogTitle>{t("title")}</DialogTitle>
         </DialogHeader>
         {payslips.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-8">No tienes nominas todavia</p>
+          <p className="text-sm text-muted-foreground text-center py-8">{t("empty")}</p>
         ) : (
           <div className="space-y-2 max-h-80 overflow-y-auto">
             {payslips.map((p) => (
               <div key={p.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/30 text-sm">
                 <div>
-                  <p className="font-medium">{MONTHS[p.month]} {p.year}</p>
+                  <p className="font-medium">{t(`months.${p.month}`)} {p.year}</p>
                   <p className="text-xs text-muted-foreground">
-                    Bruto: {formatCurrency(Number(p.baseSalary))} | IRPF: {formatCurrency(Number(p.irpfAmount ?? 0))}
+                    {t("gross")}: {formatCurrency(Number(p.baseSalary))} | {t("irpf")}: {formatCurrency(Number(p.irpfAmount ?? 0))}
                   </p>
                 </div>
                 <div className="text-right">
                   <p className="font-bold text-emerald-600">{formatCurrency(Number(p.netSalary))}</p>
-                  <Badge variant="secondary" className="text-xs">{STATUS_LABELS[p.status] ?? p.status}</Badge>
+                  <Badge variant="secondary" className="text-xs">{t(`status.${p.status}`)}</Badge>
                 </div>
               </div>
             ))}
