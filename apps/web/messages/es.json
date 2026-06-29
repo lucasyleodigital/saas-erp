@@ -107,7 +107,19 @@
     "payroll": "Nóminas",
     "suppliers": "Proveedores",
     "orders": "Pedidos",
-    "purchaseOrders": "Órdenes de compra"
+    "purchaseOrders": "Órdenes de compra",
+    "projects": "Proyectos",
+    "timeTracking": "Control horario",
+    "calendar": "Calendario",
+    "bank": "Banco",
+    "webhooks": "Webhooks",
+    "audit": "Auditoria",
+    "backup": "Backup",
+    "adminPanel": "Panel admin",
+    "myPortal": "Mi portal",
+    "home": "Inicio",
+    "clockIn": "Fichaje",
+    "myPayslips": "Mis nominas"
   },
   "auth": {
     "login": {

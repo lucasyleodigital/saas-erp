@@ -107,7 +107,19 @@
     "payroll": "Payroll",
     "suppliers": "Suppliers",
     "orders": "Orders",
-    "purchaseOrders": "Purchase orders"
+    "purchaseOrders": "Purchase orders",
+    "projects": "Projects",
+    "timeTracking": "Time tracking",
+    "calendar": "Calendar",
+    "bank": "Bank",
+    "webhooks": "Webhooks",
+    "audit": "Audit",
+    "backup": "Backup",
+    "adminPanel": "Admin panel",
+    "myPortal": "My portal",
+    "home": "Home",
+    "clockIn": "Clock in",
+    "myPayslips": "My payslips"
   },
   "auth": {
     "login": {

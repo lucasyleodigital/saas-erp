@@ -107,7 +107,19 @@
     "payroll": "Nominak",
     "suppliers": "Hornitzaileak",
     "orders": "Eskariak",
-    "purchaseOrders": "Erosketa-aginduak"
+    "purchaseOrders": "Erosketa-aginduak",
+    "projects": "Proiektuak",
+    "timeTracking": "Ordu-kontrola",
+    "calendar": "Egutegia",
+    "bank": "Bankua",
+    "webhooks": "Webhooks",
+    "audit": "Auditoria",
+    "backup": "Babeskopia",
+    "adminPanel": "Admin panela",
+    "myPortal": "Nire ataria",
+    "home": "Hasiera",
+    "clockIn": "Fitxatzea",
+    "myPayslips": "Nire nominak"
   },
   "auth": {
     "login": {

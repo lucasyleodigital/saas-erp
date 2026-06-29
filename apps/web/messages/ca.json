@@ -107,7 +107,19 @@
     "payroll": "Nomines",
     "suppliers": "Proveidors",
     "orders": "Comandes",
-    "purchaseOrders": "Ordres de compra"
+    "purchaseOrders": "Ordres de compra",
+    "projects": "Projectes",
+    "timeTracking": "Control horari",
+    "calendar": "Calendari",
+    "bank": "Banc",
+    "webhooks": "Webhooks",
+    "audit": "Auditoria",
+    "backup": "Copia de seguretat",
+    "adminPanel": "Panell admin",
+    "myPortal": "El meu portal",
+    "home": "Inici",
+    "clockIn": "Fitxatge",
+    "myPayslips": "Les meves nomines"
   },
   "auth": {
     "login": {

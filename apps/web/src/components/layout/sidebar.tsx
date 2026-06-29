@@ -65,11 +65,11 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
   // Employee portal - limited sidebar
   const employeeNavItems = [
     {
-      group: "Mi portal",
+      group: t("myPortal"),
       items: [
-        { href: "/dashboard", label: "Inicio", icon: LayoutDashboard },
-        { href: "/control-horario", label: "Fichaje", icon: Timer },
-        { href: "/nominas", label: "Mis nominas", icon: Banknote },
+        { href: "/dashboard", label: t("home"), icon: LayoutDashboard },
+        { href: "/control-horario", label: t("clockIn"), icon: Timer },
+        { href: "/nominas", label: t("myPayslips"), icon: Banknote },
         { href: "/configuracion", label: t("settings"), icon: Settings },
       ],
     },
@@ -89,9 +89,9 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         { href: "/clientes",  label: t("clients"),   icon: Users },
         { href: "/leads",     label: t("leads"),     icon: UserPlus },
         { href: "/pipeline",  label: t("pipeline"),  icon: BarChart3 },
-        { href: "/proyectos", label: "Proyectos",    icon: FolderKanban },
+        { href: "/proyectos", label: t("projects"),    icon: FolderKanban },
         { href: "/empleados", label: t("employees"), icon: UserCheck },
-        { href: "/control-horario", label: "Control horario", icon: Timer },
+        { href: "/control-horario", label: t("timeTracking"), icon: Timer },
         { href: "/nominas",   label: t("payroll"),   icon: Banknote },
       ],
     },
@@ -102,7 +102,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         { href: "/presupuestos", label: t("quotes"),        icon: ClipboardList },
         { href: "/pedidos",      label: t("orders"),        icon: ShoppingCart },
         { href: "/albaranes",    label: t("deliveryNotes"), icon: Truck },
-        { href: "/calendario",   label: "Calendario",       icon: CalendarDays },
+        { href: "/calendario",   label: t("calendar"),       icon: CalendarDays },
         { href: "/productos",    label: t("products"),      icon: Package },
         { href: "/verifactu",    label: t("verifactu"),     icon: Shield },
       ],
@@ -111,7 +111,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
       group: t("accounting"),
       items: [
         { href: "/contabilidad", label: t("accounting"),     icon: Calculator },
-        { href: "/banco",        label: "Banco",             icon: Landmark },
+        { href: "/banco",        label: t("bank"),             icon: Landmark },
         { href: "/compras",      label: t("purchaseOrders"), icon: PackageCheck },
         { href: "/inventario",   label: t("inventory"),      icon: Warehouse },
         { href: "/proveedores",  label: t("suppliers"),      icon: Truck },
@@ -124,9 +124,9 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         { href: "/empresa",         label: t("company"),       icon: Building2 },
         { href: "/billing",         label: t("billing"),       icon: CreditCard },
         { href: "/automatizaciones",label: t("automations"),   icon: Zap },
-        { href: "/webhooks",        label: "Webhooks",         icon: Webhook },
-        { href: "/auditoria",       label: "Auditoria",        icon: Shield },
-        { href: "/backup",          label: "Backup",           icon: HardDrive },
+        { href: "/webhooks",        label: t("webhooks"),         icon: Webhook },
+        { href: "/auditoria",       label: t("audit"),        icon: Shield },
+        { href: "/backup",          label: t("backup"),           icon: HardDrive },
         { href: "/notificaciones",  label: t("notifications"), icon: Bell },
         { href: "/configuracion",   label: t("settings"),      icon: Settings },
       ],
@@ -134,7 +134,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
     ...(currentUser?.role === "SUPER_ADMIN" ? [{
       group: "ADMIN",
       items: [
-        { href: "/admin", label: "Panel admin", icon: Shield },
+        { href: "/admin", label: t("adminPanel"), icon: Shield },
       ],
     }] : []),
   ];
