@@ -30,6 +30,8 @@ import {
   ArrowRight,
   Trash2,
   Eye,
+  Filter,
+  X,
 } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { motion } from "framer-motion";
@@ -48,11 +50,22 @@ const STATUS_TAB_KEYS = [
 
 export function DeliveryNotesView() {
   const t = useTranslations("deliveryNotes");
+  const tCommon = useTranslations("common");
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<string | undefined>(undefined);
   const [page, setPage] = useState(1);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [amountMin, setAmountMin] = useState("");
+  const [amountMax, setAmountMax] = useState("");
   const debouncedSearch = useDebounce(search, 300);
+  const debouncedMin = useDebounce(amountMin, 400);
+  const debouncedMax = useDebounce(amountMax, 400);
+
+  const hasActiveFilters = !!(dateFrom || dateTo || amountMin || amountMax);
+  function clearFilters() { setDateFrom(""); setDateTo(""); setAmountMin(""); setAmountMax(""); setPage(1); }
 
   const updateStatus = useUpdateDeliveryNoteStatus();
   const convertToInvoice = useConvertDeliveryNoteToInvoice();
@@ -63,6 +76,10 @@ export function DeliveryNotesView() {
     status,
     page,
     limit: 20,
+    ...(dateFrom ? { dateFrom } : {}),
+    ...(dateTo ? { dateTo } : {}),
+    ...(debouncedMin ? { amountMin: debouncedMin } : {}),
+    ...(debouncedMax ? { amountMax: debouncedMax } : {}),
   });
 
   const notes: any[] = data?.data ?? [];
@@ -88,32 +105,70 @@ export function DeliveryNotesView() {
       </div>
 
       {/* Tabs + Search */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-        <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg overflow-x-auto">
-          {STATUS_TAB_KEYS.map((tab) => (
-            <button
-              key={tab.tKey}
-              onClick={() => { setStatus(tab.key); setPage(1); }}
-              className={cn(
-                "px-3 py-1.5 text-sm rounded-md transition-colors whitespace-nowrap",
-                status === tab.key
-                  ? "bg-background text-foreground shadow-sm font-medium"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {t(`statuses.${tab.tKey}`)}
-            </button>
-          ))}
+      <div className="space-y-3">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg overflow-x-auto">
+            {STATUS_TAB_KEYS.map((tab) => (
+              <button
+                key={tab.tKey}
+                onClick={() => { setStatus(tab.key); setPage(1); }}
+                className={cn(
+                  "px-3 py-1.5 text-sm rounded-md transition-colors whitespace-nowrap",
+                  status === tab.key
+                    ? "bg-background text-foreground shadow-sm font-medium"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {t(`statuses.${tab.tKey}`)}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder={t("search")}
+                className="pl-9"
+                value={search}
+                onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+              />
+            </div>
+            <Button variant={showFilters || hasActiveFilters ? "secondary" : "outline"} size="sm"
+              onClick={() => setShowFilters((v) => !v)} className="gap-2 shrink-0">
+              <Filter className="h-4 w-4" />{tCommon("filters")}
+              {hasActiveFilters && <span className="h-2 w-2 rounded-full bg-primary" />}
+            </Button>
+            {hasActiveFilters && (
+              <Button variant="ghost" size="sm" onClick={clearFilters}>
+                <X className="h-4 w-4 mr-1" />{tCommon("clearFilters")}
+              </Button>
+            )}
+          </div>
         </div>
-        <div className="relative w-full sm:w-64">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder={t("search")}
-            className="pl-9"
-            value={search}
-            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-          />
-        </div>
+        {showFilters && (
+          <div className="flex flex-wrap gap-3 p-4 bg-muted/30 rounded-lg border border-border">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-muted-foreground">{tCommon("dateFrom")}</label>
+              <input type="date" value={dateFrom} onChange={(e) => { setDateFrom(e.target.value); setPage(1); }}
+                className="h-9 rounded-md border border-input bg-background px-3 text-sm" />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-muted-foreground">{tCommon("dateTo")}</label>
+              <input type="date" value={dateTo} onChange={(e) => { setDateTo(e.target.value); setPage(1); }}
+                className="h-9 rounded-md border border-input bg-background px-3 text-sm" />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-muted-foreground">{tCommon("amountMin")}</label>
+              <input type="number" min="0" value={amountMin} onChange={(e) => setAmountMin(e.target.value)}
+                placeholder="0" className="h-9 w-28 rounded-md border border-input bg-background px-3 text-sm" />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-muted-foreground">{tCommon("amountMax")}</label>
+              <input type="number" min="0" value={amountMax} onChange={(e) => setAmountMax(e.target.value)}
+                placeholder="∞" className="h-9 w-28 rounded-md border border-input bg-background px-3 text-sm" />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Table */}

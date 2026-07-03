@@ -6,12 +6,13 @@ export class DeliveryNotesService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(companyId: string, params: any) {
-    const { search, status } = params;
+    const { search, status, clientId, dateFrom, dateTo, amountMin, amountMax } = params;
     const page = Number(params.page) || 1;
     const limit = Number(params.limit) || 20;
     const where: any = {
       companyId,
       ...(status && { status }),
+      ...(clientId && { clientId }),
       ...(search && {
         OR: [
           { number: { contains: search, mode: "insensitive" } },
@@ -19,6 +20,16 @@ export class DeliveryNotesService {
         ],
       }),
     };
+    if (dateFrom || dateTo) {
+      where.issueDate = {};
+      if (dateFrom) where.issueDate.gte = new Date(dateFrom);
+      if (dateTo) where.issueDate.lte = new Date(dateTo + "T23:59:59");
+    }
+    if (amountMin || amountMax) {
+      where.total = {};
+      if (amountMin) where.total.gte = Number(amountMin);
+      if (amountMax) where.total.lte = Number(amountMax);
+    }
 
     const [data, total] = await Promise.all([
       this.prisma.deliveryNote.findMany({

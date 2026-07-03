@@ -25,7 +25,7 @@ export class InvoicesService {
     private audit: AuditService,
   ) {}
 
-  async findAll(companyId: string, params: PaginationParams & { status?: string; dateFrom?: string; dateTo?: string; amountMin?: string; amountMax?: string; clientId?: string }) {
+  async findAll(companyId: string, params: PaginationParams & { status?: string; dateFrom?: string; dateTo?: string; amountMin?: string; amountMax?: string; clientId?: string; clientSearch?: string }) {
     const { search, status, sortBy = "createdAt", sortOrder = "desc" } = params;
     const page = Number(params.page) || 1;
     const limit = Number(params.limit) || 20;
@@ -35,6 +35,7 @@ export class InvoicesService {
       companyId,
       ...(status && { status }),
       ...(params.clientId && { clientId: params.clientId }),
+      ...(params.clientSearch && { client: { name: { contains: params.clientSearch, mode: "insensitive" } } }),
       ...(search && {
         OR: [
           { number: { contains: search, mode: "insensitive" } },

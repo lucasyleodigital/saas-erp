@@ -10,14 +10,21 @@ export class ProductsService {
   ) {}
 
   async findAll(companyId: string, params: any) {
-    const { search } = params;
+    const { search, type, categoryId, minPrice, maxPrice } = params;
     const page = Number(params.page) || 1;
     const limit = Number(params.limit) || 50;
     const where: any = {
       companyId,
       isActive: true,
       ...(search && { name: { contains: search, mode: "insensitive" } }),
+      ...(type && { type }),
+      ...(categoryId && { categoryId }),
     };
+    if (minPrice || maxPrice) {
+      where.price = {};
+      if (minPrice) where.price.gte = Number(minPrice);
+      if (maxPrice) where.price.lte = Number(maxPrice);
+    }
     const [data, total] = await Promise.all([
       this.prisma.product.findMany({
         where,
@@ -28,7 +35,7 @@ export class ProductsService {
       }),
       this.prisma.product.count({ where }),
     ]);
-    return { data, total, page, limit };
+    return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
   }
 
   async findOne(companyId: string, id: string) {

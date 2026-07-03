@@ -95,7 +95,7 @@ export function InvoicesView() {
     ...(dateTo ? { dateTo } : {}),
     ...(amountMin ? { amountMin } : {}),
     ...(amountMax ? { amountMax } : {}),
-    ...(clientFilter ? { client: clientFilter } : {}),
+    ...(clientFilter ? { clientSearch: clientFilter } : {}),
   });
 
   const invoices = data?.data ?? [];

@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
 
-export function useLeads(params?: { page?: number; limit?: number; search?: string }) {
+export function useLeads(params?: { page?: number; limit?: number; search?: string; source?: string; dateFrom?: string; dateTo?: string }) {
   return useQuery({
     queryKey: ["leads", params],
     queryFn: () => api.get("/leads", { params }).then((r) => r.data),

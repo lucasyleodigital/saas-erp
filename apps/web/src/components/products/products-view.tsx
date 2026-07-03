@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ProductDialog } from "./product-dialog";
 import { formatCurrency } from "@/lib/utils";
-import { Search, Plus, Package, Settings, Boxes, Tag, MoreHorizontal, Edit, Trash2, Download } from "lucide-react";
+import { Search, Plus, Package, Settings, Boxes, Tag, MoreHorizontal, Edit, Trash2, Download, Filter, X } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useExport } from "@/hooks/use-export";
 import { motion } from "framer-motion";
@@ -35,9 +35,23 @@ export function ProductsView() {
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const [typeFilter, setTypeFilter] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
   const debouncedSearch = useDebounce(search, 300);
+  const debouncedMin = useDebounce(minPrice, 400);
+  const debouncedMax = useDebounce(maxPrice, 400);
 
-  const { data, isLoading } = useProducts({ search: debouncedSearch || undefined });
+  const hasActiveFilters = !!(typeFilter || minPrice || maxPrice);
+  function clearFilters() { setTypeFilter(""); setMinPrice(""); setMaxPrice(""); }
+
+  const { data, isLoading } = useProducts({
+    search: debouncedSearch || undefined,
+    ...(typeFilter ? { type: typeFilter } : {}),
+    ...(debouncedMin ? { minPrice: debouncedMin } : {}),
+    ...(debouncedMax ? { maxPrice: debouncedMax } : {}),
+  });
   const products = data?.data ?? [];
   const deleteProduct = useDeleteProduct();
   const { exportData: exportProducts, isPending: exporting } = useExport("products");
@@ -64,14 +78,52 @@ export function ProductsView() {
         </div>
       </div>
 
-      <div className="relative w-full max-w-sm">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder={t("search")}
-          className="pl-9"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+      <div className="space-y-3">
+        <div className="flex items-center gap-2">
+          <div className="relative w-full max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder={t("search")}
+              className="pl-9"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <Button variant={showFilters || hasActiveFilters ? "secondary" : "outline"} size="sm"
+            onClick={() => setShowFilters((v) => !v)} className="gap-2 shrink-0">
+            <Filter className="h-4 w-4" />{tCommon("filters")}
+            {hasActiveFilters && <span className="h-2 w-2 rounded-full bg-primary" />}
+          </Button>
+          {hasActiveFilters && (
+            <Button variant="ghost" size="sm" onClick={clearFilters}>
+              <X className="h-4 w-4 mr-1" />{tCommon("clearFilters")}
+            </Button>
+          )}
+        </div>
+        {showFilters && (
+          <div className="flex flex-wrap gap-3 p-4 bg-muted/30 rounded-lg border border-border">
+            <div className="flex flex-col gap-1.5 min-w-[160px]">
+              <label className="text-xs font-medium text-muted-foreground">{tCommon("type")}</label>
+              <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}
+                className="h-9 rounded-md border border-input bg-background px-3 text-sm">
+                <option value="">{tCommon("all")}</option>
+                <option value="SERVICE">{t("type.service")}</option>
+                <option value="DIGITAL">{t("type.digital")}</option>
+                <option value="PHYSICAL">{t("type.physical")}</option>
+              </select>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-muted-foreground">{tCommon("amountMin")}</label>
+              <input type="number" min="0" value={minPrice} onChange={(e) => setMinPrice(e.target.value)}
+                placeholder="0" className="h-9 w-28 rounded-md border border-input bg-background px-3 text-sm" />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-muted-foreground">{tCommon("amountMax")}</label>
+              <input type="number" min="0" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)}
+                placeholder="∞" className="h-9 w-28 rounded-md border border-input bg-background px-3 text-sm" />
+            </div>
+          </div>
+        )}
       </div>
 
       {isLoading ? (

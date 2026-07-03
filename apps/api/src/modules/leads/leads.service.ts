@@ -10,12 +10,13 @@ export class LeadsService {
   ) {}
 
   async findAll(companyId: string, params: any) {
-    const { search } = params;
+    const { search, source, dateFrom, dateTo } = params;
     const page = Number(params.page) || 1;
     const limit = Number(params.limit) || 20;
     const where: any = {
       companyId,
       isConverted: false,
+      ...(source && { source }),
       ...(search && {
         OR: [
           { name: { contains: search, mode: "insensitive" } },
@@ -24,6 +25,11 @@ export class LeadsService {
         ],
       }),
     };
+    if (dateFrom || dateTo) {
+      where.createdAt = {};
+      if (dateFrom) where.createdAt.gte = new Date(dateFrom);
+      if (dateTo) where.createdAt.lte = new Date(dateTo + "T23:59:59");
+    }
 
     const [data, total] = await Promise.all([
       this.prisma.lead.findMany({

@@ -20,6 +20,8 @@ import {
   Globe,
   AlertCircle,
   Download,
+  Filter,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -43,12 +45,17 @@ export function ClientsView() {
   const [page, setPage] = useState(1);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingClient, setEditingClient] = useState<any>(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const [typeFilter, setTypeFilter] = useState("");
   const debouncedSearch = useDebounce(search, 300);
+
+  const hasActiveFilters = !!typeFilter;
 
   const { data, isLoading, isError, error } = useClients({
     search: debouncedSearch || undefined,
     page,
     limit: 20,
+    ...(typeFilter ? { type: typeFilter } : {}),
   });
 
   const deleteClient = useDeleteClient();
@@ -100,18 +107,50 @@ export function ClientsView() {
         </div>
       </div>
 
-      {/* Search */}
-      <div className="relative w-full max-w-sm">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder={t("searchPlaceholder")}
-          className="pl-9"
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setPage(1);
-          }}
-        />
+      {/* Search + Filter */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-2">
+          <div className="relative w-full max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder={t("searchPlaceholder")}
+              className="pl-9"
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            />
+          </div>
+          <Button
+            variant={showFilters || hasActiveFilters ? "secondary" : "outline"}
+            size="sm"
+            onClick={() => setShowFilters((v) => !v)}
+            className="gap-2 shrink-0"
+          >
+            <Filter className="h-4 w-4" />
+            {tCommon("filters")}
+            {hasActiveFilters && <span className="h-2 w-2 rounded-full bg-primary" />}
+          </Button>
+          {hasActiveFilters && (
+            <Button variant="ghost" size="sm" onClick={() => { setTypeFilter(""); setPage(1); }}>
+              <X className="h-4 w-4 mr-1" />{tCommon("clearFilters")}
+            </Button>
+          )}
+        </div>
+        {showFilters && (
+          <div className="flex flex-wrap gap-3 p-4 bg-muted/30 rounded-lg border border-border">
+            <div className="flex flex-col gap-1.5 min-w-[160px]">
+              <label className="text-xs font-medium text-muted-foreground">{t("type")}</label>
+              <select
+                value={typeFilter}
+                onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
+                className="h-9 rounded-md border border-input bg-background px-3 text-sm"
+              >
+                <option value="">{tCommon("all")}</option>
+                <option value="INDIVIDUAL">{t("typeIndividual")}</option>
+                <option value="COMPANY">{t("typeCompany")}</option>
+              </select>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Table */}

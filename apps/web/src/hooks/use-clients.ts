@@ -8,7 +8,7 @@ export const clientKeys = {
   detail: (id: string) => [...clientKeys.all, "detail", id] as const,
 };
 
-export function useClients(params?: { page?: number; limit?: number; search?: string }) {
+export function useClients(params?: { page?: number; limit?: number; search?: string; type?: string; isActive?: string }) {
   return useQuery({
     queryKey: clientKeys.list(params),
     queryFn: () =>

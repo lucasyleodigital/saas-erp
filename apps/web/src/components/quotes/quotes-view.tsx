@@ -34,7 +34,10 @@ import {
   ArrowRight,
   Download,
   Copy,
+  Filter,
+  X,
 } from "lucide-react";
+import { Label } from "@/components/ui/label";
 import { useDebounce } from "@/hooks/use-debounce";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -66,7 +69,20 @@ export function QuotesView() {
   const [page, setPage] = useState(1);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [pdfLoading, setPdfLoading] = useState<string | null>(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [amountMin, setAmountMin] = useState("");
+  const [amountMax, setAmountMax] = useState("");
+  const [clientSearch, setClientSearch] = useState("");
   const debouncedSearch = useDebounce(search, 300);
+  const debouncedClient = useDebounce(clientSearch, 300);
+
+  const hasActiveFilters = !!(dateFrom || dateTo || amountMin || amountMax || clientSearch);
+
+  function clearFilters() {
+    setDateFrom(""); setDateTo(""); setAmountMin(""); setAmountMax(""); setClientSearch(""); setPage(1);
+  }
 
   const updateStatus = useUpdateQuoteStatus();
   const convertToInvoice = useConvertQuoteToInvoice();
@@ -79,6 +95,11 @@ export function QuotesView() {
     status,
     page,
     limit: 20,
+    ...(dateFrom ? { dateFrom } : {}),
+    ...(dateTo ? { dateTo } : {}),
+    ...(amountMin ? { amountMin } : {}),
+    ...(amountMax ? { amountMax } : {}),
+    ...(debouncedClient ? { clientSearch: debouncedClient } : {}),
   });
 
   const quotes: any[] = data?.data ?? [];
@@ -99,39 +120,76 @@ export function QuotesView() {
         </Button>
       </div>
 
-      {/* Tabs + Search */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-        <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg overflow-x-auto">
-          {STATUS_TABS.map((tab) => (
-            <button
-              key={tab.label}
-              onClick={() => {
-                setStatus(tab.key);
-                setPage(1);
-              }}
-              className={cn(
-                "px-3 py-1.5 text-sm rounded-md transition-colors whitespace-nowrap",
-                status === tab.key
-                  ? "bg-background text-foreground shadow-sm font-medium"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {tab.label}
-            </button>
-          ))}
+      {/* Tabs + Search + Filters */}
+      <div className="space-y-3">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg overflow-x-auto">
+            {STATUS_TABS.map((tab) => (
+              <button
+                key={tab.label}
+                onClick={() => { setStatus(tab.key); setPage(1); }}
+                className={cn(
+                  "px-3 py-1.5 text-sm rounded-md transition-colors whitespace-nowrap",
+                  status === tab.key
+                    ? "bg-background text-foreground shadow-sm font-medium"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder={t("searchPlaceholder")}
+              className="pl-9"
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            />
+          </div>
+          <Button
+            variant={showFilters || hasActiveFilters ? "secondary" : "outline"}
+            size="sm"
+            onClick={() => setShowFilters((v) => !v)}
+            className="gap-2 shrink-0"
+          >
+            <Filter className="h-4 w-4" />
+            {tCommon("filters")}
+            {hasActiveFilters && <span className="h-2 w-2 rounded-full bg-primary" />}
+          </Button>
+          {hasActiveFilters && (
+            <Button variant="ghost" size="sm" onClick={clearFilters}>
+              <X className="h-4 w-4 mr-1" />{tCommon("clearFilters")}
+            </Button>
+          )}
         </div>
-        <div className="relative w-full sm:w-64">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder={t("searchPlaceholder")}
-            className="pl-9"
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setPage(1);
-            }}
-          />
-        </div>
+        {showFilters && (
+          <div className="flex flex-wrap gap-3 p-4 bg-muted/30 rounded-lg border border-border">
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-xs">{tCommon("dateFrom")}</Label>
+              <input type="date" value={dateFrom} onChange={(e) => { setDateFrom(e.target.value); setPage(1); }}
+                className="h-9 rounded-md border border-input bg-background px-3 text-sm" />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-xs">{tCommon("dateTo")}</Label>
+              <input type="date" value={dateTo} onChange={(e) => { setDateTo(e.target.value); setPage(1); }}
+                className="h-9 rounded-md border border-input bg-background px-3 text-sm" />
+            </div>
+            <div className="flex flex-col gap-1.5 min-w-[110px]">
+              <Label className="text-xs">{tCommon("amountMin")}</Label>
+              <Input type="number" placeholder="0" value={amountMin} onChange={(e) => { setAmountMin(e.target.value); setPage(1); }} className="h-9" />
+            </div>
+            <div className="flex flex-col gap-1.5 min-w-[110px]">
+              <Label className="text-xs">{tCommon("amountMax")}</Label>
+              <Input type="number" placeholder="∞" value={amountMax} onChange={(e) => { setAmountMax(e.target.value); setPage(1); }} className="h-9" />
+            </div>
+            <div className="flex flex-col gap-1.5 min-w-[160px]">
+              <Label className="text-xs">{tCommon("client")}</Label>
+              <Input placeholder={tCommon("searchClient")} value={clientSearch} onChange={(e) => { setClientSearch(e.target.value); setPage(1); }} className="h-9" />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Table */}

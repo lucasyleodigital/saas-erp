@@ -18,15 +18,17 @@ export class ClientsService {
     private audit: AuditService,
   ) {}
 
-  async findAll(companyId: string, params: PaginationParams) {
-    const { search, sortBy = "createdAt", sortOrder = "desc" } = params;
+  async findAll(companyId: string, params: PaginationParams & { type?: string; isActive?: string }) {
+    const { search, sortBy = "createdAt", sortOrder = "desc", type, isActive } = params;
     const page = Number(params.page) || 1;
     const limit = Number(params.limit) || 20;
     const skip = (page - 1) * limit;
 
-    const where = {
+    const where: any = {
       companyId,
-      isActive: true,
+      // default: only active; if isActive=all show all; if isActive=false show inactive
+      ...(isActive === "all" ? {} : isActive === "false" ? { isActive: false } : { isActive: true }),
+      ...(type && { type }),
       ...(search && {
         OR: [
           { name: { contains: search, mode: "insensitive" as const } },

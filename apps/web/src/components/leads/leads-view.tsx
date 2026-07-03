@@ -36,6 +36,8 @@ import {
   Trash2,
   Loader2,
   Users,
+  Filter,
+  X,
 } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { formatDate } from "@/lib/utils";
@@ -68,10 +70,23 @@ export function LeadsView() {
   const tCommon = useTranslations("common");
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [sourceFilter, setSourceFilter] = useState("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [page, setPage] = useState(1);
   const debouncedSearch = useDebounce(search, 300);
+
+  const hasActiveFilters = !!(sourceFilter || dateFrom || dateTo);
+  function clearFilters() { setSourceFilter(""); setDateFrom(""); setDateTo(""); setPage(1); }
 
   const { data, isLoading } = useLeads({
     search: debouncedSearch || undefined,
+    page,
+    limit: 20,
+    ...(sourceFilter ? { source: sourceFilter } : {}),
+    ...(dateFrom ? { dateFrom } : {}),
+    ...(dateTo ? { dateTo } : {}),
   });
   const createLead = useCreateLead();
   const convertLead = useConvertLead();
@@ -108,15 +123,49 @@ export function LeadsView() {
         </Button>
       </div>
 
-      {/* Search */}
-      <div className="relative w-full max-w-sm">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder={t("search")}
-          className="pl-9"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+      {/* Search + Filters */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-2">
+          <div className="relative w-full max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input placeholder={t("search")} className="pl-9" value={search}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
+          </div>
+          <Button variant={showFilters || hasActiveFilters ? "secondary" : "outline"} size="sm"
+            onClick={() => setShowFilters((v) => !v)} className="gap-2 shrink-0">
+            <Filter className="h-4 w-4" />{tCommon("filters")}
+            {hasActiveFilters && <span className="h-2 w-2 rounded-full bg-primary" />}
+          </Button>
+          {hasActiveFilters && (
+            <Button variant="ghost" size="sm" onClick={clearFilters}>
+              <X className="h-4 w-4 mr-1" />{tCommon("clearFilters")}
+            </Button>
+          )}
+        </div>
+        {showFilters && (
+          <div className="flex flex-wrap gap-3 p-4 bg-muted/30 rounded-lg border border-border">
+            <div className="flex flex-col gap-1.5 min-w-[160px]">
+              <label className="text-xs font-medium text-muted-foreground">{t("source")}</label>
+              <select value={sourceFilter} onChange={(e) => { setSourceFilter(e.target.value); setPage(1); }}
+                className="h-9 rounded-md border border-input bg-background px-3 text-sm">
+                <option value="">{tCommon("all")}</option>
+                {SOURCE_KEYS.map((k) => (
+                  <option key={k} value={k.toUpperCase()}>{t(`sources.${k}`)}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-muted-foreground">{tCommon("dateFrom")}</label>
+              <input type="date" value={dateFrom} onChange={(e) => { setDateFrom(e.target.value); setPage(1); }}
+                className="h-9 rounded-md border border-input bg-background px-3 text-sm" />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-muted-foreground">{tCommon("dateTo")}</label>
+              <input type="date" value={dateTo} onChange={(e) => { setDateTo(e.target.value); setPage(1); }}
+                className="h-9 rounded-md border border-input bg-background px-3 text-sm" />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Table */}

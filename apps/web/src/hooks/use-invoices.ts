@@ -17,7 +17,8 @@ export function useInvoices(params?: {
   dateTo?: string;
   amountMin?: string;
   amountMax?: string;
-  client?: string;
+  clientId?: string;
+  clientSearch?: string;
 }) {
   return useQuery({
     queryKey: invoiceKeys.list(params),

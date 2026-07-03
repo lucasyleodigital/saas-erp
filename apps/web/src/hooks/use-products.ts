@@ -7,7 +7,7 @@ export const productKeys = {
   list: (params?: Record<string, unknown>) => [...productKeys.all, "list", params] as const,
 };
 
-export function useProducts(params?: { search?: string }) {
+export function useProducts(params?: { search?: string; type?: string; categoryId?: string; minPrice?: string; maxPrice?: string; page?: number; limit?: number }) {
   return useQuery({
     queryKey: productKeys.list(params),
     queryFn: () => api.get("/products", { params }).then((r) => r.data),

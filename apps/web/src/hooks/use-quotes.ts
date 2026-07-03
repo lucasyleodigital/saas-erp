@@ -7,6 +7,12 @@ export function useQuotes(params?: {
   limit?: number;
   search?: string;
   status?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  amountMin?: string;
+  amountMax?: string;
+  clientId?: string;
+  clientSearch?: string;
 }) {
   return useQuery({
     queryKey: ["quotes", params],
