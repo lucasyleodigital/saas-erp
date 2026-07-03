@@ -1942,6 +1942,7 @@
     "status": "Estat",
     "hashCopied": "Hash copiat",
     "verifyAeat": "Verificar a AEAT",
+    "sendToAeat": "Enviar a AEAT",
     "statusLabels": {
       "GENERATED": "Generat",
       "SIGNED": "Signat",

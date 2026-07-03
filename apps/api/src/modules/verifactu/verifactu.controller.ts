@@ -64,4 +64,11 @@ export class VerifactuController {
   deleteCertificate(@CurrentUser() user: JwtPayload) {
     return this.verifactuService.deleteCertificate(user.companyId);
   }
+
+  // ── Send to AEAT ──────────────────────────────────────────────────────────
+
+  @Post("records/:id/send")
+  sendToAeat(@CurrentUser() user: JwtPayload, @Param("id") id: string) {
+    return this.verifactuService.sendToAeat(user.companyId, id);
+  }
 }

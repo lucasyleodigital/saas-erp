@@ -1888,6 +1888,7 @@
     "status": "Egoera",
     "hashCopied": "Hash kopiatua",
     "verifyAeat": "AEATn egiaztatu",
+    "sendToAeat": "AEATera bidali",
     "statusLabels": {
       "GENERATED": "Sortua",
       "SIGNED": "Sinatua",

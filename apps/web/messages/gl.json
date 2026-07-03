@@ -1803,6 +1803,7 @@
     "status": "Estado",
     "hashCopied": "Hash copiado",
     "verifyAeat": "Verificar na AEAT",
+    "sendToAeat": "Enviar á AEAT",
     "statusLabels": {
       "GENERATED": "Xerado",
       "SIGNED": "Asinado",

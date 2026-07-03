@@ -1,6 +1,6 @@
 "use client";
 
-import { useVerifactuRecords } from "@/hooks/use-verifactu";
+import { useVerifactuRecords, useSendToAeat } from "@/hooks/use-verifactu";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 import {
   Shield, ShieldCheck, ShieldAlert,
   CheckCircle2, Clock, AlertCircle,
-  ExternalLink, FileText, Copy, Settings,
+  ExternalLink, FileText, Copy, Settings, Send, Loader2,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -34,6 +34,7 @@ export function VerifactuView() {
   const t = useTranslations("verifactuView");
   const { data, isLoading } = useVerifactuRecords();
   const { data: certInfo } = useCertificateInfo();
+  const sendMutation = useSendToAeat();
 
   const records = data?.records ?? [];
   const stats = data?.stats;
@@ -269,13 +270,30 @@ export function VerifactuView() {
                           </Badge>
                         </td>
                         <td className="px-4 py-3 text-right">
-                          {record.qrCode && (
-                            <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-                              <a href={record.qrCode} target="_blank" rel="noopener noreferrer" title={t("verifyAeat")}>
-                                <ExternalLink className="h-4 w-4" />
-                              </a>
-                            </Button>
-                          )}
+                          <div className="flex items-center justify-end gap-1">
+                            {(record.status === "GENERATED" || record.status === "SIGNED") && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-7 gap-1 text-xs"
+                                disabled={sendMutation.isPending}
+                                onClick={() => sendMutation.mutate(record.id)}
+                              >
+                                {sendMutation.isPending && sendMutation.variables === record.id
+                                  ? <Loader2 className="h-3 w-3 animate-spin" />
+                                  : <Send className="h-3 w-3" />
+                                }
+                                {t("sendToAeat")}
+                              </Button>
+                            )}
+                            {record.qrCode && (
+                              <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+                                <a href={record.qrCode} target="_blank" rel="noopener noreferrer" title={t("verifyAeat")}>
+                                  <ExternalLink className="h-4 w-4" />
+                                </a>
+                              </Button>
+                            )}
+                          </div>
                         </td>
                       </motion.tr>
                     );

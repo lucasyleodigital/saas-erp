@@ -10,7 +10,7 @@ export interface VerifactuRecord {
   invoiceId: string;
   hash: string;
   previousHash: string | null;
-  status: "GENERATED" | "SUBMITTED" | "ACCEPTED" | "REJECTED" | "ERROR";
+  status: "GENERATED" | "SIGNED" | "SENT" | "SUBMITTED" | "ACCEPTED" | "REJECTED" | "ERROR";
   qrCode: string | null;
   xml: string;
   sentAt: string | null;
@@ -104,6 +104,25 @@ export function useDeleteCertificate() {
     },
     onError: (err: any) => {
       toast.error(err?.response?.data?.message ?? "Error al eliminar el certificado");
+    },
+  });
+}
+
+export function useSendToAeat() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (recordId: string) =>
+      api.post(`/verifactu/records/${recordId}/send`).then((r) => r.data),
+    onSuccess: (data) => {
+      if (data.status === "ACCEPTED") {
+        toast.success(`Aceptado por AEAT. CSV: ${data.csv ?? "—"}`);
+      } else {
+        toast.warning(`AEAT respondió: ${data.estado}${data.error ? ` — ${data.error}` : ""}`);
+      }
+      qc.invalidateQueries({ queryKey: ["verifactu"] });
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message ?? "Error al enviar a AEAT");
     },
   });
 }

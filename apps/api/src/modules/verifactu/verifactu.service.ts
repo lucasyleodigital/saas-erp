@@ -1,13 +1,28 @@
-import { Injectable, BadRequestException } from "@nestjs/common";
+import { Injectable, BadRequestException, Logger } from "@nestjs/common";
 import { createHash, createCipheriv, createDecipheriv, randomBytes } from "crypto";
 import { create } from "xmlbuilder2";
+import * as https from "https";
+import { SignedXml } from "xml-crypto";
 import { PrismaService } from "../../database/prisma.service";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const forge: any = require("node-forge");
 
+// AEAT VERI*FACTU SOAP endpoints (SuministroLR / SistemaFacturacion)
+const AEAT_ENDPOINTS = {
+  test: "https://prewww10.aeat.es/wlpl/TIKE-CONT/ws/SistemaFacturacion/VerifactuSOAP",
+  prod: "https://www10.aeat.es/wlpl/TIKE-CONT/ws/SistemaFacturacion/VerifactuSOAP",
+};
+
 @Injectable()
 export class VerifactuService {
+  private readonly logger = new Logger(VerifactuService.name);
+
   constructor(private prisma: PrismaService) {}
+
+  private aeatEndpoint(): string {
+    const env = (process.env.AEAT_ENV ?? "test").toLowerCase();
+    return env === "prod" ? AEAT_ENDPOINTS.prod : AEAT_ENDPOINTS.test;
+  }
 
   async generateForInvoice(companyId: string, invoiceId: string, silent = false) {
     const invoice = await this.prisma.invoice.findFirst({
@@ -44,9 +59,9 @@ export class VerifactuService {
       orderBy: { createdAt: "desc" },
     });
 
-    const xml = this.buildXml(invoice, invoice.company);
     const hashInput = this.buildHashInput(invoice, previousRecord?.hash);
     const hash = createHash("sha256").update(hashInput, "utf8").digest("hex").toUpperCase();
+    const xml = this.buildXml(invoice, invoice.company, hash, previousRecord?.hash ?? null);
 
     const record = await this.prisma.verifactuRecord.create({
       data: {
@@ -60,10 +75,14 @@ export class VerifactuService {
       },
     });
 
+    await this.prisma.verifactuEvent.create({
+      data: { recordId: record.id, status: "GENERATED", message: "Registro generado y huella calculada" },
+    });
+
     return record;
   }
 
-  private buildXml(invoice: any, company: any): string {
+  private buildXml(invoice: any, company: any, hash: string, previousHash: string | null): string {
     const taxLines: { rate: number; base: number; amount: number }[] =
       (invoice.taxes as any[])?.length > 0
         ? (invoice.taxes as any[]).map((t) => ({
@@ -73,7 +92,113 @@ export class VerifactuService {
           }))
         : [{ rate: 21, base: Number(invoice.subtotal), amount: Number(invoice.taxAmount) }];
 
+    const issueDateStr = new Date(invoice.issueDate).toLocaleDateString("es-ES");
+    const now = new Date();
+    // ISO 8601 with timezone offset, e.g. 2026-06-29T12:00:00+02:00 (required by AEAT FechaHoraHusoGenRegistro)
+    const tzOffsetMin = -now.getTimezoneOffset();
+    const tzSign = tzOffsetMin >= 0 ? "+" : "-";
+    const tzAbs = Math.abs(tzOffsetMin);
+    const tzStr = `${tzSign}${String(Math.floor(tzAbs / 60)).padStart(2, "0")}:${String(tzAbs % 60).padStart(2, "0")}`;
+    const fechaHoraHuso = `${now.toISOString().slice(0, 19)}${tzStr}`;
+
     const desglose = create({ version: "1.0", encoding: "UTF-8" })
+      .ele("sum:RegistroFactura", {
+        "xmlns:sum": "https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd",
+        "xmlns:sf": "https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd",
+      })
+        .ele("sum:RegistroAlta")
+          .ele("sf:IDVersion").txt("1.0").up()
+          .ele("sf:IDFactura")
+            .ele("sf:IDEmisorFactura").txt(company.cif ?? "").up()
+            .ele("sf:NumSerieFactura").txt(invoice.number).up()
+            .ele("sf:FechaExpedicionFactura").txt(issueDateStr).up()
+          .up()
+          .ele("sf:NombreRazonEmisor").txt(company.legalName ?? company.name).up()
+          .ele("sf:TipoFactura").txt("F1").up()
+          .ele("sf:DescripcionOperacion").txt(
+            invoice.items.map((i: any) => i.description).join(", ").slice(0, 500)
+          ).up()
+          .ele("sf:Destinatarios")
+            .ele("sf:IDDestinatario")
+              .ele("sf:NombreRazon").txt(invoice.client.legalName ?? invoice.client.name).up()
+              .ele("sf:NIF").txt(invoice.client.cifNif ?? "").up()
+            .up()
+          .up()
+          .ele("sf:Desglose");
+
+    for (const tax of taxLines) {
+      desglose
+        .ele("sf:DetalleIVA")
+          .ele("sf:TipoImpositivo").txt(tax.rate.toFixed(2)).up()
+          .ele("sf:BaseImponibleOImporteNoSujeto").txt(tax.base.toFixed(2)).up()
+          .ele("sf:CuotaRepercutida").txt(tax.amount.toFixed(2)).up()
+        .up();
+    }
+
+    const afterDesglose = desglose
+      .up() // back to RegistroAlta
+      .ele("sf:CuotaTotal").txt(Number(invoice.taxAmount).toFixed(2)).up()
+      .ele("sf:ImporteTotal").txt(Number(invoice.total).toFixed(2)).up();
+
+    // Encadenamiento: links this record to the previous one in the company's chain (or PrimerRegistro)
+    if (previousHash) {
+      afterDesglose
+        .ele("sf:Encadenamiento")
+          .ele("sf:RegistroAnterior")
+            .ele("sf:IDEmisorFactura").txt(company.cif ?? "").up()
+            .ele("sf:Huella").txt(previousHash).up()
+          .up()
+        .up();
+    } else {
+      afterDesglose.ele("sf:Encadenamiento").ele("sf:PrimerRegistro").txt("S").up().up();
+    }
+
+    afterDesglose
+      .ele("sf:SistemaInformatico")
+        .ele("sf:NombreRazon").txt("YouWhole").up()
+        .ele("sf:NIF").txt(company.cif ?? "").up()
+        .ele("sf:NombreSistemaInformatico").txt("YouWhole ERP").up()
+        .ele("sf:IdSistemaInformatico").txt("01").up()
+        .ele("sf:Version").txt("1.0").up()
+        .ele("sf:NumeroInstalacion").txt(company.id ?? "1").up()
+        .ele("sf:TipoUsoPosibleSoloVerifactu").txt("S").up()
+        .ele("sf:TipoUsoPosibleMultiOT").txt("N").up()
+        .ele("sf:IndicadorMultiplesOT").txt("N").up()
+      .up()
+      .ele("sf:FechaHoraHusoGenRegistro").txt(fechaHoraHuso).up()
+      .ele("sf:TipoHuella").txt("01").up()
+      .ele("sf:Huella").txt(hash).up();
+
+    return desglose.root().end({ prettyPrint: false });
+  }
+
+  // ── XAdES-BES signing ─────────────────────────────────────────────────────
+
+  private signRegistroXml(xml: string, certPem: string, keyPem: string): string {
+    const sig = new SignedXml({
+      privateKey: keyPem,
+      publicCert: certPem,
+      signatureAlgorithm: "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256",
+      canonicalizationAlgorithm: "http://www.w3.org/2001/10/xml-exc-c14n#",
+    });
+    sig.addReference({
+      xpath: "//*[local-name(.)='RegistroAlta']",
+      digestAlgorithm: "http://www.w3.org/2001/04/xmlenc#sha256",
+      transforms: [
+        "http://www.w3.org/2000/09/xmldsig#enveloped-signature",
+        "http://www.w3.org/2001/10/xml-exc-c14n#",
+      ],
+    });
+    sig.getKeyInfoContent = () => {
+      const certClean = certPem.replace(/-----BEGIN CERTIFICATE-----/, "").replace(/-----END CERTIFICATE-----/, "").replace(/\r?\n/g, "");
+      return `<X509Data><X509Certificate>${certClean}</X509Certificate></X509Data>`;
+    };
+    sig.computeSignature(xml, { location: { reference: "//*[local-name(.)='RegistroFactura']", action: "append" } });
+    return sig.getSignedXml();
+  }
+
+  private buildSoapEnvelope(signedRegistro: string, company: any): string {
+    return create({ version: "1.0", encoding: "UTF-8" })
       .ele("soapenv:Envelope", {
         "xmlns:soapenv": "http://schemas.xmlsoap.org/soap/envelope/",
         "xmlns:sum": "https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd",
@@ -86,44 +211,12 @@ export class VerifactuService {
               .ele("sum:NIF").txt(company.cif ?? "").up()
             .up()
           .up()
-          .ele("sum:RegistroFactura")
-            .ele("sum:RegistroAlta")
-              .ele("sum:IDVersion").txt("1.0").up()
-              .ele("sum:IDFactura")
-                .ele("sum:IDEmisorFactura").txt(company.cif ?? "").up()
-                .ele("sum:NumSerieFactura").txt(invoice.number).up()
-                .ele("sum:FechaExpedicionFactura").txt(
-                  new Date(invoice.issueDate).toLocaleDateString("es-ES")
-                ).up()
-              .up()
-              .ele("sum:NombreRazonEmisor").txt(company.legalName ?? company.name).up()
-              .ele("sum:TipoFactura").txt("F1").up()
-              .ele("sum:DescripcionOperacion").txt(
-                invoice.items.map((i: any) => i.description).join(", ").slice(0, 500)
-              ).up()
-              .ele("sum:Destinatarios")
-                .ele("sum:IDDestinatario")
-                  .ele("sum:NombreRazon").txt(invoice.client.legalName ?? invoice.client.name).up()
-                  .ele("sum:NIF").txt(invoice.client.cifNif ?? "").up()
-                .up()
-              .up()
-              .ele("sum:Desglose");
-
-    for (const tax of taxLines) {
-      desglose
-        .ele("sum:DetalleIVA")
-          .ele("sum:TipoImpositivo").txt(tax.rate.toFixed(2)).up()
-          .ele("sum:BaseImponibleOImporteNoSujeto").txt(tax.base.toFixed(2)).up()
-          .ele("sum:CuotaRepercutida").txt(tax.amount.toFixed(2)).up()
-        .up();
-    }
-
-    desglose
-      .up() // back to RegistroAlta
-      .ele("sum:CuotaTotal").txt(Number(invoice.taxAmount).toFixed(2)).up()
-      .ele("sum:ImporteTotal").txt(Number(invoice.total).toFixed(2)).up();
-
-    return desglose.root().end({ prettyPrint: false });
+        .up() // RegFactuSistemaFacturacion (registro inserted via raw XML below)
+      .up()
+      .root()
+      .end({ prettyPrint: false })
+      // Inject the signed RegistroFactura right before the closing tag of RegFactuSistemaFacturacion
+      .replace("</sum:RegFactuSistemaFacturacion>", `${signedRegistro}</sum:RegFactuSistemaFacturacion>`);
   }
 
   private buildHashInput(invoice: any, previousHash?: string | null): string {
@@ -256,6 +349,145 @@ export class VerifactuService {
     const { verifactuCert: _removed, ...rest } = (company.settings ?? {}) as any;
     await this.prisma.company.update({ where: { id: companyId }, data: { settings: rest } });
     return { deleted: true };
+  }
+
+  // ── Certificate material extraction ─────────────────────────────────────
+
+  private async getCertMaterial(companyId: string): Promise<{
+    certPem: string;
+    keyPem: string;
+    pfxBuffer: Buffer;
+    password: string;
+  }> {
+    const company = await this.prisma.company.findUniqueOrThrow({ where: { id: companyId } });
+    const s = (company.settings ?? {}) as any;
+    const vc = s?.verifactuCert;
+    if (!vc?.data) throw new BadRequestException("No hay certificado digital configurado. Ve a VeriFactu → Certificado.");
+
+    const password = this.decrypt(vc.password);
+    const pfxB64 = this.decrypt(vc.data);
+    const pfxBuffer = Buffer.from(pfxB64, "base64");
+
+    const p12Der = pfxBuffer.toString("binary");
+    const p12Asn1 = forge.asn1.fromDer(p12Der);
+    const p12 = forge.pkcs12.pkcs12FromAsn1(p12Asn1, password);
+
+    const certBags = p12.getBags({ bagType: forge.pki.oids.certBag });
+    const cert = certBags[forge.pki.oids.certBag]?.[0]?.cert;
+    if (!cert) throw new BadRequestException("No se pudo extraer el certificado del archivo .p12");
+
+    const keyBags = p12.getBags({ bagType: forge.pki.oids.pkcs8ShroudedKeyBag });
+    const privateKey = keyBags[forge.pki.oids.pkcs8ShroudedKeyBag]?.[0]?.key;
+    if (!privateKey) throw new BadRequestException("No se pudo extraer la clave privada del certificado");
+
+    return {
+      certPem: forge.pki.certificateToPem(cert),
+      keyPem: forge.pki.privateKeyToPem(privateKey),
+      pfxBuffer,
+      password,
+    };
+  }
+
+  // ── Send to AEAT ──────────────────────────────────────────────────────────
+
+  async sendToAeat(companyId: string, recordId: string) {
+    const record = await this.prisma.verifactuRecord.findFirst({
+      where: { id: recordId, companyId },
+      include: { invoice: { include: { company: true } } },
+    });
+    if (!record) throw new BadRequestException("Registro VeriFactu no encontrado");
+    if (record.status === "ACCEPTED") throw new BadRequestException("Este registro ya fue aceptado por AEAT");
+
+    const { certPem, keyPem, pfxBuffer, password } = await this.getCertMaterial(companyId);
+    const company = record.invoice.company;
+
+    // Sign the stored RegistroFactura XML (sign at send time, not at generation time)
+    const signedRegistro = this.signRegistroXml(record.xml, certPem, keyPem);
+    const soapEnvelope = this.buildSoapEnvelope(signedRegistro, company);
+
+    this.logger.log(`[VeriFactu] Sending record ${recordId} to AEAT ${this.aeatEndpoint()}`);
+
+    let responseXml: string;
+    try {
+      responseXml = await this.postSoap(soapEnvelope, pfxBuffer, password);
+    } catch (err: any) {
+      await this.prisma.verifactuEvent.create({
+        data: { recordId, status: "REJECTED", message: `Error de red: ${err.message}` },
+      });
+      throw new BadRequestException(`Error al conectar con AEAT: ${err.message}`);
+    }
+
+    // Parse AEAT response: EstadoEnvio (Correcto/AceptadoConErrores/Incorrecto), CSV, errors
+    const estadoMatch = responseXml.match(/<[^:]*:?EstadoEnvio[^>]*>([^<]+)<\/[^>]+>/);
+    const csvMatch = responseXml.match(/<[^:]*:?CSV[^>]*>([^<]+)<\/[^>]+>/);
+    const errDescMatch = responseXml.match(/<[^:]*:?DescripcionErrorRegistro[^>]*>([^<]+)<\/[^>]+>/);
+
+    const estado = estadoMatch?.[1]?.trim() ?? "Desconocido";
+    const csv = csvMatch?.[1]?.trim() ?? null;
+    const errDesc = errDescMatch?.[1]?.trim() ?? null;
+
+    const accepted = estado === "Correcto" || estado === "AceptadoConErrores";
+    const newStatus = accepted ? "ACCEPTED" : "REJECTED";
+
+    await this.prisma.verifactuRecord.update({
+      where: { id: recordId },
+      data: {
+        status: newStatus,
+        aeatResponse: responseXml,
+        ...(csv ? { csv } : {}),
+        sentAt: new Date(),
+      },
+    });
+
+    await this.prisma.verifactuEvent.create({
+      data: {
+        recordId,
+        status: newStatus,
+        message: accepted
+          ? `Aceptado por AEAT. CSV: ${csv ?? "N/A"}`
+          : `Rechazado por AEAT: ${errDesc ?? estado}`,
+      },
+    });
+
+    return { status: newStatus, estado, csv, error: errDesc };
+  }
+
+  private postSoap(envelope: string, pfxBuffer: Buffer, passphrase: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const body = Buffer.from(envelope, "utf8");
+      const url = new URL(this.aeatEndpoint());
+      const agent = new https.Agent({ pfx: pfxBuffer, passphrase, rejectUnauthorized: true });
+
+      const req = https.request(
+        {
+          hostname: url.hostname,
+          port: url.port || 443,
+          path: url.pathname,
+          method: "POST",
+          headers: {
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "RegFactuSistemaFacturacion",
+            "Content-Length": body.length,
+          },
+          agent,
+        },
+        (res) => {
+          const chunks: Buffer[] = [];
+          res.on("data", (d: Buffer) => chunks.push(d));
+          res.on("end", () => {
+            const xml = Buffer.concat(chunks).toString("utf8");
+            if (res.statusCode && res.statusCode >= 400) {
+              reject(new Error(`AEAT HTTP ${res.statusCode}: ${xml.slice(0, 300)}`));
+            } else {
+              resolve(xml);
+            }
+          });
+        }
+      );
+      req.on("error", reject);
+      req.write(body);
+      req.end();
+    });
   }
 
   async getAll(companyId: string) {

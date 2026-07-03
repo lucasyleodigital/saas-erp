@@ -1943,6 +1943,7 @@
     "status": "Status",
     "hashCopied": "Hash copied",
     "verifyAeat": "Verify at AEAT",
+    "sendToAeat": "Send to AEAT",
     "statusLabels": {
       "GENERATED": "Generated",
       "SIGNED": "Signed",
