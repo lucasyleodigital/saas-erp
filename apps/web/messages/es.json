@@ -1042,7 +1042,13 @@
       "twoFactorComingSoon": "Proximamente",
       "notifPreferences": "Preferencias de notificaciones",
       "notifDetailedComingSoon": "Proximamente",
-      "notifComingSoon": "Proximamente"
+      "notifComingSoon": "Proximamente",
+      "notifItems": {
+        "overdueInvoices": { "label": "Facturas vencidas", "description": "Aviso cuando una factura supera su fecha de vencimiento" },
+        "newLeads": { "label": "Nuevos leads", "description": "Notificacion cuando entra un nuevo lead en el pipeline" },
+        "paymentsReceived": { "label": "Pagos recibidos", "description": "Aviso cuando se registra un pago o se reconcilia una factura" },
+        "weeklySummary": { "label": "Resumen semanal", "description": "Resumen de actividad cada lunes por la manana" }
+      }
     }
   },
   "company": {

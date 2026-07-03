@@ -1032,9 +1032,15 @@
       "twoFactorDescription": "Anade una capa extra de seguridad con Google Authenticator.",
       "configure2FA": "Configurar 2FA",
       "twoFactorComingSoon": "Proximamente",
-      "notifPreferences": "Preferencias de notificaciones",
+      "notifPreferences": "Preferencias de notificacións",
       "notifDetailedComingSoon": "Proximamente",
-      "notifComingSoon": "Proximamente"
+      "notifComingSoon": "Proximamente",
+      "notifItems": {
+        "overdueInvoices": { "label": "Facturas vencidas", "description": "Aviso cando unha factura supera a data de vencemento" },
+        "newLeads": { "label": "Novos leads", "description": "Notificación cando entra un novo lead no pipeline" },
+        "paymentsReceived": { "label": "Pagamentos recibidos", "description": "Aviso cando se rexistra un pagamento ou se reconcilia unha factura" },
+        "weeklySummary": { "label": "Resumo semanal", "description": "Resumo de actividade cada luns pola mañá" }
+      }
     }
   },
   "company": {

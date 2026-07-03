@@ -46,6 +46,7 @@ export default function AdminPage() {
     try {
       const r = await api.post(`/admin/companies/${companyId}/impersonate`);
       localStorage.setItem("admin_original_token", localStorage.getItem("access_token") ?? "");
+      localStorage.setItem("admin_impersonated_company", r.data.companyName ?? companyName);
       localStorage.setItem("access_token", r.data.accessToken);
       toast.success(`Entrando como ${r.data.ownerEmail} en ${r.data.companyName}`);
       window.location.href = "/es/dashboard";

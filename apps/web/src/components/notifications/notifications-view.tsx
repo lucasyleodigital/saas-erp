@@ -59,7 +59,7 @@ export function NotificationsView() {
             )}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            {t("totalCount", { total: data?.total ?? 0 })}
+            {t("totalCount", { count: data?.total ?? 0 })}
           </p>
         </div>
         <div className="flex gap-2">

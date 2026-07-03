@@ -1040,9 +1040,15 @@
       "twoFactorDescription": "Anade una capa extra de seguridad con Google Authenticator.",
       "configure2FA": "Configurar 2FA",
       "twoFactorComingSoon": "Proximamente",
-      "notifPreferences": "Preferencias de notificaciones",
-      "notifDetailedComingSoon": "Proximamente",
-      "notifComingSoon": "Proximamente"
+      "notifPreferences": "Jakinarazpen hobespenak",
+      "notifDetailedComingSoon": "Laster",
+      "notifComingSoon": "Laster",
+      "notifItems": {
+        "overdueInvoices": { "label": "Iraungitako fakturak", "description": "Alerta faktura bat muga-eguna gainditzen duenean" },
+        "newLeads": { "label": "Lead berriak", "description": "Jakinarazpena lead berri bat pipeline-an sartzen denean" },
+        "paymentsReceived": { "label": "Jasotako ordainketak", "description": "Alerta ordainketa bat erregistratzen denean" },
+        "weeklySummary": { "label": "Asteko laburpena", "description": "Jardueren laburpena astelehen goizero" }
+      }
     }
   },
   "company": {

@@ -4,6 +4,7 @@ import { ApiKeepalive } from "@/components/layout/api-keepalive";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { AssistantWidget } from "@/components/assistant/assistant-widget";
 import { UpdateBanner } from "@/components/layout/update-banner";
+import { ImpersonationBanner } from "@/components/layout/impersonation-banner";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +15,7 @@ export default function DashboardLayout({
 }) {
   return (
     <>
+      <ImpersonationBanner />
       <Suspense fallback={null}>
         <GoogleCallbackHandler />
       </Suspense>

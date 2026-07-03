@@ -1040,9 +1040,15 @@
       "twoFactorDescription": "Anade una capa extra de seguridad con Google Authenticator.",
       "configure2FA": "Configurar 2FA",
       "twoFactorComingSoon": "Proximamente",
-      "notifPreferences": "Preferencias de notificaciones",
-      "notifDetailedComingSoon": "Proximamente",
-      "notifComingSoon": "Proximamente"
+      "notifPreferences": "Notification preferences",
+      "notifDetailedComingSoon": "Coming soon",
+      "notifComingSoon": "Coming soon",
+      "notifItems": {
+        "overdueInvoices": { "label": "Overdue invoices", "description": "Alert when an invoice passes its due date" },
+        "newLeads": { "label": "New leads", "description": "Notification when a new lead enters the pipeline" },
+        "paymentsReceived": { "label": "Payments received", "description": "Alert when a payment is registered or an invoice is reconciled" },
+        "weeklySummary": { "label": "Weekly summary", "description": "Activity summary every Monday morning" }
+      }
     }
   },
   "company": {
