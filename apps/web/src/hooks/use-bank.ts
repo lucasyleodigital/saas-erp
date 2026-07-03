@@ -72,7 +72,15 @@ export function useImportBankStatement() {
     },
     onSuccess: (data) => {
       qc.invalidateQueries({ queryKey: ["bank"] });
-      toast.success(`${data.imported ?? 0} movimientos importados`);
+      // Invoices may have been marked as paid during reconciliation
+      qc.invalidateQueries({ queryKey: ["invoices"] });
+      qc.invalidateQueries({ queryKey: ["invoice"] });
+      qc.invalidateQueries({ queryKey: ["dashboard"] });
+      const matched = data.matched ?? 0;
+      const msg = matched > 0
+        ? `${data.imported ?? 0} movimientos importados · ${matched} facturas reconciliadas`
+        : `${data.imported ?? 0} movimientos importados`;
+      toast.success(msg);
     },
     onError: () => toast.error("Error al importar el extracto"),
   });
