@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -24,6 +24,8 @@ import {
 import { useCreateProduct, useUpdateProduct } from "@/hooks/use-products";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { CustomFieldsSection } from "@/components/custom-fields/custom-fields-section";
+import { useCustomFieldValues, useSaveCustomFieldValues } from "@/hooks/use-custom-fields";
 
 const schema = z.object({
   name: z.string().min(1, "Nombre requerido"),
@@ -50,6 +52,10 @@ export function ProductDialog({
   const isEditing = !!product;
   const createProduct = useCreateProduct();
   const updateProduct = useUpdateProduct(product?.id ?? "");
+  const saveCfValues = useSaveCustomFieldValues("PRODUCT");
+  const { data: existingCfValues } = useCustomFieldValues("PRODUCT", product?.id);
+
+  const [cfValues, setCfValues] = useState<Record<string, string>>({});
 
   const {
     register,
@@ -77,16 +83,34 @@ export function ProductDialog({
             }
           : { type: "SERVICE", price: 0 }
       );
+      setCfValues({});
     }
   }, [open, product, reset]);
 
+  useEffect(() => {
+    if (existingCfValues) {
+      const map: Record<string, string> = {};
+      existingCfValues.forEach((f) => { if (f.value !== null) map[f.id] = f.value; });
+      setCfValues(map);
+    }
+  }, [existingCfValues]);
+
   async function onSubmit(data: FormData) {
-    if (isEditing) await updateProduct.mutateAsync(data as any);
-    else await createProduct.mutateAsync(data as any);
+    let entityId: string;
+    if (isEditing) {
+      await updateProduct.mutateAsync(data as any);
+      entityId = product.id;
+    } else {
+      const created = await createProduct.mutateAsync(data as any);
+      entityId = created.id;
+    }
+    if (Object.keys(cfValues).length > 0) {
+      await saveCfValues.mutateAsync({ entityId, values: cfValues });
+    }
     onOpenChange(false);
   }
 
-  const isPending = createProduct.isPending || updateProduct.isPending;
+  const isPending = createProduct.isPending || updateProduct.isPending || saveCfValues.isPending;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -157,6 +181,8 @@ export function ProductDialog({
               />
             </div>
           </div>
+
+          <CustomFieldsSection entity="PRODUCT" values={cfValues} onChange={setCfValues} />
 
           <DialogFooter className="pt-2 gap-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>

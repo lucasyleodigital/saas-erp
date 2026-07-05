@@ -17,6 +17,23 @@ export class CompaniesService {
     private config: ConfigService,
   ) {}
 
+  async findAllForUser(userId: string) {
+    const memberships = await this.prisma.userCompany.findMany({
+      where: { userId },
+      include: {
+        company: { select: { id: true, name: true, logo: true } },
+      },
+      orderBy: [{ isDefault: "desc" }, { createdAt: "asc" }],
+    });
+    return memberships.map((m) => ({
+      id: m.company.id,
+      name: m.company.name,
+      logo: m.company.logo,
+      role: m.role,
+      isDefault: m.isDefault,
+    }));
+  }
+
   async findOne(companyId: string) {
     const company = await this.prisma.company.findUnique({
       where: { id: companyId },

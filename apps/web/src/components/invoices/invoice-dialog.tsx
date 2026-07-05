@@ -24,6 +24,8 @@ import { Plus, Trash2, Loader2 } from "lucide-react";
 import { CurrencySelector } from "./currency-selector";
 import { LanguageSelector } from "./language-selector";
 import { useTranslations } from "next-intl";
+import { CustomFieldsSection } from "@/components/custom-fields/custom-fields-section";
+import { useSaveCustomFieldValues } from "@/hooks/use-custom-fields";
 
 const lineSchema = z.object({
   productId: z.string().optional(),
@@ -53,6 +55,8 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
   const tCommon = useTranslations("common");
 
   const createInvoice = useCreateInvoice();
+  const saveCfValues = useSaveCustomFieldValues("INVOICE");
+  const [cfValues, setCfValues] = useState<Record<string, string>>({});
   const { data: clientsData } = useClients({ limit: 200 } as any);
   const { data: productsData } = useProducts();
   const { data: projectsData } = useProjects({});
@@ -106,6 +110,7 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
       setProjectId("");
       setApplyIrpf(false);
       setIrpfRate(defaultIrpfRate);
+      setCfValues({});
     }
   }, [open, reset, today]);
 
@@ -143,13 +148,16 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
       taxes.push({ taxId: `irpf-${irpfRate}`, rate: -irpfRate, base: subtotal });
     }
 
-    await createInvoice.mutateAsync({
+    const created = await createInvoice.mutateAsync({
       ...data,
       currency,
       language,
       projectId: projectId || undefined,
       taxes,
     } as any);
+    if (Object.keys(cfValues).length > 0 && created?.id) {
+      await saveCfValues.mutateAsync({ entityId: created.id, values: cfValues });
+    }
     onOpenChange(false);
   }
 
@@ -383,6 +391,8 @@ export function InvoiceDialog({ open, onOpenChange }: InvoiceDialogProps) {
               className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-none placeholder:text-muted-foreground"
             />
           </div>
+
+          <CustomFieldsSection entity="INVOICE" values={cfValues} onChange={setCfValues} />
 
           <DialogFooter className="gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>

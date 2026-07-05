@@ -1236,10 +1236,24 @@ model CustomField {
   isActive  Boolean   @default(true)
   createdAt DateTime  @default(now())
 
-  company   Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  company   Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  values    CustomFieldValue[]
 
   @@index([companyId, entity])
   @@map("custom_fields")
+}
+
+model CustomFieldValue {
+  id            String      @id @default(uuid())
+  customFieldId String
+  entityId      String
+  value         String?
+
+  customField   CustomField @relation(fields: [customFieldId], references: [id], onDelete: Cascade)
+
+  @@unique([customFieldId, entityId])
+  @@index([entityId])
+  @@map("custom_field_values")
 }
 
 // ============================================================

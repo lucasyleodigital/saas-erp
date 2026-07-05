@@ -104,6 +104,21 @@ export class AuthController {
     return user;
   }
 
+  @Post("switch-company/:companyId")
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async switchCompany(
+    @Param("companyId") companyId: string,
+    @CurrentUser() user: JwtPayload,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const tokens = await this.authService.login(user.sub, user.email, companyId);
+    res.cookie(REFRESH_COOKIE, tokens.refreshToken, COOKIE_OPTIONS);
+    res.cookie("auth_session", "1", SESSION_COOKIE_OPTIONS);
+    return { accessToken: tokens.accessToken };
+  }
+
   @Post("2fa/setup")
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)

@@ -35,3 +35,27 @@ export function useDeleteCustomField() {
     onError: () => toast.error("Error al eliminar"),
   });
 }
+
+export function useCustomFieldValues(entity: string, entityId: string | undefined) {
+  return useQuery({
+    queryKey: ["custom-field-values", entity, entityId],
+    queryFn: () =>
+      api.get(`/custom-fields/values/${entity}/${entityId}`).then((r) => r.data) as Promise<
+        Array<{ id: string; name: string; type: string; options: any; required: boolean; value: string | null }>
+      >,
+    enabled: !!entityId,
+    staleTime: 0,
+  });
+}
+
+export function useSaveCustomFieldValues(entity: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ entityId, values }: { entityId: string; values: Record<string, string> }) =>
+      api.post(`/custom-fields/values/${entity}/${entityId}`, values).then((r) => r.data),
+    onSuccess: (_d, { entityId }) => {
+      qc.invalidateQueries({ queryKey: ["custom-field-values", entity, entityId] });
+    },
+    onError: () => toast.error("Error al guardar campos personalizados"),
+  });
+}

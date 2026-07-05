@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -17,6 +17,8 @@ import { Label } from "@/components/ui/label";
 import { useCreateClient, useUpdateClient } from "@/hooks/use-clients";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { CustomFieldsSection } from "@/components/custom-fields/custom-fields-section";
+import { useCustomFieldValues, useSaveCustomFieldValues } from "@/hooks/use-custom-fields";
 
 const schema = z.object({
   name: z.string().min(1),
@@ -49,6 +51,10 @@ export function ClientDialog({ open, onOpenChange, client }: ClientDialogProps) 
   const isEditing = !!client;
   const createClient = useCreateClient();
   const updateClient = useUpdateClient(client?.id ?? "");
+  const saveCfValues = useSaveCustomFieldValues("CLIENT");
+  const { data: existingCfValues } = useCustomFieldValues("CLIENT", client?.id);
+
+  const [cfValues, setCfValues] = useState<Record<string, string>>({});
 
   const {
     register,
@@ -78,22 +84,37 @@ export function ClientDialog({ open, onOpenChange, client }: ClientDialogProps) 
             }
           : { country: "ES", clientType: "EMPRESA" }
       );
+      setCfValues({});
     }
   }, [open, client, reset]);
+
+  useEffect(() => {
+    if (existingCfValues) {
+      const map: Record<string, string> = {};
+      existingCfValues.forEach((f) => { if (f.value !== null) map[f.id] = f.value; });
+      setCfValues(map);
+    }
+  }, [existingCfValues]);
 
   async function onSubmit(data: FormData) {
     const clean = Object.fromEntries(
       Object.entries(data).filter(([, v]) => v !== "" && v !== undefined)
     );
+    let entityId: string;
     if (isEditing) {
       await updateClient.mutateAsync(clean);
+      entityId = client.id;
     } else {
-      await createClient.mutateAsync(clean);
+      const created = await createClient.mutateAsync(clean);
+      entityId = created.id;
+    }
+    if (Object.keys(cfValues).length > 0) {
+      await saveCfValues.mutateAsync({ entityId, values: cfValues });
     }
     onOpenChange(false);
   }
 
-  const isPending = createClient.isPending || updateClient.isPending;
+  const isPending = createClient.isPending || updateClient.isPending || saveCfValues.isPending;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -189,6 +210,8 @@ export function ClientDialog({ open, onOpenChange, client }: ClientDialogProps) 
               className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
             />
           </div>
+
+          <CustomFieldsSection entity="CLIENT" values={cfValues} onChange={setCfValues} />
 
           <DialogFooter className="gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>

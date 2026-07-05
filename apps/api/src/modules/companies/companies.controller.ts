@@ -29,6 +29,11 @@ function requireAdminOrOwner(role: string) {
 export class CompaniesController {
   constructor(private companiesService: CompaniesService) {}
 
+  @Get("my-list")
+  getMyCompanies(@CurrentUser() user: JwtPayload) {
+    return this.companiesService.findAllForUser(user.sub);
+  }
+
   @Get("me")
   getMyCompany(@CurrentUser() user: JwtPayload) {
     return this.companiesService.findOne(user.companyId);

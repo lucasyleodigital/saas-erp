@@ -48,4 +48,25 @@ export class CustomFieldsController {
   remove(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
     return this.customFieldsService.remove(u.companyId, id);
   }
+
+  // ─── Values ────────────────────────────────────────────────────────────
+
+  @Get("values/:entity/:entityId")
+  getValues(
+    @CurrentUser() u: JwtPayload,
+    @Param("entity") entity: string,
+    @Param("entityId") entityId: string,
+  ) {
+    return this.customFieldsService.getValues(u.companyId, entity, entityId);
+  }
+
+  @Post("values/:entity/:entityId")
+  saveValues(
+    @CurrentUser() u: JwtPayload,
+    @Param("entity") entity: string,
+    @Param("entityId") entityId: string,
+    @Body() body: Record<string, string>,
+  ) {
+    return this.customFieldsService.saveValues(u.companyId, entity, entityId, body);
+  }
 }

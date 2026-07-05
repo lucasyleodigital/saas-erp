@@ -48,4 +48,44 @@ export class CustomFieldsService {
 
     return this.prisma.customField.delete({ where: { id } });
   }
+
+  // ─── Values ──────────────────────────────────────────────────────────────
+
+  /** Devuelve los valores de campos personalizados para una entidad concreta */
+  async getValues(companyId: string, entity: string, entityId: string) {
+    const fields = await this.prisma.customField.findMany({
+      where: { companyId, entity, isActive: true },
+      include: {
+        values: { where: { entityId } },
+      },
+      orderBy: [{ order: "asc" }],
+    });
+    return fields.map((f) => ({
+      id: f.id,
+      name: f.name,
+      type: f.type,
+      options: f.options,
+      required: f.required,
+      value: f.values[0]?.value ?? null,
+    }));
+  }
+
+  /** Guarda (upsert) los valores de campos personalizados para una entidad */
+  async saveValues(companyId: string, entity: string, entityId: string, values: Record<string, string>) {
+    const fields = await this.prisma.customField.findMany({
+      where: { companyId, entity, isActive: true },
+    });
+
+    await Promise.all(
+      fields.map((f) => {
+        const value = values[f.id];
+        if (value === undefined) return;
+        return this.prisma.customFieldValue.upsert({
+          where: { customFieldId_entityId: { customFieldId: f.id, entityId } },
+          create: { customFieldId: f.id, entityId, value: String(value) },
+          update: { value: String(value) },
+        });
+      })
+    );
+  }
 }

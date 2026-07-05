@@ -43,6 +43,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useUnreadCount } from "@/hooks/use-notifications";
 import { useUser } from "@/hooks/use-user";
+import { CompanySwitcher } from "./company-switcher";
 
 const LOCALES = ["es", "ca", "eu", "gl", "en"];
 
@@ -188,6 +189,9 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
           </div>
         )}
       </div>
+
+      {/* Company switcher — solo visible si el usuario tiene >1 empresa */}
+      <CompanySwitcher collapsed={collapsed} />
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto py-4 scrollbar-thin">
