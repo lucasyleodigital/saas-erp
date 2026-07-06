@@ -79,7 +79,7 @@ export function TeamSection({ currentRole }: { currentRole: string }) {
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("EMPLOYEE");
 
-  const isOwnerOrAdmin = ["OWNER", "ADMIN"].includes(currentRole);
+  const isOwnerOrAdmin = ["OWNER", "ADMIN", "SUPER_ADMIN"].includes(currentRole);
 
   function handleInvite() {
     if (!email.trim()) return;
