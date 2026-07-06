@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -22,16 +23,9 @@ interface InvitationInfo {
   };
 }
 
-const ROLE_LABELS: Record<string, string> = {
-  OWNER: "Propietario",
-  ADMIN: "Administrador",
-  ACCOUNTANT: "Contable",
-  SALES: "Ventas",
-  EMPLOYEE: "Empleado",
-};
-
 export default function InvitePage() {
   const params = useParams();
+  const tRoles = useTranslations("team.roles");
   const router = useRouter();
   const token = params.token as string;
 
@@ -149,7 +143,7 @@ export default function InvitePage() {
               <span className="text-muted-foreground">Rol asignado</span>
               <span className="font-medium flex items-center gap-1">
                 <Shield className="h-3 w-3 text-primary" />
-                {ROLE_LABELS[invitation?.role ?? "EMPLOYEE"]}
+                {tRoles((invitation?.role ?? "EMPLOYEE").toLowerCase() as any)}
               </span>
             </div>
           </div>

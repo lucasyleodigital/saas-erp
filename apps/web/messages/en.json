@@ -1874,7 +1874,9 @@
     "sendInvitation": "Send invitation",
     "expires": "Expires {date}",
     "roles": {
-      "admin": "Admin",
+      "owner": "Owner",
+      "ownerDesc": "Full access. Manages billing and can delete the company.",
+      "admin": "Administrator",
       "adminDesc": "Full access except billing and deletion.",
       "accountant": "Accountant",
       "accountantDesc": "Accounting, invoices and bank access only.",

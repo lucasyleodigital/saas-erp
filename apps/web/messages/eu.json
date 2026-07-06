@@ -1819,7 +1819,9 @@
     "sendInvitation": "Gonbidapena bidali",
     "expires": "Iraungitze-data {date}",
     "roles": {
-      "admin": "Admin",
+      "owner": "Jabea",
+      "ownerDesc": "Sarbide osoa. Fakturazioa kudeatzen du eta enpresa ezabatu dezake.",
+      "admin": "Administratzailea",
       "adminDesc": "Sarbide osoa, fakturazio eta ezabaketa izan ezik.",
       "accountant": "Kontularia",
       "accountantDesc": "Kontabilitatea, fakturak eta bankua soilik.",

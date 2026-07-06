@@ -1734,7 +1734,9 @@
     "sendInvitation": "Enviar convite",
     "expires": "Caduca {date}",
     "roles": {
-      "admin": "Admin",
+      "owner": "Propietario",
+      "ownerDesc": "Acceso completo. Xestiona facturacion e pode eliminar a empresa.",
+      "admin": "Administrador",
       "adminDesc": "Acceso completo excepto facturacion e eliminacion.",
       "accountant": "Contable",
       "accountantDesc": "So acceso a contabilidade, facturas e banco.",

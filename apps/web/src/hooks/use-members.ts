@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 export interface TeamMember {
   id: string;
@@ -30,6 +31,19 @@ export interface PendingInvitation {
   createdAt: string;
 }
 
+/** Hook para obtener etiquetas de rol traducidas al idioma activo */
+export function useRoleLabels(): Record<string, string> {
+  const t = useTranslations("team.roles");
+  return {
+    OWNER: t("owner"),
+    ADMIN: t("admin"),
+    ACCOUNTANT: t("accountant"),
+    SALES: t("sales"),
+    EMPLOYEE: t("employee"),
+  };
+}
+
+/** Fallback estático para contextos sin React (ej: fuera de componentes) */
 export const ROLE_LABELS: Record<string, string> = {
   OWNER: "Propietario",
   ADMIN: "Administrador",

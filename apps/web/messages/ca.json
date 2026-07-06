@@ -1873,7 +1873,9 @@
     "sendInvitation": "Enviar invitacio",
     "expires": "Caduca {date}",
     "roles": {
-      "admin": "Admin",
+      "owner": "Propietari",
+      "ownerDesc": "Acces complet. Gestiona facturacio i pot eliminar l'empresa.",
+      "admin": "Administrador",
       "adminDesc": "Acces complet excepte facturacio i eliminacio.",
       "accountant": "Comptable",
       "accountantDesc": "Nomes comptabilitat, factures i banc.",

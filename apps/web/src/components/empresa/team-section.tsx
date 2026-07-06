@@ -7,7 +7,7 @@ import {
   useUpdateMemberRole,
   useRemoveMember,
   useCancelInvitation,
-  ROLE_LABELS,
+  useRoleLabels,
   ROLE_COLORS,
 } from "@/hooks/use-members";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -68,6 +68,7 @@ export function TeamSection({ currentRole }: { currentRole: string }) {
   const t = useTranslations("team");
   const tCommon = useTranslations("common");
   const ASSIGNABLE_ROLES = useAssignableRoles();
+  const roleLabels = useRoleLabels();
   const { data, isLoading } = useMembers();
   const inviteMember = useInviteMember();
   const updateRole = useUpdateMemberRole();
@@ -153,7 +154,7 @@ export function TeamSection({ currentRole }: { currentRole: string }) {
                     <div className="flex items-center gap-2">
                       <span className={`text-xs font-medium px-2 py-0.5 rounded-full flex items-center gap-1 ${ROLE_COLORS[member.role]}`}>
                         {RoleIcon && <RoleIcon className="h-3 w-3" />}
-                        {ROLE_LABELS[member.role]}
+                        {roleLabels[member.role]}
                       </span>
                       {canEdit && (
                         <DropdownMenu>
@@ -223,7 +224,7 @@ export function TeamSection({ currentRole }: { currentRole: string }) {
                     </div>
                     <div className="flex items-center gap-2">
                       <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${ROLE_COLORS[inv.role]}`}>
-                        {ROLE_LABELS[inv.role]}
+                        {roleLabels[inv.role]}
                       </span>
                       <Badge variant="outline" className="text-xs">{tCommon("pending")}</Badge>
                       {isOwnerOrAdmin && (
@@ -261,7 +262,7 @@ export function TeamSection({ currentRole }: { currentRole: string }) {
             ].map(({ role, desc }) => (
               <div key={role} className="flex items-start gap-2 text-sm">
                 <span className={`text-xs font-medium px-2 py-0.5 rounded-full shrink-0 mt-0.5 ${ROLE_COLORS[role]}`}>
-                  {ROLE_LABELS[role]}
+                  {roleLabels[role]}
                 </span>
                 <span className="text-muted-foreground">{desc}</span>
               </div>
