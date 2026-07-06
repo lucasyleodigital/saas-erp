@@ -1,6 +1,8 @@
 import {
   Controller,
   Get,
+  Post,
+  Body,
   Res,
   UseGuards,
   ForbiddenException,
@@ -39,5 +41,16 @@ export class BackupController {
       `attachment; filename="youwhole-backup-${new Date().toISOString().split("T")[0]}.json"`,
     );
     res.send(json);
+  }
+
+  @Post("restore")
+  async restoreBackup(
+    @CurrentUser() u: JwtPayload,
+    @Body() body: any,
+  ) {
+    if (!["OWNER", "ADMIN", "SUPER_ADMIN"].includes(u.role)) {
+      throw new ForbiddenException("Solo administradores pueden restaurar backups");
+    }
+    return this.backupService.restoreBackup(u.companyId, body);
   }
 }

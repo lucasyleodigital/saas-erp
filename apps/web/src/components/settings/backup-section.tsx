@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,13 +10,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { HardDrive, Download, Loader2, CheckCircle2 } from "lucide-react";
+import { HardDrive, Download, Upload, Loader2, CheckCircle2, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
 export function BackupSection() {
   const t = useTranslations("backup");
   const [downloading, setDownloading] = useState(false);
+  const [restoring, setRestoring] = useState(false);
+  const [confirmRestore, setConfirmRestore] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [lastBackup, setLastBackup] = useState<string | null>(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("lastBackupDate");
@@ -50,6 +53,33 @@ export function BackupSection() {
     } finally {
       setDownloading(false);
     }
+  }
+
+  async function handleRestore(file: File) {
+    setRestoring(true);
+    setConfirmRestore(false);
+    try {
+      const text = await file.text();
+      const json = JSON.parse(text);
+      await api.post("/backup/restore", json);
+      toast.success("Backup restaurado correctamente. Recarga la página para ver los cambios.");
+    } catch (err: any) {
+      const msg = err?.response?.data?.message ?? "Error al restaurar el backup";
+      toast.error(Array.isArray(msg) ? msg.join(", ") : msg);
+    } finally {
+      setRestoring(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  }
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.name.endsWith(".json")) {
+      toast.error("El archivo debe ser un .json exportado desde YouWhole");
+      return;
+    }
+    handleRestore(file);
   }
 
   return (
@@ -108,6 +138,60 @@ export function BackupSection() {
               </>
             )}
           </Button>
+        </CardContent>
+      </Card>
+
+      <Card className="border-amber-500/30">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Upload className="h-5 w-5" />
+            Restaurar backup
+          </CardTitle>
+          <CardDescription>
+            Sube un archivo de backup exportado desde YouWhole para restaurar los datos. Los registros existentes se actualizarán y los nuevos se crearán.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-start gap-2 rounded-lg bg-amber-500/10 border border-amber-500/20 px-4 py-3 text-sm text-amber-600 dark:text-amber-400">
+            <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
+            <span>Esta acción sobreescribirá los datos existentes con los del archivo. Se recomienda hacer un backup previo antes de restaurar.</span>
+          </div>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json"
+            className="hidden"
+            onChange={handleFileChange}
+          />
+
+          {!confirmRestore ? (
+            <Button
+              variant="outline"
+              onClick={() => setConfirmRestore(true)}
+              disabled={restoring}
+              className="gap-2 border-amber-500/50 hover:bg-amber-500/10"
+            >
+              <Upload className="h-4 w-4" />
+              Seleccionar archivo de backup
+            </Button>
+          ) : (
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-muted-foreground">¿Confirmas que quieres restaurar?</span>
+              <Button
+                size="sm"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={restoring}
+                className="gap-2"
+              >
+                {restoring ? <Loader2 className="h-3 w-3 animate-spin" /> : null}
+                {restoring ? "Restaurando..." : "Sí, seleccionar archivo"}
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => setConfirmRestore(false)}>
+                Cancelar
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
