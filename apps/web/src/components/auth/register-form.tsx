@@ -23,7 +23,10 @@ const schema = z.object({
   lastName:    z.string().min(1),
   companyName: z.string().min(2),
   email:       z.string().email(),
-  password:    z.string().min(8).regex(/[A-Z]/).regex(/[0-9]/),
+  password:    z.string()
+    .min(8, "Mínimo 8 caracteres")
+    .regex(/[A-Z]/, "Debe contener al menos una mayúscula")
+    .regex(/[0-9]/, "Debe contener al menos un número"),
   acceptTerms: z.literal(true, { errorMap: () => ({ message: "Debes aceptar los terminos" }) }),
 });
 
@@ -112,8 +115,10 @@ export function RegisterForm() {
       <div className="space-y-1.5">
         <Label htmlFor="password">{t("password")} *</Label>
         <Input id="password" type="password" {...register("password")} placeholder="••••••••" autoComplete="new-password" />
-        {errors.password && (
+        {errors.password ? (
           <p className="text-xs text-destructive">{errors.password.message}</p>
+        ) : (
+          <p className="text-xs text-muted-foreground">Mínimo 8 caracteres, una mayúscula y un número</p>
         )}
       </div>
 
