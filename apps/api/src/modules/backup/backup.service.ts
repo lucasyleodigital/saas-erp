@@ -23,7 +23,7 @@ export class BackupService {
           if (Array.isArray(contacts)) {
             for (const contact of contacts) {
               const { id: cId, clientId: _cl, ...contactData } = contact;
-              await tx.clientContact.upsert({
+              await tx.contact.upsert({
                 where: { id: cId },
                 create: { id: cId, ...contactData, clientId: upserted.id },
                 update: { ...contactData },
