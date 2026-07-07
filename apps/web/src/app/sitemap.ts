@@ -31,6 +31,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${APP_URL}/alternativa-holded`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${APP_URL}/alternativa-sage-autonomos`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${APP_URL}/modelo-130-online`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
+    { url: `${APP_URL}/software-recursos-humanos-pymes`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${APP_URL}/software-control-horario`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${APP_URL}/software-almacen-inventario`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
 
     // Páginas de marketing
     { url: `${APP_URL}/sobre-nosotros`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
