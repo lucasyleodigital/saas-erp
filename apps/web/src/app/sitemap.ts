@@ -34,6 +34,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${APP_URL}/software-recursos-humanos-pymes`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${APP_URL}/software-control-horario`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${APP_URL}/software-almacen-inventario`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${APP_URL}/software-crm-pymes`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${APP_URL}/software-contabilidad-pymes`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${APP_URL}/software-nominas-pymes`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
 
     // Páginas de marketing
     { url: `${APP_URL}/sobre-nosotros`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
