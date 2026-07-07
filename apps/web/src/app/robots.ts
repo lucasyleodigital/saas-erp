@@ -21,6 +21,9 @@ export default function robots(): MetadataRoute.Robots {
           "/cookies",
         ],
         disallow: [
+          "/manifest.json",
+          "/es/login",
+          "/es/registro",
           "/dashboard/",
           "/facturas/",
           "/clientes/",

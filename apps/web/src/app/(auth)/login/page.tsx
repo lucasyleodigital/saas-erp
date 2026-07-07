@@ -6,9 +6,12 @@ import { LoginForm } from "@/components/auth/login-form";
 // The [locale] wrapper provides it; the non-locale route must not be statically rendered
 export const dynamic = "force-dynamic";
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.com";
+
 export const metadata: Metadata = {
   title: "Iniciar sesión",
-  robots: { index: true, follow: false },
+  robots: { index: false, follow: false },
+  alternates: { canonical: `${APP_URL}/es/login` },
 };
 
 export default async function LoginPage() {
