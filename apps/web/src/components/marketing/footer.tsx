@@ -7,7 +7,28 @@ const FOOTER_LINKS = [
     links: [
       { href: "#features", label: "Funcionalidades" },
       { href: "#pricing", label: "Precios" },
-      { href: "#verifactu", label: "VeriFactu" },
+      { href: "/verifactu-software-certificado", label: "VeriFactu" },
+    ],
+  },
+  {
+    title: "Soluciones",
+    links: [
+      { href: "/erp-autonomos-espana", label: "ERP para autónomos" },
+      { href: "/software-facturacion-pymes", label: "Facturación pymes" },
+      { href: "/software-contabilidad-pymes", label: "Contabilidad" },
+      { href: "/software-crm-pymes", label: "CRM" },
+      { href: "/software-recursos-humanos-pymes", label: "Recursos humanos" },
+      { href: "/software-nominas-pymes", label: "Nóminas" },
+      { href: "/software-control-horario", label: "Control horario" },
+      { href: "/software-almacen-inventario", label: "Almacén e inventario" },
+      { href: "/modelo-130-online", label: "Modelo 130" },
+    ],
+  },
+  {
+    title: "Comparativas",
+    links: [
+      { href: "/alternativa-holded", label: "Alternativa a Holded" },
+      { href: "/alternativa-sage-autonomos", label: "Alternativa a Sage" },
     ],
   },
   {
@@ -39,9 +60,9 @@ export function MarketingFooter() {
   return (
     <footer className="border-t border-border bg-muted/20 py-16">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 mb-12">
           {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
+          <div className="col-span-2 lg:col-span-1">
             <Link href="/" className="inline-block mb-4">
               <Image src="/logo.png" alt="YouWhole" width={130} height={36} className="object-contain" />
             </Link>
