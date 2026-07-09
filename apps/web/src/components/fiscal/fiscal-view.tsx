@@ -155,11 +155,16 @@ function AddExpenseDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
 
 // ── Main View ─────────────────────────────────────────────────────────────────
 export function FiscalView() {
-  const currentYear = new Date().getFullYear();
-  const currentQ = Math.floor(new Date().getMonth() / 3) + 1;
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentQ = Math.floor(now.getMonth() / 3) + 1;
+  // Si estamos en los primeros 20 días del trimestre, el plazo de presentación
+  // del trimestre anterior sigue abierto → mostramos el anterior por defecto
+  const isFilingWindow = now.getDate() <= 20 && currentQ > 1;
+  const defaultQ = isFilingWindow ? currentQ - 1 : currentQ;
 
   const [year, setYear] = useState(currentYear);
-  const [quarter, setQuarter] = useState(currentQ);
+  const [quarter, setQuarter] = useState(defaultQ);
   const [addExpenseOpen, setAddExpenseOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"dashboard" | "m303" | "m130" | "gastos">("dashboard");
 
