@@ -20,9 +20,9 @@ function useTimeAgo() {
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
     if (mins < 1) return t("timeAgo.now");
-    if (mins < 60) return t("timeAgo.minutes", { n: mins });
-    if (hours < 24) return t("timeAgo.hours", { n: hours });
-    return t("timeAgo.days", { n: days });
+    if (mins < 60) return t("timeAgo.minutes", { m: mins });
+    if (hours < 24) return t("timeAgo.hours", { h: hours });
+    return t("timeAgo.days", { d: days });
   };
 }
 
