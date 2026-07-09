@@ -1,0 +1,300 @@
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../../database/prisma.service";
+
+export interface QuarterRange {
+  year: number;
+  quarter: number;
+  from: Date;
+  to: Date;
+  deadline: Date;
+}
+
+function quarterRange(year: number, q: number): QuarterRange {
+  const startMonth = (q - 1) * 3;
+  const from = new Date(year, startMonth, 1);
+  const to = new Date(year, startMonth + 3, 0, 23, 59, 59);
+  const deadlineMonth = startMonth + 3;
+  const deadline = new Date(year, deadlineMonth, 20);
+  return { year, quarter: q, from, to, deadline };
+}
+
+function currentQuarter(): QuarterRange {
+  const now = new Date();
+  const q = Math.floor(now.getMonth() / 3) + 1;
+  return quarterRange(now.getFullYear(), q);
+}
+
+@Injectable()
+export class FiscalService {
+  constructor(private prisma: PrismaService) {}
+
+  // ── Modelo 303 ─────────────────────────────────────────────
+  async getM303(companyId: string, year: number, quarter: number) {
+    const range = quarterRange(year, quarter);
+
+    const invoices = await this.prisma.invoice.findMany({
+      where: {
+        companyId,
+        issueDate: { gte: range.from, lte: range.to },
+        status: { notIn: ["DRAFT", "CANCELLED"] },
+      },
+      include: { taxes: true },
+    });
+
+    const expenses = await this.prisma.expense.findMany({
+      where: {
+        companyId,
+        date: { gte: range.from, lte: range.to },
+        isDeductible: true,
+      },
+    });
+
+    // IVA repercutido (cobrado a clientes)
+    const ivaRepercutido = invoices.reduce((sum, inv) => {
+      const iva = inv.taxes.filter((t) => Number(t.rate) > 0 && Number(t.rate) !== 15);
+      return sum + iva.reduce((s, t) => s + Number(t.amount), 0);
+    }, 0);
+
+    const baseRepercutida = invoices.reduce((sum, inv) => sum + Number(inv.subtotal), 0);
+
+    // IVA soportado (gastos deducibles)
+    const ivaSoportado = expenses.reduce((s, e) => s + Number(e.vatAmount), 0);
+    const baseSoportada = expenses.reduce((s, e) => s + Number(e.subtotal), 0);
+
+    const resultado = ivaRepercutido - ivaSoportado;
+
+    return {
+      period: { year, quarter, from: range.from, to: range.to, deadline: range.deadline },
+      repercutido: {
+        base: +baseRepercutida.toFixed(2),
+        cuota: +ivaRepercutido.toFixed(2),
+        invoiceCount: invoices.length,
+      },
+      soportado: {
+        base: +baseSoportada.toFixed(2),
+        cuota: +ivaSoportado.toFixed(2),
+        expenseCount: expenses.length,
+      },
+      resultado: +resultado.toFixed(2),
+      casillas: {
+        c01: +baseRepercutida.toFixed(2),
+        c03: +ivaRepercutido.toFixed(2),
+        c29: +ivaSoportado.toFixed(2),
+        c46: +resultado.toFixed(2),
+      },
+    };
+  }
+
+  // ── Modelo 130 ─────────────────────────────────────────────
+  async getM130(companyId: string, year: number, quarter: number) {
+    const range = quarterRange(year, quarter);
+    const yearStart = new Date(year, 0, 1);
+
+    // Acumulado del año hasta fin del trimestre
+    const invoicesYTD = await this.prisma.invoice.findMany({
+      where: {
+        companyId,
+        issueDate: { gte: yearStart, lte: range.to },
+        status: { notIn: ["DRAFT", "CANCELLED"] },
+      },
+      include: { taxes: true },
+    });
+
+    const expensesYTD = await this.prisma.expense.findMany({
+      where: {
+        companyId,
+        date: { gte: yearStart, lte: range.to },
+        isDeductible: true,
+      },
+    });
+
+    const ingresosYTD = invoicesYTD.reduce((s, i) => s + Number(i.subtotal), 0);
+    const gastosYTD = expensesYTD.reduce((s, e) => s + Number(e.subtotal), 0);
+    const rendimientoNeto = Math.max(0, ingresosYTD - gastosYTD);
+    const pagoPrevio = rendimientoNeto * 0.2;
+
+    // IRPF retenido por clientes acumulado año
+    const retencionesYTD = invoicesYTD.reduce((s, inv) => {
+      const irpf = inv.taxes.filter((t) => Number(t.rate) < 0 || Number(t.amount) < 0);
+      return s + irpf.reduce((ss, t) => ss + Math.abs(Number(t.amount)), 0);
+    }, 0);
+
+    // Pagos anteriores ya ingresados (trimestres previos del año)
+    const periodosPrevios = await this.prisma.fiscalPeriod.findMany({
+      where: { companyId, year, quarter: { lt: quarter }, model130Filed: true },
+    });
+    const pagosPrevios = periodosPrevios.reduce((s, p) => s + Number(p.model130Amount ?? 0), 0);
+
+    const aIngresar = Math.max(0, pagoPrevio - retencionesYTD - pagosPrevios);
+
+    return {
+      period: { year, quarter, from: range.from, to: range.to, deadline: range.deadline },
+      ingresosYTD: +ingresosYTD.toFixed(2),
+      gastosYTD: +gastosYTD.toFixed(2),
+      rendimientoNeto: +rendimientoNeto.toFixed(2),
+      pagoPrevio: +pagoPrevio.toFixed(2),
+      retencionesYTD: +retencionesYTD.toFixed(2),
+      pagosPrevios: +pagosPrevios.toFixed(2),
+      aIngresar: +aIngresar.toFixed(2),
+      casillas: {
+        c01: +ingresosYTD.toFixed(2),
+        c02: +gastosYTD.toFixed(2),
+        c03: +rendimientoNeto.toFixed(2),
+        c05: +pagoPrevio.toFixed(2),
+        c14: +retencionesYTD.toFixed(2),
+        c15: +pagosPrevios.toFixed(2),
+        c16: +aIngresar.toFixed(2),
+      },
+    };
+  }
+
+  // ── Calendario fiscal ──────────────────────────────────────
+  getCalendar(year: number) {
+    const deadlines = [];
+    for (let q = 1; q <= 4; q++) {
+      const range = quarterRange(year, q);
+      deadlines.push(
+        { model: "303", year, quarter: q, deadline: range.deadline, label: `Modelo 303 – ${q}T ${year}` },
+        { model: "130", year, quarter: q, deadline: range.deadline, label: `Modelo 130 – ${q}T ${year}` },
+      );
+    }
+    // Anuales
+    deadlines.push(
+      { model: "390", year, quarter: null, deadline: new Date(year + 1, 0, 30), label: `Modelo 390 – Resumen IVA ${year}` },
+      { model: "190", year, quarter: null, deadline: new Date(year + 1, 0, 31), label: `Modelo 190 – Resumen IRPF ${year}` },
+      { model: "100", year, quarter: null, deadline: new Date(year + 1, 5, 30), label: `Renta (Modelo 100) – ${year}` },
+    );
+    const now = new Date();
+    return deadlines
+      .map((d) => ({
+        ...d,
+        daysLeft: Math.ceil((d.deadline.getTime() - now.getTime()) / 86400000),
+        overdue: d.deadline < now,
+      }))
+      .sort((a, b) => a.deadline.getTime() - b.deadline.getTime());
+  }
+
+  // ── Gastos ─────────────────────────────────────────────────
+  async getExpenses(companyId: string, params: any) {
+    const { year, quarter, page = 1, limit = 50 } = params;
+    const skip = (Number(page) - 1) * Number(limit);
+
+    let where: any = { companyId };
+    if (year && quarter) {
+      const range = quarterRange(Number(year), Number(quarter));
+      where.date = { gte: range.from, lte: range.to };
+    } else if (year) {
+      where.date = { gte: new Date(Number(year), 0, 1), lte: new Date(Number(year), 11, 31, 23, 59, 59) };
+    }
+
+    const [data, total] = await Promise.all([
+      this.prisma.expense.findMany({ where, skip, take: Number(limit), orderBy: { date: "desc" } }),
+      this.prisma.expense.count({ where }),
+    ]);
+    return { data, total };
+  }
+
+  async createExpense(companyId: string, data: any) {
+    const subtotal = Number(data.subtotal);
+    const vatRate = Number(data.vatRate ?? 21);
+    const vatAmount = +(subtotal * vatRate / 100).toFixed(2);
+    const total = +(subtotal + vatAmount).toFixed(2);
+
+    return this.prisma.expense.create({
+      data: {
+        companyId,
+        date: new Date(data.date),
+        description: data.description,
+        supplier: data.supplier || null,
+        invoiceRef: data.invoiceRef || null,
+        subtotal,
+        vatRate,
+        vatAmount,
+        total,
+        category: data.category || "OTROS",
+        isDeductible: data.isDeductible !== false,
+      },
+    });
+  }
+
+  async deleteExpense(companyId: string, id: string) {
+    await this.prisma.expense.deleteMany({ where: { id, companyId } });
+    return { deleted: true };
+  }
+
+  // ── Marcar modelo como presentado ─────────────────────────
+  async markFiled(companyId: string, year: number, quarter: number, body: any) {
+    return this.prisma.fiscalPeriod.upsert({
+      where: { companyId_year_quarter: { companyId, year, quarter } },
+      create: {
+        companyId, year, quarter,
+        model303Filed: body.model303Filed ?? false,
+        model130Filed: body.model130Filed ?? false,
+        model111Filed: body.model111Filed ?? false,
+        model303Amount: body.model303Amount ?? null,
+        model130Amount: body.model130Amount ?? null,
+        model111Amount: body.model111Amount ?? null,
+        filedAt: body.filedAt ? new Date(body.filedAt) : new Date(),
+        notes: body.notes ?? null,
+      },
+      update: {
+        model303Filed: body.model303Filed ?? undefined,
+        model130Filed: body.model130Filed ?? undefined,
+        model111Filed: body.model111Filed ?? undefined,
+        model303Amount: body.model303Amount ?? undefined,
+        model130Amount: body.model130Amount ?? undefined,
+        model111Amount: body.model111Amount ?? undefined,
+        filedAt: body.filedAt ? new Date(body.filedAt) : new Date(),
+        notes: body.notes ?? undefined,
+      },
+    });
+  }
+
+  async getFiscalPeriods(companyId: string, year: number) {
+    return this.prisma.fiscalPeriod.findMany({
+      where: { companyId, year },
+      orderBy: { quarter: "asc" },
+    });
+  }
+
+  // ── Resumen anual ─────────────────────────────────────────
+  async getAnnualSummary(companyId: string, year: number) {
+    const from = new Date(year, 0, 1);
+    const to = new Date(year, 11, 31, 23, 59, 59);
+
+    const [invoices, expenses] = await Promise.all([
+      this.prisma.invoice.findMany({
+        where: { companyId, issueDate: { gte: from, lte: to }, status: { notIn: ["DRAFT", "CANCELLED"] } },
+        include: { taxes: true },
+      }),
+      this.prisma.expense.findMany({
+        where: { companyId, date: { gte: from, lte: to }, isDeductible: true },
+      }),
+    ]);
+
+    const ingresos = invoices.reduce((s, i) => s + Number(i.subtotal), 0);
+    const gastos = expenses.reduce((s, e) => s + Number(e.subtotal), 0);
+    const ivaRepercutido = invoices.reduce((s, inv) => {
+      return s + inv.taxes.filter((t) => Number(t.rate) > 0 && Number(t.rate) !== 15)
+        .reduce((ss, t) => ss + Number(t.amount), 0);
+    }, 0);
+    const ivaSoportado = expenses.reduce((s, e) => s + Number(e.vatAmount), 0);
+    const retenciones = invoices.reduce((s, inv) => {
+      return s + inv.taxes.filter((t) => Number(t.amount) < 0)
+        .reduce((ss, t) => ss + Math.abs(Number(t.amount)), 0);
+    }, 0);
+
+    return {
+      year,
+      ingresos: +ingresos.toFixed(2),
+      gastos: +gastos.toFixed(2),
+      rendimientoNeto: +(ingresos - gastos).toFixed(2),
+      ivaRepercutido: +ivaRepercutido.toFixed(2),
+      ivaSoportado: +ivaSoportado.toFixed(2),
+      ivaResultado: +(ivaRepercutido - ivaSoportado).toFixed(2),
+      retencionesTotales: +retenciones.toFixed(2),
+      invoiceCount: invoices.length,
+      expenseCount: expenses.length,
+    };
+  }
+}

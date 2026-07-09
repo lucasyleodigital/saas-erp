@@ -40,6 +40,7 @@ import { BackupModule } from "./modules/backup/backup.module";
 import { AssistantModule } from "./modules/assistant/assistant.module";
 import { CurrencyModule } from "./modules/currency/currency.module";
 import { AuditModule } from "./modules/audit/audit.module";
+import { FiscalModule } from "./modules/fiscal/fiscal.module";
 import { DatabaseModule } from "./database/database.module";
 import { validateEnv } from "./config/env.validation";
 
@@ -92,6 +93,7 @@ import { validateEnv } from "./config/env.validation";
     AssistantModule,
     CurrencyModule,
     AuditModule,
+    FiscalModule,
   ],
   providers: [
     // Apply rate limiting globally to ALL routes
