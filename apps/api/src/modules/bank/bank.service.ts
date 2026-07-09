@@ -174,7 +174,7 @@ export class BankService {
           }),
           this.prisma.bankTransaction.update({
             where: { id: txId },
-            data: { isReconciled: true },
+            data: { isReconciled: true, reconcileStatus: newStatus },
           }),
         ]);
         return true;

@@ -310,7 +310,11 @@ function AccountCard({ account }: { account: any }) {
                           {isIncome ? "+" : ""}{formatCurrency(amount)}
                         </td>
                         <td className="px-4 py-2.5 text-center">
-                          {tx.isReconciled ? (
+                          {tx.isReconciled && tx.reconcileStatus === "PARTIAL" ? (
+                            <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-100 rounded-full px-2 py-0.5">
+                              <CheckCircle className="h-3 w-3" /> Parcial
+                            </span>
+                          ) : tx.isReconciled ? (
                             <span className="inline-flex items-center gap-1 text-xs text-green-700 bg-green-100 rounded-full px-2 py-0.5">
                               <CheckCircle className="h-3 w-3" /> {t("reconciled")}
                             </span>

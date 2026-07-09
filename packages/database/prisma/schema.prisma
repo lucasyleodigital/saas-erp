@@ -892,13 +892,14 @@ model BankAccount {
 }
 
 model BankTransaction {
-  id            String    @id @default(uuid())
-  bankAccountId String
-  description   String
-  amount        Decimal   @db.Decimal(12, 2)
-  date          DateTime
-  isReconciled  Boolean   @default(false)
-  reference     String?
+  id              String    @id @default(uuid())
+  bankAccountId   String
+  description     String
+  amount          Decimal   @db.Decimal(12, 2)
+  date            DateTime
+  isReconciled    Boolean   @default(false)
+  reconcileStatus String?
+  reference       String?
 
   bankAccount   BankAccount @relation(fields: [bankAccountId], references: [id], onDelete: Cascade)
 
