@@ -124,6 +124,22 @@ export class BankService {
     return { imported, reconciled, unmatched };
   }
 
+  async reconcilePending(companyId: string, bankAccountId: string): Promise<{ reconciled: number }> {
+    const account = await this.prisma.bankAccount.findFirst({ where: { id: bankAccountId, companyId } });
+    if (!account) throw new BadRequestException("Cuenta no encontrada");
+
+    const pending = await this.prisma.bankTransaction.findMany({
+      where: { bankAccountId, isReconciled: false, amount: { gt: 0 } },
+    });
+
+    let reconciled = 0;
+    for (const tx of pending) {
+      const matched = await this.tryReconcile(companyId, tx.id, Number(tx.amount), tx.description);
+      if (matched) reconciled++;
+    }
+    return { reconciled };
+  }
+
   private async tryReconcile(
     companyId: string,
     txId: string,

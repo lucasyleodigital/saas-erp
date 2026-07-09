@@ -9,6 +9,7 @@ import {
   useBankTransactions,
   useDeleteTransaction,
   useClearTransactions,
+  useReconcilePending,
 } from "@/hooks/use-bank";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,7 @@ import {
   ArrowUpRight,
   ArrowDownLeft,
   Trash2,
+  RefreshCw,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -145,6 +147,7 @@ function AccountCard({ account }: { account: any }) {
   const [expanded, setExpanded] = useState(false);
   const deleteTx = useDeleteTransaction();
   const clearTx = useClearTransactions();
+  const reconcile = useReconcilePending();
   const { data: txData, isLoading: txLoading } = useBankTransactions(
     expanded ? account.id : ""
   );
@@ -209,6 +212,21 @@ function AccountCard({ account }: { account: any }) {
                 <Upload className="h-3.5 w-3.5" />
               )}
               {t("importStatement")}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2"
+              onClick={() => reconcile.mutate(account.id)}
+              disabled={reconcile.isPending}
+              title="Buscar facturas pendientes que coincidan con movimientos no reconciliados"
+            >
+              {reconcile.isPending ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <RefreshCw className="h-3.5 w-3.5" />
+              )}
+              Reconciliar
             </Button>
             <Button
               variant="ghost"

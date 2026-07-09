@@ -60,6 +60,14 @@ export class BankController {
     return this.bankService.deleteTransaction(u.companyId, accountId, txId);
   }
 
+  @Post("accounts/:accountId/reconcile")
+  reconcilePending(
+    @CurrentUser() u: JwtPayload,
+    @Param("accountId") accountId: string,
+  ) {
+    return this.bankService.reconcilePending(u.companyId, accountId);
+  }
+
   @Delete("accounts/:accountId/transactions")
   clearTransactions(
     @CurrentUser() u: JwtPayload,

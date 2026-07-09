@@ -62,6 +62,10 @@ class EnvironmentVariables {
   @IsString()
   @IsOptional()
   PLATFORM_ADMIN_EMAILS?: string;
+
+  @IsString()
+  @IsOptional()
+  AEAT_ENV?: string = "test";
 }
 
 export function validateEnv(config: Record<string, unknown>) {

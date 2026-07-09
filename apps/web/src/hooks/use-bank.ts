@@ -58,6 +58,25 @@ export function useClearTransactions() {
   });
 }
 
+export function useReconcilePending() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (accountId: string) =>
+      api.post(`/bank/accounts/${accountId}/reconcile`).then((r) => r.data),
+    onSuccess: (data) => {
+      qc.invalidateQueries({ queryKey: ["bank"] });
+      qc.invalidateQueries({ queryKey: ["invoices"] });
+      qc.invalidateQueries({ queryKey: ["invoice"] });
+      qc.invalidateQueries({ queryKey: ["dashboard"] });
+      const msg = data.reconciled > 0
+        ? `${data.reconciled} facturas reconciliadas`
+        : "No se encontraron facturas pendientes que coincidan";
+      toast.success(msg);
+    },
+    onError: () => toast.error("Error al reconciliar movimientos"),
+  });
+}
+
 export function useImportBankStatement() {
   const qc = useQueryClient();
   return useMutation({
