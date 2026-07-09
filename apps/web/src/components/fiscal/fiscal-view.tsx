@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import {
-  useFiscalCalendar, useAnnualSummary, useM303, useM130,
+  useFiscalCalendar, useAnnualSummary, useM303, useM130, useM202,
   useFiscalPeriods, useMarkFiled, useExpenses, useCreateExpense, useDeleteExpense,
 } from "@/hooks/use-fiscal";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -166,8 +166,10 @@ export function FiscalView() {
   const [year, setYear] = useState(currentYear);
   const [quarter, setQuarter] = useState(defaultQ);
   const [addExpenseOpen, setAddExpenseOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<"dashboard" | "m303" | "m130" | "gastos">("dashboard");
+  const [activeTab, setActiveTab] = useState<"dashboard" | "m303" | "m130" | "m202" | "gastos">("dashboard");
+  const [m202Period, setM202Period] = useState(1);
 
+  const { data: m202 } = useM202(year, m202Period);
   const { data: calendar } = useFiscalCalendar(year);
   const { data: annual } = useAnnualSummary(year);
   const { data: m303 } = useM303(year, quarter);
@@ -196,6 +198,7 @@ export function FiscalView() {
     { id: "dashboard", label: "Resumen" },
     { id: "m303", label: "Modelo 303" },
     { id: "m130", label: "Modelo 130" },
+    { id: "m202", label: "Modelo 202 (SL)" },
     { id: "gastos", label: "Gastos" },
   ] as const;
 
@@ -441,6 +444,74 @@ export function FiscalView() {
               <p>1. Ve a <strong>sede.agenciatributaria.gob.es</strong> → Modelo 130 → Presentación</p>
               <p>2. Copia las casillas de arriba</p>
               <p>3. Si el resultado es 0, marca "Resultado negativo o cero" y presenta</p>
+            </div>
+          </ModeloCard>
+        </div>
+      )}
+
+      {/* ── MODELO 202 ── */}
+      {activeTab === "m202" && m202 && (
+        <div className="space-y-4">
+          <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg px-4 py-3 text-sm text-blue-700 dark:text-blue-400">
+            <strong>Modelo 202 — Impuesto de Sociedades (pago fraccionado)</strong>
+            <p className="mt-1 text-xs opacity-80">Solo para empresas con forma jurídica SL o SA. Los autónomos persona física NO presentan este modelo.</p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium">Período:</span>
+            {[
+              { p: 1, label: "1P — Abril" },
+              { p: 2, label: "2P — Octubre" },
+              { p: 3, label: "3P — Diciembre" },
+            ].map(({ p, label }) => (
+              <button
+                key={p}
+                onClick={() => setM202Period(p)}
+                className={cn("px-3 py-1.5 rounded-md text-sm border transition-colors", m202Period === p ? "bg-primary text-primary-foreground border-primary" : "border-border hover:bg-muted")}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+            <Card><CardContent className="p-4">
+              <p className="text-xs text-muted-foreground">Ingresos año</p>
+              <p className="text-lg font-bold text-green-600">{formatCurrency(m202.ingresos)}</p>
+            </CardContent></Card>
+            <Card><CardContent className="p-4">
+              <p className="text-xs text-muted-foreground">Gastos deducibles</p>
+              <p className="text-lg font-bold text-red-500">{formatCurrency(m202.gastos)}</p>
+            </CardContent></Card>
+            <Card className="border-primary/30"><CardContent className="p-4">
+              <p className="text-xs text-muted-foreground">Pago fraccionado</p>
+              <p className="text-lg font-bold">{formatCurrency(m202.pagoFraccionado)}</p>
+              <p className="text-xs text-muted-foreground">18% de cuota íntegra</p>
+            </CardContent></Card>
+          </div>
+
+          <ModeloCard
+            title={`Modelo 202 — ${["", "1er pago (abril)", "2º pago (octubre)", "3er pago (diciembre)"][m202Period]} ${year}`}
+            subtitle={`Plazo: ${new Date(m202.deadline).toLocaleDateString("es-ES")} · Pago fraccionado IS`}
+          >
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide px-3 pt-2 pb-1">Base del cálculo (acumulado año)</p>
+            <CasillaRow num="01" label="Ingresos computables del ejercicio" value={m202.casillas.c01} />
+            <CasillaRow num="02" label="Gastos fiscalmente deducibles" value={-m202.casillas.c02} />
+            <CasillaRow num="12" label="Resultado contable (base)" value={m202.casillas.c12} />
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide px-3 pt-3 pb-1">Cuota</p>
+            <CasillaRow num="13" label={`Cuota íntegra al ${m202.tipoGravamen}%`} value={m202.casillas.c13} />
+            <div className="mt-2 border-t pt-2">
+              <CasillaRow num="14" label="Pago fraccionado a ingresar (18%)" value={m202.casillas.c14} highlight />
+            </div>
+            <div className="mt-3 bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 text-xs text-amber-700 dark:text-amber-400">
+              <p className="font-medium mb-1">Nota importante</p>
+              <p>{m202.nota}</p>
+            </div>
+            <div className="mt-2 bg-muted/30 rounded-lg p-3 text-xs text-muted-foreground">
+              <p className="font-medium text-foreground mb-1">¿Cómo presentarlo?</p>
+              <p>1. Ve a <strong>sede.agenciatributaria.gob.es</strong> → Modelo 202 → Presentación</p>
+              <p>2. El administrador/gestor de la SL debe identificarse con certificado de la empresa</p>
+              <p>3. Copia los importes de las casillas de arriba</p>
             </div>
           </ModeloCard>
         </div>

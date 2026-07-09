@@ -50,6 +50,13 @@ export function useMarkFiled() {
   });
 }
 
+export function useM202(year: number, period: number) {
+  return useQuery({
+    queryKey: ["fiscal", "m202", year, period],
+    queryFn: () => api.get("/fiscal/m202", { params: { year, period } }).then((r) => r.data),
+  });
+}
+
 export function useExpenses(params: { year?: number; quarter?: number }) {
   return useQuery({
     queryKey: ["fiscal", "expenses", params],

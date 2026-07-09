@@ -38,8 +38,16 @@ export class FiscalService {
         issueDate: { gte: range.from, lte: range.to },
         status: { notIn: ["DRAFT", "CANCELLED"] },
       },
-      include: { taxes: true },
     });
+
+    const invoiceIds = invoices.map((i) => i.id);
+
+    // IVA repercutido — leer InvoiceTax con rate > 0 (excluye IRPF que es negativo)
+    const ivaTaxes = invoiceIds.length
+      ? await this.prisma.invoiceTax.findMany({
+          where: { invoiceId: { in: invoiceIds }, rate: { gt: 0 } },
+        })
+      : [];
 
     const expenses = await this.prisma.expense.findMany({
       where: {
@@ -49,13 +57,12 @@ export class FiscalService {
       },
     });
 
-    // IVA repercutido (cobrado a clientes)
-    const ivaRepercutido = invoices.reduce((sum, inv) => {
-      const iva = inv.taxes.filter((t) => Number(t.rate) > 0 && Number(t.rate) !== 15);
-      return sum + iva.reduce((s, t) => s + Number(t.amount), 0);
-    }, 0);
-
     const baseRepercutida = invoices.reduce((sum, inv) => sum + Number(inv.subtotal), 0);
+
+    // Si hay registros InvoiceTax, usarlos; si no, estimar IVA al 21% sobre subtotal
+    const ivaRepercutido = ivaTaxes.length
+      ? ivaTaxes.reduce((s, t) => s + Number(t.amount), 0)
+      : invoices.reduce((s, inv) => s + Number(inv.subtotal) * 0.21, 0);
 
     // IVA soportado (gastos deducibles)
     const ivaSoportado = expenses.reduce((s, e) => s + Number(e.vatAmount), 0);
@@ -108,16 +115,23 @@ export class FiscalService {
       },
     });
 
+    const invoiceIdsYTD = invoicesYTD.map((i) => i.id);
     const ingresosYTD = invoicesYTD.reduce((s, i) => s + Number(i.subtotal), 0);
     const gastosYTD = expensesYTD.reduce((s, e) => s + Number(e.subtotal), 0);
     const rendimientoNeto = Math.max(0, ingresosYTD - gastosYTD);
     const pagoPrevio = rendimientoNeto * 0.2;
 
-    // IRPF retenido por clientes acumulado año
-    const retencionesYTD = invoicesYTD.reduce((s, inv) => {
-      const irpf = inv.taxes.filter((t) => Number(t.rate) < 0 || Number(t.amount) < 0);
-      return s + irpf.reduce((ss, t) => ss + Math.abs(Number(t.amount)), 0);
-    }, 0);
+    // IRPF retenido por clientes — leer InvoiceTax con rate < 0 (retenciones)
+    const irpfTaxes = invoiceIdsYTD.length
+      ? await this.prisma.invoiceTax.findMany({
+          where: { invoiceId: { in: invoiceIdsYTD }, rate: { lt: 0 } },
+        })
+      : [];
+
+    // Si hay registros InvoiceTax, usarlos; si no, estimar IRPF al 15%
+    const retencionesYTD = irpfTaxes.length
+      ? irpfTaxes.reduce((s, t) => s + Math.abs(Number(t.amount)), 0)
+      : invoicesYTD.reduce((s, inv) => s + Number(inv.subtotal) * 0.15, 0);
 
     // Pagos anteriores ya ingresados (trimestres previos del año)
     const periodosPrevios = await this.prisma.fiscalPeriod.findMany({
@@ -172,6 +186,57 @@ export class FiscalService {
         overdue: d.deadline < now,
       }))
       .sort((a, b) => a.deadline.getTime() - b.deadline.getTime());
+  }
+
+  // ── Modelo 202 (Impuesto de Sociedades — pago fraccionado) ─
+  async getM202(companyId: string, year: number, period: number) {
+    // Periods: 1=abril (1T), 2=octubre (3T), 3=diciembre (4T parcial)
+    const periodDeadlines: Record<number, Date> = {
+      1: new Date(year, 3, 20),   // 20 abril
+      2: new Date(year, 9, 20),   // 20 octubre
+      3: new Date(year, 11, 20),  // 20 diciembre
+    };
+    const deadline = periodDeadlines[period] ?? new Date(year, 3, 20);
+
+    // Para IS: base = beneficio neto estimado del año en curso
+    // Método simplificado: 18% del resultado contable del último ejercicio cerrado
+    // O método real: 17-24% sobre resultado del periodo en curso
+    const from = new Date(year, 0, 1);
+    const to = new Date();
+
+    const invoices = await this.prisma.invoice.findMany({
+      where: { companyId, issueDate: { gte: from, lte: to }, status: { notIn: ["DRAFT", "CANCELLED"] } },
+    });
+    const expenses = await this.prisma.expense.findMany({
+      where: { companyId, date: { gte: from, lte: to }, isDeductible: true },
+    });
+
+    const ingresos = invoices.reduce((s, i) => s + Number(i.subtotal), 0);
+    const gastos = expenses.reduce((s, e) => s + Number(e.subtotal), 0);
+    const resultadoContable = Math.max(0, ingresos - gastos);
+    const tipoGravamen = 0.25; // 25% tipo general pymes; 23% si facturación < 1M€
+    const cuotaIntegra = resultadoContable * tipoGravamen;
+    const pagoFraccionado = +(cuotaIntegra * 0.18).toFixed(2); // 18% de la cuota íntegra
+
+    return {
+      period,
+      deadline,
+      daysLeft: Math.ceil((deadline.getTime() - Date.now()) / 86400000),
+      ingresos: +ingresos.toFixed(2),
+      gastos: +gastos.toFixed(2),
+      resultadoContable: +resultadoContable.toFixed(2),
+      tipoGravamen: tipoGravamen * 100,
+      cuotaIntegra: +cuotaIntegra.toFixed(2),
+      pagoFraccionado,
+      casillas: {
+        c01: +ingresos.toFixed(2),
+        c02: +gastos.toFixed(2),
+        c12: +resultadoContable.toFixed(2),
+        c13: +(resultadoContable * tipoGravamen).toFixed(2),
+        c14: +pagoFraccionado.toFixed(2),
+      },
+      nota: "Cálculo orientativo. El tipo puede ser 23% si facturación anual < 1M€. Consulta con gestor para deducciones específicas.",
+    };
   }
 
   // ── Gastos ─────────────────────────────────────────────────
