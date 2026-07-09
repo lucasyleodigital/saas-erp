@@ -1,12 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import { useInvoice, useUpdateInvoiceStatus, useRegisterPayment } from "@/hooks/use-invoices";
 import { useGenerateVerifactu } from "@/hooks/use-verifactu";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { ArrowLeft, Download, Send, CheckCircle, Shield, ExternalLink, Copy } from "lucide-react";
+import { ArrowLeft, Download, Send, CheckCircle, Shield, ExternalLink, Copy, Banknote } from "lucide-react";
 import { downloadInvoicePdf } from "@/lib/pdf/download-pdf";
 import { LocaleLink as Link } from "@/components/ui/locale-link";
 import { toast } from "sonner";
@@ -28,6 +32,8 @@ export function InvoiceDetail({ id }: { id: string }) {
   const generateVerifactu = useGenerateVerifactu();
   const t = useTranslations("invoices");
   const tCommon = useTranslations("common");
+  const [partialOpen, setPartialOpen] = useState(false);
+  const [partialAmount, setPartialAmount] = useState("");
 
   if (isLoading) {
     return (
@@ -96,21 +102,35 @@ export function InvoiceDetail({ id }: { id: string }) {
             </Button>
           )}
           {["SENT", "PARTIAL", "OVERDUE"].includes(invoice.status) && (
-            <Button
-              size="sm"
-              className="gap-2 bg-emerald-600 hover:bg-emerald-700"
-              disabled={registerPayment.isPending}
-              onClick={() =>
-                registerPayment.mutate({
-                  invoiceId: id,
-                  amount: pendingAmount,
-                  method: "BANK_TRANSFER",
-                })
-              }
-            >
-              <CheckCircle className="h-4 w-4" />
-              {t("detail.registerFullPayment")}
-            </Button>
+            <>
+              <Button
+                size="sm"
+                variant="outline"
+                className="gap-2"
+                onClick={() => {
+                  setPartialAmount("");
+                  setPartialOpen(true);
+                }}
+              >
+                <Banknote className="h-4 w-4" />
+                Pago parcial
+              </Button>
+              <Button
+                size="sm"
+                className="gap-2 bg-emerald-600 hover:bg-emerald-700"
+                disabled={registerPayment.isPending}
+                onClick={() =>
+                  registerPayment.mutate({
+                    invoiceId: id,
+                    amount: pendingAmount,
+                    method: "BANK_TRANSFER",
+                  })
+                }
+              >
+                <CheckCircle className="h-4 w-4" />
+                {t("detail.registerFullPayment")}
+              </Button>
+            </>
           )}
         </div>
       </div>
@@ -412,6 +432,64 @@ export function InvoiceDetail({ id }: { id: string }) {
           </Card>
         </div>
       </div>
+
+      {/* Partial payment dialog */}
+      <Dialog open={partialOpen} onOpenChange={setPartialOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Banknote className="h-5 w-5 text-primary" />
+              Registrar pago parcial
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Total factura</span>
+              <span className="font-semibold">{formatCurrency(Number(invoice.total))}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Ya cobrado</span>
+              <span className="font-semibold text-emerald-600">{formatCurrency(Number(invoice.paidAmount ?? 0))}</span>
+            </div>
+            <div className="flex justify-between text-sm border-t pt-2">
+              <span className="text-muted-foreground">Pendiente</span>
+              <span className="font-bold">{formatCurrency(pendingAmount)}</span>
+            </div>
+            <div className="space-y-1.5">
+              <Label>Importe recibido (€)</Label>
+              <Input
+                type="number"
+                min="0.01"
+                max={pendingAmount}
+                step="0.01"
+                placeholder={`Máx. ${pendingAmount.toFixed(2)}`}
+                value={partialAmount}
+                onChange={(e) => setPartialAmount(e.target.value)}
+                autoFocus
+              />
+            </div>
+          </div>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setPartialOpen(false)}>
+              {tCommon("cancel")}
+            </Button>
+            <Button
+              disabled={!partialAmount || Number(partialAmount) <= 0 || Number(partialAmount) > pendingAmount || registerPayment.isPending}
+              onClick={() => {
+                const amount = Number(partialAmount);
+                if (amount > 0 && amount <= pendingAmount) {
+                  registerPayment.mutate(
+                    { invoiceId: id, amount, method: "BANK_TRANSFER" },
+                    { onSuccess: () => setPartialOpen(false) }
+                  );
+                }
+              }}
+            >
+              Registrar pago
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
