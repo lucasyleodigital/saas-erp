@@ -821,7 +821,9 @@
       "annual303": "Deklaratzeko BEZ guztira",
       "repairHint": "BEZ 0 agertzen bada faktura existenteekin, sakatu Konpondu",
       "repairTaxes": "Zergak konpondu",
-      "repairing": "Konpontzen..."
+      "repairing": "Konpontzen...",
+      "totalToDeclare": "Adierazitako BEZ guztira {year}",
+      "onBase": "{amount} oinarri ezargarriaren gainean"
     },
     "journal": {
       "newEntry": "Kontabilitate-idazpen berria",
@@ -862,7 +864,8 @@
       "netIncome": "Errendimendu garbia",
       "previousPayments": "Aurreko ordainketak",
       "toPay": "Ordaintzeko",
-      "totalSubtitle": "Metatutako PFEZ zatikako ordainketak"
+      "totalSubtitle": "Metatutako PFEZ zatikako ordainketak",
+      "totalTitle": "PFEZ guztira ordaindua {year}"
     },
     "modelo347": {
       "title": "347 Eredua - Hirugarrenekin eragiketak",

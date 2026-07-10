@@ -821,7 +821,9 @@
       "annual303": "Total VAT to declare",
       "repairHint": "If VAT shows 0 with existing invoices, click Repair",
       "repairTaxes": "Repair taxes",
-      "repairing": "Repairing..."
+      "repairing": "Repairing...",
+      "totalToDeclare": "Total VAT to declare {year}",
+      "onBase": "On taxable base of {amount}"
     },
     "journal": {
       "newEntry": "New journal entry",
@@ -862,7 +864,8 @@
       "netIncome": "Net income",
       "previousPayments": "Previous payments",
       "toPay": "To pay",
-      "totalSubtitle": "Accumulated IRPF instalments"
+      "totalSubtitle": "Accumulated IRPF instalments",
+      "totalTitle": "Total IRPF paid {year}"
     },
     "modelo347": {
       "title": "Model 347 - Third-party operations",

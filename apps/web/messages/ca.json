@@ -821,7 +821,9 @@
       "annual303": "Total IVA a declarar",
       "repairHint": "Si l'IVA surt a 0 amb factures existents, prem Reparar",
       "repairTaxes": "Reparar impostos",
-      "repairing": "Reparant..."
+      "repairing": "Reparant...",
+      "totalToDeclare": "Total IVA a declarar {year}",
+      "onBase": "Sobre base imposable de {amount}"
     },
     "journal": {
       "newEntry": "Nou assentament comptable",
@@ -862,7 +864,8 @@
       "netIncome": "Rdt. net",
       "previousPayments": "Pagaments ant.",
       "toPay": "A ingressar",
-      "totalSubtitle": "Pagaments fraccionats IRPF acumulats"
+      "totalSubtitle": "Pagaments fraccionats IRPF acumulats",
+      "totalTitle": "Total IRPF pagat {year}"
     },
     "modelo347": {
       "title": "Model 347 - Operacions amb tercers",

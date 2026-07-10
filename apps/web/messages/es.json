@@ -821,7 +821,9 @@
       "annual303": "Total IVA a declarar",
       "repairHint": "Si el IVA sale a 0 con facturas existentes, pulsa Reparar",
       "repairTaxes": "Reparar impuestos",
-      "repairing": "Reparando..."
+      "repairing": "Reparando...",
+      "totalToDeclare": "Total IVA a declarar {year}",
+      "onBase": "Sobre base imponible de {amount}"
     },
     "journal": {
       "newEntry": "Nuevo asiento contable",
@@ -862,7 +864,8 @@
       "netIncome": "Rto. neto",
       "previousPayments": "Pagos ant.",
       "toPay": "A ingresar",
-      "totalSubtitle": "Pagos fraccionados IRPF acumulados"
+      "totalSubtitle": "Pagos fraccionados IRPF acumulados",
+      "totalTitle": "Total IRPF pagado {year}"
     },
     "modelo347": {
       "title": "Modelo 347 - Operaciones con terceros",

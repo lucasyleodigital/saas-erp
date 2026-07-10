@@ -114,7 +114,7 @@ export class CalendarController {
     return this.prisma.calendarEntry.create({
       data: {
         companyId: u.companyId,
-        userId: u.userId,
+        userId: u.sub,
         type: body.type ?? "REMINDER",
         title: body.title,
         description: body.description,
