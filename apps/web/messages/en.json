@@ -849,7 +849,9 @@
       "client": "Client",
       "supplier": "Supplier",
       "cifNif": "Tax ID",
-      "base": "Base"
+      "base": "Base",
+      "noIssued": "No issued invoices in {year}",
+      "noReceived": "No received invoices in {year}"
     },
     "modelo130": {
       "title": "Model 130 - IRPF instalment",
@@ -866,7 +868,11 @@
       "description": "Annual declaration of operations over 3,005.06 EUR.",
       "clientHeader": "Clients",
       "supplierHeader": "Suppliers",
-      "totalOps": "Total operations"
+      "totalOps": "Total operations",
+      "clients": "Clients ({count})",
+      "suppliers": "Suppliers ({count})",
+      "noClients": "No client exceeds 3,005.06 € in {year}",
+      "noSuppliers": "No supplier exceeds 3,005.06 € in {year}"
     },
     "retenciones": {
       "title": "IRPF withholdings applied",
@@ -874,7 +880,10 @@
       "client": "Client",
       "base": "Base",
       "irpfRate": "IRPF %",
-      "retention": "Withholding"
+      "retention": "Withholding",
+      "noRetentions": "No withholdings recorded in {year}",
+      "totalTitle": "Total",
+      "totalBase": "Total base"
     },
     "months": {
       "jan": "Jan",
@@ -2120,3 +2129,4 @@
     }
   }
 }
+

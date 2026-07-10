@@ -841,7 +841,9 @@
       "client": "Cliente",
       "supplier": "Provedor",
       "cifNif": "CIF/NIF",
-      "base": "Base"
+      "base": "Base",
+      "noIssued": "Non hai facturas emitidas en {year}",
+      "noReceived": "Non hai facturas recibidas en {year}"
     },
     "modelo130": {
       "title": "Modelo 130 - Pagamento fraccionado IRPF",
@@ -858,7 +860,11 @@
       "description": "Declaracion anual de operacions superiores a 3.005,06 EUR.",
       "clientHeader": "Clientes",
       "supplierHeader": "Provedores",
-      "totalOps": "Total operacions"
+      "totalOps": "Total operacions",
+      "clients": "Clientes ({count})",
+      "suppliers": "Provedores ({count})",
+      "noClients": "Ningún cliente supera 3.005,06 € en {year}",
+      "noSuppliers": "Ningún provedor supera 3.005,06 € en {year}"
     },
     "retenciones": {
       "title": "Retencions IRPF practicadas",
@@ -866,7 +872,10 @@
       "client": "Cliente",
       "base": "Base",
       "irpfRate": "% IRPF",
-      "retention": "Retencion"
+      "retention": "Retencion",
+      "noRetentions": "Non hai retencions rexistradas en {year}",
+      "totalTitle": "Total",
+      "totalBase": "Base total"
     },
     "months": {
       "jan": "Xan",
@@ -1980,3 +1989,4 @@
     }
   }
 }
+
