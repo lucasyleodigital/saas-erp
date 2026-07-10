@@ -92,6 +92,7 @@
     "leads": "Leads",
     "automations": "Automatitzacions",
     "accounting": "Comptabilitat",
+    "fiscal": "Fiscal",
     "inventory": "Inventari",
     "settings": "Configuracio",
     "company": "La meva empresa",
@@ -849,7 +850,9 @@
       "client": "Client",
       "supplier": "Proveidor",
       "cifNif": "CIF/NIF",
-      "base": "Base"
+      "base": "Base",
+      "noIssued": "No hi ha factures emeses a {year}",
+      "noReceived": "No hi ha factures rebudes a {year}"
     },
     "modelo130": {
       "title": "Model 130 - Pagament fraccionat IRPF",
@@ -866,7 +869,11 @@
       "description": "Declaracio anual d'operacions superiors a 3.005,06 EUR.",
       "clientHeader": "Clients",
       "supplierHeader": "Proveidors",
-      "totalOps": "Total operacions"
+      "totalOps": "Total operacions",
+      "clients": "Clients ({count})",
+      "suppliers": "Proveïdors ({count})",
+      "noClients": "Cap client supera 3.005,06 € a {year}",
+      "noSuppliers": "Cap proveïdor supera 3.005,06 € a {year}"
     },
     "retenciones": {
       "title": "Retencions IRPF practicades",
@@ -874,7 +881,10 @@
       "client": "Client",
       "base": "Base",
       "irpfRate": "% IRPF",
-      "retention": "Retencio"
+      "retention": "Retenció",
+      "noRetentions": "No hi ha retencions registrades a {year}",
+      "totalTitle": "Total retencions {year}",
+      "totalBase": "Base total subjecta a retenció: {amount}"
     },
     "months": {
       "jan": "Gen",
@@ -889,6 +899,140 @@
       "oct": "Oct",
       "nov": "Nov",
       "dec": "Des"
+    }
+  },
+  "fiscal": {
+    "title": "Gestió fiscal",
+    "subtitle": "Models tributaris, despeses deduïbles i calendari d'obligacions",
+    "tabs": {
+      "dashboard": "Resum",
+      "m303": "Model 303",
+      "m130": "Model 130",
+      "m202": "Model 202 (SL)",
+      "gastos": "Despeses"
+    },
+    "quarters": {
+      "q1": "1T (Gen–Mar)",
+      "q2": "2T (Abr–Jun)",
+      "q3": "3T (Jul–Set)",
+      "q4": "4T (Oct–Des)"
+    },
+    "overdue": "Termini vençut",
+    "filed": "Presentat",
+    "markFiled": "Marcar com presentat",
+    "deadline": "Termini",
+    "aeatLink": "Seu AEAT",
+    "howToFile": "Com presentar-lo?",
+    "dashboard": {
+      "income": "Ingressos {year}",
+      "expenses": "Despeses {year}",
+      "netIncome": "Rendiment net",
+      "irpfBase": "Base IRPF estimada",
+      "ivaResult": "IVA a ingressar",
+      "ivaSubtitle": "Repercutit − suportat",
+      "statusTitle": "Estat de presentacions {year}",
+      "calendarTitle": "Calendari fiscal {year}",
+      "mod": "Mod. {num}"
+    },
+    "m303": {
+      "vatCharged": "IVA repercutit",
+      "vatDeductible": "IVA suportat",
+      "result": "Resultat",
+      "toPay": "A ingressar",
+      "toReturn": "A retornar",
+      "invoices": "{count} factures",
+      "expenses": "{count} despeses",
+      "c01": "Base imposable operacions tipus general",
+      "c03": "Quota IVA al 21%",
+      "c28": "Base IVA suportat en operacions corrents",
+      "c29": "Quota IVA suportat deduïble",
+      "c46": "Resultat (diferència)",
+      "sectionCharged": "IVA Meritat",
+      "sectionDeductible": "IVA Deduïble",
+      "how1": "Ves a sede.agenciatributaria.gob.es → Model 303 → Presentació",
+      "how2": "Identifica't amb Cl@ve PIN o certificat digital",
+      "how3": "Copia les caselles de dalt al formulari online",
+      "how4": "Si el resultat és positiu, domicilia el pagament o ingressa al compte"
+    },
+    "m130": {
+      "incomeYTD": "Ingressos acum. {year}",
+      "expensesYTD": "Despeses acum. {year}",
+      "retentions": "Retencions clients",
+      "toPay": "A ingressar",
+      "zeroNote": "Resultat 0 — presentar igualment",
+      "c01": "Ingressos computables de l'any",
+      "c02": "Despeses fiscalment deduïbles",
+      "c03": "Rendiment net (01 − 02)",
+      "c05": "20% del rendiment net",
+      "c14": "Retencions suportades acumulades",
+      "c15": "Pagaments fraccionats anteriors {year}",
+      "c16": "Resultat a ingressar",
+      "sectionCalc": "Càlcul del rendiment (acumulat anual)",
+      "sectionDeductions": "Deduccions",
+      "zeroAlert": "Les retencions que els teus clients ja han ingressat per tu cobreixen el pagament fraccionat. El resultat és 0. Cal presentar el model igualment marcant la casella \"Sense activitat o quota zero\".",
+      "how1": "Ves a sede.agenciatributaria.gob.es → Model 130 → Presentació",
+      "how2": "Copia les caselles de dalt",
+      "how3": "Si el resultat és 0, marca \"Resultat negatiu o zero\" i presenta"
+    },
+    "m202": {
+      "alertTitle": "Model 202 — Impost de Societats (pagament fraccionat)",
+      "alertBody": "Només per a empreses amb forma jurídica SL o SA. Els autònoms persona física NO presenten aquest model.",
+      "period": "Període",
+      "p1": "1P — Abril",
+      "p2": "2P — Octubre",
+      "p3": "3P — Desembre",
+      "p1title": "1r pagament (abril)",
+      "p2title": "2n pagament (octubre)",
+      "p3title": "3r pagament (desembre)",
+      "income": "Ingressos any",
+      "expenses": "Despeses deduïbles",
+      "installment": "Pagament fraccionat",
+      "installmentNote": "18% de quota íntegra",
+      "c01": "Ingressos computables de l'exercici",
+      "c02": "Despeses fiscalment deduïbles",
+      "c12": "Resultat comptable (base)",
+      "c13": "Quota íntegra al {rate}%",
+      "c14": "Pagament fraccionat a ingressar (18%)",
+      "sectionBase": "Base del càlcul (acumulat any)",
+      "sectionQuota": "Quota",
+      "how1": "Ves a sede.agenciatributaria.gob.es → Model 202 → Presentació",
+      "how2": "L'administrador/gestor de la SL ha d'identificar-se amb certificat de l'empresa",
+      "how3": "Copia els imports de les caselles de dalt"
+    },
+    "gastos": {
+      "title": "Despeses deduïbles — {quarter} {year}",
+      "subtitle": "Desa aquí les factures de despeses per calcular l'IVA suportat i el rendiment net",
+      "add": "Afegir despesa",
+      "addFirst": "Afegir primera despesa",
+      "empty": "Sense despeses registrades",
+      "emptyHint": "Afegeix les factures que reps de proveïdors per calcular l'IVA deduïble",
+      "total": "Total {count} despeses",
+      "colDate": "Data",
+      "colDescription": "Descripció",
+      "colCategory": "Categoria",
+      "colBase": "Base",
+      "colVat": "IVA",
+      "colTotal": "Total"
+    },
+    "addExpense": {
+      "title": "Afegir despesa deduïble",
+      "date": "Data",
+      "category": "Categoria",
+      "description": "Descripció *",
+      "supplier": "Proveïdor",
+      "invoiceRef": "Nº factura",
+      "base": "Base imposable (€) *",
+      "vat": "IVA (%)",
+      "vat0": "0% (exempt)",
+      "vat4": "4% (superreduït)",
+      "vat10": "10% (reduït)",
+      "vat21": "21% (general)",
+      "vatSummary": "IVA {rate}%: {amount}",
+      "total": "Total: {amount}",
+      "cancel": "Cancel·lar",
+      "save": "Desar despesa",
+      "descPlaceholder": "Software subscripció, hosting...",
+      "supplierPlaceholder": "Cloudflare, Google..."
     }
   },
   "bank": {
@@ -2119,3 +2263,4 @@
     }
   }
 }
+

@@ -112,7 +112,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
     {
       group: t("accounting"),
       items: [
-        { href: "/fiscal",       label: "Fiscal",              icon: Receipt },
+        { href: "/fiscal",       label: t("fiscal"),           icon: Receipt },
         { href: "/contabilidad", label: t("accounting"),     icon: Calculator },
         { href: "/banco",        label: t("bank"),             icon: Landmark },
         { href: "/compras",      label: t("purchaseOrders"), icon: PackageCheck },
