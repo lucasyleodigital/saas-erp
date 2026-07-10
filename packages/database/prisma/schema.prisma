@@ -253,8 +253,9 @@ model Company {
   purchaseOrders PurchaseOrder[]
   projects       Project[]
   customFields   CustomField[]
-  expenses       Expense[]
-  fiscalPeriods  FiscalPeriod[]
+  expenses        Expense[]
+  fiscalPeriods   FiscalPeriod[]
+  calendarEntries CalendarEntry[]
 
   @@map("companies")
 }
@@ -1373,6 +1374,31 @@ model Expense {
 
   @@index([companyId, date])
   @@map("expenses")
+}
+
+// ============================================================
+// CALENDAR
+// ============================================================
+
+model CalendarEntry {
+  id          String   @id @default(uuid())
+  companyId   String
+  userId      String?
+  type        String   @default("REMINDER") // APPOINTMENT | TASK | REMINDER
+  title       String
+  description String?
+  date        DateTime
+  endDate     DateTime?
+  allDay      Boolean  @default(true)
+  done        Boolean  @default(false)
+  color       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, date])
+  @@map("calendar_entries")
 }
 
 model FiscalPeriod {
