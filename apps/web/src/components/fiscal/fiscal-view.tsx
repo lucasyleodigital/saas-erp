@@ -527,7 +527,7 @@ export function FiscalView() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium">{t("gastos.title", { quarter: QUARTER_LABELS[quarter], year })}</p>
+              <p className="text-sm font-medium">{t("gastos.title", { quarter: QUARTER_LABELS[quarter] ?? "", year })}</p>
               <p className="text-xs text-muted-foreground">{t("gastos.subtitle")}</p>
             </div>
             <Button className="gap-2" onClick={() => setAddExpenseOpen(true)}>
