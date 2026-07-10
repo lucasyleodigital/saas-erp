@@ -178,6 +178,7 @@ export function FiscalView() {
   const { data: periods } = useFiscalPeriods(year);
   const { data: expenses } = useExpenses({ year, quarter });
   const markFiled = useMarkFiled();
+  const deleteExpense = useDeleteExpense();
 
   const QUARTER_LABELS = ["", t("quarters.q1"), t("quarters.q2"), t("quarters.q3"), t("quarters.q4")];
 
