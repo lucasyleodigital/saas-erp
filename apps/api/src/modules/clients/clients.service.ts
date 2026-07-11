@@ -69,10 +69,12 @@ export class ClientsService {
     const count = await this.plans.countClients(companyId);
     await this.plans.checkLimit(companyId, "maxClients", count);
     const client = await this.prisma.client.create({ data: { ...dto, companyId } });
+    const company = await this.prisma.company.findUnique({ where: { id: companyId }, select: { name: true } });
     this.automations.trigger(companyId, "CLIENT_CREATED", {
       clientId:    client.id,
       clientName:  client.name,
       clientEmail: client.email ?? "",
+      companyName: company?.name ?? "",
     }).catch(() => {});
     this.notifications.create(companyId, {
       title: "Nuevo cliente",

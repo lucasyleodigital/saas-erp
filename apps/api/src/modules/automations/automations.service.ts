@@ -152,13 +152,19 @@ export class AutomationsService {
 
     switch (automation.action) {
       case "SEND_EMAIL":
-        if (ctx.clientEmail && config.subject) {
-          await this.email.sendGeneric(
-            ctx.clientEmail,
-            interpolate(config.subject),
-            interpolate(config.body ?? ""),
-          );
+        if (!ctx.clientEmail) {
+          console.warn(`[Automation ${automation.id}] SEND_EMAIL skipped: no clientEmail in context`);
+          break;
         }
+        if (!config.subject) {
+          console.warn(`[Automation ${automation.id}] SEND_EMAIL skipped: actionConfig.subject is empty`);
+          break;
+        }
+        await this.email.sendGeneric(
+          ctx.clientEmail,
+          interpolate(config.subject),
+          interpolate(config.body ?? ""),
+        );
         break;
 
       case "CREATE_NOTIFICATION":

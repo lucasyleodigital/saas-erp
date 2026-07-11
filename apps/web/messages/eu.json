@@ -676,19 +676,8 @@
   },
   "automations": {
     "title": "Automatizazioak",
-    "subtitle": "Automatizatu zeregin errepikakorrak",
-    "new": "Automatizazio berria",
-    "active": "Aktiboak",
-    "inactive": "Inaktiboak",
-    "trigger": "Abiarazlea",
-    "action": "Ekintza",
-    "runs": "Exekuzioak",
-    "lastRun": "Azken exekuzioa",
-    "noAutomations": "Oraindik ez duzu automatizaziorik",
-    "upgrade": "Eguneratu zure plana automatizazioak erabiltzeko",
+    "subtitle": "Arau automatikoak: zerbait gertatzen denean, hau egin",
     "newRule": "Arau berria",
-    "createFromScratch": "Hutsetik sortu",
-    "emptyDescription": "Aukeratu goiko txantiloi bat edo sortu arau pertsonalizatu bat hutsetik.",
     "triggers": {
       "invoiceCreated": "Faktura sortuta",
       "invoicePaid": "Faktura ordainduta",
@@ -705,81 +694,63 @@
     },
     "actions": {
       "sendEmail": "Emaila bidali",
-      "createNotification": "Barne-jakinarazpena sortu",
-      "sendWebhook": "Webhook-a bidali (HTTP POST)"
+      "createNotification": "Barne-jakinarazpena"
     },
-    "templates": {
-      "title": "Txantiloi azkarrak",
-      "clickToUse": "— egin klik erabiltzeko",
-      "overdueReminder": {
+    "prebuilt": {
+      "welcome": {
+        "name": "Bezero berrien ongietorri-emaila",
+        "desc": "Bezero berri bat alta ematen denean automatikoki bidaltzen da"
+      },
+      "invoicePaid": {
+        "name": "Ordainketa berrestea",
+        "desc": "Faktura ordainduta markatzen denean esker-email bat bidaltzen du"
+      },
+      "overdue": {
         "name": "Iraungitako fakturaren gogorarazlea",
-        "description": "Email automatikoa bidaltzen du faktura batek mugaeguna gainditzen duenean"
+        "desc": "Faktura bat mugaeguna gainditzen duenean bezeroari abisatzen dio"
       },
-      "welcomeClient": {
-        "name": "Bezero berriaren ongietorria",
-        "description": "Automatikoki agurtzen du alta ematen den bezero berri bakoitza"
-      },
-      "newLeadAlert": {
-        "name": "Lead berriaren alerta",
-        "description": "Barne-jakinarazpen bat jasotzen du lead berri bat sartzen den bakoitzean"
-      },
-      "paymentConfirmation": {
-        "name": "Jasotako ordainketaren berrespena",
-        "description": "Berrespen email automatikoa bidaltzen du ordainketa bat jasotzean"
-      },
-      "quoteWebhook": {
-        "name": "Webhook-a aurrekontua onartzean",
-        "description": "Zure CRM edo Zapier-i jakinarazten dio bezero batek aurrekontu bat onartzen duenean"
-      },
-      "lowStockAlert": {
+      "lowStock": {
         "name": "Stock baxuaren alerta",
-        "description": "Barne-jakinarazpen bat jasotzen du produktu baten stock-a gutxienekoaren azpitik jaisten denean"
-      },
-      "newOrderNotif": {
-        "name": "Eskari berriaren jakinarazpena",
-        "description": "Barnetik jakinarazten du bezero-eskari berri bat iristen denean"
-      },
-      "purchaseReceivedAlert": {
-        "name": "Jasotako erosketaren alerta",
-        "description": "Jakinarazten du erosketa-agindu bat guztiz jasota geratzen denean biltegian"
+        "desc": "Produktu bat gutxienekora iristen denean barne-jakinarazpena jasotzen duzu"
       }
     },
-    "form": {
-      "editTitle": "Automatizazioa editatu",
-      "newTitle": "Automatizazio berria",
-      "triggerLabel": "Hau gertatzen denean (trigger) *",
-      "selectEvent": "Gertaera hautatu...",
-      "actionLabel": "Ekintza hau exekutatu *",
-      "emailConfig": "Email-aren konfigurazioa",
-      "subject": "Gaia",
-      "body": "Gorputza",
-      "notifConfig": "Jakinarazpenaren konfigurazioa",
-      "notifTitleLabel": "Izenburua",
+    "dialog": {
+      "newTitle": "Arau automatiko berria",
+      "editTitle": "Araua editatu",
+      "when": "Noiz",
+      "then": "Egin",
+      "whenLabel": "Hau gertatzen denean...",
+      "thenLabel": "Hau exekutatu...",
+      "selectEvent": "Gertaera hautatu",
+      "emailConfig": "Emaila konfiguratu",
+      "subject": "Email-aren gaia",
       "message": "Mezua",
-      "webhookConfig": "Webhook-aren konfigurazioa",
-      "namePlaceholder": "Ordainketa-gogorarazlea",
-      "nameRequired": "Izena derrigorrezkoa da",
-      "selectTrigger": "Hautatu trigger bat",
-      "selectAction": "Hautatu ekintza bat",
-      "invalidUrl": "URL baliogabea"
+      "notifConfig": "Jakinarazpena konfiguratu",
+      "notifTitle": "Izenburua",
+      "required": "Eremu derrigorrezkoa",
+      "create": "Araua sortu"
     },
-    "stats": {
-      "totalRules": "Arau guztira",
-      "totalExecutions": "Exekuzio guztira",
-      "executedCount": "{count} aldiz exekutatuta",
-      "noExecutions": "Exekuziorik gabe oraindik",
-      "last": "azkena",
-      "testNow": "Orain probatu",
+    "card": {
+      "runs": "exekuzio",
+      "test": "Orain probatu",
       "pause": "Pausatu",
       "activate": "Aktibatu"
     },
+    "section": {
+      "activeRules": "Arau aktiboak",
+      "suggestions": "Iradokizunak — klik bat aktibatzeko"
+    },
+    "empty": {
+      "noRules": "Oraindik ez duzu arauren bat",
+      "addBelow": "Aktibatu iradokizun bat edo sortu zurea"
+    },
     "logs": {
       "title": "Exekuzio-historia",
-      "noLogs": "Oraindik ez da exekuziorik erregistratu"
+      "empty": "Oraindik ez da exekuziorik erregistratu"
     },
     "planWall": {
       "title": "Automatizazioak ordainpekoak dira",
-      "description": "FREE planarekin ezin dituzu automatizazioak sortu. Eguneratu STARTER edo goragoko planera email, jakinarazpen eta webhook fluxu automatikoak desblokeatzeko.",
+      "description": "FREE planarekin ezin dituzu automatizazioak sortu. Eguneratu STARTER edo goragoko planera fluxu automatikoak desblokeatzeko.",
       "viewPlans": "Planak ikusi",
       "upgradeStarter": "Starter-era eguneratu"
     }

@@ -676,19 +676,8 @@
   },
   "automations": {
     "title": "Automatizaciones",
-    "subtitle": "Automatiza tareas repetitivas",
-    "new": "Nueva automatización",
-    "active": "Activas",
-    "inactive": "Inactivas",
-    "trigger": "Disparador",
-    "action": "Acción",
-    "runs": "Ejecuciones",
-    "lastRun": "Última ejecución",
-    "noAutomations": "No tienes automatizaciones todavía",
-    "upgrade": "Actualiza tu plan para usar automatizaciones",
+    "subtitle": "Reglas automaticas: cuando pase algo, haz esto",
     "newRule": "Nueva regla",
-    "createFromScratch": "Crear desde cero",
-    "emptyDescription": "Elige una plantilla de arriba o crea una regla personalizada desde cero.",
     "triggers": {
       "invoiceCreated": "Factura creada",
       "invoicePaid": "Factura pagada",
@@ -705,81 +694,63 @@
     },
     "actions": {
       "sendEmail": "Enviar email",
-      "createNotification": "Crear notificacion interna",
-      "sendWebhook": "Enviar webhook (HTTP POST)"
+      "createNotification": "Notificacion interna"
     },
-    "templates": {
-      "title": "Plantillas rapidas",
-      "clickToUse": "— haz clic para usar",
-      "overdueReminder": {
+    "prebuilt": {
+      "welcome": {
+        "name": "Email de bienvenida a nuevos clientes",
+        "desc": "Se envia automaticamente cuando das de alta un cliente nuevo"
+      },
+      "invoicePaid": {
+        "name": "Confirmar pago recibido",
+        "desc": "Envia un email de agradecimiento cuando marcas una factura como pagada"
+      },
+      "overdue": {
         "name": "Recordatorio de factura vencida",
-        "description": "Envia un email automatico cuando una factura supera la fecha de vencimiento"
+        "desc": "Avisa al cliente cuando una factura supera la fecha de vencimiento"
       },
-      "welcomeClient": {
-        "name": "Bienvenida a nuevo cliente",
-        "description": "Saluda automaticamente a cada cliente nuevo que se da de alta"
-      },
-      "newLeadAlert": {
-        "name": "Alerta de nuevo lead",
-        "description": "Recibe una notificacion interna cada vez que entra un lead nuevo"
-      },
-      "paymentConfirmation": {
-        "name": "Confirmacion de pago recibido",
-        "description": "Envia un email de confirmacion automatico al recibir un pago"
-      },
-      "quoteWebhook": {
-        "name": "Webhook al aceptar presupuesto",
-        "description": "Notifica a tu CRM o Zapier cuando un cliente acepta un presupuesto"
-      },
-      "lowStockAlert": {
+      "lowStock": {
         "name": "Alerta de stock bajo",
-        "description": "Recibe una notificacion interna cuando el stock de un producto cae por debajo del minimo"
-      },
-      "newOrderNotif": {
-        "name": "Notificacion de nuevo pedido",
-        "description": "Avisa internamente cuando llega un nuevo pedido de cliente"
-      },
-      "purchaseReceivedAlert": {
-        "name": "Alerta de compra recibida",
-        "description": "Notifica cuando una orden de compra queda completamente recibida en almacen"
+        "desc": "Recibe una notificacion interna cuando un producto llega al minimo"
       }
     },
-    "form": {
-      "editTitle": "Editar automatizacion",
-      "newTitle": "Nueva automatizacion",
-      "triggerLabel": "Cuando ocurra esto (trigger) *",
-      "selectEvent": "Seleccionar evento...",
-      "actionLabel": "Ejecutar esta accion *",
-      "emailConfig": "Config del email",
-      "subject": "Asunto",
-      "body": "Cuerpo",
-      "notifConfig": "Config de notificacion",
-      "notifTitleLabel": "Titulo",
+    "dialog": {
+      "newTitle": "Nueva regla automatica",
+      "editTitle": "Editar regla",
+      "when": "Cuando",
+      "then": "Hacer",
+      "whenLabel": "Cuando ocurra esto...",
+      "thenLabel": "Ejecutar esto...",
+      "selectEvent": "Seleccionar evento",
+      "emailConfig": "Configurar email",
+      "subject": "Asunto del email",
       "message": "Mensaje",
-      "webhookConfig": "Config del webhook",
-      "namePlaceholder": "Recordatorio de pago",
-      "nameRequired": "Nombre obligatorio",
-      "selectTrigger": "Selecciona un trigger",
-      "selectAction": "Selecciona una accion",
-      "invalidUrl": "URL invalida"
+      "notifConfig": "Configurar notificacion",
+      "notifTitle": "Titulo",
+      "required": "Campo obligatorio",
+      "create": "Crear regla"
     },
-    "stats": {
-      "totalRules": "Total reglas",
-      "totalExecutions": "Ejecuciones totales",
-      "executedCount": "Ejecutada {count} veces",
-      "noExecutions": "Sin ejecuciones aun",
-      "last": "ultima",
-      "testNow": "Probar ahora",
+    "card": {
+      "runs": "ejecuciones",
+      "test": "Probar ahora",
       "pause": "Pausar",
       "activate": "Activar"
     },
+    "section": {
+      "activeRules": "Reglas activas",
+      "suggestions": "Sugerencias — un clic para activar"
+    },
+    "empty": {
+      "noRules": "No tienes ninguna regla todavia",
+      "addBelow": "Activa una sugerencia o crea la tuya propia"
+    },
     "logs": {
       "title": "Historial de ejecuciones",
-      "noLogs": "Sin ejecuciones registradas todavia"
+      "empty": "Sin ejecuciones registradas todavia"
     },
     "planWall": {
       "title": "Las automatizaciones son de pago",
-      "description": "Con el plan FREE no puedes crear automatizaciones. Actualiza a STARTER o superior para desbloquear flujos automaticos de email, notificaciones y webhooks.",
+      "description": "Con el plan FREE no puedes crear automatizaciones. Actualiza a STARTER o superior para desbloquear flujos automaticos.",
       "viewPlans": "Ver planes",
       "upgradeStarter": "Actualizar a Starter"
     }

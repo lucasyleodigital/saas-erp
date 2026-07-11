@@ -676,19 +676,8 @@
   },
   "automations": {
     "title": "Automations",
-    "subtitle": "Automate repetitive tasks",
-    "new": "New automation",
-    "active": "Active",
-    "inactive": "Inactive",
-    "trigger": "Trigger",
-    "action": "Action",
-    "runs": "Runs",
-    "lastRun": "Last run",
-    "noAutomations": "No automations yet",
-    "upgrade": "Upgrade your plan to use automations",
+    "subtitle": "Automatic rules: when something happens, do this",
     "newRule": "New rule",
-    "createFromScratch": "Create from scratch",
-    "emptyDescription": "Choose a template above or create a custom rule from scratch.",
     "triggers": {
       "invoiceCreated": "Invoice created",
       "invoicePaid": "Invoice paid",
@@ -705,81 +694,63 @@
     },
     "actions": {
       "sendEmail": "Send email",
-      "createNotification": "Create internal notification",
-      "sendWebhook": "Send webhook (HTTP POST)"
+      "createNotification": "Internal notification"
     },
-    "templates": {
-      "title": "Quick templates",
-      "clickToUse": "— click to use",
-      "overdueReminder": {
+    "prebuilt": {
+      "welcome": {
+        "name": "Welcome email for new clients",
+        "desc": "Sent automatically when you add a new client"
+      },
+      "invoicePaid": {
+        "name": "Confirm payment received",
+        "desc": "Send a thank-you email when you mark an invoice as paid"
+      },
+      "overdue": {
         "name": "Overdue invoice reminder",
-        "description": "Send an automatic email when an invoice exceeds its due date"
+        "desc": "Notify the client when an invoice passes its due date"
       },
-      "welcomeClient": {
-        "name": "Welcome new client",
-        "description": "Automatically greet each new client that signs up"
-      },
-      "newLeadAlert": {
-        "name": "New lead alert",
-        "description": "Receive an internal notification each time a new lead comes in"
-      },
-      "paymentConfirmation": {
-        "name": "Payment received confirmation",
-        "description": "Send an automatic confirmation email upon receiving a payment"
-      },
-      "quoteWebhook": {
-        "name": "Webhook on quote accepted",
-        "description": "Notify your CRM or Zapier when a client accepts a quote"
-      },
-      "lowStockAlert": {
+      "lowStock": {
         "name": "Low stock alert",
-        "description": "Receive an internal notification when product stock falls below minimum"
-      },
-      "newOrderNotif": {
-        "name": "New order notification",
-        "description": "Get notified internally when a new customer order arrives"
-      },
-      "purchaseReceivedAlert": {
-        "name": "Purchase received alert",
-        "description": "Notify when a purchase order is fully received in warehouse"
+        "desc": "Get an internal notification when a product reaches minimum stock"
       }
     },
-    "form": {
-      "editTitle": "Edit automation",
-      "newTitle": "New automation",
-      "triggerLabel": "When this happens (trigger) *",
-      "selectEvent": "Select event...",
-      "actionLabel": "Execute this action *",
-      "emailConfig": "Email config",
-      "subject": "Subject",
-      "body": "Body",
-      "notifConfig": "Notification config",
-      "notifTitleLabel": "Title",
+    "dialog": {
+      "newTitle": "New automatic rule",
+      "editTitle": "Edit rule",
+      "when": "When",
+      "then": "Do",
+      "whenLabel": "When this happens...",
+      "thenLabel": "Execute this...",
+      "selectEvent": "Select event",
+      "emailConfig": "Configure email",
+      "subject": "Email subject",
       "message": "Message",
-      "webhookConfig": "Webhook config",
-      "namePlaceholder": "Payment reminder",
-      "nameRequired": "Name is required",
-      "selectTrigger": "Select a trigger",
-      "selectAction": "Select an action",
-      "invalidUrl": "Invalid URL"
+      "notifConfig": "Configure notification",
+      "notifTitle": "Title",
+      "required": "Required field",
+      "create": "Create rule"
     },
-    "stats": {
-      "totalRules": "Total rules",
-      "totalExecutions": "Total executions",
-      "executedCount": "Executed {count} times",
-      "noExecutions": "No executions yet",
-      "last": "last",
-      "testNow": "Test now",
+    "card": {
+      "runs": "runs",
+      "test": "Test now",
       "pause": "Pause",
       "activate": "Activate"
     },
+    "section": {
+      "activeRules": "Active rules",
+      "suggestions": "Suggestions — one click to activate"
+    },
+    "empty": {
+      "noRules": "No rules yet",
+      "addBelow": "Activate a suggestion or create your own"
+    },
     "logs": {
       "title": "Execution history",
-      "noLogs": "No executions recorded yet"
+      "empty": "No executions recorded yet"
     },
     "planWall": {
       "title": "Automations are a paid feature",
-      "description": "With the FREE plan you cannot create automations. Upgrade to STARTER or higher to unlock automatic email, notification and webhook flows.",
+      "description": "With the FREE plan you cannot create automations. Upgrade to STARTER or higher to unlock automatic flows.",
       "viewPlans": "View plans",
       "upgradeStarter": "Upgrade to Starter"
     }
