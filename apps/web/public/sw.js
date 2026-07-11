@@ -1,4 +1,4 @@
-const CACHE_NAME = "youwhole-v1";
+const CACHE_NAME = "youwhole-v2";
 const PRECACHE = ["/es/dashboard", "/manifest.json", "/logo-icon.png"];
 
 self.addEventListener("install", (e) => {
