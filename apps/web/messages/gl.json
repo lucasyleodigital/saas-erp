@@ -200,6 +200,16 @@
       "month": "Mes",
       "overtime": "Extras",
       "recentEntries": "Fichaxes recentes",
+      "break": "descanso",
+      "breakDialog": {
+        "title": "Rexistrar descanso",
+        "subtitle": "Canto tempo descansaches?",
+        "noBreak": "Sen descanso",
+        "custom": "Outro",
+        "preview": "{minutes} min de descanso",
+        "cancel": "Cancelar",
+        "confirm": "Fichar saida"
+      },
       "requestDays": "Solicitar dias",
       "viewPayslips": "Ver nominas",
       "upcomingAbsences": "Proximas ausencias",
@@ -1413,6 +1423,22 @@
     "pendingLeaves": "Ausencias pendentes",
     "monthlyCost": "Custo mensual",
     "annualCost": "Custo anual",
+    "tabs": {
+      "employees": "Empregados",
+      "leaves": "Ausencias"
+    },
+    "leaves": {
+      "awayThisMonth": "Ausentes este mes",
+      "days": "dias",
+      "allRequests": "Todas as solicitudes",
+      "noRequests": "Sen solicitudes de ausencia",
+      "status": {
+        "all": "Todas",
+        "pending": "Pendente",
+        "approved": "Aprobada",
+        "rejected": "Rexeitada"
+      }
+    },
     "table": {
       "employee": "Empregado",
       "position": "Cargo",
@@ -1800,11 +1826,13 @@
     "loadError": "Erro ao cargar entradas",
     "inProgress": "En curso",
     "confirmDelete": "Eliminar esta entrada?",
+    "breakMin": "Descanso (min)",
     "table": {
       "employee": "Empregado",
       "project": "Proxecto",
       "clockIn": "Entrada",
-      "clockOut": "Saida"
+      "clockOut": "Saida",
+      "break": "Descanso"
     },
     "filter": {
       "allEmployees": "Todos os empregados",

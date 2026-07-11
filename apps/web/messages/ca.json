@@ -200,6 +200,16 @@
       "month": "Mes",
       "overtime": "Extres",
       "recentEntries": "Fitxatges recents",
+      "break": "descans",
+      "breakDialog": {
+        "title": "Registrar descans",
+        "subtitle": "Quant temps has descansat?",
+        "noBreak": "Sense descans",
+        "custom": "Altre",
+        "preview": "{minutes} min de descans",
+        "cancel": "Cancel·lar",
+        "confirm": "Fitxar sortida"
+      },
       "requestDays": "Sol·licitar dies",
       "viewPayslips": "Veure nomines",
       "upcomingAbsences": "Proximes absencies",
@@ -1422,6 +1432,22 @@
     "pendingLeaves": "Absencies pendents",
     "monthlyCost": "Cost mensual",
     "annualCost": "Cost anual",
+    "tabs": {
+      "employees": "Empleats",
+      "leaves": "Absencies"
+    },
+    "leaves": {
+      "awayThisMonth": "Absents aquest mes",
+      "days": "dies",
+      "allRequests": "Totes les solicituds",
+      "noRequests": "Sense solicituds d'absencia",
+      "status": {
+        "all": "Totes",
+        "pending": "Pendent",
+        "approved": "Aprovada",
+        "rejected": "Rebutjada"
+      }
+    },
     "table": {
       "employee": "Empleat",
       "position": "Carrec",
@@ -1939,11 +1965,13 @@
       "sat": "Ds",
       "sun": "Dg"
     },
+    "breakMin": "Descans (min)",
     "table": {
       "employee": "Empleat",
       "project": "Projecte",
       "clockIn": "Entrada",
-      "clockOut": "Sortida"
+      "clockOut": "Sortida",
+      "break": "Descans"
     },
     "filter": {
       "allEmployees": "Tots els empleats",

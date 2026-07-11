@@ -200,6 +200,16 @@
       "month": "Month",
       "overtime": "Overtime",
       "recentEntries": "Recent entries",
+      "break": "break",
+      "breakDialog": {
+        "title": "Log break time",
+        "subtitle": "How long did you take a break?",
+        "noBreak": "No break",
+        "custom": "Other",
+        "preview": "{minutes} min break",
+        "cancel": "Cancel",
+        "confirm": "Clock out"
+      },
       "requestDays": "Request days off",
       "viewPayslips": "View payslips",
       "upcomingAbsences": "Upcoming absences",
@@ -1423,6 +1433,22 @@
     "pendingLeaves": "Pending leaves",
     "monthlyCost": "Monthly cost",
     "annualCost": "Annual cost",
+    "tabs": {
+      "employees": "Employees",
+      "leaves": "Absences"
+    },
+    "leaves": {
+      "awayThisMonth": "Away this month",
+      "days": "days",
+      "allRequests": "All requests",
+      "noRequests": "No leave requests",
+      "status": {
+        "all": "All",
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      }
+    },
     "table": {
       "employee": "Employee",
       "position": "Position",
@@ -1940,11 +1966,13 @@
       "sat": "Sat",
       "sun": "Sun"
     },
+    "breakMin": "Break (min)",
     "table": {
       "employee": "Employee",
       "project": "Project",
       "clockIn": "Clock in",
-      "clockOut": "Clock out"
+      "clockOut": "Clock out",
+      "break": "Break"
     },
     "filter": {
       "allEmployees": "All employees",

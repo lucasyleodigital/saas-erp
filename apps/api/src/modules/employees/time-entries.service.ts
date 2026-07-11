@@ -1,9 +1,13 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
+import { EmailService } from "../email/email.service";
 
 @Injectable()
 export class TimeEntriesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private email: EmailService,
+  ) {}
 
   async findAll(companyId: string, params: any) {
     const { employeeId, projectId, dateFrom, dateTo, page = 1, limit = 50 } = params;
@@ -90,7 +94,7 @@ export class TimeEntriesService {
     const STANDARD_DAY = 480;
     const overtimeMinutes = Math.max(0, totalMinutes - STANDARD_DAY);
 
-    return this.prisma.timeEntry.update({
+    const entry = await this.prisma.timeEntry.update({
       where: { id: open.id },
       data: {
         clockOut: now,
@@ -99,8 +103,35 @@ export class TimeEntriesService {
         locationOut: opts?.latitude ? { latitude: opts.latitude, longitude: opts.longitude } : undefined,
         notes: overtimeMinutes > 0 ? `Horas extra: ${(overtimeMinutes / 60).toFixed(1)}h` : open.notes,
       },
-      include: { employee: { select: { firstName: true, lastName: true } } },
+      include: {
+        employee: { select: { firstName: true, lastName: true, email: true } },
+      },
     });
+
+    // Send confirmation email to employee (fire-and-forget)
+    const emp = entry.employee as any;
+    if (emp?.email) {
+      const totalH = (totalMinutes / 60).toFixed(2).replace(".", ",");
+      const breakStr = breakMinutes > 0 ? ` (descanso: ${breakMinutes} min)` : "";
+      const overtimeStr = overtimeMinutes > 0 ? `<p style="color:#d97706;margin:0 0 8px;">Horas extra hoy: <strong>${(overtimeMinutes/60).toFixed(1)}h</strong></p>` : "";
+      this.email.sendGeneric(
+        emp.email,
+        `Fichaje registrado — ${new Date().toLocaleDateString("es-ES")}`,
+        `<div style="font-family:-apple-system,sans-serif;max-width:480px;margin:0 auto;padding:32px;color:#111827;">
+          <h2 style="font-size:18px;font-weight:700;margin:0 0 16px;">Hola ${emp.firstName}, tu jornada ha quedado registrada</h2>
+          <div style="background:#f9fafb;border-radius:8px;padding:16px 20px;margin-bottom:16px;">
+            <p style="margin:0 0 8px;font-size:14px;"><strong>Entrada:</strong> ${open.clockIn.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}</p>
+            <p style="margin:0 0 8px;font-size:14px;"><strong>Salida:</strong> ${now.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}</p>
+            ${breakMinutes > 0 ? `<p style="margin:0 0 8px;font-size:14px;"><strong>Descanso:</strong> ${breakMinutes} minutos</p>` : ""}
+            <p style="margin:0;font-size:15px;font-weight:600;color:#0d9488;"><strong>Total:</strong> ${totalH} horas${breakStr}</p>
+          </div>
+          ${overtimeStr}
+          <p style="font-size:12px;color:#9ca3af;margin:0;">YouWhole — Control horario</p>
+        </div>`,
+      ).catch(() => {});
+    }
+
+    return entry;
   }
 
   async getActiveClocks(companyId: string) {

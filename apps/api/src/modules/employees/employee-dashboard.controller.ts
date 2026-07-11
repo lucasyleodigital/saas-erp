@@ -70,7 +70,7 @@ export class EmployeeDashboardController {
       where: { employeeId: emp.id, date: { gte: weekStart }, clockOut: { not: null } },
       orderBy: { date: "desc" },
       take: 7,
-      select: { date: true, clockIn: true, clockOut: true, totalMinutes: true },
+      select: { date: true, clockIn: true, clockOut: true, totalMinutes: true, breakMinutes: true },
     });
 
     return {
@@ -90,6 +90,7 @@ export class EmployeeDashboardController {
         clockIn: e.clockIn.toISOString().slice(11, 16),
         clockOut: e.clockOut!.toISOString().slice(11, 16),
         hours: Math.round(((e.totalMinutes ?? 0) / 60) * 10) / 10,
+        breakMinutes: e.breakMinutes ?? 0,
       })),
     };
   }

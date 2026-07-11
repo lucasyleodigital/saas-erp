@@ -200,6 +200,16 @@
       "month": "Mes",
       "overtime": "Extras",
       "recentEntries": "Fichajes recientes",
+      "break": "descanso",
+      "breakDialog": {
+        "title": "Registrar descanso",
+        "subtitle": "Cuanto tiempo has descansado?",
+        "noBreak": "Sin descanso",
+        "custom": "Otro",
+        "preview": "{minutes} min de descanso",
+        "cancel": "Cancelar",
+        "confirm": "Fichar salida"
+      },
       "requestDays": "Solicitar dias",
       "viewPayslips": "Ver nominas",
       "upcomingAbsences": "Proximas ausencias",
@@ -1423,6 +1433,22 @@
     "pendingLeaves": "Ausencias pendientes",
     "monthlyCost": "Coste mensual",
     "annualCost": "Coste anual",
+    "tabs": {
+      "employees": "Empleados",
+      "leaves": "Ausencias"
+    },
+    "leaves": {
+      "awayThisMonth": "Ausentes este mes",
+      "days": "dias",
+      "allRequests": "Todas las solicitudes",
+      "noRequests": "Sin solicitudes de ausencia",
+      "status": {
+        "all": "Todas",
+        "pending": "Pendiente",
+        "approved": "Aprobada",
+        "rejected": "Rechazada"
+      }
+    },
     "table": {
       "employee": "Empleado",
       "position": "Cargo",
@@ -1940,11 +1966,13 @@
       "sat": "Sab",
       "sun": "Dom"
     },
+    "breakMin": "Descanso (min)",
     "table": {
       "employee": "Empleado",
       "project": "Proyecto",
       "clockIn": "Entrada",
-      "clockOut": "Salida"
+      "clockOut": "Salida",
+      "break": "Descanso"
     },
     "filter": {
       "allEmployees": "Todos los empleados",

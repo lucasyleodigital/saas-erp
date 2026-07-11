@@ -200,6 +200,16 @@
       "month": "Hilabetea",
       "overtime": "Apartekoak",
       "recentEntries": "Azken erregistroak",
+      "break": "atsedenaldia",
+      "breakDialog": {
+        "title": "Atsedena erregistratu",
+        "subtitle": "Zenbat denbora hartu duzu atsedena?",
+        "noBreak": "Atsedenik gabe",
+        "custom": "Beste bat",
+        "preview": "{minutes} min atsedena",
+        "cancel": "Utzi",
+        "confirm": "Irteera fitxatu"
+      },
       "requestDays": "Egunak eskatu",
       "viewPayslips": "Nominak ikusi",
       "upcomingAbsences": "Hurrengo absentziak",
@@ -1421,6 +1431,22 @@
     "pendingLeaves": "Absentzia zain",
     "monthlyCost": "Hileko kostua",
     "annualCost": "Urteko kostua",
+    "tabs": {
+      "employees": "Langileak",
+      "leaves": "Absentziak"
+    },
+    "leaves": {
+      "awayThisMonth": "Hilabete honetan kanpo",
+      "days": "egun",
+      "allRequests": "Eskaera guztiak",
+      "noRequests": "Ez dago absentzia eskaerapik",
+      "status": {
+        "all": "Denak",
+        "pending": "Zain",
+        "approved": "Onartua",
+        "rejected": "Ukatua"
+      }
+    },
     "table": {
       "employee": "Langilea",
       "position": "Kargua",
@@ -1885,11 +1911,13 @@
       "sat": "Lr",
       "sun": "Ig"
     },
+    "breakMin": "Atsedena (min)",
     "table": {
       "employee": "Langilea",
       "project": "Proiektua",
       "clockIn": "Sarrera",
-      "clockOut": "Irteera"
+      "clockOut": "Irteera",
+      "break": "Atsedena"
     },
     "filter": {
       "allEmployees": "Langile guztiak",

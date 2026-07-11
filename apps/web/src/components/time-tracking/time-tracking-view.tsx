@@ -63,6 +63,7 @@ export function TimeTrackingView() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [tab, setTab] = useState<"list" | "week">("list");
   const [clockEmployee, setClockEmployee] = useState("");
+  const [clockBreak, setClockBreak] = useState("0");
   const [filterEmployee, setFilterEmployee] = useState("");
   const [filterProject, setFilterProject] = useState("");
   const [filterFrom, setFilterFrom] = useState("");
@@ -194,7 +195,18 @@ export function TimeTrackingView() {
               <Users className="h-5 w-5 text-primary shrink-0" />
               <EmployeeFilter value={clockEmployee} onChange={setClockEmployee} />
             </div>
-            <div className="flex gap-2">
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 border rounded-lg px-2.5 py-1.5 bg-background">
+                <span className="text-xs text-muted-foreground whitespace-nowrap">{t("breakMin")}</span>
+                <Input
+                  type="number"
+                  min="0"
+                  max="480"
+                  value={clockBreak}
+                  onChange={(e) => setClockBreak(e.target.value)}
+                  className="h-7 w-16 border-0 p-0 text-sm text-center focus-visible:ring-0"
+                />
+              </div>
               <Button
                 className="gap-2"
                 onClick={() => { if (clockEmployee) clockIn.mutate({ employeeId: clockEmployee }); }}
@@ -205,7 +217,7 @@ export function TimeTrackingView() {
               <Button
                 variant="outline"
                 className="gap-2"
-                onClick={() => { if (clockEmployee) clockOut.mutate({ employeeId: clockEmployee }); }}
+                onClick={() => { if (clockEmployee) clockOut.mutate({ employeeId: clockEmployee, breakMinutes: Number(clockBreak) || 0 }); }}
                 disabled={!clockEmployee || clockOut.isPending}
               >
                 <LogOut className="h-4 w-4" /> {t("clockOut")}
@@ -351,6 +363,9 @@ export function TimeTrackingView() {
                     <th className="text-left font-medium text-muted-foreground px-4 py-3">
                       {t("table.clockOut")}
                     </th>
+                    <th className="text-center font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">
+                      {t("table.break")}
+                    </th>
                     <th className="text-right font-medium text-muted-foreground px-4 py-3">
                       {tCommon("total")}
                     </th>
@@ -404,6 +419,9 @@ export function TimeTrackingView() {
                               : (
                                 <Badge variant="success">{t("inProgress")}</Badge>
                               )}
+                          </td>
+                          <td className="px-4 py-3 hidden lg:table-cell text-center text-muted-foreground text-sm">
+                            {entry.breakMinutes > 0 ? `${entry.breakMinutes}m` : "—"}
                           </td>
                           <td className="px-4 py-3 text-right font-medium">
                             {totalH} h

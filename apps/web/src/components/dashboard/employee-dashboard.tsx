@@ -15,7 +15,7 @@ import {
   LogIn, LogOut, Clock, CalendarDays, Zap, Loader2,
   MapPin, Briefcase, CalendarOff, Receipt, CheckCircle,
 } from "lucide-react";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, cn } from "@/lib/utils";
 import { useGpsConsent, GpsConsentBanner } from "@/components/time-tracking/gps-consent";
 import { useTranslations } from "next-intl";
 
@@ -37,6 +37,7 @@ export function EmployeeDashboard() {
   const [loading, setLoading] = useState(true);
   const [acting, setActing] = useState(false);
   const [leaveDialog, setLeaveDialog] = useState(false);
+  const [breakDialog, setBreakDialog] = useState(false);
   const [payslips, setPayslips] = useState<any[]>([]);
   const [showPayslips, setShowPayslips] = useState(false);
   const { consented: gpsConsented, accept: acceptGps, reject: rejectGps } = useGpsConsent();
@@ -47,11 +48,12 @@ export function EmployeeDashboard() {
 
   useEffect(() => { load(); }, []);
 
-  async function handleClock(action: "clock-in" | "clock-out") {
+  async function handleClock(action: "clock-in" | "clock-out", breakMinutes?: number) {
     setActing(true);
     try {
       const loc = await getLocation(gpsConsented === true);
-      await api.post(`/my/${action}`, loc ?? {});
+      const body = { ...(loc ?? {}), ...(action === "clock-out" && breakMinutes !== undefined ? { breakMinutes } : {}) };
+      await api.post(`/my/${action}`, body);
       const gpsMsg = loc ? t("withLocation") : "";
       toast.success((action === "clock-in" ? t("clockedInSuccess") : t("clockedOutSuccess")) + gpsMsg);
       setTimeout(load, 1000);
@@ -149,7 +151,7 @@ export function EmployeeDashboard() {
               size="lg"
               variant="outline"
               className="h-14 text-base gap-2"
-              onClick={() => handleClock("clock-out")}
+              onClick={() => setBreakDialog(true)}
               disabled={acting || !data.isClockedIn}
             >
               {acting ? <Loader2 className="h-5 w-5 animate-spin" /> : <LogOut className="h-5 w-5" />}
@@ -186,12 +188,15 @@ export function EmployeeDashboard() {
           <CardContent className="p-0">
             <div className="divide-y">
               {data.recentEntries.map((e: any, i: number) => (
-                <div key={i} className="flex items-center justify-between px-4 py-2.5 text-sm">
-                  <span className="text-muted-foreground">
+                <div key={i} className="flex items-center justify-between px-4 py-2.5 text-sm gap-2">
+                  <span className="text-muted-foreground shrink-0">
                     {new Date(e.date).toLocaleDateString("es-ES", { weekday: "short", day: "numeric", month: "short" })}
                   </span>
-                  <span>{e.clockIn} - {e.clockOut}</span>
-                  <span className="font-semibold">{e.hours}h</span>
+                  <span className="text-muted-foreground">{e.clockIn} - {e.clockOut ?? "—"}</span>
+                  {e.breakMinutes > 0 && (
+                    <span className="text-xs text-amber-600 shrink-0">{e.breakMinutes}m {t("break")}</span>
+                  )}
+                  <span className="font-semibold shrink-0">{e.hours}h</span>
                 </div>
               ))}
             </div>
@@ -232,12 +237,107 @@ export function EmployeeDashboard() {
         <p className="text-sm text-amber-600 text-center">{t("pendingRequests", { count: data.pendingLeaves })}</p>
       )}
 
+      {/* Break + clock-out dialog */}
+      <BreakDialog
+        open={breakDialog}
+        onOpenChange={setBreakDialog}
+        onConfirm={(mins) => { setBreakDialog(false); handleClock("clock-out", mins); }}
+        acting={acting}
+      />
+
       {/* Leave request dialog */}
       <LeaveRequestDialog open={leaveDialog} onOpenChange={setLeaveDialog} onSuccess={load} />
 
       {/* Payslips dialog */}
       <PayslipsDialog open={showPayslips} onOpenChange={setShowPayslips} payslips={payslips} />
     </div>
+  );
+}
+
+// ─── Break Dialog ─────────────────────────────────────────────────────────────
+
+const BREAK_OPTIONS = [0, 15, 20, 30, 45, 60];
+
+function BreakDialog({
+  open, onOpenChange, onConfirm, acting,
+}: {
+  open: boolean;
+  onOpenChange: (o: boolean) => void;
+  onConfirm: (breakMinutes: number) => void;
+  acting: boolean;
+}) {
+  const t = useTranslations("dashboard.employee");
+  const [selected, setSelected] = useState(0);
+  const [custom, setCustom] = useState("");
+  const isCustom = selected === -1;
+  const minutes = isCustom ? (Number(custom) || 0) : selected;
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-sm">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <LogOut className="h-4 w-4" />
+            {t("breakDialog.title")}
+          </DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <p className="text-sm text-muted-foreground">{t("breakDialog.subtitle")}</p>
+          <div className="grid grid-cols-3 gap-2">
+            {BREAK_OPTIONS.map((opt) => (
+              <button
+                key={opt}
+                onClick={() => setSelected(opt)}
+                className={cn(
+                  "rounded-lg border py-2.5 text-sm font-medium transition-all",
+                  selected === opt && !isCustom
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border hover:border-primary/40"
+                )}
+              >
+                {opt === 0 ? t("breakDialog.noBreak") : `${opt} min`}
+              </button>
+            ))}
+            <button
+              onClick={() => setSelected(-1)}
+              className={cn(
+                "rounded-lg border py-2.5 text-sm font-medium transition-all col-span-3",
+                isCustom ? "border-primary bg-primary/10 text-primary" : "border-border hover:border-primary/40"
+              )}
+            >
+              {t("breakDialog.custom")}
+            </button>
+          </div>
+          {isCustom && (
+            <div className="flex items-center gap-2">
+              <Input
+                type="number"
+                min="0"
+                max="480"
+                value={custom}
+                onChange={(e) => setCustom(e.target.value)}
+                placeholder="0"
+                className="h-9"
+                autoFocus
+              />
+              <span className="text-sm text-muted-foreground shrink-0">min</span>
+            </div>
+          )}
+          {minutes > 0 && (
+            <p className="text-xs text-muted-foreground text-center">
+              {t("breakDialog.preview", { minutes })}
+            </p>
+          )}
+        </div>
+        <DialogFooter className="gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>{t("breakDialog.cancel")}</Button>
+          <Button onClick={() => onConfirm(minutes)} disabled={acting}>
+            {acting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+            {t("breakDialog.confirm")}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 

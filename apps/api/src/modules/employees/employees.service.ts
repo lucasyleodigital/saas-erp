@@ -1,10 +1,14 @@
 import { Injectable, NotFoundException, BadRequestException, ConflictException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
+import { EmailService } from "../email/email.service";
 import * as bcrypt from "bcryptjs";
 
 @Injectable()
 export class EmployeesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private email: EmailService,
+  ) {}
 
   // ─── Employees ─────────────────────────────────────────────
 
@@ -209,25 +213,48 @@ export class EmployeesService {
   }
 
   async updateLeaveStatus(companyId: string, requestId: string, status: "APPROVED" | "REJECTED", approvedBy?: string) {
-    const req = await this.prisma.leaveRequest.findFirst({ where: { id: requestId, companyId } });
+    const req = await this.prisma.leaveRequest.findFirst({
+      where: { id: requestId, companyId },
+      include: { employee: { select: { firstName: true, email: true } } },
+    });
     if (!req) throw new NotFoundException("Solicitud no encontrada");
 
-    return this.prisma.leaveRequest.update({
+    const updated = await this.prisma.leaveRequest.update({
       where: { id: requestId },
       data: {
         status,
         approvedBy: approvedBy ?? undefined,
         approvedAt: new Date(),
-        ...(status === "APPROVED" && {
-          employee: {
-            update: {
-              where: { id: req.employeeId },
-              data:  { status: req.type === "SICK" || req.type === "OTHER" ? "ACTIVE" : "ACTIVE" },
-            },
-          },
-        }),
       },
     });
+
+    // Notify employee by email (fire-and-forget)
+    const emp = (req as any).employee;
+    if (emp?.email) {
+      const startStr = req.startDate.toLocaleDateString("es-ES", { day: "numeric", month: "long" });
+      const endStr   = req.endDate.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
+      const isApproved = status === "APPROVED";
+      this.email.sendGeneric(
+        emp.email,
+        isApproved ? `Solicitud de ausencia aprobada` : `Solicitud de ausencia no aprobada`,
+        `<div style="font-family:-apple-system,sans-serif;max-width:480px;margin:0 auto;padding:32px;color:#111827;">
+          <h2 style="font-size:18px;font-weight:700;margin:0 0 16px;">
+            Hola ${emp.firstName}, tu solicitud ha sido ${isApproved ? "aprobada" : "rechazada"}
+          </h2>
+          <div style="background:${isApproved ? "#f0fdf4" : "#fef2f2"};border-left:4px solid ${isApproved ? "#10b981" : "#ef4444"};border-radius:0 8px 8px 0;padding:16px 20px;margin-bottom:16px;">
+            <p style="margin:0 0 6px;font-size:14px;"><strong>Periodo:</strong> ${startStr} – ${endStr}</p>
+            <p style="margin:0 0 6px;font-size:14px;"><strong>Días:</strong> ${req.days}</p>
+            <p style="margin:0;font-size:15px;font-weight:600;color:${isApproved ? "#059669" : "#dc2626"};">
+              Estado: ${isApproved ? "APROBADA" : "NO APROBADA"}
+            </p>
+          </div>
+          ${!isApproved ? `<p style="font-size:13px;color:#6b7280;">Si tienes dudas, contacta con tu responsable.</p>` : ""}
+          <p style="font-size:12px;color:#9ca3af;margin-top:24px;">YouWhole — RRHH</p>
+        </div>`,
+      ).catch(() => {});
+    }
+
+    return updated;
   }
 
   async deleteLeaveRequest(companyId: string, requestId: string) {

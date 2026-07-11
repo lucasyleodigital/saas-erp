@@ -30,6 +30,9 @@ import {
   CalendarOff,
   Eye,
   Trash2,
+  Check,
+  X,
+  Calendar,
 } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { motion } from "framer-motion";
@@ -68,6 +71,7 @@ export function EmployeesView() {
   const [status, setStatus] = useState<string | undefined>(undefined);
   const [page, setPage] = useState(1);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [mainTab, setMainTab] = useState<"employees" | "leaves">("employees");
   const debouncedSearch = useDebounce(search, 300);
 
   const { data: stats } = useEmployeeStats();
@@ -102,6 +106,25 @@ export function EmployeesView() {
         </Button>
       </div>
 
+      {/* Main tabs */}
+      <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg w-fit">
+        <button
+          onClick={() => setMainTab("employees")}
+          className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${mainTab === "employees" ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          <Users className="h-3.5 w-3.5" /> {t("tabs.employees")}
+        </button>
+        <button
+          onClick={() => setMainTab("leaves")}
+          className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${mainTab === "leaves" ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          <CalendarOff className="h-3.5 w-3.5" /> {t("tabs.leaves")}
+        </button>
+      </div>
+
+      {mainTab === "leaves" && <LeaveManagementPanel />}
+
+      {mainTab === "employees" && <>
       {/* Stats */}
       {stats && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -306,6 +329,167 @@ export function EmployeesView() {
       <PendingLeaveRequests />
 
       <EmployeeDialog open={dialogOpen} onOpenChange={setDialogOpen} />
+      </>}
+    </div>
+  );
+}
+
+// ─── Leave Management Panel ───────────────────────────────────────────────────
+
+const LEAVE_STATUS_COLORS: Record<string, string> = {
+  PENDING:  "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+  APPROVED: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
+  REJECTED: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
+};
+
+const LEAVE_TYPE_LABELS: Record<string, string> = {
+  VACATION: "vacation", SICK: "sick", PERSONAL: "personal",
+  MATERNITY: "maternity", PATERNITY: "paternity", OTHER: "other",
+};
+
+function LeaveManagementPanel() {
+  const t = useTranslations("employees");
+  const [filterStatus, setFilterStatus] = useState<string>("ALL");
+  const approve = useApproveLeave();
+  const reject  = useRejectLeave();
+
+  const { data } = useLeaveRequests(filterStatus !== "ALL" ? { status: filterStatus } : {});
+  const requests: any[] = data ?? [];
+
+  // Group approved leaves into a simple "who's away this month" view
+  const today = new Date();
+  const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+  const monthEnd   = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+  const approvedThisMonth = requests.filter((r) => {
+    if (r.status !== "APPROVED") return false;
+    const start = new Date(r.startDate);
+    const end   = new Date(r.endDate);
+    return start <= monthEnd && end >= monthStart;
+  });
+
+  return (
+    <div className="space-y-5">
+      {/* This month calendar */}
+      {approvedThisMonth.length > 0 && (
+        <Card>
+          <CardContent className="p-4">
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-primary" />
+              {t("leaves.awayThisMonth")}
+            </h3>
+            <div className="space-y-2">
+              {approvedThisMonth.map((r: any) => (
+                <div key={r.id} className="flex items-center gap-3 text-sm">
+                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary shrink-0">
+                    {(r.employee?.firstName?.[0] ?? "")}{(r.employee?.lastName?.[0] ?? "")}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium truncate">{r.employee?.firstName} {r.employee?.lastName}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {new Date(r.startDate).toLocaleDateString("es-ES", { day: "numeric", month: "short" })} –{" "}
+                      {new Date(r.endDate).toLocaleDateString("es-ES", { day: "numeric", month: "short" })}
+                      {" · "}{r.days} {t("leaves.days")}
+                    </p>
+                  </div>
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${LEAVE_TYPE_LABELS[r.type] ? "" : ""}`}>
+                    {t(`leaveRequests.${LEAVE_TYPE_LABELS[r.type] ?? "other"}`)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* All requests with filter */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-semibold">{t("leaves.allRequests")}</h3>
+          <div className="flex gap-1">
+            {(["ALL", "PENDING", "APPROVED", "REJECTED"] as const).map((s) => (
+              <button
+                key={s}
+                onClick={() => setFilterStatus(s)}
+                className={`text-xs px-2.5 py-1 rounded-lg font-medium transition-colors ${
+                  filterStatus === s
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground hover:bg-muted/80"
+                }`}
+              >
+                {t(`leaves.status.${s.toLowerCase()}`)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {requests.length === 0 ? (
+          <Card>
+            <CardContent className="py-10 text-center text-sm text-muted-foreground">
+              {t("leaves.noRequests")}
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="space-y-2">
+            {requests.map((req: any) => (
+              <Card key={req.id}>
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start gap-3 flex-1 min-w-0">
+                      <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-sm font-bold text-primary shrink-0">
+                        {(req.employee?.firstName?.[0] ?? "")}{(req.employee?.lastName?.[0] ?? "")}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-medium text-sm">{req.employee?.firstName} {req.employee?.lastName}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {t(`leaveRequests.${LEAVE_TYPE_LABELS[req.type] ?? "other"}`)}
+                          {" · "}
+                          {new Date(req.startDate).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}
+                          {" – "}
+                          {new Date(req.endDate).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}
+                          {" · "}{req.days} {t("leaves.days")}
+                        </p>
+                        {req.reason && (
+                          <p className="text-xs text-muted-foreground mt-1 italic">"{req.reason}"</p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${LEAVE_STATUS_COLORS[req.status] ?? ""}`}>
+                        {t(`leaves.status.${req.status.toLowerCase()}`)}
+                      </span>
+                      {req.status === "PENDING" && (
+                        <>
+                          <Button
+                            size="icon"
+                            variant="outline"
+                            className="h-7 w-7 text-emerald-600 border-emerald-200 hover:bg-emerald-50"
+                            onClick={() => approve.mutate(req.id)}
+                            disabled={approve.isPending}
+                            title={t("leaveRequests.approve")}
+                          >
+                            <Check className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="outline"
+                            className="h-7 w-7 text-red-600 border-red-200 hover:bg-red-50"
+                            onClick={() => reject.mutate(req.id)}
+                            disabled={reject.isPending}
+                            title={t("leaveRequests.reject")}
+                          >
+                            <X className="h-3.5 w-3.5" />
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
