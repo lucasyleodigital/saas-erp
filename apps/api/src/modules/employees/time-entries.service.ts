@@ -2,6 +2,10 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
 import { EmailService } from "../email/email.service";
 
+function esc(s: string | null | undefined): string {
+  return (s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 @Injectable()
 export class TimeEntriesService {
   constructor(
@@ -90,7 +94,7 @@ export class TimeEntriesService {
 
     const now = new Date();
     const breakMinutes = opts?.breakMinutes ?? 0;
-    const totalMinutes = Math.round((now.getTime() - open.clockIn.getTime()) / 60000) - breakMinutes;
+    const totalMinutes = Math.max(0, Math.round((now.getTime() - open.clockIn.getTime()) / 60000) - breakMinutes);
     const STANDARD_DAY = 480;
     const overtimeMinutes = Math.max(0, totalMinutes - STANDARD_DAY);
 
@@ -112,23 +116,22 @@ export class TimeEntriesService {
     const emp = entry.employee as any;
     if (emp?.email) {
       const totalH = (totalMinutes / 60).toFixed(2).replace(".", ",");
-      const breakStr = breakMinutes > 0 ? ` (descanso: ${breakMinutes} min)` : "";
       const overtimeStr = overtimeMinutes > 0 ? `<p style="color:#d97706;margin:0 0 8px;">Horas extra hoy: <strong>${(overtimeMinutes/60).toFixed(1)}h</strong></p>` : "";
       this.email.sendGeneric(
         emp.email,
-        `Fichaje registrado — ${new Date().toLocaleDateString("es-ES")}`,
+        `Fichaje registrado — ${now.toLocaleDateString("es-ES")}`,
         `<div style="font-family:-apple-system,sans-serif;max-width:480px;margin:0 auto;padding:32px;color:#111827;">
-          <h2 style="font-size:18px;font-weight:700;margin:0 0 16px;">Hola ${emp.firstName}, tu jornada ha quedado registrada</h2>
+          <h2 style="font-size:18px;font-weight:700;margin:0 0 16px;">Hola ${esc(emp.firstName)}, tu jornada ha quedado registrada</h2>
           <div style="background:#f9fafb;border-radius:8px;padding:16px 20px;margin-bottom:16px;">
             <p style="margin:0 0 8px;font-size:14px;"><strong>Entrada:</strong> ${open.clockIn.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}</p>
             <p style="margin:0 0 8px;font-size:14px;"><strong>Salida:</strong> ${now.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}</p>
             ${breakMinutes > 0 ? `<p style="margin:0 0 8px;font-size:14px;"><strong>Descanso:</strong> ${breakMinutes} minutos</p>` : ""}
-            <p style="margin:0;font-size:15px;font-weight:600;color:#0d9488;"><strong>Total:</strong> ${totalH} horas${breakStr}</p>
+            <p style="margin:0;font-size:15px;font-weight:600;color:#0d9488;"><strong>Total:</strong> ${totalH} horas</p>
           </div>
           ${overtimeStr}
           <p style="font-size:12px;color:#9ca3af;margin:0;">YouWhole — Control horario</p>
         </div>`,
-      ).catch(() => {});
+      ).catch((err: any) => { console.error("[clockOut email]", err?.message); });
     }
 
     return entry;

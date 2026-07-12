@@ -356,15 +356,19 @@ function LeaveManagementPanel() {
   const { data } = useLeaveRequests(filterStatus !== "ALL" ? { status: filterStatus } : {});
   const requests: any[] = data ?? [];
 
-  // Group approved leaves into a simple "who's away this month" view
+  // Separate query so "away this month" card is never hidden by the status filter
+  const { data: approvedData } = useLeaveRequests({ status: "APPROVED" });
   const today = new Date();
-  const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-  const monthEnd   = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-
-  const approvedThisMonth = requests.filter((r) => {
-    if (r.status !== "APPROVED") return false;
-    const start = new Date(r.startDate);
-    const end   = new Date(r.endDate);
+  const thisYear  = today.getFullYear();
+  const thisMonth = today.getMonth();
+  const approvedThisMonth = (approvedData ?? []).filter((r: any) => {
+    // Parse YYYY-MM-DD as local date to avoid UTC-midnight/timezone mismatch
+    const [sy = 2000, sm = 1, sd = 1] = (r.startDate as string).slice(0, 10).split("-").map(Number);
+    const [ey = 2000, em = 1, ed = 1] = (r.endDate   as string).slice(0, 10).split("-").map(Number);
+    const start = new Date(sy, sm - 1, sd);
+    const end   = new Date(ey, em - 1, ed);
+    const monthStart = new Date(thisYear, thisMonth, 1);
+    const monthEnd   = new Date(thisYear, thisMonth + 1, 0);
     return start <= monthEnd && end >= monthStart;
   });
 
@@ -392,7 +396,7 @@ function LeaveManagementPanel() {
                       {" · "}{r.days} {t("leaves.days")}
                     </p>
                   </div>
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${LEAVE_TYPE_LABELS[r.type] ? "" : ""}`}>
+                  <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-primary/10 text-primary">
                     {t(`leaveRequests.${LEAVE_TYPE_LABELS[r.type] ?? "other"}`)}
                   </span>
                 </div>
@@ -444,10 +448,10 @@ function LeaveManagementPanel() {
                         <p className="text-xs text-muted-foreground mt-0.5">
                           {t(`leaveRequests.${LEAVE_TYPE_LABELS[req.type] ?? "other"}`)}
                           {" · "}
-                          {new Date(req.startDate).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}
+                          {new Date((req.startDate as string).slice(0, 10).replace(/-/g, "/")).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}
                           {" – "}
-                          {new Date(req.endDate).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}
-                          {" · "}{req.days} {t("leaves.days")}
+                          {new Date((req.endDate as string).slice(0, 10).replace(/-/g, "/")).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}
+                          {" · "}{req.days ?? "?"} {t("leaves.days")}
                         </p>
                         {req.reason && (
                           <p className="text-xs text-muted-foreground mt-1 italic">"{req.reason}"</p>
@@ -465,7 +469,7 @@ function LeaveManagementPanel() {
                             variant="outline"
                             className="h-7 w-7 text-emerald-600 border-emerald-200 hover:bg-emerald-50"
                             onClick={() => approve.mutate(req.id)}
-                            disabled={approve.isPending}
+                            disabled={approve.isPending || reject.isPending}
                             title={t("leaveRequests.approve")}
                           >
                             <Check className="h-3.5 w-3.5" />
@@ -475,7 +479,7 @@ function LeaveManagementPanel() {
                             variant="outline"
                             className="h-7 w-7 text-red-600 border-red-200 hover:bg-red-50"
                             onClick={() => reject.mutate(req.id)}
-                            disabled={reject.isPending}
+                            disabled={approve.isPending || reject.isPending}
                             title={t("leaveRequests.reject")}
                           >
                             <X className="h-3.5 w-3.5" />
@@ -503,14 +507,6 @@ function PendingLeaveRequests() {
   const requests = data ?? [];
   if (requests.length === 0) return null;
 
-  const LEAVE_TYPE_KEYS: Record<string, string> = {
-    VACATION: "vacation",
-    SICK: "sick",
-    PERSONAL: "personal",
-    MATERNITY: "maternity",
-    OTHER: "other",
-  };
-
   return (
     <Card className="border-amber-500/20 bg-amber-500/5">
       <CardContent className="p-5">
@@ -526,7 +522,7 @@ function PendingLeaveRequests() {
                   {req.employee?.firstName ?? ""} {req.employee?.lastName ?? ""}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {LEAVE_TYPE_KEYS[req.type] ? t(`leaveRequests.${LEAVE_TYPE_KEYS[req.type]}`) : req.type} · {new Date(req.startDate).toLocaleDateString()} - {new Date(req.endDate).toLocaleDateString()} · {t("leaveRequests.days", { days: req.days })}
+                  {t(`leaveRequests.${LEAVE_TYPE_LABELS[req.type] ?? "other"}`)} · {new Date((req.startDate as string).slice(0, 10).replace(/-/g, "/")).toLocaleDateString()} - {new Date((req.endDate as string).slice(0, 10).replace(/-/g, "/")).toLocaleDateString()} · {t("leaveRequests.days", { days: req.days ?? "?" })}
                 </p>
                 {req.reason && <p className="text-xs text-muted-foreground mt-0.5">{t("leaveRequests.reason", { reason: req.reason })}</p>}
               </div>
@@ -536,7 +532,7 @@ function PendingLeaveRequests() {
                   variant="outline"
                   className="text-green-600 border-green-200 hover:bg-green-50 gap-1 h-8"
                   onClick={() => approve.mutate(req.id)}
-                  disabled={approve.isPending}
+                  disabled={approve.isPending || reject.isPending}
                 >
                   {t("leaveRequests.approve")}
                 </Button>
@@ -545,7 +541,7 @@ function PendingLeaveRequests() {
                   variant="outline"
                   className="text-red-600 border-red-200 hover:bg-red-50 gap-1 h-8"
                   onClick={() => reject.mutate(req.id)}
-                  disabled={reject.isPending}
+                  disabled={approve.isPending || reject.isPending}
                 >
                   {t("leaveRequests.reject")}
                 </Button>

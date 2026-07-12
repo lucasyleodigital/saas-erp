@@ -3,6 +3,10 @@ import { PrismaService } from "../../database/prisma.service";
 import { EmailService } from "../email/email.service";
 import * as bcrypt from "bcryptjs";
 
+function esc(s: string | null | undefined): string {
+  return (s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 @Injectable()
 export class EmployeesService {
   constructor(
@@ -157,7 +161,7 @@ export class EmployeesService {
     if (entry.clockOut) throw new BadRequestException("Este fichaje ya está cerrado");
 
     const clockOut = dto.clockOut ? new Date(dto.clockOut) : new Date();
-    const breakMinutes = dto.breakMinutes ? Number(dto.breakMinutes) : entry.breakMinutes;
+    const breakMinutes = dto.breakMinutes !== undefined ? Number(dto.breakMinutes) : entry.breakMinutes;
     const diff = Math.floor((clockOut.getTime() - entry.clockIn.getTime()) / 60000) - breakMinutes;
     const totalMinutes = Math.max(0, diff);
 
@@ -219,27 +223,31 @@ export class EmployeesService {
     });
     if (!req) throw new NotFoundException("Solicitud no encontrada");
 
+    const isApproved = status === "APPROVED";
+
     const updated = await this.prisma.leaveRequest.update({
       where: { id: requestId },
       data: {
         status,
         approvedBy: approvedBy ?? undefined,
-        approvedAt: new Date(),
+        ...(isApproved ? { approvedAt: new Date() } : {}),
+        employee: {
+          update: { status: isApproved ? "ON_LEAVE" : "ACTIVE" },
+        },
       },
     });
 
     // Notify employee by email (fire-and-forget)
-    const emp = (req as any).employee;
+    const emp = req.employee as { firstName: string; email: string } | null;
     if (emp?.email) {
       const startStr = req.startDate.toLocaleDateString("es-ES", { day: "numeric", month: "long" });
       const endStr   = req.endDate.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
-      const isApproved = status === "APPROVED";
       this.email.sendGeneric(
         emp.email,
         isApproved ? `Solicitud de ausencia aprobada` : `Solicitud de ausencia no aprobada`,
         `<div style="font-family:-apple-system,sans-serif;max-width:480px;margin:0 auto;padding:32px;color:#111827;">
           <h2 style="font-size:18px;font-weight:700;margin:0 0 16px;">
-            Hola ${emp.firstName}, tu solicitud ha sido ${isApproved ? "aprobada" : "rechazada"}
+            Hola ${esc(emp.firstName)}, tu solicitud ha sido ${isApproved ? "aprobada" : "rechazada"}
           </h2>
           <div style="background:${isApproved ? "#f0fdf4" : "#fef2f2"};border-left:4px solid ${isApproved ? "#10b981" : "#ef4444"};border-radius:0 8px 8px 0;padding:16px 20px;margin-bottom:16px;">
             <p style="margin:0 0 6px;font-size:14px;"><strong>Periodo:</strong> ${startStr} – ${endStr}</p>
@@ -251,7 +259,7 @@ export class EmployeesService {
           ${!isApproved ? `<p style="font-size:13px;color:#6b7280;">Si tienes dudas, contacta con tu responsable.</p>` : ""}
           <p style="font-size:12px;color:#9ca3af;margin-top:24px;">YouWhole — RRHH</p>
         </div>`,
-      ).catch(() => {});
+      ).catch((err: any) => { console.error("[leaveStatus email]", err?.message); });
     }
 
     return updated;
@@ -296,12 +304,19 @@ export class EmployeesService {
     const employee = await this.prisma.employee.findFirst({ where: { id: employeeId, companyId } });
     if (!employee) throw new NotFoundException("Empleado no encontrado");
 
-    const token = employee.clockToken ?? crypto.randomUUID();
     if (!employee.clockToken) {
-      await this.prisma.employee.update({ where: { id: employeeId }, data: { clockToken: token } });
+      const newToken = crypto.randomUUID();
+      // Atomic: only set if still null, avoids race condition with concurrent callers
+      await this.prisma.employee.updateMany({
+        where: { id: employeeId, clockToken: null },
+        data: { clockToken: newToken },
+      });
+      // Re-read to get whichever token won (ours or a concurrent caller's)
+      const fresh = await this.prisma.employee.findUnique({ where: { id: employeeId }, select: { clockToken: true, firstName: true, lastName: true } });
+      return { token: fresh!.clockToken!, employeeName: `${employee.firstName} ${employee.lastName}` };
     }
 
-    return { token, employeeName: `${employee.firstName} ${employee.lastName}` };
+    return { token: employee.clockToken, employeeName: `${employee.firstName} ${employee.lastName}` };
   }
 
   async activatePortalAccess(companyId: string, employeeId: string, password: string) {

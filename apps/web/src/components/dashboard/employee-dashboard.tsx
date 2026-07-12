@@ -269,6 +269,7 @@ function BreakDialog({
   const t = useTranslations("dashboard.employee");
   const [selected, setSelected] = useState(0);
   const [custom, setCustom] = useState("");
+  useEffect(() => { if (open) { setSelected(0); setCustom(""); } }, [open]);
   const isCustom = selected === -1;
   const minutes = isCustom ? (Number(custom) || 0) : selected;
 
