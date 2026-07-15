@@ -88,6 +88,19 @@ export function useDeleteExpense() {
   });
 }
 
+export function useUpdateExpense() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: any }) =>
+      api.patch(`/fiscal/expenses/${id}`, data).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["fiscal"] });
+      toast.success("Gasto actualizado");
+    },
+    onError: () => toast.error("Error al actualizar el gasto"),
+  });
+}
+
 export function useAnalyzeExpense() {
   return useMutation({
     mutationFn: (file: File) => {

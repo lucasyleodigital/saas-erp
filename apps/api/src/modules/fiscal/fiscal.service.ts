@@ -389,6 +389,28 @@ Si no puedes leer algún campo, omítelo del JSON.`,
     return { attachmentUrl, extracted };
   }
 
+  async updateExpense(companyId: string, id: string, data: any) {
+    const existing = await this.prisma.expense.findFirst({ where: { id, companyId } });
+    if (!existing) throw new Error("Gasto no encontrado");
+    const subtotal = data.subtotal !== undefined ? Number(data.subtotal) : Number(existing.subtotal);
+    const vatRate  = data.vatRate  !== undefined ? Number(data.vatRate)  : Number(existing.vatRate);
+    const vatAmount = +(subtotal * vatRate / 100).toFixed(2);
+    const total     = +(subtotal + vatAmount).toFixed(2);
+    return this.prisma.expense.update({
+      where: { id },
+      data: {
+        ...(data.date        && { date:        new Date(data.date) }),
+        ...(data.description && { description: data.description }),
+        ...(data.supplier    !== undefined && { supplier:    data.supplier    || null }),
+        ...(data.supplierNif !== undefined && { supplierNif: data.supplierNif || null }),
+        ...(data.invoiceRef  !== undefined && { invoiceRef:  data.invoiceRef  || null }),
+        ...(data.category    && { category: data.category }),
+        subtotal, vatRate, vatAmount, total,
+        isDeductible: data.isDeductible !== false,
+      },
+    });
+  }
+
   async deleteExpense(companyId: string, id: string) {
     await this.prisma.expense.deleteMany({ where: { id, companyId } });
     return { deleted: true };
