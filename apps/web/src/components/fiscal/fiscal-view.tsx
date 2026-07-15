@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import {
   useFiscalCalendar, useAnnualSummary, useM303, useM130, useM202,
   useFiscalPeriods, useMarkFiled, useExpenses, useCreateExpense, useDeleteExpense,
-  useAnalyzeExpense,
+  useUpdateExpense, useAnalyzeExpense,
 } from "@/hooks/use-fiscal";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,7 @@ import { formatCurrency } from "@/lib/utils";
 import {
   Calculator, CalendarDays, AlertTriangle, CheckCircle2, Clock,
   ChevronDown, ChevronUp, Plus, Trash2, Loader2, FileText, TrendingUp,
-  TrendingDown, Receipt, ExternalLink, Upload, Paperclip, X as XIcon,
+  TrendingDown, Receipt, ExternalLink, Upload, Paperclip, X as XIcon, Pencil,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -77,6 +77,89 @@ function ModeloCard({
       </CardHeader>
       {open && <CardContent className="pt-0 space-y-1">{children}</CardContent>}
     </Card>
+  );
+}
+
+// ── Edit Expense Dialog ────────────────────────────────────────────────────────
+function EditExpenseDialog({ expense, onOpenChange }: { expense: any | null; onOpenChange: (v: boolean) => void }) {
+  const update = useUpdateExpense();
+  const [form, setForm] = useState<any>({});
+
+  useEffect(() => {
+    if (expense) {
+      setForm({
+        date: expense.date ? new Date(expense.date).toISOString().split("T")[0] : "",
+        description: expense.description ?? "",
+        supplier: expense.supplier ?? "",
+        supplierNif: expense.supplierNif ?? "",
+        invoiceRef: expense.invoiceRef ?? "",
+        subtotal: String(expense.subtotal ?? ""),
+        vatRate: String(expense.vatRate ?? "21"),
+        category: expense.category ?? "OTROS",
+      });
+    }
+  }, [expense]);
+
+  function set(k: string, v: string) { setForm((p: any) => ({ ...p, [k]: v })); }
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    await update.mutateAsync({ id: expense.id, data: form });
+    onOpenChange(false);
+  }
+
+  const vatAmount = form.subtotal ? +(Number(form.subtotal) * Number(form.vatRate) / 100).toFixed(2) : 0;
+  const total = form.subtotal ? +(Number(form.subtotal) + vatAmount).toFixed(2) : 0;
+
+  return (
+    <Dialog open={!!expense} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2"><Pencil className="h-5 w-5 text-primary" />Editar gasto</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={submit} className="space-y-3">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1"><Label>Fecha</Label><Input type="date" value={form.date ?? ""} onChange={(e) => set("date", e.target.value)} required /></div>
+            <div className="space-y-1">
+              <Label>Categoría</Label>
+              <select className="w-full h-9 border rounded-md px-3 text-sm bg-background" value={form.category ?? "OTROS"} onChange={(e) => set("category", e.target.value)}>
+                {EXPENSE_CATEGORIES.map((c) => <option key={c}>{c}</option>)}
+              </select>
+            </div>
+          </div>
+          <div className="space-y-1"><Label>Descripción</Label><Input value={form.description ?? ""} onChange={(e) => set("description", e.target.value)} required /></div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1"><Label>Proveedor</Label><Input value={form.supplier ?? ""} onChange={(e) => set("supplier", e.target.value)} /></div>
+            <div className="space-y-1"><Label>NIF proveedor</Label><Input placeholder="B12345678" value={form.supplierNif ?? ""} onChange={(e) => set("supplierNif", e.target.value)} /></div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1"><Label>Nº factura</Label><Input placeholder="INV-001" value={form.invoiceRef ?? ""} onChange={(e) => set("invoiceRef", e.target.value)} /></div>
+            <div className="space-y-1">
+              <Label>IVA</Label>
+              <select className="w-full h-9 border rounded-md px-3 text-sm bg-background" value={form.vatRate ?? "21"} onChange={(e) => set("vatRate", e.target.value)}>
+                <option value="0">0% (exento)</option>
+                <option value="4">4% (superreducido)</option>
+                <option value="10">10% (reducido)</option>
+                <option value="21">21% (general)</option>
+              </select>
+            </div>
+          </div>
+          <div className="space-y-1"><Label>Base imponible (€)</Label><Input type="number" step="0.01" placeholder="0.00" value={form.subtotal ?? ""} onChange={(e) => set("subtotal", e.target.value)} required /></div>
+          {form.subtotal && (
+            <div className="bg-muted/30 rounded-lg p-3 text-sm flex justify-between">
+              <span className="text-muted-foreground">IVA {form.vatRate}%: {formatCurrency(vatAmount)}</span>
+              <span className="font-semibold">Total: {formatCurrency(total)}</span>
+            </div>
+          )}
+          <DialogFooter className="gap-2 pt-1">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+            <Button type="submit" disabled={update.isPending}>
+              {update.isPending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}Guardar cambios
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -254,6 +337,7 @@ export function FiscalView() {
   const { data: expenses } = useExpenses({ year, quarter });
   const markFiled = useMarkFiled();
   const deleteExpense = useDeleteExpense();
+  const [editingExpense, setEditingExpense] = useState<any | null>(null);
 
   const QUARTER_LABELS = ["", t("quarters.q1"), t("quarters.q2"), t("quarters.q3"), t("quarters.q4")];
 
@@ -656,9 +740,14 @@ export function FiscalView() {
                           )}
                         </td>
                         <td className="px-2 py-2.5">
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => deleteExpense.mutate(e.id)}>
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
+                          <div className="flex items-center gap-1">
+                            <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-primary" onClick={() => setEditingExpense(e)}>
+                              <Pencil className="h-3.5 w-3.5" />
+                            </Button>
+                            <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => deleteExpense.mutate(e.id)}>
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -680,6 +769,7 @@ export function FiscalView() {
       )}
 
       <AddExpenseDialog open={addExpenseOpen} onOpenChange={setAddExpenseOpen} />
+      <EditExpenseDialog expense={editingExpense} onOpenChange={(v) => !v && setEditingExpense(null)} />
     </div>
   );
 }
