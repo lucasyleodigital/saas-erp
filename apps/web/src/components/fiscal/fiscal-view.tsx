@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import {
   useFiscalCalendar, useAnnualSummary, useM303, useM130, useM202,
   useFiscalPeriods, useMarkFiled, useExpenses, useCreateExpense, useDeleteExpense,
+  useAnalyzeExpense,
 } from "@/hooks/use-fiscal";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,7 +17,7 @@ import { formatCurrency } from "@/lib/utils";
 import {
   Calculator, CalendarDays, AlertTriangle, CheckCircle2, Clock,
   ChevronDown, ChevronUp, Plus, Trash2, Loader2, FileText, TrendingUp,
-  TrendingDown, Receipt, ExternalLink,
+  TrendingDown, Receipt, ExternalLink, Upload, Paperclip, X as XIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -80,36 +81,109 @@ function ModeloCard({
 }
 
 // ── Add Expense Dialog ─────────────────────────────────────────────────────────
+const EMPTY_FORM = {
+  date: new Date().toISOString().split("T")[0],
+  description: "", supplier: "", supplierNif: "", invoiceRef: "",
+  subtotal: "", vatRate: "21", category: "OTROS", attachmentUrl: "",
+};
+
 function AddExpenseDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
   const t = useTranslations("fiscal.addExpense");
   const create = useCreateExpense();
-  const [form, setForm] = useState({
-    date: new Date().toISOString().split("T")[0],
-    description: "",
-    supplier: "",
-    invoiceRef: "",
-    subtotal: "",
-    vatRate: "21",
-    category: "OTROS",
-  });
+  const analyze = useAnalyzeExpense();
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
+
   function set(k: string, v: string) { setForm((p) => ({ ...p, [k]: v })); }
+
+  const handleFile = useCallback(async (file: File) => {
+    setFileName(file.name);
+    const result = await analyze.mutateAsync(file);
+    const ex = result.extracted;
+    setForm((p) => ({
+      ...p,
+      ...(ex.date        && { date:        ex.date }),
+      ...(ex.description && { description: ex.description }),
+      ...(ex.supplier    && { supplier:    ex.supplier }),
+      ...(ex.supplierNif && { supplierNif: ex.supplierNif }),
+      ...(ex.invoiceRef  && { invoiceRef:  ex.invoiceRef }),
+      ...(ex.subtotal    && { subtotal:    String(ex.subtotal) }),
+      ...(ex.vatRate     !== undefined && { vatRate: String(ex.vatRate) }),
+      ...(ex.category    && { category:   ex.category }),
+      ...(result.attachmentUrl && { attachmentUrl: result.attachmentUrl }),
+    }));
+  }, [analyze]);
+
+  function onDrop(e: React.DragEvent) {
+    e.preventDefault(); setDragOver(false);
+    const file = e.dataTransfer.files[0];
+    if (file) handleFile(file);
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     await create.mutateAsync(form);
     onOpenChange(false);
-    setForm({ date: new Date().toISOString().split("T")[0], description: "", supplier: "", invoiceRef: "", subtotal: "", vatRate: "21", category: "OTROS" });
+    setForm(EMPTY_FORM);
+    setFileName(null);
   }
 
   const vatAmount = form.subtotal ? +(Number(form.subtotal) * Number(form.vatRate) / 100).toFixed(2) : 0;
   const total = form.subtotal ? +(Number(form.subtotal) + vatAmount).toFixed(2) : 0;
+  const isAnalyzing = analyze.isPending;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+    <Dialog open={open} onOpenChange={(v) => { onOpenChange(v); if (!v) { setForm(EMPTY_FORM); setFileName(null); } }}>
+      <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2"><Receipt className="h-5 w-5 text-primary" />{t("title")}</DialogTitle>
         </DialogHeader>
+
+        {/* Upload zone */}
+        <div
+          className={cn(
+            "border-2 border-dashed rounded-xl p-5 text-center transition-colors cursor-pointer",
+            dragOver ? "border-primary bg-primary/5" : "border-muted-foreground/20 hover:border-primary/40",
+            isAnalyzing && "pointer-events-none opacity-60",
+          )}
+          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={onDrop}
+          onClick={() => fileRef.current?.click()}
+        >
+          <input
+            ref={fileRef}
+            type="file"
+            className="hidden"
+            accept="image/*,application/pdf"
+            capture="environment"
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }}
+          />
+          {isAnalyzing ? (
+            <div className="flex flex-col items-center gap-2 py-1">
+              <Loader2 className="h-8 w-8 text-primary animate-spin" />
+              <p className="text-sm font-medium text-primary">Analizando con IA...</p>
+            </div>
+          ) : fileName ? (
+            <div className="flex items-center justify-center gap-2 text-sm">
+              <Paperclip className="h-4 w-4 text-primary" />
+              <span className="font-medium text-primary truncate max-w-[260px]">{fileName}</span>
+              <button type="button" onClick={(e) => { e.stopPropagation(); setFileName(null); set("attachmentUrl", ""); }}
+                className="text-muted-foreground hover:text-destructive">
+                <XIcon className="h-4 w-4" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center gap-1.5 py-1">
+              <Upload className="h-7 w-7 text-muted-foreground" />
+              <p className="text-sm font-medium">Sube la factura o foto del ticket</p>
+              <p className="text-xs text-muted-foreground">PDF, JPG, PNG — la IA rellenará los campos automáticamente</p>
+            </div>
+          )}
+        </div>
+
         <form onSubmit={submit} className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1"><Label>{t("date")}</Label><Input type="date" value={form.date} onChange={(e) => set("date", e.target.value)} required /></div>
@@ -123,10 +197,10 @@ function AddExpenseDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
           <div className="space-y-1"><Label>{t("description")}</Label><Input placeholder={t("descPlaceholder")} value={form.description} onChange={(e) => set("description", e.target.value)} required /></div>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1"><Label>{t("supplier")}</Label><Input placeholder={t("supplierPlaceholder")} value={form.supplier} onChange={(e) => set("supplier", e.target.value)} /></div>
-            <div className="space-y-1"><Label>{t("invoiceRef")}</Label><Input placeholder="INV-001" value={form.invoiceRef} onChange={(e) => set("invoiceRef", e.target.value)} /></div>
+            <div className="space-y-1"><Label>NIF proveedor</Label><Input placeholder="B12345678" value={form.supplierNif} onChange={(e) => set("supplierNif", e.target.value)} /></div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1"><Label>{t("base")}</Label><Input type="number" step="0.01" placeholder="0.00" value={form.subtotal} onChange={(e) => set("subtotal", e.target.value)} required /></div>
+            <div className="space-y-1"><Label>{t("invoiceRef")}</Label><Input placeholder="INV-001" value={form.invoiceRef} onChange={(e) => set("invoiceRef", e.target.value)} /></div>
             <div className="space-y-1">
               <Label>{t("vat")}</Label>
               <select className="w-full h-9 border rounded-md px-3 text-sm bg-background" value={form.vatRate} onChange={(e) => set("vatRate", e.target.value)}>
@@ -137,6 +211,7 @@ function AddExpenseDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
               </select>
             </div>
           </div>
+          <div className="space-y-1"><Label>{t("base")}</Label><Input type="number" step="0.01" placeholder="0.00" value={form.subtotal} onChange={(e) => set("subtotal", e.target.value)} required /></div>
           {form.subtotal && (
             <div className="bg-muted/30 rounded-lg p-3 text-sm flex justify-between">
               <span className="text-muted-foreground">{t("vatSummary", { rate: form.vatRate, amount: formatCurrency(vatAmount) })}</span>
@@ -145,7 +220,7 @@ function AddExpenseDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
           )}
           <DialogFooter className="gap-2 pt-1">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>{t("cancel")}</Button>
-            <Button type="submit" disabled={create.isPending}>
+            <Button type="submit" disabled={create.isPending || isAnalyzing}>
               {create.isPending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}{t("save")}
             </Button>
           </DialogFooter>
@@ -555,6 +630,7 @@ export function FiscalView() {
                       <th className="text-right px-4 py-2.5 text-xs font-medium text-muted-foreground">{t("gastos.colBase")}</th>
                       <th className="text-right px-4 py-2.5 text-xs font-medium text-muted-foreground">{t("gastos.colVat")}</th>
                       <th className="text-right px-4 py-2.5 text-xs font-medium text-muted-foreground">{t("gastos.colTotal")}</th>
+                      <th className="w-8 text-center px-2 py-2.5 text-xs font-medium text-muted-foreground"><Paperclip className="h-3 w-3 mx-auto" /></th>
                       <th className="w-10" />
                     </tr>
                   </thead>
@@ -564,12 +640,21 @@ export function FiscalView() {
                         <td className="px-4 py-2.5 text-muted-foreground text-xs">{new Date(e.date).toLocaleDateString()}</td>
                         <td className="px-4 py-2.5">
                           <p>{e.description}</p>
-                          {e.supplier && <p className="text-xs text-muted-foreground">{e.supplier}</p>}
+                          {e.supplier && <p className="text-xs text-muted-foreground">{e.supplier}{e.supplierNif ? ` · ${e.supplierNif}` : ""}</p>}
                         </td>
                         <td className="px-4 py-2.5"><Badge variant="secondary" className="text-xs">{e.category}</Badge></td>
                         <td className="px-4 py-2.5 text-right tabular-nums">{formatCurrency(Number(e.subtotal))}</td>
                         <td className="px-4 py-2.5 text-right tabular-nums text-muted-foreground">{formatCurrency(Number(e.vatAmount))}</td>
                         <td className="px-4 py-2.5 text-right tabular-nums font-medium">{formatCurrency(Number(e.total))}</td>
+                        <td className="px-2 py-2.5 text-center">
+                          {e.attachmentUrl && (
+                            <a href={e.attachmentUrl} target="_blank" rel="noopener noreferrer"
+                              className="inline-flex items-center justify-center h-7 w-7 rounded text-primary hover:bg-primary/10 transition-colors"
+                              title="Ver adjunto">
+                              <Paperclip className="h-3.5 w-3.5" />
+                            </a>
+                          )}
+                        </td>
                         <td className="px-2 py-2.5">
                           <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => deleteExpense.mutate(e.id)}>
                             <Trash2 className="h-3.5 w-3.5" />
@@ -584,7 +669,7 @@ export function FiscalView() {
                       <td className="px-4 py-2.5 text-right tabular-nums font-semibold">{formatCurrency(expenses.data.reduce((s: number, e: any) => s + Number(e.subtotal), 0))}</td>
                       <td className="px-4 py-2.5 text-right tabular-nums text-muted-foreground font-semibold">{formatCurrency(expenses.data.reduce((s: number, e: any) => s + Number(e.vatAmount), 0))}</td>
                       <td className="px-4 py-2.5 text-right tabular-nums font-bold">{formatCurrency(expenses.data.reduce((s: number, e: any) => s + Number(e.total), 0))}</td>
-                      <td />
+                      <td /><td />
                     </tr>
                   </tfoot>
                 </table>

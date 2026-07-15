@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { PrismaService } from "../../database/prisma.service";
 
 export interface QuarterRange {
@@ -26,7 +27,10 @@ function currentQuarter(): QuarterRange {
 
 @Injectable()
 export class FiscalService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private config: ConfigService,
+  ) {}
 
   // ── Modelo 303 ─────────────────────────────────────────────
   async getM303(companyId: string, year: number, quarter: number) {
@@ -271,6 +275,7 @@ export class FiscalService {
         date: new Date(data.date),
         description: data.description,
         supplier: data.supplier || null,
+        supplierNif: data.supplierNif || null,
         invoiceRef: data.invoiceRef || null,
         subtotal,
         vatRate,
@@ -278,8 +283,110 @@ export class FiscalService {
         total,
         category: data.category || "OTROS",
         isDeductible: data.isDeductible !== false,
+        attachmentUrl: data.attachmentUrl || null,
       },
     });
+  }
+
+  async analyzeExpense(file: Express.Multer.File): Promise<{
+    attachmentUrl: string | null;
+    extracted: {
+      date?: string; description?: string; supplier?: string;
+      supplierNif?: string; invoiceRef?: string; subtotal?: number;
+      vatRate?: number; category?: string;
+    };
+  }> {
+    const claudeKey = this.config.get<string>("CLAUDE_API_KEY");
+    const supabaseUrl = this.config.get<string>("SUPABASE_URL");
+    const supabaseKey = this.config.get<string>("SUPABASE_SERVICE_KEY");
+
+    // Upload to Supabase Storage (if configured)
+    let attachmentUrl: string | null = null;
+    if (supabaseUrl && supabaseKey) {
+      const fileName = `${Date.now()}-${file.originalname.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
+      const uploadRes = await fetch(
+        `${supabaseUrl}/storage/v1/object/expense-attachments/${fileName}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${supabaseKey}`,
+            "Content-Type": file.mimetype,
+            "x-upsert": "true",
+          },
+          body: file.buffer as unknown as BodyInit,
+        },
+      );
+      if (uploadRes.ok) {
+        attachmentUrl = `${supabaseUrl}/storage/v1/object/public/expense-attachments/${fileName}`;
+      } else {
+        console.warn("[analyzeExpense] Storage upload failed:", await uploadRes.text());
+      }
+    }
+
+    // OCR extraction with Claude (if configured)
+    let extracted: Record<string, any> = {};
+    if (claudeKey) {
+      const isImage = file.mimetype.startsWith("image/");
+      const isPdf = file.mimetype === "application/pdf";
+
+      if (isImage || isPdf) {
+        const mediaType = isPdf ? "application/pdf" : (file.mimetype as "image/jpeg" | "image/png" | "image/webp" | "image/gif");
+        const base64 = file.buffer.toString("base64");
+
+        const claudeRes = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: {
+            "x-api-key": claudeKey,
+            "anthropic-version": "2023-06-01",
+            "anthropic-beta": "pdfs-2024-09-25",
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "claude-haiku-4-5-20251001",
+            max_tokens: 512,
+            messages: [{
+              role: "user",
+              content: [
+                {
+                  type: isPdf ? "document" : "image",
+                  source: { type: "base64", media_type: mediaType, data: base64 },
+                },
+                {
+                  type: "text",
+                  text: `Extrae los datos de esta factura o ticket y responde SOLO con JSON válido, sin explicaciones:
+{
+  "date": "YYYY-MM-DD",
+  "supplier": "nombre del proveedor",
+  "supplierNif": "NIF/CIF del proveedor si aparece",
+  "invoiceRef": "número de factura si aparece",
+  "description": "descripción breve del gasto",
+  "subtotal": número sin IVA (decimal con punto),
+  "vatRate": tipo de IVA en % (0, 4, 10 o 21),
+  "category": una de: SERVICIOS, SOFTWARE, MARKETING, OFICINA, TRANSPORTE, FORMACION, OTROS
+}
+Si no puedes leer algún campo, omítelo del JSON.`,
+                },
+              ],
+            }],
+          }),
+        });
+
+        if (claudeRes.ok) {
+          const claudeData = await claudeRes.json() as any;
+          const text = claudeData.content?.[0]?.text ?? "";
+          try {
+            const jsonMatch = text.match(/\{[\s\S]*\}/);
+            if (jsonMatch) extracted = JSON.parse(jsonMatch[0]);
+          } catch {
+            console.warn("[analyzeExpense] Could not parse Claude response:", text);
+          }
+        } else {
+          console.warn("[analyzeExpense] Claude API error:", await claudeRes.text());
+        }
+      }
+    }
+
+    return { attachmentUrl, extracted };
   }
 
   async deleteExpense(companyId: string, id: string) {

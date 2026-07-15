@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Delete, Query, Body, Param, UseGuards } from "@nestjs/common";
+import { Controller, Get, Post, Delete, Query, Body, Param, UseGuards, UseInterceptors, UploadedFile, BadRequestException } from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
 import { FiscalService } from "./fiscal.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
@@ -66,6 +67,13 @@ export class FiscalController {
   @Post("expenses")
   createExpense(@CurrentUser() u: JwtPayload, @Body() body: any) {
     return this.fiscal.createExpense(u.companyId, body);
+  }
+
+  @Post("expenses/analyze")
+  @UseInterceptors(FileInterceptor("file", { limits: { fileSize: 10 * 1024 * 1024 } }))
+  analyzeExpense(@UploadedFile() file: Express.Multer.File) {
+    if (!file) throw new BadRequestException("No se recibió ningún archivo");
+    return this.fiscal.analyzeExpense(file);
   }
 
   @Delete("expenses/:id")

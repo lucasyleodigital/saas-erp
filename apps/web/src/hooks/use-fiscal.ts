@@ -87,3 +87,23 @@ export function useDeleteExpense() {
     onError: () => toast.error("Error al eliminar"),
   });
 }
+
+export function useAnalyzeExpense() {
+  return useMutation({
+    mutationFn: (file: File) => {
+      const fd = new FormData();
+      fd.append("file", file);
+      return api.post("/fiscal/expenses/analyze", fd, {
+        headers: { "Content-Type": "multipart/form-data" },
+      }).then((r) => r.data as {
+        attachmentUrl: string | null;
+        extracted: {
+          date?: string; description?: string; supplier?: string;
+          supplierNif?: string; invoiceRef?: string; subtotal?: number;
+          vatRate?: number; category?: string;
+        };
+      });
+    },
+    onError: () => toast.error("Error al analizar el archivo"),
+  });
+}
