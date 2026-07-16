@@ -48,8 +48,11 @@ export function DealDialog({ open, onOpenChange, stages }: DealDialogProps) {
 
   async function onSubmit(data: FormData) {
     await createDeal.mutateAsync({
-      ...data,
-      ...(data.closeDate && { closeDate: new Date(data.closeDate).toISOString() }),
+      title: data.title,
+      stageId:   data.stageId   || undefined,
+      clientId:  data.clientId  || undefined,
+      value:     data.value,
+      closeDate: data.closeDate ? new Date(data.closeDate).toISOString() : undefined,
     } as any);
     onOpenChange(false);
   }
