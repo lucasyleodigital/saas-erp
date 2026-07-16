@@ -8,7 +8,7 @@ export enum DealStage {
 
 export class CreateDealDto {
   @IsString() @MaxLength(300) title: string;
-  @IsString() stageId: string;
+  @IsOptional() @IsString() stageId?: string;
   @IsOptional() @IsString() clientId?: string;
   @IsOptional() @IsString() leadId?: string;
   @IsOptional() @IsNumber() @Min(0) @Type(() => Number) value?: number;
