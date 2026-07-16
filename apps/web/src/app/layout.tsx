@@ -141,7 +141,27 @@ export default function RootLayout({
         <Script id="sw-register" strategy="afterInteractive">
           {`
             if ('serviceWorker' in navigator) {
-              navigator.serviceWorker.register('/sw.js').catch(function(){});
+              navigator.serviceWorker.register('/sw.js').then(function(reg) {
+                reg.addEventListener('updatefound', function() {
+                  var newSW = reg.installing;
+                  if (!newSW) return;
+                  newSW.addEventListener('statechange', function() {
+                    if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+                      // New version ready — show update banner
+                      var banner = document.createElement('div');
+                      banner.id = 'yw-update-banner';
+                      banner.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9999;background:#0d9488;color:#fff;padding:12px 20px;border-radius:12px;font-family:-apple-system,sans-serif;font-size:14px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 20px rgba(0,0,0,0.25);max-width:calc(100vw - 40px);';
+                      banner.innerHTML = '<span>Nueva version disponible</span><button id="yw-update-btn" style="background:#fff;color:#0d9488;border:none;border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer;">Actualizar</button>';
+                      document.body.appendChild(banner);
+                      document.getElementById('yw-update-btn').addEventListener('click', function() {
+                        newSW.postMessage({ type: 'SKIP_WAITING' });
+                        banner.remove();
+                        window.location.reload();
+                      });
+                    }
+                  });
+                });
+              }).catch(function(){});
             }
           `}
         </Script>

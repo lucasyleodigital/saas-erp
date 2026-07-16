@@ -321,4 +321,31 @@ export class EmailService {
       `
     );
   }
+
+  async sendNewSignupAlert(email: string, firstName: string, lastName: string, companyName: string) {
+    const now = new Intl.DateTimeFormat("es-ES", {
+      day: "2-digit", month: "2-digit", year: "numeric",
+      hour: "2-digit", minute: "2-digit", timeZone: "Europe/Madrid",
+    }).format(new Date());
+
+    await this.send(
+      "lucasyleodigital@gmail.com",
+      `Nuevo cliente en YouWhole: ${companyName}`,
+      `
+      <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:520px;margin:0 auto;padding:32px;color:#111827;">
+        <div style="background:linear-gradient(135deg,#040c0a,#061410);border-radius:12px;padding:24px 28px;margin-bottom:24px;">
+          <h1 style="color:#ffffff;font-size:20px;font-weight:700;margin:0 0 4px;">Nuevo registro en YouWhole</h1>
+          <p style="color:#94a3b8;font-size:14px;margin:0;">${now}</p>
+        </div>
+        <div style="background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:20px 24px;">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;">
+            <tr><td style="padding:8px 0;color:#6b7280;width:130px;">Empresa</td><td style="padding:8px 0;font-weight:600;color:#111827;">${companyName}</td></tr>
+            <tr><td style="padding:8px 0;color:#6b7280;">Nombre</td><td style="padding:8px 0;color:#374151;">${firstName} ${lastName}</td></tr>
+            <tr><td style="padding:8px 0;color:#6b7280;">Email</td><td style="padding:8px 0;color:#374151;">${email}</td></tr>
+          </table>
+        </div>
+      </div>
+      `
+    );
+  }
 }

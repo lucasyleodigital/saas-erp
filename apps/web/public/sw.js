@@ -1,20 +1,19 @@
-const CACHE_NAME = "youwhole-v2";
+const CACHE_NAME = "youwhole-v3";
 const PRECACHE = ["/es/dashboard", "/manifest.json", "/logo-icon.png"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE))
   );
-  self.skipWaiting();
+  // Don't skipWaiting — let the banner prompt the user to update
 });
 
 self.addEventListener("activate", (e) => {
   e.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
-    )
+    ).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
 self.addEventListener("fetch", (e) => {
@@ -31,4 +30,11 @@ self.addEventListener("fetch", (e) => {
       })
       .catch(() => caches.match(e.request))
   );
+});
+
+// Notify all clients when a new SW version is waiting
+self.addEventListener("message", (e) => {
+  if (e.data?.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });

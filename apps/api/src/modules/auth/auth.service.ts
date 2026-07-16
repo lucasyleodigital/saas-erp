@@ -75,6 +75,11 @@ export class AuthService {
       .sendWelcome(user.email, dto.firstName, dto.companyName)
       .catch((err) => console.error("[EMAIL] Welcome email failed:", err?.message ?? err));
 
+    // Notify YouWhole team of new signup (fire-and-forget)
+    this.email
+      .sendNewSignupAlert(dto.email, dto.firstName, dto.lastName, dto.companyName)
+      .catch((err) => console.error("[EMAIL] Signup alert failed:", err?.message ?? err));
+
     return tokens;
   }
 
