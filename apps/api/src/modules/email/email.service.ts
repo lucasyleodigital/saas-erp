@@ -329,7 +329,7 @@ export class EmailService {
     }).format(new Date());
 
     await this.send(
-      "lucasyleodigital@gmail.com",
+      "youwholeapp@gmail.com",
       `Nuevo cliente en YouWhole: ${companyName}`,
       `
       <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:520px;margin:0 auto;padding:32px;color:#111827;">
