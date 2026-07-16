@@ -64,9 +64,9 @@ export class DealsService {
       data: {
         ...rest,
         companyId,
-        ...(clientId && { clientId }),
-        ...(leadId   && { leadId }),
-      },
+        clientId: clientId || null,
+        leadId:   leadId   || null,
+      } as any,
     });
   }
 
