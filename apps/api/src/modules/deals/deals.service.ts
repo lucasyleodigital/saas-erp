@@ -59,7 +59,15 @@ export class DealsService {
   }
 
   async create(companyId: string, data: CreateDealDto) {
-    return this.prisma.deal.create({ data: { ...data, companyId } });
+    const { clientId, leadId, ...rest } = data;
+    return this.prisma.deal.create({
+      data: {
+        ...rest,
+        companyId,
+        ...(clientId && { clientId }),
+        ...(leadId   && { leadId }),
+      },
+    });
   }
 
   async moveStage(companyId: string, id: string, stageId: string) {
