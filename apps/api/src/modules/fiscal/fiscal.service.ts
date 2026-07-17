@@ -348,6 +348,9 @@ export class FiscalService {
     const vatAmount = +(subtotal * vatRate / 100).toFixed(2);
     const total = +(subtotal + vatAmount).toFixed(2);
 
+    const withholdingRate = data.withholdingRate != null ? Number(data.withholdingRate) : null;
+    const withholdingAmount = withholdingRate != null ? +(subtotal * withholdingRate / 100).toFixed(2) : null;
+
     return this.prisma.expense.create({
       data: {
         companyId,
@@ -363,6 +366,8 @@ export class FiscalService {
         category: data.category || "OTROS",
         isDeductible: data.isDeductible !== false,
         attachmentUrl: data.attachmentUrl || null,
+        withholdingRate,
+        withholdingAmount,
       },
     });
   }
@@ -486,6 +491,12 @@ Si no puedes leer algún campo, omítelo del JSON.`,
         ...(data.category    && { category: data.category }),
         subtotal, vatRate, vatAmount, total,
         isDeductible: data.isDeductible !== false,
+        ...(data.withholdingRate != null
+          ? {
+              withholdingRate: Number(data.withholdingRate),
+              withholdingAmount: +(subtotal * Number(data.withholdingRate) / 100).toFixed(2),
+            }
+          : {}),
       },
     });
   }

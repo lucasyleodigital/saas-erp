@@ -96,6 +96,7 @@ function EditExpenseDialog({ expense, onOpenChange }: { expense: any | null; onO
         invoiceRef: expense.invoiceRef ?? "",
         subtotal: String(expense.subtotal ?? ""),
         vatRate: String(expense.vatRate ?? "21"),
+        withholdingRate: expense.withholdingRate != null ? String(expense.withholdingRate) : "",
         category: expense.category ?? "OTROS",
       });
     }
@@ -145,11 +146,28 @@ function EditExpenseDialog({ expense, onOpenChange }: { expense: any | null; onO
               </select>
             </div>
           </div>
-          <div className="space-y-1"><Label>Base imponible (€)</Label><Input type="number" step="0.01" placeholder="0.00" value={form.subtotal ?? ""} onChange={(e) => set("subtotal", e.target.value)} required /></div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1"><Label>Base imponible (€)</Label><Input type="number" step="0.01" placeholder="0.00" value={form.subtotal ?? ""} onChange={(e) => set("subtotal", e.target.value)} required /></div>
+            <div className="space-y-1">
+              <Label>Retención IRPF (%)</Label>
+              <select className="w-full h-9 border rounded-md px-3 text-sm bg-background" value={form.withholdingRate ?? ""} onChange={(e) => set("withholdingRate", e.target.value)}>
+                <option value="">Sin retención</option>
+                <option value="7">7% (inicio actividad)</option>
+                <option value="15">15% (profesionales)</option>
+                <option value="19">19% (arrendamientos)</option>
+              </select>
+            </div>
+          </div>
           {form.subtotal && (
-            <div className="bg-muted/30 rounded-lg p-3 text-sm flex justify-between">
-              <span className="text-muted-foreground">IVA {form.vatRate}%: {formatCurrency(vatAmount)}</span>
-              <span className="font-semibold">Total: {formatCurrency(total)}</span>
+            <div className="bg-muted/30 rounded-lg p-3 text-sm space-y-1">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">IVA {form.vatRate}%: {formatCurrency(vatAmount)}</span>
+                {form.withholdingRate && <span className="text-amber-600">Retención {form.withholdingRate}%: −{formatCurrency(+(Number(form.subtotal) * Number(form.withholdingRate) / 100).toFixed(2))}</span>}
+              </div>
+              <div className="flex justify-between font-semibold">
+                <span>Total:</span>
+                <span>{formatCurrency(total)}</span>
+              </div>
             </div>
           )}
           <DialogFooter className="gap-2 pt-1">
@@ -168,7 +186,7 @@ function EditExpenseDialog({ expense, onOpenChange }: { expense: any | null; onO
 const EMPTY_FORM = {
   date: new Date().toISOString().split("T")[0],
   description: "", supplier: "", supplierNif: "", invoiceRef: "",
-  subtotal: "", vatRate: "21", category: "OTROS", attachmentUrl: "",
+  subtotal: "", vatRate: "21", withholdingRate: "", category: "OTROS", attachmentUrl: "",
 };
 
 function AddExpenseDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
@@ -343,11 +361,28 @@ function AddExpenseDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
               </select>
             </div>
           </div>
-          <div className="space-y-1"><Label>{t("base")}</Label><Input type="number" step="0.01" placeholder="0.00" value={form.subtotal} onChange={(e) => set("subtotal", e.target.value)} required /></div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1"><Label>{t("base")}</Label><Input type="number" step="0.01" placeholder="0.00" value={form.subtotal} onChange={(e) => set("subtotal", e.target.value)} required /></div>
+            <div className="space-y-1">
+              <Label>Retención IRPF (%)</Label>
+              <select className="w-full h-9 border rounded-md px-3 text-sm bg-background" value={form.withholdingRate} onChange={(e) => set("withholdingRate", e.target.value)}>
+                <option value="">Sin retención</option>
+                <option value="7">7% (inicio actividad)</option>
+                <option value="15">15% (profesionales)</option>
+                <option value="19">19% (arrendamientos)</option>
+              </select>
+            </div>
+          </div>
           {form.subtotal && (
-            <div className="bg-muted/30 rounded-lg p-3 text-sm flex justify-between">
-              <span className="text-muted-foreground">{t("vatSummary", { rate: form.vatRate, amount: formatCurrency(vatAmount) })}</span>
-              <span className="font-semibold">{t("total", { amount: formatCurrency(total) })}</span>
+            <div className="bg-muted/30 rounded-lg p-3 text-sm space-y-1">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">{t("vatSummary", { rate: form.vatRate, amount: formatCurrency(vatAmount) })}</span>
+                {form.withholdingRate && <span className="text-amber-600">Retención {form.withholdingRate}%: −{formatCurrency(+(Number(form.subtotal) * Number(form.withholdingRate) / 100).toFixed(2))}</span>}
+              </div>
+              <div className="flex justify-between font-semibold">
+                <span>{t("total", { amount: "" })}</span>
+                <span>{formatCurrency(+(Number(form.subtotal) + vatAmount - (form.withholdingRate ? Number(form.subtotal) * Number(form.withholdingRate) / 100 : 0)).toFixed(2) as unknown as number)}</span>
+              </div>
             </div>
           )}
           <DialogFooter className="gap-2 pt-1">

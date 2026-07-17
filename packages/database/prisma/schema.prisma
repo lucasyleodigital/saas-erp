@@ -1367,10 +1367,12 @@ model Expense {
   vatRate       Decimal  @default(21) @db.Decimal(5, 2)
   vatAmount     Decimal  @db.Decimal(12, 2)
   total         Decimal  @db.Decimal(12, 2)
-  category      String   @default("OTROS")
-  isDeductible  Boolean  @default(true)
-  attachmentUrl String?
-  createdAt     DateTime @default(now())
+  category          String   @default("OTROS")
+  isDeductible      Boolean  @default(true)
+  attachmentUrl     String?
+  withholdingRate   Decimal? @db.Decimal(5, 2)
+  withholdingAmount Decimal? @db.Decimal(12, 2)
+  createdAt         DateTime @default(now())
 
   company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
