@@ -5,6 +5,7 @@ import {
   usePurchaseOrders,
   useDeletePurchaseOrder,
   useCreatePurchaseOrder,
+  useUpdatePurchaseOrder,
   useReceivePurchaseOrder,
   type PurchaseOrder,
 } from "@/hooks/use-purchase-orders";
@@ -82,6 +83,7 @@ export function PurchaseOrdersView() {
     limit: 20,
   });
   const deletePo = useDeletePurchaseOrder();
+  const updatePo = useUpdatePurchaseOrder();
 
   const pos = data?.data ?? [];
   const totalPages = data?.totalPages ?? 1;
@@ -179,10 +181,28 @@ export function PurchaseOrdersView() {
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
-                                {(po.status === "SENT" || po.status === "PARTIAL_RECEIVED") && (
-                                  <DropdownMenuItem onClick={() => setReceivePoId(po.id)}>
+                                {po.status === "DRAFT" && (
+                                  <DropdownMenuItem onClick={() => updatePo.mutate({ id: po.id, status: "SENT" } as any)}>
                                     <PackageCheck className="h-4 w-4 mr-2" />
-                                    {t("registerReception")}
+                                    Marcar como enviada
+                                  </DropdownMenuItem>
+                                )}
+                                {(po.status === "SENT" || po.status === "PARTIAL_RECEIVED") && (
+                                  <>
+                                    <DropdownMenuItem onClick={() => setReceivePoId(po.id)}>
+                                      <PackageCheck className="h-4 w-4 mr-2" />
+                                      {t("registerReception")}
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => updatePo.mutate({ id: po.id, status: "RECEIVED" } as any)}>
+                                      <PackageCheck className="h-4 w-4 mr-2" />
+                                      Marcar todo recibido
+                                    </DropdownMenuItem>
+                                  </>
+                                )}
+                                {po.status !== "CANCELLED" && po.status !== "RECEIVED" && (
+                                  <DropdownMenuItem onClick={() => updatePo.mutate({ id: po.id, status: "CANCELLED" } as any)}>
+                                    <Trash2 className="h-4 w-4 mr-2" />
+                                    Cancelar orden
                                   </DropdownMenuItem>
                                 )}
                                 <DropdownMenuSeparator />
