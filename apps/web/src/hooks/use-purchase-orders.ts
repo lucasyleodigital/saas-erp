@@ -115,3 +115,25 @@ export function useReceivePurchaseOrder() {
     },
   });
 }
+
+export function useReceiveAllPurchaseOrder() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) =>
+      api.post(`/purchase-orders/${id}/receive-all`).then((r) => r.data as PurchaseOrder),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["purchase-orders"] });
+      qc.invalidateQueries({ queryKey: ["fiscal"] });
+      qc.invalidateQueries({ queryKey: ["products"] });
+    },
+  });
+}
+
+export function usePendingPurchaseOrders() {
+  return useQuery({
+    queryKey: ["purchase-orders", "pending"],
+    queryFn: () =>
+      api.get("/purchase-orders", { params: { status: "SENT", limit: 100 } })
+        .then((r) => r.data as { data: PurchaseOrder[] }),
+  });
+}

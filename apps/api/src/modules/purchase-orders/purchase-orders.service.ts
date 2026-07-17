@@ -236,6 +236,15 @@ export class PurchaseOrdersService {
     return this.findOne(companyId, id);
   }
 
+  async receiveAll(companyId: string, id: string) {
+    const po = await this.findOne(companyId, id);
+    const itemUpdates = po.items.map((i: any) => ({
+      itemId: i.id,
+      receivedQty: Number(i.quantity),
+    }));
+    return this.receiveItems(companyId, id, itemUpdates);
+  }
+
   async stats(companyId: string) {
     const [total, draft, sent, partial, received] = await Promise.all([
       this.prisma.purchaseOrder.count({ where: { companyId } }),

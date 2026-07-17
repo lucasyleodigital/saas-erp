@@ -7,6 +7,7 @@ import {
   useFiscalPeriods, useMarkFiled, useExpenses, useCreateExpense, useDeleteExpense,
   useUpdateExpense, useAnalyzeExpense,
 } from "@/hooks/use-fiscal";
+import { usePendingPurchaseOrders, useReceiveAllPurchaseOrder } from "@/hooks/use-purchase-orders";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -174,12 +175,29 @@ function AddExpenseDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
   const t = useTranslations("fiscal.addExpense");
   const create = useCreateExpense();
   const analyze = useAnalyzeExpense();
+  const receiveAll = useReceiveAllPurchaseOrder();
+  const { data: pendingPos } = usePendingPurchaseOrders();
   const fileRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState(EMPTY_FORM);
   const [fileName, setFileName] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [linkedPoId, setLinkedPoId] = useState("");
 
   function set(k: string, v: string) { setForm((p) => ({ ...p, [k]: v })); }
+
+  function handlePoLink(poId: string) {
+    setLinkedPoId(poId);
+    if (!poId) return;
+    const po = pendingPos?.data?.find((p) => p.id === poId);
+    if (!po) return;
+    setForm((prev) => ({
+      ...prev,
+      supplier: po.supplier?.name ?? prev.supplier,
+      invoiceRef: po.number,
+      subtotal: String(Number(po.subtotal).toFixed(2)),
+      description: prev.description || `Factura OC ${po.number}`,
+    }));
+  }
 
   const handleFile = useCallback(async (file: File) => {
     setFileName(file.name);
@@ -208,9 +226,13 @@ function AddExpenseDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     await create.mutateAsync(form);
+    if (linkedPoId) {
+      await receiveAll.mutateAsync(linkedPoId).catch(() => {});
+    }
     onOpenChange(false);
     setForm(EMPTY_FORM);
     setFileName(null);
+    setLinkedPoId("");
   }
 
   const vatAmount = form.subtotal ? +(Number(form.subtotal) * Number(form.vatRate) / 100).toFixed(2) : 0;
@@ -266,6 +288,33 @@ function AddExpenseDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
             </div>
           )}
         </div>
+
+        {/* Vincular a OC pendiente */}
+        {pendingPos?.data && pendingPos.data.length > 0 && (
+          <div className="space-y-1">
+            <Label className="flex items-center gap-1.5 text-sm">
+              <Receipt className="h-3.5 w-3.5 text-primary" />
+              Vincular a orden de compra pendiente
+            </Label>
+            <select
+              className="w-full h-9 border rounded-md px-3 text-sm bg-background"
+              value={linkedPoId}
+              onChange={(e) => handlePoLink(e.target.value)}
+            >
+              <option value="">— Sin vincular —</option>
+              {pendingPos.data.map((po) => (
+                <option key={po.id} value={po.id}>
+                  {po.number} · {po.supplier?.name ?? "Proveedor"} · {Number(po.total).toFixed(2)}€
+                </option>
+              ))}
+            </select>
+            {linkedPoId && (
+              <p className="text-xs text-emerald-600">
+                Al guardar, la OC se marcará como recibida automáticamente.
+              </p>
+            )}
+          </div>
+        )}
 
         <form onSubmit={submit} className="space-y-3">
           <div className="grid grid-cols-2 gap-3">

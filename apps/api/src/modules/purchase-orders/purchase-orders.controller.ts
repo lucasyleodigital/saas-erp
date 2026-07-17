@@ -55,4 +55,10 @@ export class PurchaseOrdersController {
   ) {
     return this.service.receiveItems(req.user.companyId, id, dto.items);
   }
+
+  @Post(":id/receive-all")
+  @HttpCode(200)
+  receiveAll(@Req() req: any, @Param("id") id: string) {
+    return this.service.receiveAll(req.user.companyId, id);
+  }
 }
