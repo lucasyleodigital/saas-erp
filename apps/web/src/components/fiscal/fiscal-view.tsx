@@ -206,7 +206,7 @@ function AddExpenseDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
   function handlePoLink(poId: string) {
     setLinkedPoId(poId);
     if (!poId) return;
-    const po = (pendingPos?.data?.data ?? []).find((p: any) => p.id === poId);
+    const po = (pendingPos ?? []).find((p: any) => p.id === poId);
     if (!po) return;
     setForm((prev) => ({
       ...prev,
@@ -308,7 +308,7 @@ function AddExpenseDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
         </div>
 
         {/* Vincular a OC pendiente */}
-        {(pendingPos?.data?.data ?? []).length > 0 && (
+        {(pendingPos ?? []).length > 0 && (
           <div className="space-y-1">
             <Label className="flex items-center gap-1.5 text-sm">
               <Receipt className="h-3.5 w-3.5 text-primary" />
@@ -320,7 +320,7 @@ function AddExpenseDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
               onChange={(e) => handlePoLink(e.target.value)}
             >
               <option value="">— Sin vincular —</option>
-              {(pendingPos?.data?.data ?? []).map((po: any) => (
+              {(pendingPos ?? []).map((po: any) => (
                 <option key={po.id} value={po.id}>
                   {po.number} · {po.supplier?.name ?? "Proveedor"} · {Number(po.total).toFixed(2)}€
                 </option>

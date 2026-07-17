@@ -132,8 +132,8 @@ export function useReceiveAllPurchaseOrder() {
 export function usePendingPurchaseOrders() {
   return useQuery({
     queryKey: ["purchase-orders", "pending"],
-    queryFn: () =>
+    queryFn: (): Promise<PurchaseOrder[]> =>
       api.get("/purchase-orders", { params: { status: "SENT", limit: 100 } })
-        .then((r) => r.data as { data: PurchaseOrder[] }),
+        .then((r) => (r.data?.data ?? r.data) as PurchaseOrder[]),
   });
 }
