@@ -1,12 +1,14 @@
 import { Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
 import { AutomationsService } from "../automations/automations.service";
+import { FiscalService } from "../fiscal/fiscal.service";
 
 @Injectable()
 export class PurchaseOrdersService {
   constructor(
     private prisma: PrismaService,
     private automations: AutomationsService,
+    private fiscal: FiscalService,
   ) {}
 
   private async nextPoNumber(companyId: string): Promise<string> {
@@ -201,7 +203,10 @@ export class PurchaseOrdersService {
       if (newStatus === "RECEIVED") {
         const updatedPo = await tx.purchaseOrder.findFirst({
           where: { id },
-          include: { supplier: { select: { name: true } } },
+          include: {
+            supplier: { select: { name: true, cifNif: true } },
+            items: true,
+          },
         });
         if (updatedPo) {
           this.automations.trigger(companyId, "PURCHASE_ORDER_RECEIVED", {
@@ -209,6 +214,21 @@ export class PurchaseOrdersService {
             supplierName: (updatedPo as any).supplier?.name ?? "",
             total:        String(updatedPo.total),
           }).catch(() => {});
+
+          // Auto-create fiscal expense from received PO
+          const supplier = (updatedPo as any).supplier;
+          const vatRate = (updatedPo as any).items[0]?.taxRate ?? 21;
+          this.fiscal.createExpense(companyId, {
+            date:        updatedPo.issueDate,
+            description: `OC ${updatedPo.number} — ${supplier?.name ?? "Proveedor"}`,
+            supplier:    supplier?.name ?? null,
+            supplierNif: supplier?.cifNif ?? null,
+            invoiceRef:  updatedPo.number,
+            subtotal:    Number(updatedPo.subtotal),
+            vatRate:     Number(vatRate),
+            category:    "OTROS",
+            isDeductible: true,
+          }).catch((err: any) => console.error("[FISCAL] Auto-expense from PO failed:", err?.message));
         }
       }
     });

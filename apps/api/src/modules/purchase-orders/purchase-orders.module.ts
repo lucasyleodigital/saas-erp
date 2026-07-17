@@ -2,9 +2,10 @@ import { Module } from "@nestjs/common";
 import { PurchaseOrdersService } from "./purchase-orders.service";
 import { PurchaseOrdersController } from "./purchase-orders.controller";
 import { AutomationsModule } from "../automations/automations.module";
+import { FiscalModule } from "../fiscal/fiscal.module";
 
 @Module({
-  imports: [AutomationsModule],
+  imports: [AutomationsModule, FiscalModule],
   controllers: [PurchaseOrdersController],
   providers: [PurchaseOrdersService],
   exports: [PurchaseOrdersService],
