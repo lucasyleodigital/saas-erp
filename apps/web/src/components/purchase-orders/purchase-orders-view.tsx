@@ -182,10 +182,20 @@ export function PurchaseOrdersView() {
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
                                 {po.status === "DRAFT" && (
-                                  <DropdownMenuItem onClick={() => updatePo.mutate({ id: po.id, status: "SENT" } as any)}>
-                                    <PackageCheck className="h-4 w-4 mr-2" />
-                                    Marcar como enviada
-                                  </DropdownMenuItem>
+                                  <>
+                                    <DropdownMenuItem onClick={() => updatePo.mutate({ id: po.id, status: "SENT" } as any)}>
+                                      <PackageCheck className="h-4 w-4 mr-2" />
+                                      Marcar como enviada
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => updatePo.mutate({ id: po.id, status: "PARTIAL_RECEIVED" } as any)}>
+                                      <PackageCheck className="h-4 w-4 mr-2" />
+                                      Marcar parcialmente recibida
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => updatePo.mutate({ id: po.id, status: "RECEIVED" } as any)}>
+                                      <PackageCheck className="h-4 w-4 mr-2" />
+                                      Marcar como recibida
+                                    </DropdownMenuItem>
+                                  </>
                                 )}
                                 {(po.status === "SENT" || po.status === "PARTIAL_RECEIVED") && (
                                   <>
