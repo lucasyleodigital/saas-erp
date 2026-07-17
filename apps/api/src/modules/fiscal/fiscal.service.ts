@@ -174,6 +174,7 @@ export class FiscalService {
       deadlines.push(
         { model: "303", year, quarter: q, deadline: range.deadline, label: `Modelo 303 – ${q}T ${year}` },
         { model: "130", year, quarter: q, deadline: range.deadline, label: `Modelo 130 – ${q}T ${year}` },
+        { model: "111", year, quarter: q, deadline: range.deadline, label: `Modelo 111 – ${q}T ${year}` },
       );
     }
     // Anuales
@@ -190,6 +191,84 @@ export class FiscalService {
         overdue: d.deadline < now,
       }))
       .sort((a, b) => a.deadline.getTime() - b.deadline.getTime());
+  }
+
+  // ── Modelo 111 (Retenciones IRPF — nóminas y profesionales) ─
+  async getM111(companyId: string, year: number, quarter: number) {
+    const range = quarterRange(year, quarter);
+
+    // Retenciones de IRPF soportadas en facturas de proveedores/gastos
+    // Campo withholdingRate / withholdingAmount en expenses (si existe)
+    const expenses = await this.prisma.expense.findMany({
+      where: {
+        companyId,
+        date: { gte: range.from, lte: range.to },
+      },
+    });
+
+    // Retenciones en facturas emitidas (IRPF que nos retienen los clientes)
+    const invoices = await this.prisma.invoice.findMany({
+      where: {
+        companyId,
+        issueDate: { gte: range.from, lte: range.to },
+        status: { notIn: ["DRAFT", "CANCELLED"] },
+      },
+      include: { taxes: true },
+    });
+
+    // IRPF retenido en facturas de compra (gastos con retención): usamos campo withholdingAmount si existe
+    const retencionesGastos = expenses.reduce((s, e) => {
+      const w = (e as any).withholdingAmount;
+      return s + (w ? Math.abs(Number(w)) : 0);
+    }, 0);
+    const baseGastos = expenses.reduce((s, e) => {
+      const w = (e as any).withholdingAmount;
+      return s + (w ? Number(e.subtotal) : 0);
+    }, 0);
+
+    // IRPF retenido en facturas emitidas (clientes nos retienen): taxes con rate < 0
+    const irpfTaxesFacturado = invoices.flatMap((i) =>
+      i.taxes.filter((t) => Number(t.rate) < 0),
+    );
+    const retencionesClientes = irpfTaxesFacturado.reduce(
+      (s, t) => s + Math.abs(Number(t.amount)),
+      0,
+    );
+    const baseClientes = invoices
+      .filter((i) => i.taxes.some((t) => Number(t.rate) < 0))
+      .reduce((s, i) => s + Number(i.subtotal), 0);
+
+    // Total a ingresar = retenciones practicadas a terceros (gastos profesionales)
+    // Las retenciones que NOS practican los clientes no se ingresan en M111 (esas son del cliente)
+    const totalRetenciones = retencionesGastos;
+    const totalBase = baseGastos;
+    const tipoMedio = totalBase > 0 ? +((totalRetenciones / totalBase) * 100).toFixed(2) : 0;
+
+    return {
+      period: { year, quarter, from: range.from, to: range.to, deadline: range.deadline },
+      // Retenciones practicadas a proveedores/profesionales (lo que INGRESAMOS a Hacienda)
+      retencionesAProveedores: {
+        base: +totalBase.toFixed(2),
+        retenciones: +totalRetenciones.toFixed(2),
+        tipoMedio,
+      },
+      // Info adicional: retenciones que NOS practican los clientes
+      retencionesDeClientes: {
+        base: +baseClientes.toFixed(2),
+        retenciones: +retencionesClientes.toFixed(2),
+      },
+      aIngresar: +totalRetenciones.toFixed(2),
+      casillas: {
+        c01: +totalBase.toFixed(2),       // Perceptores
+        c03: +totalBase.toFixed(2),       // Base de retención
+        c04: +tipoMedio.toFixed(2),       // Tipo medio
+        c05: +totalRetenciones.toFixed(2), // Retenciones e ingresos a cuenta
+        c06: +totalRetenciones.toFixed(2), // Total a ingresar/devolver
+      },
+      nota: retencionesGastos === 0
+        ? "No se han detectado gastos con retención IRPF este trimestre. Si pagas facturas a profesionales autónomos con retención, asegúrate de registrarlas con el campo 'retención' en el gasto."
+        : null,
+    };
   }
 
   // ── Modelo 202 (Impuesto de Sociedades — pago fraccionado) ─

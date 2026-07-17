@@ -30,6 +30,13 @@ export function useM130(year: number, quarter: number) {
   });
 }
 
+export function useM111(year: number, quarter: number) {
+  return useQuery({
+    queryKey: ["fiscal", "m111", year, quarter],
+    queryFn: () => api.get("/fiscal/m111", { params: { year, quarter } }).then((r) => r.data),
+  });
+}
+
 export function useFiscalPeriods(year: number) {
   return useQuery({
     queryKey: ["fiscal", "periods", year],

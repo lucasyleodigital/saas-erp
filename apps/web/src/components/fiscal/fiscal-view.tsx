@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import {
-  useFiscalCalendar, useAnnualSummary, useM303, useM130, useM202,
+  useFiscalCalendar, useAnnualSummary, useM303, useM130, useM111, useM202,
   useFiscalPeriods, useMarkFiled, useExpenses, useCreateExpense, useDeleteExpense,
   useUpdateExpense, useAnalyzeExpense,
 } from "@/hooks/use-fiscal";
@@ -374,9 +374,10 @@ export function FiscalView() {
   const [year, setYear] = useState(currentYear);
   const [quarter, setQuarter] = useState(defaultQ);
   const [addExpenseOpen, setAddExpenseOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<"dashboard" | "m303" | "m130" | "m202" | "gastos">("dashboard");
+  const [activeTab, setActiveTab] = useState<"dashboard" | "m303" | "m130" | "m111" | "m202" | "gastos">("dashboard");
   const [m202Period, setM202Period] = useState(1);
 
+  const { data: m111 } = useM111(year, quarter);
   const { data: m202 } = useM202(year, m202Period);
   const { data: calendar } = useFiscalCalendar(year);
   const { data: annual } = useAnnualSummary(year);
@@ -409,6 +410,7 @@ export function FiscalView() {
     { id: "dashboard", label: t("tabs.dashboard") },
     { id: "m303", label: t("tabs.m303") },
     { id: "m130", label: t("tabs.m130") },
+    { id: "m111", label: t("tabs.m111") },
     { id: "m202", label: t("tabs.m202") },
     { id: "gastos", label: t("tabs.gastos") },
   ] as const;
@@ -656,6 +658,66 @@ export function FiscalView() {
               <p>1. {t("m130.how1")}</p>
               <p>2. {t("m130.how2")}</p>
               <p>3. {t("m130.how3")}</p>
+            </div>
+          </ModeloCard>
+        </div>
+      )}
+
+      {/* ── MODELO 111 ── */}
+      {activeTab === "m111" && m111 && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+            <Card><CardContent className="p-4">
+              <p className="text-xs text-muted-foreground">Base de retención</p>
+              <p className="text-lg font-bold">{formatCurrency(m111.retencionesAProveedores.base)}</p>
+              <p className="text-xs text-muted-foreground">Facturas de profesionales</p>
+            </CardContent></Card>
+            <Card><CardContent className="p-4">
+              <p className="text-xs text-muted-foreground">Tipo medio aplicado</p>
+              <p className="text-lg font-bold text-primary">{m111.retencionesAProveedores.tipoMedio}%</p>
+            </CardContent></Card>
+            <Card className="border-primary/30"><CardContent className="p-4">
+              <p className="text-xs text-muted-foreground">A ingresar a Hacienda</p>
+              <p className="text-lg font-bold">{formatCurrency(m111.aIngresar)}</p>
+            </CardContent></Card>
+          </div>
+
+          {m111.nota && (
+            <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg px-4 py-3 text-sm text-amber-700 dark:text-amber-400">
+              <strong>Nota:</strong> {m111.nota}
+            </div>
+          )}
+
+          <ModeloCard
+            title={`Modelo 111 — ${QUARTER_LABELS[quarter]} ${year}`}
+            subtitle={`Vencimiento: ${new Date(m111.period.deadline).toLocaleDateString()} · Retenciones IRPF`}
+            filed={periodStatus?.model111Filed}
+            onMarkFiled={() => handleMarkFiled("model111", m111.aIngresar)}
+            isPending={markFiled.isPending}
+            filedLabel={t("filed")}
+            markFiledLabel={t("markFiled")}
+          >
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide px-3 pt-2 pb-1">Rendimientos del trabajo y actividades económicas</p>
+            <CasillaRow num="01" label="Nº de perceptores" value={0} />
+            <CasillaRow num="03" label="Base de retención e ingresos a cuenta" value={m111.casillas.c03} />
+            <CasillaRow num="04" label="Tipo medio (%)" value={m111.casillas.c04} />
+            <CasillaRow num="05" label="Retenciones e ingresos a cuenta" value={m111.casillas.c05} />
+            {m111.retencionesDeClientes.retenciones > 0 && (
+              <>
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide px-3 pt-3 pb-1">Retenciones que te practican los clientes (info)</p>
+                <CasillaRow num="—" label="Base (facturas emitidas con retención)" value={m111.retencionesDeClientes.base} />
+                <CasillaRow num="—" label="IRPF retenido por clientes" value={m111.retencionesDeClientes.retenciones} />
+              </>
+            )}
+            <div className="mt-2 border-t pt-2">
+              <CasillaRow num="06" label="Total a ingresar / devolver" value={m111.casillas.c06} highlight />
+            </div>
+            <div className="mt-3 bg-muted/30 rounded-lg p-3 text-xs text-muted-foreground">
+              <p className="font-medium text-foreground mb-1">Cómo presentarlo</p>
+              <p>1. Accede a la Sede Electrónica de la AEAT (sede.agenciatributaria.gob.es)</p>
+              <p>2. Busca "Modelo 111 — Retenciones IRPF"</p>
+              <p>3. Cumplimenta con los importes de las casillas 03, 05 y 06</p>
+              <p>4. Presenta antes del día 20 del mes siguiente al trimestre</p>
             </div>
           </ModeloCard>
         </div>

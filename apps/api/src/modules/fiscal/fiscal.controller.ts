@@ -52,6 +52,13 @@ export class FiscalController {
     return this.fiscal.markFiled(u.companyId, Number(year), Number(quarter), body);
   }
 
+  @Get("m111")
+  getM111(@CurrentUser() u: JwtPayload, @Query("year") year: string, @Query("quarter") quarter: string) {
+    const y = Number(year) || new Date().getFullYear();
+    const q = Number(quarter) || Math.floor(new Date().getMonth() / 3) + 1;
+    return this.fiscal.getM111(u.companyId, y, q);
+  }
+
   @Get("m202")
   getM202(@CurrentUser() u: JwtPayload, @Query("year") year: string, @Query("period") period: string) {
     const y = Number(year) || new Date().getFullYear();
