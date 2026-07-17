@@ -317,10 +317,24 @@ function CreatePoDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (
             <div className="space-y-2">
               {items.map((item, i) => (
                 <div key={i} className="grid grid-cols-12 gap-2 items-center">
-                  <div className="col-span-4">
+                  <div className="col-span-4 space-y-1">
+                    <Select
+                      value={item.productId || "__free__"}
+                      onValueChange={(v) => setItem(i, "productId", v === "__free__" ? "" : v)}
+                    >
+                      <SelectTrigger className="h-8 text-xs">
+                        <SelectValue placeholder={t("form.product")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__free__">— Descripción libre —</SelectItem>
+                        {products.map((p: any) => (
+                          <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <Input
                       className="h-8 text-xs"
-                      placeholder={t("form.description")}
+                      placeholder={item.productId ? "Descripción adicional (opcional)" : t("form.description")}
                       value={item.description}
                       onChange={(e) => setItem(i, "description", e.target.value)}
                     />
