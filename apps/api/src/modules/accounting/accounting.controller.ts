@@ -94,4 +94,9 @@ export class AccountingController {
   backfillTaxes(@CurrentUser() user: JwtPayload) {
     return this.service.backfillInvoiceTaxes(user.companyId);
   }
+
+  @Post("sync-expenses")
+  syncExpenses(@CurrentUser() user: JwtPayload) {
+    return this.service.syncAllExpenses(user.companyId);
+  }
 }

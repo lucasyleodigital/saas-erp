@@ -83,6 +83,18 @@ export function useRetenciones(year: number) {
   });
 }
 
+export function useSyncExpenses() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => api.post("/accounting/sync-expenses").then((r) => r.data),
+    onSuccess: (data: any) => {
+      qc.invalidateQueries({ queryKey: ["accounting"] });
+      toast.success(`Sincronización completada: ${data.created} asientos creados, ${data.skipped} ya existían`);
+    },
+    onError: () => toast.error("Error al sincronizar gastos"),
+  });
+}
+
 export function useBackfillTaxes() {
   const qc = useQueryClient();
   return useMutation({

@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PrismaService } from "../../database/prisma.service";
+import { AccountingService } from "../accounting/accounting.service";
 
 export interface QuarterRange {
   year: number;
@@ -30,6 +31,7 @@ export class FiscalService {
   constructor(
     private prisma: PrismaService,
     private config: ConfigService,
+    private accounting: AccountingService,
   ) {}
 
   // ── Modelo 303 ─────────────────────────────────────────────
@@ -351,7 +353,7 @@ export class FiscalService {
     const withholdingRate = data.withholdingRate != null ? Number(data.withholdingRate) : null;
     const withholdingAmount = withholdingRate != null ? +(subtotal * withholdingRate / 100).toFixed(2) : null;
 
-    return this.prisma.expense.create({
+    const expense = await this.prisma.expense.create({
       data: {
         companyId,
         date: new Date(data.date),
@@ -370,6 +372,16 @@ export class FiscalService {
         withholdingAmount,
       },
     });
+
+    // Crear asiento contable automáticamente
+    this.accounting.createExpenseJournalEntry(companyId, {
+      id: expense.id, date: expense.date, description: expense.description,
+      supplier: expense.supplier, subtotal, vatRate, vatAmount, total,
+      category: expense.category,
+      withholdingRate, withholdingAmount,
+    }).catch((err) => console.error("[Accounting] Failed to create journal entry:", err?.message));
+
+    return expense;
   }
 
   async analyzeExpense(file: Express.Multer.File): Promise<{
@@ -480,7 +492,7 @@ Si no puedes leer algún campo, omítelo del JSON.`,
     const vatRate  = data.vatRate  !== undefined ? Number(data.vatRate)  : Number(existing.vatRate);
     const vatAmount = +(subtotal * vatRate / 100).toFixed(2);
     const total     = +(subtotal + vatAmount).toFixed(2);
-    return this.prisma.expense.update({
+    const updated = await this.prisma.expense.update({
       where: { id },
       data: {
         ...(data.date        && { date:        new Date(data.date) }),
@@ -499,9 +511,24 @@ Si no puedes leer algún campo, omítelo del JSON.`,
           : {}),
       },
     });
+
+    // Regenerar asiento contable (borrar el anterior y crear uno nuevo)
+    this.accounting.deleteExpenseJournalEntry(companyId, id)
+      .then(() => this.accounting.createExpenseJournalEntry(companyId, {
+        id: updated.id, date: updated.date, description: updated.description,
+        supplier: updated.supplier, subtotal, vatRate, vatAmount, total,
+        category: updated.category,
+        withholdingRate:  (updated as any).withholdingRate  != null ? Number((updated as any).withholdingRate)  : null,
+        withholdingAmount:(updated as any).withholdingAmount != null ? Number((updated as any).withholdingAmount) : null,
+      }))
+      .catch((err) => console.error("[Accounting] Failed to update journal entry:", err?.message));
+
+    return updated;
   }
 
   async deleteExpense(companyId: string, id: string) {
+    // Borrar asiento contable asociado primero
+    await this.accounting.deleteExpenseJournalEntry(companyId, id).catch(() => {});
     await this.prisma.expense.deleteMany({ where: { id, companyId } });
     return { deleted: true };
   }

@@ -544,6 +544,126 @@ export class AccountingService {
     return { message: `${fixed} facturas corregidas con registros de IVA`, fixed, total: invoices.length };
   }
 
+  // ─── Mapeo categoría fiscal → cuenta contable (PGC español) ─────────────────
+  private categoryToAccount(category: string): string {
+    const map: Record<string, string> = {
+      SERVICIOS:   "623", // Servicios de profesionales independientes
+      SOFTWARE:    "629", // Otros servicios
+      MARKETING:   "627", // Publicidad, propaganda y relaciones públicas
+      OFICINA:     "629", // Otros servicios
+      TRANSPORTE:  "624", // Transportes
+      FORMACION:   "629", // Otros servicios
+      OTROS:       "629", // Otros servicios
+    };
+    return map[category] ?? "629";
+  }
+
+  // ─── Crear asiento contable desde un gasto fiscal ────────────────────────────
+  async createExpenseJournalEntry(companyId: string, expense: {
+    id: string; date: Date | string; description: string; supplier?: string | null;
+    subtotal: number; vatRate: number; vatAmount: number; total: number;
+    category: string; withholdingRate?: number | null; withholdingAmount?: number | null;
+  }) {
+    await this.ensureDefaultAccounts(companyId);
+
+    const expenseCode = this.categoryToAccount(expense.category);
+    const expenseAccount  = await this.findOrCreateAccount(companyId, expenseCode);
+    const ivaAccount      = await this.findOrCreateAccount(companyId, "472"); // IVA soportado
+    const proveedorAccount = await this.findOrCreateAccount(companyId, "410"); // Acreedores
+    const retencionAccount = await this.findOrCreateAccount(companyId, "4751"); // HP retenciones
+
+    const subtotal        = Number(expense.subtotal);
+    const vatAmount       = Number(expense.vatAmount);
+    const withholdingAmt  = Number(expense.withholdingAmount ?? 0);
+
+    // Asiento: Debe = gasto + IVA; Haber = acreedor − retención + retención HP
+    const items: { accountId: string; description?: string; debit: number; credit: number }[] = [
+      { accountId: expenseAccount.id,   description: expense.description, debit: subtotal,    credit: 0 },
+      { accountId: ivaAccount.id,       description: `IVA soportado ${expense.vatRate}%`,    debit: vatAmount,   credit: 0 },
+      { accountId: proveedorAccount.id, description: expense.supplier ?? expense.description, debit: 0,           credit: subtotal + vatAmount - withholdingAmt },
+    ];
+
+    if (withholdingAmt > 0) {
+      items.push({ accountId: retencionAccount.id, description: `Retención IRPF ${expense.withholdingRate}%`, debit: 0, credit: withholdingAmt });
+    }
+
+    return this.prisma.journalEntry.create({
+      data: {
+        companyId,
+        type:        "MANUAL",
+        reference:   `GASTO-${expense.id.slice(0, 8).toUpperCase()}`,
+        description: expense.description,
+        entryDate:   new Date(expense.date),
+        items:       { create: items },
+      },
+      include: { items: true },
+    });
+  }
+
+  // ─── Eliminar asiento de un gasto fiscal ─────────────────────────────────────
+  async deleteExpenseJournalEntry(companyId: string, expenseId: string) {
+    const ref = `GASTO-${expenseId.slice(0, 8).toUpperCase()}`;
+    await this.prisma.journalEntry.deleteMany({ where: { companyId, reference: ref } });
+  }
+
+  // ─── Sincronizar TODOS los gastos existentes → asientos contables ─────────────
+  async syncAllExpenses(companyId: string) {
+    await this.ensureDefaultAccounts(companyId);
+
+    // Primero asegurar que existe cuenta 4751 (HP retenciones practicadas)
+    await this.findOrCreateAccount(companyId, "4751");
+
+    const expenses = await this.prisma.expense.findMany({ where: { companyId } });
+    let created = 0;
+    let skipped = 0;
+
+    for (const expense of expenses) {
+      const ref = `GASTO-${expense.id.slice(0, 8).toUpperCase()}`;
+      const exists = await this.prisma.journalEntry.findFirst({ where: { companyId, reference: ref } });
+      if (exists) { skipped++; continue; }
+
+      await this.createExpenseJournalEntry(companyId, {
+        id:               expense.id,
+        date:             expense.date,
+        description:      expense.description,
+        supplier:         expense.supplier,
+        subtotal:         Number(expense.subtotal),
+        vatRate:          Number(expense.vatRate),
+        vatAmount:        Number(expense.vatAmount),
+        total:            Number(expense.total),
+        category:         expense.category,
+        withholdingRate:  (expense as any).withholdingRate != null ? Number((expense as any).withholdingRate) : null,
+        withholdingAmount:(expense as any).withholdingAmount != null ? Number((expense as any).withholdingAmount) : null,
+      });
+      created++;
+    }
+
+    return { created, skipped, total: expenses.length };
+  }
+
+  private async ensureDefaultAccounts(companyId: string) {
+    const count = await this.prisma.account.count({ where: { companyId } });
+    if (count === 0) await this.seedDefaultAccounts(companyId);
+  }
+
+  private async findOrCreateAccount(companyId: string, code: string) {
+    let account = await this.prisma.account.findFirst({ where: { companyId, code } });
+    if (!account) {
+      const defaults: Record<string, { name: string; type: string }> = {
+        "472":  { name: "HP, IVA soportado",                    type: "ASSET" },
+        "410":  { name: "Acreedores varios",                     type: "LIABILITY" },
+        "4751": { name: "HP, retenciones practicadas a terceros", type: "LIABILITY" },
+        "623":  { name: "Servicios de profesionales independientes", type: "EXPENSE" },
+        "624":  { name: "Transportes",                           type: "EXPENSE" },
+        "627":  { name: "Publicidad y relaciones publicas",      type: "EXPENSE" },
+        "629":  { name: "Otros servicios",                       type: "EXPENSE" },
+      };
+      const def = defaults[code] ?? { name: `Cuenta ${code}`, type: "EXPENSE" };
+      account = await this.prisma.account.create({ data: { companyId, code, name: def.name, type: def.type } });
+    }
+    return account;
+  }
+
   private async seedDefaultAccounts(companyId: string) {
     const defaultAccounts = [
       { code: "100", name: "Capital social", type: "EQUITY" },

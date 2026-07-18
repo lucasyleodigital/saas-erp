@@ -8,7 +8,7 @@ import {
   useProfitAndLoss, useVatReport, useJournalEntries,
   useCreateJournalEntry, useDeleteJournalEntry, useAccounts,
   useLibroFacturas, useModelo130, useModelo347, useRetenciones,
-  useBackfillTaxes, useDeleteAccount,
+  useBackfillTaxes, useDeleteAccount, useSyncExpenses,
 } from "@/hooks/use-accounting";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend,
 } from "recharts";
 import { cn, formatCurrency } from "@/lib/utils";
-import { Plus, Trash2, Loader2, BookOpen, Receipt, TrendingUp, Calculator, FileText, Users as UsersIcon } from "lucide-react";
+import { Plus, Trash2, Loader2, BookOpen, Receipt, TrendingUp, Calculator, FileText, Users as UsersIcon, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
@@ -189,6 +189,7 @@ export function AccountingView() {
   const deleteEntry = useDeleteJournalEntry();
   const { data: accountsData } = useAccounts();
   const backfillTaxes = useBackfillTaxes();
+  const syncExpenses = useSyncExpenses();
   const deleteAccount = useDeleteAccount();
 
   const { data: libro, isLoading: libroLoading } = useLibroFacturas(year);
@@ -228,6 +229,17 @@ export function AccountingView() {
               className="px-3 py-1.5 text-sm hover:bg-muted transition-colors"
             >›</button>
           </div>
+          <Button
+            size="sm"
+            variant="outline"
+            className="gap-2"
+            onClick={() => syncExpenses.mutate()}
+            disabled={syncExpenses.isPending}
+            title="Importar gastos de Fiscal como asientos contables"
+          >
+            {syncExpenses.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+            Sincronizar gastos
+          </Button>
           {tab === "journal" && (
             <Button size="sm" className="gap-2" onClick={() => setEntryDialogOpen(true)}>
               <Plus className="h-4 w-4" /> {t("journal.entry")}
