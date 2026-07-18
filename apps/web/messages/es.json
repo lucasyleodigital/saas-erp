@@ -959,6 +959,24 @@
       "how2": "Copia las casillas de arriba",
       "how3": "Si el resultado es 0, marca \"Resultado negativo o cero\" y presenta"
     },
+    "m111": {
+      "title": "Modelo 111 — Retenciones IRPF",
+      "subtitle": "Retenciones e ingresos a cuenta del IRPF (profesionales y autónomos)",
+      "baseProveedores": "Base de retención (proveedores)",
+      "tipoMedio": "Tipo medio de retención",
+      "aIngresar": "A ingresar",
+      "retencionesClientes": "Retenciones de clientes (a compensar)",
+      "baseClientesLabel": "Base (facturas emitidas con retención)",
+      "irpfClientesLabel": "IRPF retenido por clientes",
+      "c01": "Nº de perceptores",
+      "c03": "Base de retención e ingresos a cuenta",
+      "c04": "Tipo medio (%)",
+      "c05": "Retenciones e ingresos a cuenta",
+      "c06": "Total a ingresar / devolver",
+      "how1": "Ve a sede.agenciatributaria.gob.es → Modelo 111 → Presentación",
+      "how2": "Cumplimenta las casillas indicadas",
+      "how3": "Presenta antes del vencimiento del trimestre"
+    },
     "m202": {
       "alertTitle": "Modelo 202 — Impuesto de Sociedades (pago fraccionado)",
       "alertBody": "Solo para empresas con forma jurídica SL o SA. Los autónomos persona física NO presentan este modelo.",

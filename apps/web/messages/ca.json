@@ -959,6 +959,24 @@
       "how2": "Copia les caselles de dalt",
       "how3": "Si el resultat és 0, marca \"Resultat negatiu o zero\" i presenta"
     },
+    "m111": {
+      "title": "Model 111 — Retencions IRPF",
+      "subtitle": "Retencions i ingressos a compte de l'IRPF (professionals i autònoms)",
+      "baseProveedores": "Base de retenció (proveïdors)",
+      "tipoMedio": "Tipus mitjà de retenció",
+      "aIngresar": "A ingressar",
+      "retencionesClientes": "Retencions de clients (a compensar)",
+      "baseClientesLabel": "Base (factures emeses amb retenció)",
+      "irpfClientesLabel": "IRPF retingut per clients",
+      "c01": "Nº de perceptors",
+      "c03": "Base de retenció i ingressos a compte",
+      "c04": "Tipus mitjà (%)",
+      "c05": "Retencions i ingressos a compte",
+      "c06": "Total a ingressar / retornar",
+      "how1": "Vés a sede.agenciatributaria.gob.es → Model 111 → Presentació",
+      "how2": "Omple les caselles indicades",
+      "how3": "Presenta abans del venciment del trimestre"
+    },
     "m202": {
       "alertTitle": "Model 202 — Impost de Societats (pagament fraccionat)",
       "alertBody": "Només per a empreses amb forma jurídica SL o SA. Els autònoms persona física NO presenten aquest model.",

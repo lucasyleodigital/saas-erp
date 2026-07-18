@@ -703,16 +703,15 @@ export function FiscalView() {
         <div className="space-y-4">
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
             <Card><CardContent className="p-4">
-              <p className="text-xs text-muted-foreground">Base de retención</p>
+              <p className="text-xs text-muted-foreground">{t("m111.baseProveedores")}</p>
               <p className="text-lg font-bold">{formatCurrency(m111.retencionesAProveedores.base)}</p>
-              <p className="text-xs text-muted-foreground">Facturas de profesionales</p>
             </CardContent></Card>
             <Card><CardContent className="p-4">
-              <p className="text-xs text-muted-foreground">Tipo medio aplicado</p>
+              <p className="text-xs text-muted-foreground">{t("m111.tipoMedio")}</p>
               <p className="text-lg font-bold text-primary">{m111.retencionesAProveedores.tipoMedio}%</p>
             </CardContent></Card>
             <Card className="border-primary/30"><CardContent className="p-4">
-              <p className="text-xs text-muted-foreground">A ingresar a Hacienda</p>
+              <p className="text-xs text-muted-foreground">{t("m111.aIngresar")}</p>
               <p className="text-lg font-bold">{formatCurrency(m111.aIngresar)}</p>
             </CardContent></Card>
           </div>
@@ -724,35 +723,33 @@ export function FiscalView() {
           )}
 
           <ModeloCard
-            title={`Modelo 111 — ${QUARTER_LABELS[quarter]} ${year}`}
-            subtitle={`Vencimiento: ${new Date(m111.period.deadline).toLocaleDateString()} · Retenciones IRPF`}
+            title={`${t("tabs.m111")} — ${QUARTER_LABELS[quarter]} ${year}`}
+            subtitle={`${t("deadline")}: ${new Date(m111.period.deadline).toLocaleDateString()} · ${t("m111.subtitle")}`}
             filed={periodStatus?.model111Filed}
             onMarkFiled={() => handleMarkFiled("model111", m111.aIngresar)}
             isPending={markFiled.isPending}
             filedLabel={t("filed")}
             markFiledLabel={t("markFiled")}
           >
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide px-3 pt-2 pb-1">Rendimientos del trabajo y actividades económicas</p>
-            <CasillaRow num="01" label="Nº de perceptores" value={0} />
-            <CasillaRow num="03" label="Base de retención e ingresos a cuenta" value={m111.casillas.c03} />
-            <CasillaRow num="04" label="Tipo medio (%)" value={m111.casillas.c04} />
-            <CasillaRow num="05" label="Retenciones e ingresos a cuenta" value={m111.casillas.c05} />
+            <CasillaRow num="01" label={t("m111.c01")} value={0} />
+            <CasillaRow num="03" label={t("m111.c03")} value={m111.casillas.c03} />
+            <CasillaRow num="04" label={t("m111.c04")} value={m111.casillas.c04} />
+            <CasillaRow num="05" label={t("m111.c05")} value={m111.casillas.c05} />
             {m111.retencionesDeClientes.retenciones > 0 && (
               <>
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide px-3 pt-3 pb-1">Retenciones que te practican los clientes (info)</p>
-                <CasillaRow num="—" label="Base (facturas emitidas con retención)" value={m111.retencionesDeClientes.base} />
-                <CasillaRow num="—" label="IRPF retenido por clientes" value={m111.retencionesDeClientes.retenciones} />
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide px-3 pt-3 pb-1">{t("m111.retencionesClientes")}</p>
+                <CasillaRow num="—" label={t("m111.baseClientesLabel")} value={m111.retencionesDeClientes.base} />
+                <CasillaRow num="—" label={t("m111.irpfClientesLabel")} value={m111.retencionesDeClientes.retenciones} />
               </>
             )}
             <div className="mt-2 border-t pt-2">
-              <CasillaRow num="06" label="Total a ingresar / devolver" value={m111.casillas.c06} highlight />
+              <CasillaRow num="06" label={t("m111.c06")} value={m111.casillas.c06} highlight />
             </div>
             <div className="mt-3 bg-muted/30 rounded-lg p-3 text-xs text-muted-foreground">
-              <p className="font-medium text-foreground mb-1">Cómo presentarlo</p>
-              <p>1. Accede a la Sede Electrónica de la AEAT (sede.agenciatributaria.gob.es)</p>
-              <p>2. Busca "Modelo 111 — Retenciones IRPF"</p>
-              <p>3. Cumplimenta con los importes de las casillas 03, 05 y 06</p>
-              <p>4. Presenta antes del día 20 del mes siguiente al trimestre</p>
+              <p className="font-medium text-foreground mb-1">{t("howToFile")}</p>
+              <p>1. {t("m111.how1")}</p>
+              <p>2. {t("m111.how2")}</p>
+              <p>3. {t("m111.how3")}</p>
             </div>
           </ModeloCard>
         </div>

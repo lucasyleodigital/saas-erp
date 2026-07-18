@@ -959,6 +959,24 @@
       "how2": "Kopiatu goiko laukiak",
       "how3": "Emaitza 0 bada, markatu \"Emaitza negatiboa edo zero\" eta aurkeztu"
     },
+    "m111": {
+      "title": "111 Eredua — PFEZ atxikipenak",
+      "subtitle": "PFEZren konturako atxikipenak eta sarrerak (profesionalak eta autonomoak)",
+      "baseProveedores": "Atxikitze-oinarria (hornitzaileak)",
+      "tipoMedio": "Batez besteko atxikitze-tasa",
+      "aIngresar": "Sartu beharrekoa",
+      "retencionesClientes": "Bezeroen atxikipenak (konpentsatzeko)",
+      "baseClientesLabel": "Oinarria (atxikipenarekin igorritako fakturak)",
+      "irpfClientesLabel": "Bezeroek atxikitako PFEZ",
+      "c01": "Hartzaileen kop.",
+      "c03": "Atxikitze-oinarria eta konturako sarrerak",
+      "c04": "Batez besteko tasa (%)",
+      "c05": "Atxikipenak eta konturako sarrerak",
+      "c06": "Guztira sartu / itzuli",
+      "how1": "Joan sede.agenciatributaria.gob.es → 111 Eredua → Aurkezpena",
+      "how2": "Bete adierazitako laukiak",
+      "how3": "Aurkeztu hiruhileko epea baino lehen"
+    },
     "m202": {
       "alertTitle": "202 Eredua — Sozietateen Zerga (zatikako ordainketa)",
       "alertBody": "SL edo SA erakunde juridikoa duten enpresei bakarrik. Pertsona fisikoko autonomoek EZ dute eredu hau aurkezten.",

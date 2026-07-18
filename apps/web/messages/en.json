@@ -959,6 +959,24 @@
       "how2": "Copy the boxes above",
       "how3": "If result is 0, check \"Negative result or zero\" and file"
     },
+    "m111": {
+      "title": "Model 111 — IRPF Withholdings",
+      "subtitle": "Withholdings and payments on account of IRPF (professionals and self-employed)",
+      "baseProveedores": "Withholding base (suppliers)",
+      "tipoMedio": "Average withholding rate",
+      "aIngresar": "Amount due",
+      "retencionesClientes": "Client withholdings (to offset)",
+      "baseClientesLabel": "Base (invoices issued with withholding)",
+      "irpfClientesLabel": "IRPF withheld by clients",
+      "c01": "No. of recipients",
+      "c03": "Withholding base and payments on account",
+      "c04": "Average rate (%)",
+      "c05": "Withholdings and payments on account",
+      "c06": "Total payable / refundable",
+      "how1": "Go to sede.agenciatributaria.gob.es → Model 111 → Filing",
+      "how2": "Fill in the indicated boxes",
+      "how3": "File before the quarterly deadline"
+    },
     "m202": {
       "alertTitle": "Model 202 — Corporate Tax (instalment payment)",
       "alertBody": "Only for companies with SL or SA legal form. Self-employed individuals do NOT file this model.",
