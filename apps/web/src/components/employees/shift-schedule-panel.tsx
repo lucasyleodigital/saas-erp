@@ -38,8 +38,8 @@ export function ShiftSchedulePanel() {
 
   const monday = weekStart(refDate);
   const days   = Array.from({ length: 7 }, (_, i) => addDays(monday, i));
-  const from   = isoDate(days[0]);
-  const to     = isoDate(days[6]);
+  const from   = isoDate(days[0]!);
+  const to     = isoDate(days[6]!);
 
   const { data: employeesData } = useEmployees({ limit: 100, status: "ACTIVE" });
   const { data: shifts = [] }   = useShiftAssignments({ from, to });
