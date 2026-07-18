@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
+import { InvoicesService } from "../invoices/invoices.service";
 
 @Injectable()
 export class DeliveryNotesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private invoicesService: InvoicesService) {}
 
   async findAll(companyId: string, params: any) {
     const { search, status, clientId, dateFrom, dateTo, amountMin, amountMax } = params;
@@ -167,56 +168,27 @@ export class DeliveryNotesService {
 
   async convertToInvoice(companyId: string, id: string) {
     const note = await this.findOne(companyId, id);
-    if (note.status === "INVOICED") {
+    if (note.status === "INVOICED")
       throw new BadRequestException("Este albarán ya ha sido facturado");
-    }
-    if (note.status === "CANCELLED") {
+    if (note.status === "CANCELLED")
       throw new BadRequestException("No se puede facturar un albarán cancelado");
-    }
 
-    const series = await this.prisma.invoiceSeries.findFirst({
-      where: { companyId, isDefault: true },
-    });
-    if (!series) throw new NotFoundException("Serie de facturas no encontrada");
-
-    const number = `${series.prefix}${String(series.nextNumber).padStart(4, "0")}`;
-
-    const [invoice] = await this.prisma.$transaction([
-      this.prisma.invoice.create({
-        data: {
-          companyId,
-          clientId: note.clientId,
-          seriesId: series.id,
-          number,
-          subtotal: note.subtotal,
-          taxAmount: note.taxAmount,
-          total: note.total,
-          notes: note.notes ?? undefined,
-          items: {
-            create: note.items.map((item: any, i: number) => ({
-              description: item.description,
-              quantity: item.quantity,
-              unitPrice: item.unitPrice,
-              discount: item.discount,
-              subtotal: item.subtotal,
-              order: i,
-            })),
-          },
-        },
-      }),
-      this.prisma.invoiceSeries.update({
-        where: { id: series.id },
-        data: { nextNumber: { increment: 1 } },
-      }),
-      this.prisma.deliveryNote.update({
-        where: { id },
-        data: { status: "INVOICED" },
-      }),
-    ]);
+    // Delegate to InvoicesService so IRPF auto-apply and plan limits run correctly
+    const invoice = await this.invoicesService.create(companyId, {
+      clientId: note.clientId,
+      notes: note.notes ?? undefined,
+      items: (note.items as any[]).map((item) => ({
+        description: item.description,
+        quantity:    Number(item.quantity),
+        unitPrice:   Number(item.unitPrice),
+        discount:    item.discount ? Number(item.discount) : 0,
+      })),
+      taxes: [],  // InvoicesService will auto-apply IVA + IRPF based on company settings
+    } as any);
 
     await this.prisma.deliveryNote.update({
       where: { id },
-      data: { convertedToInvoiceId: invoice.id },
+      data: { status: "INVOICED", convertedToInvoiceId: invoice.id },
     });
 
     return invoice;
