@@ -77,7 +77,7 @@ export function ShiftSchedulePanel() {
         <span className="text-sm font-medium">
           {monday.toLocaleDateString("es-ES", { day: "2-digit", month: "long" })}
           {" – "}
-          {days[6].toLocaleDateString("es-ES", { day: "2-digit", month: "long", year: "numeric" })}
+          {days[6]!.toLocaleDateString("es-ES", { day: "2-digit", month: "long", year: "numeric" })}
         </span>
         <Button variant="outline" size="sm"
           onClick={(e) => { e.stopPropagation(); setRefDate(addDays(monday, 7)); }}>
