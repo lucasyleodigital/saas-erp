@@ -133,6 +133,25 @@ export class EmployeesController {
     return this.employeesService.deleteLeaveRequest(u.companyId, requestId);
   }
 
+  // ─── Shifts ──────────────────────────────────────────────────
+
+  @Get("shifts")
+  getShifts(@CurrentUser() u: JwtPayload, @Query() p: any) {
+    return this.employeesService.getShifts(u.companyId, p);
+  }
+
+  @Post("shifts")
+  @HttpCode(HttpStatus.CREATED)
+  upsertShift(@CurrentUser() u: JwtPayload, @Body() b: any) {
+    return this.employeesService.upsertShift(u.companyId, b);
+  }
+
+  @Delete("shifts/:id")
+  @HttpCode(HttpStatus.OK)
+  deleteShift(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
+    return this.employeesService.deleteShift(u.companyId, id);
+  }
+
   @Post(":id/generate-clock-token")
   async generateClockToken(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
     return this.employeesService.generateClockToken(u.companyId, id);

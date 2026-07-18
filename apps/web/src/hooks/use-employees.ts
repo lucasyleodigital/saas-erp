@@ -4,6 +4,35 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
 
+export type ShiftType = "MANANA" | "TARDE" | "NOCHE" | "PARTIDO" | "LIBRE";
+
+export const SHIFT_LABELS: Record<ShiftType, string> = {
+  MANANA:  "Mañana",
+  TARDE:   "Tarde",
+  NOCHE:   "Noche",
+  PARTIDO: "Partido",
+  LIBRE:   "Libre",
+};
+
+export const SHIFT_COLORS: Record<ShiftType, string> = {
+  MANANA:  "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300",
+  TARDE:   "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
+  NOCHE:   "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300",
+  PARTIDO: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
+  LIBRE:   "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
+};
+
+export interface ShiftAssignment {
+  id: string;
+  employeeId: string;
+  date: string;
+  shiftType: ShiftType;
+  startTime: string | null;
+  endTime: string | null;
+  notes: string | null;
+  employee?: { id: string; firstName: string; lastName: string; position: string | null };
+}
+
 export interface Employee {
   id: string;
   companyId: string;
@@ -26,6 +55,13 @@ export interface Employee {
   province: string | null;
   postalCode: string | null;
   workingHours: string | number;
+  defaultShiftType: ShiftType | null;
+  shiftStart: string | null;
+  shiftEnd: string | null;
+  ssRegistrationDate: string | null;
+  ssContributionGroup: string | null;
+  occupationCode: string | null;
+  costCenter: string | null;
   status: "ACTIVE" | "INACTIVE" | "ON_LEAVE";
   avatar: string | null;
   notes: string | null;
@@ -277,6 +313,40 @@ export function useDeleteLeaveRequest() {
     },
     onError: (err: any) => {
       toast.error(err?.response?.data?.message ?? "Error al eliminar");
+    },
+  });
+}
+
+// ─── Shift Assignments ──────────────────────────────────────
+
+export function useShiftAssignments(params: { companyId?: string; from: string; to: string }) {
+  return useQuery<ShiftAssignment[]>({
+    queryKey: ["shift-assignments", params],
+    queryFn: () => api.get("/employees/shifts", { params }).then((r) => r.data),
+    staleTime: 15_000,
+  });
+}
+
+export function useUpsertShift() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (data: { employeeId: string; date: string; shiftType: ShiftType; startTime?: string; endTime?: string; notes?: string }) =>
+      api.post("/employees/shifts", data).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["shift-assignments"] });
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message ?? "Error al guardar turno");
+    },
+  });
+}
+
+export function useDeleteShift() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => api.delete(`/employees/shifts/${id}`).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["shift-assignments"] });
     },
   });
 }

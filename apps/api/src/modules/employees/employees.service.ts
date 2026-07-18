@@ -96,6 +96,7 @@ export class EmployeesService {
     const { ...data } = dto;
     if (data.startDate) data.startDate = new Date(data.startDate);
     if (data.endDate)   data.endDate   = new Date(data.endDate);
+    if (data.ssRegistrationDate) data.ssRegistrationDate = new Date(data.ssRegistrationDate);
     if (data.salary !== undefined) data.salary = Number(data.salary);
     if (data.workingHours !== undefined) data.workingHours = Number(data.workingHours);
     return this.prisma.employee.update({ where: { id }, data });
@@ -104,6 +105,36 @@ export class EmployeesService {
   async remove(companyId: string, id: string) {
     await this.findOne(companyId, id);
     return this.prisma.employee.delete({ where: { id } });
+  }
+
+  // ─── Shifts ─────────────────────────────────────────────────
+
+  async getShifts(companyId: string, params: any) {
+    const { from, to } = params;
+    return this.prisma.shiftAssignment.findMany({
+      where: {
+        companyId,
+        date: {
+          gte: from ? new Date(from) : undefined,
+          lte: to   ? new Date(to)   : undefined,
+        },
+      },
+      include: { employee: { select: { id: true, firstName: true, lastName: true, position: true } } },
+      orderBy: [{ date: "asc" }, { employee: { lastName: "asc" } }],
+    });
+  }
+
+  async upsertShift(companyId: string, dto: any) {
+    const { employeeId, date, ...rest } = dto;
+    return this.prisma.shiftAssignment.upsert({
+      where: { employeeId_date: { employeeId, date: new Date(date) } },
+      update: rest,
+      create: { companyId, employeeId, date: new Date(date), ...rest },
+    });
+  }
+
+  async deleteShift(companyId: string, id: string) {
+    return this.prisma.shiftAssignment.deleteMany({ where: { id, companyId } });
   }
 
   // ─── Time Entries ───────────────────────────────────────────

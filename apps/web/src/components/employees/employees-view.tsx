@@ -37,6 +37,7 @@ import {
 import { useDebounce } from "@/hooks/use-debounce";
 import { motion } from "framer-motion";
 import { EmployeeDialog } from "./employee-dialog";
+import { ShiftSchedulePanel } from "./shift-schedule-panel";
 import { LocaleLink as Link } from "@/components/ui/locale-link";
 import { useTranslations } from "next-intl";
 
@@ -71,7 +72,7 @@ export function EmployeesView() {
   const [status, setStatus] = useState<string | undefined>(undefined);
   const [page, setPage] = useState(1);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [mainTab, setMainTab] = useState<"employees" | "leaves">("employees");
+  const [mainTab, setMainTab] = useState<"employees" | "leaves" | "shifts">("employees");
   const debouncedSearch = useDebounce(search, 300);
 
   const { data: stats } = useEmployeeStats();
@@ -120,9 +121,16 @@ export function EmployeesView() {
         >
           <CalendarOff className="h-3.5 w-3.5" /> {t("tabs.leaves")}
         </button>
+        <button
+          onClick={() => setMainTab("shifts")}
+          className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${mainTab === "shifts" ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          <Calendar className="h-3.5 w-3.5" /> Cuadro Horarios
+        </button>
       </div>
 
       {mainTab === "leaves" && <LeaveManagementPanel />}
+      {mainTab === "shifts" && <ShiftSchedulePanel />}
 
       {mainTab === "employees" && <>
       {/* Stats */}

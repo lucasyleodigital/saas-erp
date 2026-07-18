@@ -161,6 +161,14 @@ enum LeaveStatus {
   REJECTED
 }
 
+enum ShiftType {
+  MANANA
+  TARDE
+  NOCHE
+  PARTIDO
+  LIBRE
+}
+
 enum PayrollStatus {
   DRAFT
   APPROVED
@@ -1044,6 +1052,13 @@ model Employee {
   postalCode           String?
   workingHours         Decimal        @default(40) @db.Decimal(4, 1)
   schedule             Json?
+  defaultShiftType     ShiftType?
+  shiftStart           String?
+  shiftEnd             String?
+  ssRegistrationDate   DateTime?
+  ssContributionGroup  String?
+  occupationCode       String?
+  costCenter           String?
   clockToken           String?        @unique
   portalPassword       String?
   portalActivatedAt    DateTime?
@@ -1056,6 +1071,7 @@ model Employee {
   company              Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
   timeEntries          TimeEntry[]
   leaveRequests        LeaveRequest[]
+  shiftAssignments     ShiftAssignment[]
   payrolls             Payroll[]
 
   @@index([companyId, status])
@@ -1108,6 +1124,24 @@ model LeaveRequest {
   @@index([companyId, employeeId])
   @@index([companyId, status])
   @@map("leave_requests")
+}
+
+model ShiftAssignment {
+  id          String    @id @default(uuid())
+  companyId   String
+  employeeId  String
+  date        DateTime  @db.Date
+  shiftType   ShiftType
+  startTime   String?
+  endTime     String?
+  notes       String?
+  createdAt   DateTime  @default(now())
+
+  employee    Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([employeeId, date])
+  @@index([companyId, date])
+  @@map("shift_assignments")
 }
 
 // ============================================================
