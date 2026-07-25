@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { DocumentScannerDialog } from "@/components/document-scanner/document-scanner-dialog";
 import { cn } from "@/lib/utils";
 import { logoutAction } from "@/lib/auth";
 import {
@@ -38,6 +39,7 @@ import {
   FolderKanban,
   Timer,
   HardDrive,
+  ScanLine,
   Receipt,
 } from "lucide-react";
 import { useState } from "react";
@@ -51,6 +53,7 @@ const LOCALES = ["es", "ca", "eu", "gl", "en"];
 export function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+  const [scannerOpen, setScannerOpen] = useState(false);
   const { data: unreadCount } = useUnreadCount();
   const { data: currentUser } = useUser();
   const t = useTranslations("nav");
@@ -252,6 +255,21 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         ))}
       </nav>
 
+      {/* Scanner button */}
+      <div className="px-2 pb-2">
+        <button
+          onClick={() => setScannerOpen(true)}
+          className={cn(
+            "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+            "bg-primary/10 text-primary hover:bg-primary/20",
+          )}
+          title={collapsed ? "Escanear documento" : undefined}
+        >
+          <ScanLine className="h-4 w-4 shrink-0" />
+          {!collapsed && <span>Escanear documento</span>}
+        </button>
+      </div>
+
       {/* Footer */}
       <div className="border-t border-sidebar-border p-2">
         <button
@@ -262,6 +280,8 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
           {!collapsed && <span>{t("logout")}</span>}
         </button>
       </div>
+
+      <DocumentScannerDialog open={scannerOpen} onOpenChange={setScannerOpen} />
 
       {/* Collapse toggle */}
       <button

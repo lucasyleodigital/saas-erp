@@ -386,17 +386,21 @@ export class FiscalService {
 
   async analyzeExpense(file: Express.Multer.File): Promise<{
     attachmentUrl: string | null;
+    documentType: "GASTO" | "FACTURA_VENTA" | "ALBARAN" | "PROVEEDOR" | "OTRO";
+    aiProvider: string;
     extracted: {
       date?: string; description?: string; supplier?: string;
       supplierNif?: string; invoiceRef?: string; subtotal?: number;
       vatRate?: number; category?: string;
+      clientName?: string; clientNif?: string;
     };
   }> {
+    const nvidiaKey = this.config.get<string>("NVIDIA_API_KEY");
     const claudeKey = this.config.get<string>("CLAUDE_API_KEY");
     const supabaseUrl = this.config.get<string>("SUPABASE_URL");
     const supabaseKey = this.config.get<string>("SUPABASE_SERVICE_KEY");
 
-    // Upload to Supabase Storage (if configured)
+    // Upload to Supabase Storage
     let attachmentUrl: string | null = null;
     if (supabaseUrl && supabaseKey) {
       const fileName = `${Date.now()}-${file.originalname.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
@@ -419,16 +423,83 @@ export class FiscalService {
       }
     }
 
-    // OCR extraction with Claude (if configured)
+    const isImage = file.mimetype.startsWith("image/");
+    const isPdf = file.mimetype === "application/pdf";
     let extracted: Record<string, any> = {};
-    if (claudeKey) {
-      const isImage = file.mimetype.startsWith("image/");
-      const isPdf = file.mimetype === "application/pdf";
+    let documentType: "GASTO" | "FACTURA_VENTA" | "ALBARAN" | "PROVEEDOR" | "OTRO" = "GASTO";
+    let aiProvider = "none";
 
-      if (isImage || isPdf) {
+    const EXTRACTION_PROMPT = `Analiza este documento y responde SOLO con JSON válido, sin explicaciones ni texto adicional:
+{
+  "documentType": "GASTO" | "FACTURA_VENTA" | "ALBARAN" | "PROVEEDOR" | "OTRO",
+  "date": "YYYY-MM-DD",
+  "supplier": "nombre del proveedor o emisor",
+  "supplierNif": "NIF/CIF del proveedor si aparece",
+  "clientName": "nombre del cliente si aparece",
+  "clientNif": "NIF/CIF del cliente si aparece",
+  "invoiceRef": "número de factura o albarán si aparece",
+  "description": "descripción breve del documento",
+  "subtotal": número sin impuestos (decimal con punto),
+  "vatRate": tipo de IVA en % (0, 4, 10 o 21),
+  "category": una de: SERVICIOS, SOFTWARE, MARKETING, OFICINA, TRANSPORTE, FORMACION, OTROS
+}
+documentType debe ser:
+- GASTO: ticket, recibo o factura de proveedor que representa un gasto de la empresa
+- FACTURA_VENTA: factura emitida por la empresa a un cliente (tiene datos de cliente)
+- ALBARAN: nota de entrega, albarán o documento de recepción de mercancía
+- PROVEEDOR: ficha, catálogo o información de proveedor sin importe claro
+- OTRO: cualquier otro documento
+Omite los campos que no puedas leer.`;
+
+    // NVIDIA NIM para imágenes (gratis, rápido)
+    if (nvidiaKey && isImage) {
+      try {
+        const base64 = file.buffer.toString("base64");
+        const mimeType = file.mimetype;
+        const nimRes = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${nvidiaKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "meta/llama-4-maverick-17b-128e-instruct",
+            messages: [{
+              role: "user",
+              content: [
+                { type: "image_url", image_url: { url: `data:${mimeType};base64,${base64}` } },
+                { type: "text", text: EXTRACTION_PROMPT },
+              ],
+            }],
+            max_tokens: 600,
+            temperature: 0.1,
+          }),
+        });
+
+        if (nimRes.ok) {
+          const nimData = await nimRes.json() as any;
+          const text = nimData.choices?.[0]?.message?.content ?? "";
+          const jsonMatch = text.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            const parsed = JSON.parse(jsonMatch[0]);
+            documentType = parsed.documentType ?? "GASTO";
+            delete parsed.documentType;
+            extracted = parsed;
+            aiProvider = "nvidia-nim";
+          }
+        } else {
+          console.warn("[analyzeExpense] NVIDIA NIM error:", await nimRes.text());
+        }
+      } catch (e) {
+        console.warn("[analyzeExpense] NVIDIA NIM exception:", e);
+      }
+    }
+
+    // Claude como fallback (PDFs o si NVIDIA falla/no está configurado)
+    if (aiProvider === "none" && claudeKey && (isImage || isPdf)) {
+      try {
         const mediaType = isPdf ? "application/pdf" : (file.mimetype as "image/jpeg" | "image/png" | "image/webp" | "image/gif");
         const base64 = file.buffer.toString("base64");
-
         const claudeRes = await fetch("https://api.anthropic.com/v1/messages", {
           method: "POST",
           headers: {
@@ -439,29 +510,12 @@ export class FiscalService {
           },
           body: JSON.stringify({
             model: "claude-haiku-4-5-20251001",
-            max_tokens: 512,
+            max_tokens: 600,
             messages: [{
               role: "user",
               content: [
-                {
-                  type: isPdf ? "document" : "image",
-                  source: { type: "base64", media_type: mediaType, data: base64 },
-                },
-                {
-                  type: "text",
-                  text: `Extrae los datos de esta factura o ticket y responde SOLO con JSON válido, sin explicaciones:
-{
-  "date": "YYYY-MM-DD",
-  "supplier": "nombre del proveedor",
-  "supplierNif": "NIF/CIF del proveedor si aparece",
-  "invoiceRef": "número de factura si aparece",
-  "description": "descripción breve del gasto",
-  "subtotal": número sin IVA (decimal con punto),
-  "vatRate": tipo de IVA en % (0, 4, 10 o 21),
-  "category": una de: SERVICIOS, SOFTWARE, MARKETING, OFICINA, TRANSPORTE, FORMACION, OTROS
-}
-Si no puedes leer algún campo, omítelo del JSON.`,
-                },
+                { type: isPdf ? "document" : "image", source: { type: "base64", media_type: mediaType, data: base64 } },
+                { type: "text", text: EXTRACTION_PROMPT },
               ],
             }],
           }),
@@ -470,19 +524,23 @@ Si no puedes leer algún campo, omítelo del JSON.`,
         if (claudeRes.ok) {
           const claudeData = await claudeRes.json() as any;
           const text = claudeData.content?.[0]?.text ?? "";
-          try {
-            const jsonMatch = text.match(/\{[\s\S]*\}/);
-            if (jsonMatch) extracted = JSON.parse(jsonMatch[0]);
-          } catch {
-            console.warn("[analyzeExpense] Could not parse Claude response:", text);
+          const jsonMatch = text.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            const parsed = JSON.parse(jsonMatch[0]);
+            documentType = parsed.documentType ?? "GASTO";
+            delete parsed.documentType;
+            extracted = parsed;
+            aiProvider = "claude";
           }
         } else {
-          console.warn("[analyzeExpense] Claude API error:", await claudeRes.text());
+          console.warn("[analyzeExpense] Claude error:", await claudeRes.text());
         }
+      } catch (e) {
+        console.warn("[analyzeExpense] Claude exception:", e);
       }
     }
 
-    return { attachmentUrl, extracted };
+    return { attachmentUrl, documentType, aiProvider, extracted };
   }
 
   async updateExpense(companyId: string, id: string, data: any) {

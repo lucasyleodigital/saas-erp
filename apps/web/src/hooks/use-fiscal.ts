@@ -117,10 +117,13 @@ export function useAnalyzeExpense() {
         headers: { "Content-Type": "multipart/form-data" },
       }).then((r) => r.data as {
         attachmentUrl: string | null;
+        documentType: "GASTO" | "FACTURA_VENTA" | "ALBARAN" | "PROVEEDOR" | "OTRO";
+        aiProvider: string;
         extracted: {
           date?: string; description?: string; supplier?: string;
           supplierNif?: string; invoiceRef?: string; subtotal?: number;
           vatRate?: number; category?: string;
+          clientName?: string; clientNif?: string;
         };
       });
     },
