@@ -113,7 +113,7 @@ export function DocumentScannerDialog({ open, onOpenChange }: { open: boolean; o
       } else if (result.documentType === "PROVEEDOR") {
         await createSupplier.mutateAsync({
           name: ex.supplier ?? "",
-          taxId: ex.supplierNif ?? "",
+          cifNif: ex.supplierNif ?? "",
           email: "",
           phone: "",
           address: "",
