@@ -429,27 +429,31 @@ export class FiscalService {
     let documentType: "GASTO" | "FACTURA_VENTA" | "ALBARAN" | "PROVEEDOR" | "OTRO" = "GASTO";
     let aiProvider = "none";
 
-    const EXTRACTION_PROMPT = `Analiza este documento y responde SOLO con JSON válido, sin explicaciones ni texto adicional:
+    const EXTRACTION_PROMPT = `You are a document data extractor. Read this document carefully and extract ONLY data that is EXPLICITLY visible in the document. NEVER invent, guess or hallucinate data.
+
+Respond with ONLY a valid JSON object, no explanations, no markdown:
 {
-  "documentType": "GASTO" | "FACTURA_VENTA" | "ALBARAN" | "PROVEEDOR" | "OTRO",
-  "date": "YYYY-MM-DD",
-  "supplier": "nombre del proveedor o emisor",
-  "supplierNif": "NIF/CIF del proveedor si aparece",
-  "clientName": "nombre del cliente si aparece",
-  "clientNif": "NIF/CIF del cliente si aparece",
-  "invoiceRef": "número de factura o albarán si aparece",
-  "description": "descripción breve del documento",
-  "subtotal": número sin impuestos (decimal con punto),
-  "vatRate": tipo de IVA en % (0, 4, 10 o 21),
-  "category": una de: SERVICIOS, SOFTWARE, MARKETING, OFICINA, TRANSPORTE, FORMACION, OTROS
+  "documentType": "GASTO" or "FACTURA_VENTA" or "ALBARAN" or "PROVEEDOR" or "OTRO",
+  "date": "YYYY-MM-DD" (only if a date is clearly visible),
+  "supplier": "exact name of the issuer/seller as written in the document",
+  "supplierNif": "tax ID of the issuer only if explicitly shown",
+  "clientName": "exact name of the buyer/client only if explicitly shown",
+  "clientNif": "tax ID of the buyer only if explicitly shown",
+  "invoiceRef": "invoice or document number exactly as written",
+  "description": "brief description based only on what the document says",
+  "subtotal": numeric amount before taxes (use . as decimal separator, convert currency if needed to EUR),
+  "vatRate": VAT percentage as number (0, 4, 10 or 21) only if VAT is shown,
+  "category": one of: SERVICIOS, SOFTWARE, MARKETING, OFICINA, TRANSPORTE, FORMACION, OTROS
 }
-documentType debe ser:
-- GASTO: ticket, recibo o factura de proveedor que representa un gasto de la empresa
-- FACTURA_VENTA: factura emitida por la empresa a un cliente (tiene datos de cliente)
-- ALBARAN: nota de entrega, albarán o documento de recepción de mercancía
-- PROVEEDOR: ficha, catálogo o información de proveedor sin importe claro
-- OTRO: cualquier otro documento
-Omite los campos que no puedas leer.`;
+
+Rules:
+- documentType GASTO = expense receipt or supplier invoice (company pays)
+- documentType FACTURA_VENTA = invoice issued to a client (company receives payment)
+- documentType ALBARAN = delivery note
+- documentType PROVEEDOR = supplier info/catalog
+- OMIT any field you cannot read clearly from the document — do NOT invent values
+- If the document is in English or another language, still extract the data correctly
+- For amounts in USD or other currencies, convert to EUR approximately or use the numeric value as-is`;
 
     const mistralKey = this.config.get<string>("MISTRAL_API_KEY");
 
