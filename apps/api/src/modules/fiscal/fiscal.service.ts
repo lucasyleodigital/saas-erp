@@ -510,13 +510,11 @@ Rules:
       }
     }
 
-    // Mistral (API cloud global, gratis, soporta imagen + PDF)
-    if (aiProvider === "none" && mistralKey && (isImage || isPdf)) {
+    // Mistral Pixtral — solo imágenes (no soporta PDFs)
+    if (aiProvider === "none" && mistralKey && isImage) {
       try {
-        console.log("[analyzeExpense] Trying Mistral...");
+        console.log("[analyzeExpense] Trying Mistral Pixtral...");
         const base64 = file.buffer.toString("base64");
-        const mimeType = file.mimetype;
-        const isImageFile = file.mimetype.startsWith("image/");
         const mistralRes = await fetch("https://api.mistral.ai/v1/chat/completions", {
           method: "POST",
           headers: {
@@ -527,12 +525,10 @@ Rules:
             model: "pixtral-12b-2409",
             messages: [{
               role: "user",
-              content: isImageFile
-                ? [
-                    { type: "image_url", image_url: `data:${mimeType};base64,${base64}` },
-                    { type: "text", text: EXTRACTION_PROMPT },
-                  ]
-                : [{ type: "text", text: EXTRACTION_PROMPT }],
+              content: [
+                { type: "image_url", image_url: { url: `data:${file.mimetype};base64,${base64}` } },
+                { type: "text", text: EXTRACTION_PROMPT },
+              ],
             }],
             max_tokens: 800,
             temperature: 0.1,
@@ -546,11 +542,16 @@ Rules:
           const jsonMatch = text.match(/\{[\s\S]*\}/);
           if (jsonMatch) {
             const parsed = JSON.parse(jsonMatch[0]);
-            documentType = parsed.documentType ?? "GASTO";
-            delete parsed.documentType;
-            extracted = parsed;
-            aiProvider = "mistral";
-            console.log("[analyzeExpense] Mistral success, type:", documentType);
+            const hasData = parsed.supplier || parsed.invoiceRef || parsed.subtotal || parsed.date;
+            if (hasData) {
+              documentType = parsed.documentType ?? "GASTO";
+              delete parsed.documentType;
+              extracted = parsed;
+              aiProvider = "mistral";
+              console.log("[analyzeExpense] Mistral success, type:", documentType);
+            } else {
+              console.warn("[analyzeExpense] Mistral returned no meaningful data, falling back");
+            }
           }
         } else {
           console.warn(`[analyzeExpense] Mistral HTTP ${mistralRes.status}:`, await mistralRes.text());
@@ -560,7 +561,7 @@ Rules:
       }
     }
 
-    // Claude como fallback (PDFs o si los anteriores fallan)
+    // Claude — PDFs e imágenes como fallback final (soporta PDF nativo)
     if (aiProvider === "none" && claudeKey && (isImage || isPdf)) {
       try {
         const mediaType = isPdf ? "application/pdf" : (file.mimetype as "image/jpeg" | "image/png" | "image/webp" | "image/gif");
