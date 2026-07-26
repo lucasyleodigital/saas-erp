@@ -453,9 +453,54 @@ IMPORTANTE: Solo incluye campos que estén claramente visibles en el documento. 
 - Omite los campos que no puedas leer con certeza`;
 
     const mistralKey = this.config.get<string>("MISTRAL_API_KEY");
+    const geminiKey  = this.config.get<string>("GEMINI_API_KEY");
 
-    console.log(`[analyzeExpense] file=${file.originalname} mime=${file.mimetype} size=${file.size} isImage=${isImage} isPdf=${isPdf}`);
-    console.log(`[analyzeExpense] keys: nvidia=${!!nvidiaKey} mistral=${!!mistralKey} claude=${!!claudeKey}`);
+    console.log(`[analyzeExpense] file=${file.originalname} mime=${file.mimetype} size=${file.size}`);
+    console.log(`[analyzeExpense] keys: gemini=${!!geminiKey} claude=${!!claudeKey} mistral=${!!mistralKey} nvidia=${!!nvidiaKey}`);
+
+    // Gemini Flash — primario (gratis, imagen + PDF, sin restricción geográfica)
+    if (aiProvider === "none" && geminiKey && (isImage || isPdf)) {
+      try {
+        console.log("[analyzeExpense] Trying Gemini...");
+        const base64 = file.buffer.toString("base64");
+        const geminiRes = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [{ parts: [
+                { inline_data: { mime_type: file.mimetype, data: base64 } },
+                { text: EXTRACTION_PROMPT },
+              ]}],
+              generationConfig: { temperature: 0.1, maxOutputTokens: 1024 },
+            }),
+          },
+        );
+        if (geminiRes.ok) {
+          const geminiData = await geminiRes.json() as any;
+          const text = geminiData.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+          console.log("[analyzeExpense] Gemini raw:", text.substring(0, 400));
+          const jsonMatch = text.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            const parsed = JSON.parse(jsonMatch[0]);
+            if (parsed.supplier || parsed.invoiceRef || parsed.subtotal || parsed.date) {
+              documentType = parsed.documentType ?? "GASTO";
+              delete parsed.documentType;
+              extracted = parsed;
+              aiProvider = "gemini";
+              console.log("[analyzeExpense] Gemini success:", documentType, Object.keys(extracted));
+            }
+          } else {
+            console.warn("[analyzeExpense] Gemini no JSON:", text.substring(0, 200));
+          }
+        } else {
+          console.warn(`[analyzeExpense] Gemini HTTP ${geminiRes.status}:`, await geminiRes.text());
+        }
+      } catch (e) {
+        console.warn("[analyzeExpense] Gemini exception:", e);
+      }
+    }
 
     // NVIDIA NIM para imágenes
     if (nvidiaKey && isImage) {
