@@ -452,13 +452,64 @@ IMPORTANTE: Solo incluye campos que estén claramente visibles en el documento. 
 - Si el documento está en inglés u otro idioma, extrae igualmente los datos
 - Omite los campos que no puedas leer con certeza`;
 
-    const mistralKey = this.config.get<string>("MISTRAL_API_KEY");
-    const geminiKey  = this.config.get<string>("GEMINI_API_KEY");
+    const mistralKey    = this.config.get<string>("MISTRAL_API_KEY");
+    const geminiKey     = this.config.get<string>("GEMINI_API_KEY");
+    const openrouterKey = this.config.get<string>("OPENROUTER_API_KEY");
 
     console.log(`[analyzeExpense] file=${file.originalname} mime=${file.mimetype} size=${file.size}`);
-    console.log(`[analyzeExpense] keys: gemini=${!!geminiKey} claude=${!!claudeKey} mistral=${!!mistralKey} nvidia=${!!nvidiaKey}`);
+    console.log(`[analyzeExpense] keys: openrouter=${!!openrouterKey} gemini=${!!geminiKey} claude=${!!claudeKey} mistral=${!!mistralKey} nvidia=${!!nvidiaKey}`);
 
-    // Gemini 2.0 Flash — primario (gratis, imagen + PDF, sin restricción geográfica)
+    // OpenRouter — primario (modelos gratis con visión, sin restricción geográfica)
+    if (aiProvider === "none" && openrouterKey && isImage) {
+      try {
+        console.log("[analyzeExpense] Trying OpenRouter...");
+        const base64 = file.buffer.toString("base64");
+        const orRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${openrouterKey}`,
+            "Content-Type": "application/json",
+            "HTTP-Referer": "https://saas-erp.app",
+          },
+          body: JSON.stringify({
+            model: "meta-llama/llama-3.2-11b-vision-instruct:free",
+            messages: [{
+              role: "user",
+              content: [
+                { type: "image_url", image_url: { url: `data:${file.mimetype};base64,${base64}` } },
+                { type: "text", text: EXTRACTION_PROMPT },
+              ],
+            }],
+            max_tokens: 1024,
+            temperature: 0.1,
+          }),
+        });
+        if (orRes.ok) {
+          const orData = await orRes.json() as any;
+          const text = orData.choices?.[0]?.message?.content ?? "";
+          console.log("[analyzeExpense] OpenRouter raw:", text.substring(0, 400));
+          const jsonMatch = text.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            const parsed = JSON.parse(jsonMatch[0]);
+            if (parsed.supplier || parsed.invoiceRef || parsed.subtotal || parsed.date) {
+              documentType = parsed.documentType ?? "GASTO";
+              delete parsed.documentType;
+              extracted = parsed;
+              aiProvider = "openrouter";
+              console.log("[analyzeExpense] OpenRouter success:", documentType, Object.keys(extracted));
+            }
+          } else {
+            console.warn("[analyzeExpense] OpenRouter no JSON:", text.substring(0, 200));
+          }
+        } else {
+          console.warn(`[analyzeExpense] OpenRouter HTTP ${orRes.status}:`, (await orRes.text()).substring(0, 200));
+        }
+      } catch (e) {
+        console.warn("[analyzeExpense] OpenRouter exception:", e);
+      }
+    }
+
+    // Gemini 2.0 Flash — segundo (gratis, imagen + PDF, sin restricción geográfica)
     if (aiProvider === "none" && geminiKey && (isImage || isPdf)) {
       try {
         console.log("[analyzeExpense] Trying Gemini 2.0 Flash...");
