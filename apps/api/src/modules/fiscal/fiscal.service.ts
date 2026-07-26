@@ -463,7 +463,7 @@ Omite los campos que no puedas leer.`;
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            model: "meta/llama-4-maverick-17b-128e-instruct",
+            model: "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
             messages: [{
               role: "user",
               content: [
