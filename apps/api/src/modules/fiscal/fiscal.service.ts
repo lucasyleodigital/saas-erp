@@ -429,31 +429,28 @@ export class FiscalService {
     let documentType: "GASTO" | "FACTURA_VENTA" | "ALBARAN" | "PROVEEDOR" | "OTRO" = "GASTO";
     let aiProvider = "none";
 
-    const EXTRACTION_PROMPT = `You are a document data extractor. Read this document carefully and extract ONLY data that is EXPLICITLY visible in the document. NEVER invent, guess or hallucinate data.
+    const EXTRACTION_PROMPT = `Lee este documento y extrae los datos. Responde ÚNICAMENTE con JSON válido, sin texto adicional ni markdown.
+IMPORTANTE: Solo incluye campos que estén claramente visibles en el documento. NO inventes datos.
 
-Respond with ONLY a valid JSON object, no explanations, no markdown:
 {
-  "documentType": "GASTO" or "FACTURA_VENTA" or "ALBARAN" or "PROVEEDOR" or "OTRO",
-  "date": "YYYY-MM-DD" (only if a date is clearly visible),
-  "supplier": "exact name of the issuer/seller as written in the document",
-  "supplierNif": "tax ID of the issuer only if explicitly shown",
-  "clientName": "exact name of the buyer/client only if explicitly shown",
-  "clientNif": "tax ID of the buyer only if explicitly shown",
-  "invoiceRef": "invoice or document number exactly as written",
-  "description": "brief description based only on what the document says",
-  "subtotal": numeric amount before taxes (use . as decimal separator, convert currency if needed to EUR),
-  "vatRate": VAT percentage as number (0, 4, 10 or 21) only if VAT is shown,
-  "category": one of: SERVICIOS, SOFTWARE, MARKETING, OFICINA, TRANSPORTE, FORMACION, OTROS
+  "documentType": "GASTO" | "FACTURA_VENTA" | "ALBARAN" | "PROVEEDOR" | "OTRO",
+  "date": "YYYY-MM-DD",
+  "supplier": "nombre exacto del emisor/vendedor",
+  "supplierNif": "NIF/CIF/VAT del emisor",
+  "clientName": "nombre del cliente/comprador",
+  "clientNif": "NIF del cliente",
+  "invoiceRef": "número de factura exacto",
+  "description": "descripción breve del servicio o producto",
+  "subtotal": importe numérico sin impuestos,
+  "vatRate": porcentaje IVA/VAT como número (0, 4, 10 o 21),
+  "category": "SERVICIOS" | "SOFTWARE" | "MARKETING" | "OFICINA" | "TRANSPORTE" | "FORMACION" | "OTROS"
 }
 
-Rules:
-- documentType GASTO = expense receipt or supplier invoice (company pays)
-- documentType FACTURA_VENTA = invoice issued to a client (company receives payment)
-- documentType ALBARAN = delivery note
-- documentType PROVEEDOR = supplier info/catalog
-- OMIT any field you cannot read clearly from the document — do NOT invent values
-- If the document is in English or another language, still extract the data correctly
-- For amounts in USD or other currencies, convert to EUR approximately or use the numeric value as-is`;
+- GASTO: recibo, ticket o factura de proveedor (la empresa paga)
+- FACTURA_VENTA: factura emitida a un cliente (la empresa cobra)
+- ALBARAN: albarán o nota de entrega
+- Si el documento está en inglés u otro idioma, extrae igualmente los datos
+- Omite los campos que no puedas leer con certeza`;
 
     const mistralKey = this.config.get<string>("MISTRAL_API_KEY");
 
@@ -510,6 +507,57 @@ Rules:
       }
     }
 
+    // Claude — primario para imágenes y PDFs (soporta ambos nativamente)
+    if (aiProvider === "none" && claudeKey && (isImage || isPdf)) {
+      try {
+        console.log("[analyzeExpense] Trying Claude...");
+        const mediaType = isPdf ? "application/pdf" : (file.mimetype as "image/jpeg" | "image/png" | "image/webp" | "image/gif");
+        const base64 = file.buffer.toString("base64");
+        const claudeRes = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: {
+            "x-api-key": claudeKey,
+            "anthropic-version": "2023-06-01",
+            "anthropic-beta": "pdfs-2024-09-25",
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "claude-haiku-4-5-20251001",
+            max_tokens: 1024,
+            messages: [{
+              role: "user",
+              content: [
+                { type: isPdf ? "document" : "image", source: { type: "base64", media_type: mediaType, data: base64 } },
+                { type: "text", text: EXTRACTION_PROMPT },
+              ],
+            }],
+          }),
+        });
+
+        if (claudeRes.ok) {
+          const claudeData = await claudeRes.json() as any;
+          const text = claudeData.content?.[0]?.text ?? "";
+          console.log("[analyzeExpense] Claude raw:", text.substring(0, 400));
+          const jsonMatch = text.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            const parsed = JSON.parse(jsonMatch[0]);
+            documentType = parsed.documentType ?? "GASTO";
+            delete parsed.documentType;
+            extracted = parsed;
+            aiProvider = "claude";
+            console.log("[analyzeExpense] Claude success, type:", documentType, "fields:", Object.keys(extracted));
+          } else {
+            console.warn("[analyzeExpense] Claude: no JSON in response:", text.substring(0, 200));
+          }
+        } else {
+          const errText = await claudeRes.text();
+          console.warn(`[analyzeExpense] Claude HTTP ${claudeRes.status}:`, errText.substring(0, 300));
+        }
+      } catch (e) {
+        console.warn("[analyzeExpense] Claude exception:", e);
+      }
+    }
+
     // Mistral Pixtral — solo imágenes (no soporta PDFs)
     if (aiProvider === "none" && mistralKey && isImage) {
       try {
@@ -561,51 +609,7 @@ Rules:
       }
     }
 
-    // Claude — PDFs e imágenes como fallback final (soporta PDF nativo)
-    if (aiProvider === "none" && claudeKey && (isImage || isPdf)) {
-      try {
-        const mediaType = isPdf ? "application/pdf" : (file.mimetype as "image/jpeg" | "image/png" | "image/webp" | "image/gif");
-        const base64 = file.buffer.toString("base64");
-        const claudeRes = await fetch("https://api.anthropic.com/v1/messages", {
-          method: "POST",
-          headers: {
-            "x-api-key": claudeKey,
-            "anthropic-version": "2023-06-01",
-            "anthropic-beta": "pdfs-2024-09-25",
-            "content-type": "application/json",
-          },
-          body: JSON.stringify({
-            model: "claude-haiku-4-5-20251001",
-            max_tokens: 600,
-            messages: [{
-              role: "user",
-              content: [
-                { type: isPdf ? "document" : "image", source: { type: "base64", media_type: mediaType, data: base64 } },
-                { type: "text", text: EXTRACTION_PROMPT },
-              ],
-            }],
-          }),
-        });
-
-        if (claudeRes.ok) {
-          const claudeData = await claudeRes.json() as any;
-          const text = claudeData.content?.[0]?.text ?? "";
-          const jsonMatch = text.match(/\{[\s\S]*\}/);
-          if (jsonMatch) {
-            const parsed = JSON.parse(jsonMatch[0]);
-            documentType = parsed.documentType ?? "GASTO";
-            delete parsed.documentType;
-            extracted = parsed;
-            aiProvider = "claude";
-          }
-        } else {
-          console.warn("[analyzeExpense] Claude error:", await claudeRes.text());
-        }
-      } catch (e) {
-        console.warn("[analyzeExpense] Claude exception:", e);
-      }
-    }
-
+    console.log(`[analyzeExpense] Final provider: ${aiProvider}, fields: ${Object.keys(extracted).join(",")}`);
     return { attachmentUrl, documentType, aiProvider, extracted };
   }
 
