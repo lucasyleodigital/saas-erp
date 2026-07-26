@@ -451,11 +451,17 @@ documentType debe ser:
 - OTRO: cualquier otro documento
 Omite los campos que no puedas leer.`;
 
-    // NVIDIA NIM para imágenes (gratis, rápido)
+    const mistralKey = this.config.get<string>("MISTRAL_API_KEY");
+
+    console.log(`[analyzeExpense] file=${file.originalname} mime=${file.mimetype} size=${file.size} isImage=${isImage} isPdf=${isPdf}`);
+    console.log(`[analyzeExpense] keys: nvidia=${!!nvidiaKey} mistral=${!!mistralKey} claude=${!!claudeKey}`);
+
+    // NVIDIA NIM para imágenes
     if (nvidiaKey && isImage) {
       try {
         const base64 = file.buffer.toString("base64");
         const mimeType = file.mimetype;
+        console.log("[analyzeExpense] Trying NVIDIA NIM...");
         const nimRes = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
           method: "POST",
           headers: {
@@ -471,7 +477,7 @@ Omite los campos que no puedas leer.`;
                 { type: "text", text: EXTRACTION_PROMPT },
               ],
             }],
-            max_tokens: 600,
+            max_tokens: 800,
             temperature: 0.1,
           }),
         });
@@ -479,6 +485,7 @@ Omite los campos que no puedas leer.`;
         if (nimRes.ok) {
           const nimData = await nimRes.json() as any;
           const text = nimData.choices?.[0]?.message?.content ?? "";
+          console.log("[analyzeExpense] NVIDIA raw response:", text.substring(0, 300));
           const jsonMatch = text.match(/\{[\s\S]*\}/);
           if (jsonMatch) {
             const parsed = JSON.parse(jsonMatch[0]);
@@ -486,16 +493,70 @@ Omite los campos que no puedas leer.`;
             delete parsed.documentType;
             extracted = parsed;
             aiProvider = "nvidia-nim";
+            console.log("[analyzeExpense] NVIDIA success, type:", documentType);
+          } else {
+            console.warn("[analyzeExpense] NVIDIA: no JSON found in response:", text.substring(0, 200));
           }
         } else {
-          console.warn("[analyzeExpense] NVIDIA NIM error:", await nimRes.text());
+          const errText = await nimRes.text();
+          console.warn(`[analyzeExpense] NVIDIA NIM HTTP ${nimRes.status}:`, errText.substring(0, 300));
         }
       } catch (e) {
         console.warn("[analyzeExpense] NVIDIA NIM exception:", e);
       }
     }
 
-    // Claude como fallback (PDFs o si NVIDIA falla/no está configurado)
+    // Mistral (API cloud global, gratis, soporta imagen + PDF)
+    if (aiProvider === "none" && mistralKey && (isImage || isPdf)) {
+      try {
+        console.log("[analyzeExpense] Trying Mistral...");
+        const base64 = file.buffer.toString("base64");
+        const mimeType = file.mimetype;
+        const isImageFile = file.mimetype.startsWith("image/");
+        const mistralRes = await fetch("https://api.mistral.ai/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${mistralKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "pixtral-12b-2409",
+            messages: [{
+              role: "user",
+              content: isImageFile
+                ? [
+                    { type: "image_url", image_url: `data:${mimeType};base64,${base64}` },
+                    { type: "text", text: EXTRACTION_PROMPT },
+                  ]
+                : [{ type: "text", text: EXTRACTION_PROMPT }],
+            }],
+            max_tokens: 800,
+            temperature: 0.1,
+          }),
+        });
+
+        if (mistralRes.ok) {
+          const mistralData = await mistralRes.json() as any;
+          const text = mistralData.choices?.[0]?.message?.content ?? "";
+          console.log("[analyzeExpense] Mistral raw:", text.substring(0, 300));
+          const jsonMatch = text.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            const parsed = JSON.parse(jsonMatch[0]);
+            documentType = parsed.documentType ?? "GASTO";
+            delete parsed.documentType;
+            extracted = parsed;
+            aiProvider = "mistral";
+            console.log("[analyzeExpense] Mistral success, type:", documentType);
+          }
+        } else {
+          console.warn(`[analyzeExpense] Mistral HTTP ${mistralRes.status}:`, await mistralRes.text());
+        }
+      } catch (e) {
+        console.warn("[analyzeExpense] Mistral exception:", e);
+      }
+    }
+
+    // Claude como fallback (PDFs o si los anteriores fallan)
     if (aiProvider === "none" && claudeKey && (isImage || isPdf)) {
       try {
         const mediaType = isPdf ? "application/pdf" : (file.mimetype as "image/jpeg" | "image/png" | "image/webp" | "image/gif");
