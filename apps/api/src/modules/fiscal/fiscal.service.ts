@@ -442,7 +442,7 @@ IMPORTANTE: Solo incluye campos que estén claramente visibles en el documento. 
   "invoiceRef": "número de factura exacto",
   "description": "descripción breve del servicio o producto",
   "subtotal": importe numérico sin impuestos,
-  "vatRate": porcentaje IVA/VAT como número (0, 4, 10 o 21),
+  "vatRate": porcentaje IVA/VAT como número (0, 4, 10 o 21) — si no aparece IVA/VAT explícito en el documento pon 0,
   "category": "SERVICIOS" | "SOFTWARE" | "MARKETING" | "OFICINA" | "TRANSPORTE" | "FORMACION" | "OTROS"
 }
 

@@ -229,7 +229,7 @@ function AddExpenseDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
       ...(ex.supplierNif && { supplierNif: ex.supplierNif }),
       ...(ex.invoiceRef  && { invoiceRef:  ex.invoiceRef }),
       ...(ex.subtotal    && { subtotal:    String(ex.subtotal) }),
-      ...(ex.vatRate     !== undefined && { vatRate: String(ex.vatRate) }),
+      vatRate: ex.vatRate !== undefined ? String(ex.vatRate) : "0",
       ...(ex.category    && { category:   ex.category }),
       ...(result.attachmentUrl && { attachmentUrl: result.attachmentUrl }),
     }));
