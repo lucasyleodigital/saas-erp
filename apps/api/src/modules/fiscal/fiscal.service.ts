@@ -458,14 +458,21 @@ IMPORTANTE: Solo incluye campos que estén claramente visibles en el documento. 
     console.log(`[analyzeExpense] file=${file.originalname} mime=${file.mimetype} size=${file.size}`);
     console.log(`[analyzeExpense] keys: gemini=${!!geminiKey} claude=${!!claudeKey} mistral=${!!mistralKey} nvidia=${!!nvidiaKey}`);
 
-    // Gemini Flash — primario (gratis, imagen + PDF, sin restricción geográfica)
+    // Gemini — primario (gratis, imagen + PDF, sin restricción geográfica)
     if (aiProvider === "none" && geminiKey && (isImage || isPdf)) {
-      try {
-        console.log("[analyzeExpense] Trying Gemini...");
-        const base64 = file.buffer.toString("base64");
-        const geminiRes = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiKey}`,
-          {
+      const GEMINI_MODELS = [
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+        "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent",
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent",
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent",
+      ];
+      const base64 = file.buffer.toString("base64");
+      for (const endpoint of GEMINI_MODELS) {
+        if (aiProvider !== "none") break;
+        try {
+          console.log("[analyzeExpense] Trying Gemini:", endpoint.split("/models/")[1]);
+          const geminiRes = await fetch(`${endpoint}?key=${geminiKey}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -475,30 +482,29 @@ IMPORTANTE: Solo incluye campos que estén claramente visibles en el documento. 
               ]}],
               generationConfig: { temperature: 0.1, maxOutputTokens: 1024 },
             }),
-          },
-        );
-        if (geminiRes.ok) {
-          const geminiData = await geminiRes.json() as any;
-          const text = geminiData.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
-          console.log("[analyzeExpense] Gemini raw:", text.substring(0, 400));
-          const jsonMatch = text.match(/\{[\s\S]*\}/);
-          if (jsonMatch) {
-            const parsed = JSON.parse(jsonMatch[0]);
-            if (parsed.supplier || parsed.invoiceRef || parsed.subtotal || parsed.date) {
-              documentType = parsed.documentType ?? "GASTO";
-              delete parsed.documentType;
-              extracted = parsed;
-              aiProvider = "gemini";
-              console.log("[analyzeExpense] Gemini success:", documentType, Object.keys(extracted));
+          });
+          if (geminiRes.ok) {
+            const geminiData = await geminiRes.json() as any;
+            const text = geminiData.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+            console.log("[analyzeExpense] Gemini raw:", text.substring(0, 400));
+            const jsonMatch = text.match(/\{[\s\S]*\}/);
+            if (jsonMatch) {
+              const parsed = JSON.parse(jsonMatch[0]);
+              if (parsed.supplier || parsed.invoiceRef || parsed.subtotal || parsed.date) {
+                documentType = parsed.documentType ?? "GASTO";
+                delete parsed.documentType;
+                extracted = parsed;
+                aiProvider = "gemini";
+                console.log("[analyzeExpense] Gemini success:", documentType, Object.keys(extracted));
+              }
             }
           } else {
-            console.warn("[analyzeExpense] Gemini no JSON:", text.substring(0, 200));
+            const errText = await geminiRes.text();
+            console.warn(`[analyzeExpense] Gemini ${endpoint.split("/models/")[1]} HTTP ${geminiRes.status}:`, errText.substring(0, 150));
           }
-        } else {
-          console.warn(`[analyzeExpense] Gemini HTTP ${geminiRes.status}:`, await geminiRes.text());
+        } catch (e) {
+          console.warn("[analyzeExpense] Gemini exception:", e);
         }
-      } catch (e) {
-        console.warn("[analyzeExpense] Gemini exception:", e);
       }
     }
 
