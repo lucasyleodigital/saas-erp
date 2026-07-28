@@ -14,7 +14,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Loader2, X, Plus, Users, MapPin, Calendar, Clock, FileText, AlertCircle } from "lucide-react";
 import { useCreateMeeting, useUpdateMeeting, type Meeting } from "@/hooks/use-meetings";
-import { cn } from "@/lib/utils";
 
 interface Props {
   open: boolean;
@@ -23,21 +22,45 @@ interface Props {
   defaultDate?: string;
 }
 
-const STATUS_OPTIONS = [
-  { value: "SCHEDULED",   label: "Programada",  color: "bg-blue-100 text-blue-700" },
-  { value: "IN_PROGRESS", label: "En curso",     color: "bg-yellow-100 text-yellow-700" },
-  { value: "COMPLETED",   label: "Completada",   color: "bg-green-100 text-green-700" },
-  { value: "CANCELLED",   label: "Cancelada",    color: "bg-red-100 text-red-700" },
+type MeetingStatus = Meeting["status"];
+
+interface FormState {
+  title: string;
+  date: string;
+  endDate: string;
+  location: string;
+  participants: string[];
+  agenda: string;
+  notes: string;
+  diagnosis: string;
+  status: MeetingStatus;
+}
+
+const STATUS_OPTIONS: { value: MeetingStatus; label: string }[] = [
+  { value: "SCHEDULED",   label: "Programada" },
+  { value: "IN_PROGRESS", label: "En curso" },
+  { value: "COMPLETED",   label: "Completada" },
+  { value: "CANCELLED",   label: "Cancelada" },
 ];
+
+const DEFAULT_FORM: FormState = {
+  title: "",
+  date: new Date().toISOString().slice(0, 10),
+  endDate: "",
+  location: "",
+  participants: [],
+  agenda: "",
+  notes: "",
+  diagnosis: "",
+  status: "SCHEDULED",
+};
 
 function ParticipantInput({ value, onChange }: { value: string[]; onChange: (v: string[]) => void }) {
   const [input, setInput] = useState("");
 
   function add() {
     const trimmed = input.trim();
-    if (trimmed && !value.includes(trimmed)) {
-      onChange([...value, trimmed]);
-    }
+    if (trimmed && !value.includes(trimmed)) onChange([...value, trimmed]);
     setInput("");
   }
 
@@ -76,24 +99,14 @@ export function MeetingDialog({ open, onOpenChange, meeting, defaultDate }: Prop
   const update = useUpdateMeeting();
   const isEdit = !!meeting;
 
-  const [form, setForm] = useState({
-    title: "",
-    date: defaultDate ?? new Date().toISOString().split("T")[0],
-    endDate: "",
-    location: "",
-    participants: [] as string[],
-    agenda: "",
-    notes: "",
-    diagnosis: "",
-    status: "SCHEDULED",
-  });
+  const [form, setForm] = useState<FormState>({ ...DEFAULT_FORM, date: defaultDate ?? DEFAULT_FORM.date });
 
   useEffect(() => {
     if (meeting) {
       setForm({
         title: meeting.title,
-        date: meeting.date.split("T")[0],
-        endDate: meeting.endDate ? ((meeting.endDate as string).split("T")[0] ?? "") : "",
+        date: meeting.date.slice(0, 10),
+        endDate: meeting.endDate ? (meeting.endDate as string).slice(0, 10) : "",
         location: meeting.location ?? "",
         participants: meeting.participants ?? [],
         agenda: meeting.agenda ?? "",
@@ -102,11 +115,11 @@ export function MeetingDialog({ open, onOpenChange, meeting, defaultDate }: Prop
         status: meeting.status,
       });
     } else {
-      setForm((f) => ({ ...f, title: "", agenda: "", notes: "", diagnosis: "", location: "", participants: [], status: "SCHEDULED", date: defaultDate ?? f.date }));
+      setForm({ ...DEFAULT_FORM, date: defaultDate ?? DEFAULT_FORM.date });
     }
   }, [meeting, defaultDate, open]);
 
-  function set(field: string, value: any) {
+  function set<K extends keyof FormState>(field: K, value: FormState[K]) {
     setForm((f) => ({ ...f, [field]: value }));
   }
 
@@ -114,9 +127,16 @@ export function MeetingDialog({ open, onOpenChange, meeting, defaultDate }: Prop
     e.preventDefault();
     if (!form.title || !form.date) return;
 
-    const payload = {
-      ...form,
+    const payload: Partial<Meeting> = {
+      title: form.title,
+      date: form.date,
       endDate: form.endDate || undefined,
+      location: form.location || undefined,
+      participants: form.participants,
+      agenda: form.agenda || undefined,
+      notes: form.notes || undefined,
+      diagnosis: form.diagnosis || undefined,
+      status: form.status,
     };
 
     if (isEdit) {
@@ -145,7 +165,7 @@ export function MeetingDialog({ open, onOpenChange, meeting, defaultDate }: Prop
             </div>
             <div className="space-y-1.5">
               <Label>Estado</Label>
-              <Select value={form.status} onValueChange={(v) => set("status", v)}>
+              <Select value={form.status} onValueChange={(v) => set("status", v as MeetingStatus)}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
                   {STATUS_OPTIONS.map((s) => (
@@ -183,23 +203,13 @@ export function MeetingDialog({ open, onOpenChange, meeting, defaultDate }: Prop
           {/* Orden del día */}
           <div className="space-y-1.5">
             <Label className="flex items-center gap-1.5"><FileText className="h-3.5 w-3.5" />Orden del día</Label>
-            <Textarea
-              value={form.agenda}
-              onChange={(e) => set("agenda", e.target.value)}
-              placeholder="Puntos a tratar en la reunión..."
-              rows={3}
-            />
+            <Textarea value={form.agenda} onChange={(e) => set("agenda", e.target.value)} placeholder="Puntos a tratar en la reunión..." rows={3} />
           </div>
 
           {/* Notas / Acta */}
           <div className="space-y-1.5">
             <Label>Notas / Acta de la reunión</Label>
-            <Textarea
-              value={form.notes}
-              onChange={(e) => set("notes", e.target.value)}
-              placeholder="Resumen de lo tratado, acuerdos, próximos pasos..."
-              rows={4}
-            />
+            <Textarea value={form.notes} onChange={(e) => set("notes", e.target.value)} placeholder="Resumen de lo tratado, acuerdos, próximos pasos..." rows={4} />
           </div>
 
           {/* Diagnóstico */}
