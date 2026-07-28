@@ -64,11 +64,38 @@ export async function POST(request: Request) {
   });
 }
 
-// GET for manual trigger from browser (no auth needed, read-only info)
-export async function GET() {
-  return NextResponse.json({
+// GET with ?secret=xxx triggers submission from the browser (no curl needed)
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const secret = searchParams.get("secret");
+
+  if (secret !== process.env.INDEXNOW_SECRET) {
+    return NextResponse.json({
+      info: "IndexNow ready",
+      key: INDEXNOW_KEY,
+      keyFile: `${APP_URL}/${INDEXNOW_KEY}.txt`,
+      urlCount: PUBLIC_URLS.length,
+      usage: "Add ?secret=YOUR_SECRET to trigger submission",
+    });
+  }
+
+  const body = {
+    host: new URL(APP_URL).hostname,
     key: INDEXNOW_KEY,
-    keyFile: `${APP_URL}/${INDEXNOW_KEY}.txt`,
-    urls: PUBLIC_URLS.length,
+    keyLocation: `${APP_URL}/${INDEXNOW_KEY}.txt`,
+    urlList: PUBLIC_URLS,
+  };
+
+  const res = await fetch("https://api.indexnow.org/indexnow", {
+    method: "POST",
+    headers: { "Content-Type": "application/json; charset=utf-8" },
+    body: JSON.stringify(body),
+  });
+
+  return NextResponse.json({
+    submitted: PUBLIC_URLS.length,
+    urls: PUBLIC_URLS,
+    status: res.status,
+    ok: res.status === 200 || res.status === 202,
   });
 }
