@@ -93,7 +93,7 @@ export function MeetingDialog({ open, onOpenChange, meeting, defaultDate }: Prop
       setForm({
         title: meeting.title,
         date: meeting.date.split("T")[0],
-        endDate: meeting.endDate ? meeting.endDate.split("T")[0] : "",
+        endDate: meeting.endDate ? (meeting.endDate as string).split("T")[0] : "",
         location: meeting.location ?? "",
         participants: meeting.participants ?? [],
         agenda: meeting.agenda ?? "",
