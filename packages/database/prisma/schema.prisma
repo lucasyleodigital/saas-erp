@@ -264,6 +264,7 @@ model Company {
   expenses        Expense[]
   fiscalPeriods   FiscalPeriod[]
   calendarEntries CalendarEntry[]
+  meetings        Meeting[]
 
   @@map("companies")
 }
@@ -1459,4 +1460,31 @@ model FiscalPeriod {
 
   @@unique([companyId, year, quarter])
   @@map("fiscal_periods")
+}
+
+// ============================================================
+// MEETINGS / ACTAS
+// ============================================================
+
+model Meeting {
+  id           String   @id @default(uuid())
+  companyId    String
+  createdById  String
+  title        String
+  date         DateTime
+  endDate      DateTime?
+  location     String?
+  participants String[]
+  agenda       String?
+  notes        String?
+  diagnosis    String?
+  status       String   @default("SCHEDULED")
+  sharedWith   String[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  company      Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, date])
+  @@map("meetings")
 }

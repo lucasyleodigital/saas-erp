@@ -41,6 +41,7 @@ import { AssistantModule } from "./modules/assistant/assistant.module";
 import { CurrencyModule } from "./modules/currency/currency.module";
 import { AuditModule } from "./modules/audit/audit.module";
 import { FiscalModule } from "./modules/fiscal/fiscal.module";
+import { MeetingsModule } from "./modules/meetings/meetings.module";
 import { DatabaseModule } from "./database/database.module";
 import { validateEnv } from "./config/env.validation";
 
@@ -94,6 +95,7 @@ import { validateEnv } from "./config/env.validation";
     CurrencyModule,
     AuditModule,
     FiscalModule,
+    MeetingsModule,
   ],
   providers: [
     // Apply rate limiting globally to ALL routes
