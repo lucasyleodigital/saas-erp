@@ -52,6 +52,19 @@ export class DealsService {
     });
   }
 
+  async renamePipeline(companyId: string, id: string, name: string) {
+    const pipeline = await this.prisma.pipeline.findFirst({ where: { id, companyId } });
+    if (!pipeline) throw new NotFoundException("Pipeline no encontrado");
+    return this.prisma.pipeline.update({ where: { id }, data: { name } });
+  }
+
+  async deletePipeline(companyId: string, id: string) {
+    const pipeline = await this.prisma.pipeline.findFirst({ where: { id, companyId } });
+    if (!pipeline) throw new NotFoundException("Pipeline no encontrado");
+    await this.prisma.pipeline.delete({ where: { id } });
+    return { ok: true };
+  }
+
   async createDefaultPipeline(companyId: string) {
     const existing = await this.prisma.pipeline.findFirst({ where: { companyId } });
     if (existing) return existing;

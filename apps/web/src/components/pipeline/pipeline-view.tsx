@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { usePipeline, useMoveDealStage, useCreateDeal, useCreatePipeline, useDeleteDeal } from "@/hooks/use-deals";
+import { usePipeline, useMoveDealStage, useCreateDeal, useCreatePipeline, useDeleteDeal, useRenamePipeline, useDeletePipeline } from "@/hooks/use-deals";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,7 +11,7 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { formatCurrency, getInitials } from "@/lib/utils";
-import { Plus, MoreHorizontal, GitBranch, CheckCircle2, Trash2, FileText } from "lucide-react";
+import { Plus, MoreHorizontal, GitBranch, CheckCircle2, Trash2, FileText, Pencil } from "lucide-react";
 import { motion } from "framer-motion";
 import { DealDialog } from "./deal-dialog";
 import { useTranslations } from "next-intl";
@@ -34,6 +34,8 @@ export function PipelineView() {
   const moveStage = useMoveDealStage();
   const deleteDeal = useDeleteDeal();
   const createPipeline = useCreatePipeline();
+  const renamePipeline = useRenamePipeline();
+  const deletePipeline = useDeletePipeline();
   const [dragging, setDragging] = useState<{ dealId: string; fromStageId: string } | null>(null);
   const [dealDialogOpen, setDealDialogOpen] = useState(false);
   const [pipelineName, setPipelineName] = useState(t("empty.defaultName"));
@@ -111,13 +113,41 @@ export function PipelineView() {
       </div>
 
       {/* Pipeline selector */}
-      {pipelines && pipelines.length > 1 && (
-        <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg w-fit">
+      {pipelines && pipelines.length > 0 && (
+        <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg w-fit flex-wrap">
           {pipelines.map((p: any, i: number) => (
-            <button key={p.id} onClick={() => setActivePipelineIdx(i)}
-              className={`px-3 py-1.5 text-sm rounded-md transition-colors ${activePipelineIdx === i ? "bg-background text-foreground shadow-sm font-medium" : "text-muted-foreground hover:text-foreground"}`}>
-              {p.name}
-            </button>
+            <div key={p.id} className={`flex items-center gap-0.5 rounded-md transition-colors ${activePipelineIdx === i ? "bg-background shadow-sm" : ""}`}>
+              <button onClick={() => setActivePipelineIdx(i)}
+                className={`px-3 py-1.5 text-sm transition-colors ${activePipelineIdx === i ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}>
+                {p.name}
+              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className={`p-1 rounded transition-colors hover:bg-muted text-muted-foreground hover:text-foreground ${activePipelineIdx === i ? "" : "opacity-0 group-hover:opacity-100"}`}>
+                    <MoreHorizontal className="h-3.5 w-3.5" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem onClick={() => {
+                    const name = prompt("Nuevo nombre del pipeline:", p.name);
+                    if (name && name !== p.name) renamePipeline.mutate({ id: p.id, name });
+                  }}>
+                    <Pencil className="h-4 w-4 mr-2" /> Renombrar
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="text-destructive focus:text-destructive"
+                    onClick={() => {
+                      if (confirm(`¿Eliminar el pipeline "${p.name}"? Se eliminarán todos sus deals.`)) {
+                        deletePipeline.mutate(p.id);
+                        setActivePipelineIdx(0);
+                      }
+                    }}
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" /> Eliminar pipeline
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           ))}
         </div>
       )}

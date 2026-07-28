@@ -56,3 +56,28 @@ export function useCreatePipeline() {
     onError: () => toast.error("Error al crear el pipeline"),
   });
 }
+
+export function useRenamePipeline() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, name }: { id: string; name: string }) =>
+      api.put(`/deals/pipeline/${id}`, { name }).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["deals", "pipeline"] });
+      toast.success("Pipeline renombrado");
+    },
+    onError: () => toast.error("Error al renombrar el pipeline"),
+  });
+}
+
+export function useDeletePipeline() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => api.delete(`/deals/pipeline/${id}`).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["deals", "pipeline"] });
+      toast.success("Pipeline eliminado");
+    },
+    onError: () => toast.error("Error al eliminar el pipeline"),
+  });
+}

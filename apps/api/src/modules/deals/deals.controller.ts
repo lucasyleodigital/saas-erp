@@ -30,6 +30,16 @@ export class DealsController {
     return this.dealsService.createPipeline(user.companyId, body.name ?? "Pipeline de ventas");
   }
 
+  @Put("pipeline/:id")
+  renamePipeline(@CurrentUser() user: JwtPayload, @Param("id") id: string, @Body("name") name: string) {
+    return this.dealsService.renamePipeline(user.companyId, id, name);
+  }
+
+  @Delete("pipeline/:id")
+  deletePipeline(@CurrentUser() user: JwtPayload, @Param("id") id: string) {
+    return this.dealsService.deletePipeline(user.companyId, id);
+  }
+
   @Post()
   create(@CurrentUser() user: JwtPayload, @Body() body: CreateDealDto) {
     return this.dealsService.create(user.companyId, body);
