@@ -116,7 +116,7 @@ export function MeetingDialog({ open, onOpenChange, meeting, defaultDate }: Prop
 
     const payload = {
       ...form,
-      endDate: form.endDate || null,
+      endDate: form.endDate || undefined,
     };
 
     if (isEdit) {
