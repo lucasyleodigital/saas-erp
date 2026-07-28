@@ -69,12 +69,14 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const secret = searchParams.get("secret");
 
-  if (secret !== process.env.INDEXNOW_SECRET) {
+  const envSecret = process.env.INDEXNOW_SECRET;
+  if (secret !== envSecret) {
     return NextResponse.json({
       info: "IndexNow ready",
       key: INDEXNOW_KEY,
-      keyFile: `${APP_URL}/${INDEXNOW_KEY}.txt`,
-      urlCount: PUBLIC_URLS.length,
+      envSecretSet: !!envSecret,
+      envSecretLength: envSecret?.length ?? 0,
+      receivedSecretLength: secret?.length ?? 0,
       usage: "Add ?secret=YOUR_SECRET to trigger submission",
     });
   }
