@@ -20,10 +20,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: APP_URL, lastModified: now, changeFrequency: "weekly", priority: 1 },
     ...localizedUrls("", 1, "weekly"),
 
-    // Registro y login
-    ...localizedUrls("/registro", 0.9, "monthly"),
-    ...localizedUrls("/login", 0.5, "yearly"),
-
     // Landing pages SEO
     { url: `${APP_URL}/erp-autonomos-espana`, lastModified: now, changeFrequency: "monthly", priority: 0.95 },
     { url: `${APP_URL}/software-facturacion-pymes`, lastModified: now, changeFrequency: "monthly", priority: 0.95 },
