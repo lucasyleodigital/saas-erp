@@ -27,7 +27,7 @@ import { useTranslations } from "next-intl";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-type AutoEventType = "invoice_due" | "invoice_issued" | "quote_expiry";
+type AutoEventType = "invoice_due" | "invoice_issued" | "quote_expiry" | "MEETING";
 type CustomEventType = "APPOINTMENT" | "TASK" | "REMINDER";
 type EventType = AutoEventType | CustomEventType;
 
@@ -48,6 +48,7 @@ const AUTO_STYLE: Record<AutoEventType, { dot: string; bg: string; label: string
   invoice_due:    { dot: "bg-amber-500",  bg: "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800",  label: "Vence factura" },
   invoice_issued: { dot: "bg-teal-500",   bg: "bg-teal-50 dark:bg-teal-950/30 border-teal-200 dark:border-teal-800",      label: "Factura emitida" },
   quote_expiry:   { dot: "bg-orange-500", bg: "bg-orange-50 dark:bg-orange-950/30 border-orange-200 dark:border-orange-800", label: "Caduca pres." },
+  MEETING:        { dot: "bg-teal-600",   bg: "bg-teal-50 dark:bg-teal-950/30 border-teal-300 dark:border-teal-700",       label: "Reunión" },
 };
 
 const CUSTOM_STYLE: Record<CustomEventType, { dot: string; bg: string; label: string; icon: React.ReactNode }> = {

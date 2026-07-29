@@ -25,7 +25,7 @@ export class CalendarController {
     const end = to ? new Date(to + "T23:59:59") : new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0, 23, 59, 59);
     const companyId = u.companyId;
 
-    const [invoicesDue, invoicesIssued, quotes, entries] = await Promise.all([
+    const [invoicesDue, invoicesIssued, quotes, entries, meetings] = await Promise.all([
       this.prisma.invoice.findMany({
         where: { companyId, dueDate: { gte: start, lte: end }, status: { notIn: ["CANCELLED", "DRAFT"] } },
         select: { id: true, number: true, total: true, dueDate: true, status: true, client: { select: { name: true } } },
@@ -40,6 +40,11 @@ export class CalendarController {
       }),
       this.prisma.calendarEntry.findMany({
         where: { companyId, date: { gte: start, lte: end } },
+        orderBy: { date: "asc" },
+      }),
+      this.prisma.meeting.findMany({
+        where: { companyId, date: { gte: start, lte: end } },
+        select: { id: true, title: true, date: true, location: true, status: true, participants: true },
         orderBy: { date: "asc" },
       }),
     ]);
@@ -77,6 +82,19 @@ export class CalendarController {
         status: q.status,
         color: "#d97706",
         readonly: true,
+      })),
+      ...meetings.map((m) => ({
+        id: `meeting-${m.id}`,
+        type: "MEETING" as const,
+        title: m.title,
+        subtitle: m.location ?? (m.participants as string[]).join(", "),
+        date: m.date.toISOString().slice(0, 10),
+        amount: undefined,
+        status: m.status,
+        color: "#0d9488",
+        done: m.status === "COMPLETED" || m.status === "CANCELLED",
+        readonly: true,
+        meetingId: m.id,
       })),
       ...entries.map((e) => ({
         id: e.id,

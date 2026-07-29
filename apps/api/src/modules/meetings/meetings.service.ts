@@ -68,11 +68,15 @@ export class MeetingsService {
 
     const emailParticipants: string[] = (meeting.participants as string[]).filter((p) => EMAIL_RE.test(p));
     if (emailParticipants.length > 0) {
-      const dateStr = new Date(meeting.date).toLocaleDateString("es-ES", {
-        weekday: "long", day: "numeric", month: "long", year: "numeric",
-      });
-      const html = this.buildInviteHtml(meeting.title, dateStr, meeting.location as string | null, meeting.agenda as string | null);
-      await Promise.all(emailParticipants.map((to) => this.email.sendGeneric(to, `Invitación: ${meeting.title}`, html)));
+      try {
+        const dateStr = new Date(meeting.date).toLocaleDateString("es-ES", {
+          weekday: "long", day: "numeric", month: "long", year: "numeric",
+        });
+        const html = this.buildInviteHtml(meeting.title, dateStr, meeting.location as string | null, meeting.agenda as string | null);
+        await Promise.all(emailParticipants.map((to) => this.email.sendGeneric(to, `Invitación: ${meeting.title}`, html)));
+      } catch (err) {
+        console.error("[MEETINGS] Error sending invitation emails:", err);
+      }
     }
 
     return meeting;
