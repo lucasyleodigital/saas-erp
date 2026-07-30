@@ -11,8 +11,9 @@ import {
   DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ProductDialog } from "./product-dialog";
+import { ImportProductsDialog } from "./import-products-dialog";
 import { formatCurrency } from "@/lib/utils";
-import { Search, Plus, Package, Settings, Boxes, Tag, MoreHorizontal, Edit, Trash2, Download, Filter, X } from "lucide-react";
+import { Search, Plus, Package, Settings, Boxes, Tag, MoreHorizontal, Edit, Trash2, Download, Filter, X, Upload } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useExport } from "@/hooks/use-export";
 import { motion } from "framer-motion";
@@ -34,6 +35,7 @@ export function ProductsView() {
   };
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [typeFilter, setTypeFilter] = useState("");
@@ -67,6 +69,10 @@ export function ProductsView() {
           <Button variant="outline" size="sm" onClick={exportProducts} disabled={exporting} className="gap-2">
             <Download className="h-4 w-4" />
             {exporting ? tCommon("exporting") : tCommon("export")}
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => setImportOpen(true)} className="gap-2">
+            <Upload className="h-4 w-4" />
+            Importar CSV
           </Button>
           <Button
             onClick={() => { setEditingProduct(null); setDialogOpen(true); }}
@@ -231,6 +237,7 @@ export function ProductsView() {
         onOpenChange={setDialogOpen}
         product={editingProduct}
       />
+      <ImportProductsDialog open={importOpen} onOpenChange={setImportOpen} />
     </div>
   );
 }

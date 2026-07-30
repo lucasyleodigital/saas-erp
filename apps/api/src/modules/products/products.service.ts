@@ -58,6 +58,28 @@ export class ProductsService {
     return this.prisma.product.update({ where: { id }, data });
   }
 
+  async importBulk(companyId: string, products: any[]) {
+    const current = await this.plans.countProducts(companyId);
+    await this.plans.checkLimit(companyId, "maxProducts", current + products.length - 1);
+    const created = await this.prisma.$transaction(
+      products.map((p) =>
+        this.prisma.product.create({
+          data: {
+            companyId,
+            name: p.name,
+            description: p.description ?? null,
+            sku: p.sku ?? null,
+            type: p.type ?? "SERVICE",
+            price: Number(p.price) || 0,
+            cost: p.cost ? Number(p.cost) : null,
+            taxId: p.taxId ?? null,
+          },
+        }),
+      ),
+    );
+    return { imported: created.length };
+  }
+
   async remove(companyId: string, id: string) {
     await this.findOne(companyId, id);
     return this.prisma.product.update({ where: { id }, data: { isActive: false } });

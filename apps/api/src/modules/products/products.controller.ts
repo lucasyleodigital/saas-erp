@@ -33,6 +33,11 @@ export class ProductsController {
     return this.productsService.update(user.companyId, id, body);
   }
 
+  @Post("import")
+  importBulk(@CurrentUser() user: JwtPayload, @Body("products") products: CreateProductDto[]) {
+    return this.productsService.importBulk(user.companyId, products);
+  }
+
   @Delete(":id")
   remove(@CurrentUser() user: JwtPayload, @Param("id") id: string) {
     return this.productsService.remove(user.companyId, id);

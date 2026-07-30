@@ -40,6 +40,19 @@ export function useUpdateProduct(id: string) {
   });
 }
 
+export function useImportProducts() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (products: Record<string, unknown>[]) =>
+      api.post("/products/import", { products }).then((r) => r.data),
+    onSuccess: (data) => {
+      qc.invalidateQueries({ queryKey: productKeys.all });
+      toast.success(`${data.imported} productos importados correctamente`);
+    },
+    onError: () => toast.error("Error al importar los productos"),
+  });
+}
+
 export function useDeleteProduct() {
   const qc = useQueryClient();
   return useMutation({
