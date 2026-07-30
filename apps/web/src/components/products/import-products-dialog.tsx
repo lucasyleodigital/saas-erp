@@ -29,7 +29,7 @@ function parseCSV(text: string): ParsedProduct[] {
   const lines = text.trim().split(/\r?\n/).filter(Boolean);
   if (lines.length < 2) return [];
 
-  const header = lines[0].split(/[,;|\t]/).map((h) => h.trim().toLowerCase().replace(/['"]/g, ""));
+  const header = (lines[0] ?? "").split(/[,;|\t]/).map((h) => h.trim().toLowerCase().replace(/['"]/g, ""));
   const nameIdx = header.findIndex((h) => ["nombre", "name", "producto", "servicio", "descripcion corta"].includes(h));
   const priceIdx = header.findIndex((h) => ["precio", "price", "pvp", "importe", "precio sin iva", "precio base"].includes(h));
   const typeIdx = header.findIndex((h) => ["tipo", "type", "categoria", "categoría"].includes(h));
