@@ -233,7 +233,7 @@ export function ImportProductsDialog({ open, onOpenChange }: Props) {
                       <td className="px-3 py-2 text-xs text-muted-foreground hidden sm:table-cell">{p.sku ?? "—"}</td>
                       <td className="px-3 py-2 text-center">
                         {p.error
-                          ? <AlertCircle className="h-3.5 w-3.5 text-red-500 mx-auto" title={p.error} />
+                          ? <span title={p.error}><AlertCircle className="h-3.5 w-3.5 text-red-500 mx-auto" /></span>
                           : <CheckCircle2 className="h-3.5 w-3.5 text-green-500 mx-auto" />
                         }
                       </td>
