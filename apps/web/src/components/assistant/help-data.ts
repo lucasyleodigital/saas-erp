@@ -105,6 +105,10 @@ export const HELP_CATEGORIES: HelpCategory[] = [
         q: "Como muevo una oportunidad de etapa?",
         a: "Arrastra la tarjeta de la oportunidad y sueltala en la columna de la nueva etapa. El cambio se guarda automaticamente.",
       },
+      {
+        q: "Puedo renombrar o eliminar las columnas del pipeline?",
+        a: "Si. En la cabecera de cada columna tienes un menu de 3 puntos (...):\n\n- Renombrar: cambia el nombre de la columna. Las oportunidades que ya estan en esa columna mantienen su etapa actualizada automaticamente.\n- Eliminar: elimina la columna. Si hay oportunidades dentro, se te pedira confirmacion antes de borrar.\n\nPuedes crear columnas nuevas con el boton '+' al final del tablero.",
+      },
     ],
   },
   {
@@ -207,6 +211,10 @@ export const HELP_CATEGORIES: HelpCategory[] = [
       {
         q: "Cual es la diferencia entre producto y servicio?",
         a: "Al crear un producto puedes seleccionar el tipo:\n- Producto: bien fisico con stock (se gestiona en Inventario).\n- Servicio: no tiene stock (horas de consultoria, diseno, etc.).",
+      },
+      {
+        q: "Puedo importar productos desde un archivo CSV?",
+        a: "Si. En Facturacion > Productos pulsa el boton 'Importar CSV' (junto al boton Exportar).\n\n1. Arrastra tu archivo CSV o haz clic para seleccionarlo.\n2. El sistema detecta automaticamente las columnas: nombre, precio, tipo, descripcion y SKU. El separador puede ser coma (,), punto y coma (;), tabulador o barra (|).\n3. Veras una tabla previa con todos los productos validos e invalidos.\n4. Pulsa 'Importar' para anadir todos los validos de golpe.\n\nSi no tienes CSV, descarga el ejemplo desde el mismo dialogo. Las columnas obligatorias son nombre y precio; el tipo es 'servicio' por defecto si no se especifica.",
       },
     ],
   },
@@ -386,6 +394,33 @@ export const HELP_CATEGORIES: HelpCategory[] = [
       {
         q: "Que es la auditoria?",
         a: "El registro de auditoria muestra quien hizo que y cuando en tu empresa. Registra creaciones, modificaciones y eliminaciones de facturas, clientes y otros datos.\n\nUtil para:\n- Saber quien modifico una factura\n- Demostrar a Hacienda cuando se emitio un documento\n- Controlar la actividad del equipo",
+      },
+    ],
+  },
+  {
+    id: "reuniones",
+    label: "Reuniones y actas",
+    icon: "CalendarDays",
+    questions: [
+      {
+        q: "Donde gestiono las reuniones?",
+        a: "Ve a CRM > Reuniones en el menu lateral. Ahi puedes ver todas las reuniones programadas, crear nuevas y acceder a las actas.",
+      },
+      {
+        q: "Como programo una reunion?",
+        a: "1. Ve a CRM > Reuniones.\n2. Pulsa '+ Nueva reunion'.\n3. Rellena titulo, fecha y hora, duracion, ubicacion (sala, videoconferencia, etc.) y orden del dia.\n4. Anade los participantes: puedes incluir emails de cualquier persona aunque no tengan cuenta en YouWhole.\n5. Pulsa 'Crear reunion'.\n\nAl crear la reunion, los participantes reciben automaticamente un email de invitacion con todos los detalles: fecha, hora, ubicacion y orden del dia.",
+      },
+      {
+        q: "Como se notifica a los participantes?",
+        a: "Al crear una reunion, YouWhole envia automaticamente un email de invitacion a todos los participantes que tengan una direccion de email valida. El email incluye:\n- Titulo y fecha/hora de la reunion\n- Ubicacion\n- Orden del dia\n\nNo necesitas hacer nada extra: la notificacion se envia sola al guardar la reunion.",
+      },
+      {
+        q: "Como aparecen las reuniones en el calendario?",
+        a: "Las reuniones programadas aparecen automaticamente en el calendario (Facturacion > Calendario) marcadas en color teal con la etiqueta 'Reunion'. Tanto las reuniones nuevas como las ya existentes son visibles en el calendario junto a las facturas vencidas y eventos de cobro.",
+      },
+      {
+        q: "Como creo el acta de una reunion?",
+        a: "1. Ve a CRM > Reuniones.\n2. Haz clic en la reunion.\n3. En el detalle, encontraras la seccion 'Acta'.\n4. Escribe los puntos tratados, decisiones y acuerdos.\n5. Guarda el acta.\n\nEl acta queda vinculada a la reunion y puedes consultarla en cualquier momento.",
       },
     ],
   },

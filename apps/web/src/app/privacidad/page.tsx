@@ -16,16 +16,16 @@ export default function PrivacidadPage() {
 
       <main className="flex-1 container mx-auto px-4 py-12 max-w-3xl">
         <h1 className="text-3xl font-bold mb-2">Política de Privacidad</h1>
-        <p className="text-sm text-muted-foreground mb-10">Última actualización: junio de 2026</p>
+        <p className="text-sm text-muted-foreground mb-10">Última actualización: agosto de 2026</p>
 
         <div className="space-y-8 text-sm leading-relaxed text-muted-foreground">
 
           <section>
             <h2 className="text-base font-semibold text-foreground mb-3">1. Responsable del tratamiento</h2>
             <p>
-              <strong className="text-foreground">[NOMBRE_EMPRESA]</strong> (en adelante, «YouWhole» o «Responsable»)<br />
-              CIF: <strong className="text-foreground">[PENDIENTE — CIF]</strong><br />
-              Domicilio fiscal: <strong className="text-foreground">[PENDIENTE — DIRECCIÓN FISCAL]</strong><br />
+              <strong className="text-foreground">Alex Lucas Torrubia</strong> (en adelante, «YouWhole» o «Responsable»)<br />
+              CIF: <strong className="text-foreground">41003566V</strong><br />
+              Domicilio fiscal: <strong className="text-foreground">Carrer del Progrés, 27, buzón 28, 08850 Gavà (Barcelona)</strong><br />
               Email de contacto: <strong className="text-foreground">legal@youwhole.com</strong>
             </p>
           </section>

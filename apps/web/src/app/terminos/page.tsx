@@ -16,7 +16,7 @@ export default function TerminosPage() {
 
       <main className="flex-1 container mx-auto px-4 py-12 max-w-3xl">
         <h1 className="text-3xl font-bold mb-2">Términos y Condiciones de Uso</h1>
-        <p className="text-sm text-muted-foreground mb-10">Última actualización: junio de 2026</p>
+        <p className="text-sm text-muted-foreground mb-10">Última actualización: agosto de 2026</p>
 
         <div className="space-y-8 text-sm leading-relaxed text-muted-foreground">
 
@@ -24,8 +24,8 @@ export default function TerminosPage() {
             <h2 className="text-base font-semibold text-foreground mb-3">1. Partes del contrato</h2>
             <p>
               Estos Términos y Condiciones regulan la relación entre{" "}
-              <strong className="text-foreground">Lucas y Leo Digital S.L.</strong> (CIF: B67890123, domicilio: Barcelona, Espana),
-              titular de la plataforma YouWhole (en adelante, «Prestador»), y el usuario que se registra y hace uso de los servicios
+              <strong className="text-foreground">Alex Lucas Torrubia</strong> (NIF: 41003566V, domicilio: Carrer del Progrés, 27, buzón 28, 08850 Gavà, Barcelona),
+              titular de la plataforma YouWhole bajo el nombre comercial «Lucas y Leo Digital» (en adelante, «Prestador»), y el usuario que se registra y hace uso de los servicios
               (en adelante, «Cliente»).
             </p>
             <p className="mt-2">

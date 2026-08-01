@@ -16,7 +16,7 @@ export default function AvisoLegalPage() {
 
       <main className="flex-1 container mx-auto px-4 py-12 max-w-3xl">
         <h1 className="text-3xl font-bold mb-2">Aviso Legal</h1>
-        <p className="text-sm text-muted-foreground mb-10">Última actualización: junio de 2026</p>
+        <p className="text-sm text-muted-foreground mb-10">Última actualización: agosto de 2026</p>
 
         <div className="space-y-8 text-sm leading-relaxed text-muted-foreground">
 
@@ -26,12 +26,12 @@ export default function AvisoLegalPage() {
               En cumplimiento de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y del Comercio Electrónico (LSSICE), se informa:
             </p>
             <ul className="list-none mt-3 space-y-1">
-              <li><strong className="text-foreground">Denominación social:</strong> [NOMBRE_EMPRESA]</li>
-              <li><strong className="text-foreground">CIF:</strong> [PENDIENTE — CIF]</li>
-              <li><strong className="text-foreground">Domicilio social:</strong> [PENDIENTE — DIRECCIÓN FISCAL]</li>
+              <li><strong className="text-foreground">Denominación social:</strong> Alex Lucas Torrubia</li>
+              <li><strong className="text-foreground">CIF:</strong> 41003566V</li>
+              <li><strong className="text-foreground">Domicilio social:</strong> Carrer del Progrés, 27, buzón 28, 08850 Gavà (Barcelona)</li>
               <li><strong className="text-foreground">Email:</strong> legal@youwhole.com</li>
               <li><strong className="text-foreground">Sitio web:</strong> youwhole.com</li>
-              <li><strong className="text-foreground">Registro Mercantil:</strong> [PENDIENTE — datos de inscripción]</li>
+              <li><strong className="text-foreground">Registro Mercantil:</strong> No procede (autónomo)</li>
             </ul>
           </section>
 
@@ -39,7 +39,7 @@ export default function AvisoLegalPage() {
             <h2 className="text-base font-semibold text-foreground mb-3">2. Objeto y ámbito de aplicación</h2>
             <p>
               El presente Aviso Legal regula el acceso y uso del sitio web <strong className="text-foreground">youwhole.com</strong> y la plataforma SaaS YouWhole
-              (en adelante, «el Sitio»), titularidad de [NOMBRE_EMPRESA].
+              (en adelante, «el Sitio»), titularidad de Alex Lucas Torrubia.
               El acceso al Sitio implica la aceptación plena de este Aviso Legal.
             </p>
           </section>
@@ -59,7 +59,7 @@ export default function AvisoLegalPage() {
             <h2 className="text-base font-semibold text-foreground mb-3">4. Propiedad intelectual e industrial</h2>
             <p>
               Todos los contenidos del Sitio (textos, imágenes, logotipos, código fuente, diseño, interfaz gráfica y demás elementos)
-              son propiedad de [NOMBRE_EMPRESA] o de terceros que han autorizado su uso, y están protegidos por la legislación española
+              son propiedad de Alex Lucas Torrubia o de terceros que han autorizado su uso, y están protegidos por la legislación española
               e internacional sobre propiedad intelectual e industrial.
             </p>
             <p className="mt-2">
@@ -70,7 +70,7 @@ export default function AvisoLegalPage() {
           <section>
             <h2 className="text-base font-semibold text-foreground mb-3">5. Exclusión de garantías y responsabilidad</h2>
             <p>
-              [NOMBRE_EMPRESA] no garantiza la disponibilidad continua del Sitio ni la ausencia de errores.
+              Alex Lucas Torrubia no garantiza la disponibilidad continua del Sitio ni la ausencia de errores.
               No será responsable de los daños o perjuicios de cualquier naturaleza derivados de:
             </p>
             <ul className="list-disc ml-5 mt-2 space-y-1">
@@ -85,7 +85,7 @@ export default function AvisoLegalPage() {
             <h2 className="text-base font-semibold text-foreground mb-3">6. Enlaces a terceros</h2>
             <p>
               El Sitio puede contener enlaces a sitios web de terceros. Dichos enlaces se facilitan a efectos informativos.
-              [NOMBRE_EMPRESA] no controla ni asume responsabilidad alguna sobre el contenido de esos sitios.
+              Alex Lucas Torrubia no controla ni asume responsabilidad alguna sobre el contenido de esos sitios.
             </p>
           </section>
 
@@ -101,7 +101,7 @@ export default function AvisoLegalPage() {
           <section>
             <h2 className="text-base font-semibold text-foreground mb-3">8. Modificaciones</h2>
             <p>
-              [NOMBRE_EMPRESA] se reserva el derecho de modificar el presente Aviso Legal en cualquier momento.
+              Alex Lucas Torrubia se reserva el derecho de modificar el presente Aviso Legal en cualquier momento.
               Las modificaciones entrarán en vigor desde su publicación en el Sitio.
             </p>
           </section>
