@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     template: "%s | YouWhole",
   },
   description:
-    "YouWhole: ERP creado por autonomos para autonomos y pymes. Facturacion electronica con VeriFactu, IRPF automatico, Modelo 130/303/347, CRM, contabilidad PGC y nominas. Desde 29 EUR/mes, sin permanencia.",
+    "ERP para autonomos y pymes españolas. VeriFactu, IRPF, Modelo 130/303, CRM y contabilidad todo en uno. Desde 29 EUR/mes, sin permanencia.",
   keywords: [
     "ERP autonomos España",
     "ERP pymes España",
@@ -109,7 +109,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html suppressHydrationWarning>
+    <html lang="es" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen`}
       >
