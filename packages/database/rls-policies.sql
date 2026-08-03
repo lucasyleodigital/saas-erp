@@ -17,7 +17,12 @@ CREATE OR REPLACE FUNCTION current_company_id() RETURNS TEXT AS $$
 BEGIN
   RETURN coalesce(current_setting('app.current_company_id', true), '');
 END;
-$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path = public;
+
+-- Revoke direct execution from public roles (only the API backend calls this via RLS)
+REVOKE EXECUTE ON FUNCTION current_company_id() FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION current_company_id() FROM anon;
+REVOKE EXECUTE ON FUNCTION current_company_id() FROM authenticated;
 
 -- ============================================================
 -- TABLES WITH companyId (direct tenant column)
@@ -58,7 +63,8 @@ DECLARE
     'custom_fields',
     'orders',
     'purchase_orders',
-    'tags'
+    'tags',
+    'meetings'
   ];
 BEGIN
   FOREACH tbl IN ARRAY tables
@@ -91,6 +97,15 @@ END $$;
 -- - System tables (users, companies, refresh_tokens)
 -- - Join tables scoped through parent (invoice_items, quote_items, etc.)
 -- ============================================================
+
+-- shift_assignments: uses snake_case column (company_id), handled separately below
+ALTER TABLE IF EXISTS shift_assignments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS shift_assignments FORCE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS tenant_isolation ON shift_assignments;
+CREATE POLICY tenant_isolation ON shift_assignments
+  FOR ALL
+  USING (company_id = current_company_id())
+  WITH CHECK (company_id = current_company_id());
 
 -- invoice_items: scoped through invoice.companyId (FK cascade)
 -- invoice_taxes: scoped through invoice.companyId (FK cascade)
