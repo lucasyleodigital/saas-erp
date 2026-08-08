@@ -27,6 +27,17 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Redirect unsupported locale prefixes (e.g. /it/contacto → /contacto)
+  // Prevents Google from being redirected to /es/login (which is Disallow in robots.txt)
+  const unsupportedLocaleMatch = pathname.match(/^\/([a-z]{2})(\/.*)?$/i);
+  if (unsupportedLocaleMatch) {
+    const segment = unsupportedLocaleMatch[1].toLowerCase();
+    if (!(routing.locales as readonly string[]).includes(segment)) {
+      const rest = unsupportedLocaleMatch[2] ?? "/";
+      return NextResponse.redirect(new URL(rest, request.url), 301);
+    }
+  }
+
   // Strip locale prefix to get the actual path
   const localePattern = new RegExp(`^/(${routing.locales.join("|")})(/.*)?\$`);
   const localeMatch = pathname.match(localePattern);
