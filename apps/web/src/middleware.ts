@@ -30,10 +30,11 @@ export function middleware(request: NextRequest) {
   // Redirect unsupported locale prefixes (e.g. /it/contacto → /contacto)
   // Prevents Google from being redirected to /es/login (which is Disallow in robots.txt)
   const unsupportedLocaleMatch = pathname.match(/^\/([a-z]{2})(\/.*)?$/i);
-  if (unsupportedLocaleMatch) {
-    const segment = unsupportedLocaleMatch[1].toLowerCase();
+  const unsupportedSegment = unsupportedLocaleMatch?.[1];
+  if (unsupportedSegment) {
+    const segment = unsupportedSegment.toLowerCase();
     if (!(routing.locales as readonly string[]).includes(segment)) {
-      const rest = unsupportedLocaleMatch[2] ?? "/";
+      const rest = unsupportedLocaleMatch?.[2] ?? "/";
       return NextResponse.redirect(new URL(rest, request.url), 301);
     }
   }
