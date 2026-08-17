@@ -32,6 +32,16 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.youwhole.com" }],
+        destination: "https://youwhole.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
   webpack: (config, { isServer }) => {
     if (isServer) {
       config.externals = [...(config.externals ?? []), "canvas"];
