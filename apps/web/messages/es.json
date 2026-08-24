@@ -2723,5 +2723,1075 @@
       "madeInSpain": "Hecho en España",
       "designedBy": "Diseñado y desarrollado por"
     }
+  },
+  "satellite": {
+    "erpAutonomos": {
+      "seo": {
+        "title": "ERP para Autónomos en España — YouWhole",
+        "description": "El ERP diseñado por autónomos para autónomos. Facturación con VeriFactu, IRPF automático, Modelo 130/303, contabilidad PGC y CRM. Sin permanencia. Desde 29 EUR/mes.",
+        "ogTitle": "ERP para Autónomos en España — YouWhole",
+        "ogDescription": "Diseñado por autónomos para autónomos. VeriFactu, IRPF, Modelo 130/303 y CRM en una sola plataforma."
+      },
+      "badge": "Creado por autónomos para autónomos",
+      "h1Line1": "El ERP que los autónomos españoles",
+      "h1Highlight": "necesitaban",
+      "subtitle": "Facturación con VeriFactu, IRPF automático, Modelo 130/303, contabilidad PGC y CRM. Todo en una plataforma pensada para cómo trabaja un autónomo de verdad.",
+      "ctaPrimary": "Empieza gratis — 14 días sin tarjeta",
+      "ctaSecondary": "Solicitar demo",
+      "trustLine": "Sin permanencia · Cancela cuando quieras · Soporte en español",
+      "features": {
+        "title": "Todo lo que necesita un autónomo",
+        "subtitle": "Diseñado desde cero para la realidad del autónomo español: Hacienda, clientes, tiempo y dinero.",
+        "items": {
+          "f1": {
+            "title": "VeriFactu certificado AEAT",
+            "desc": "Cumple con la obligación legal desde el primer día. Cada factura se registra automáticamente en la Agencia Tributaria."
+          },
+          "f2": {
+            "title": "IRPF automático",
+            "desc": "Calcula y aplica la retención IRPF en cada factura según el tipo de cliente. Sin errores, sin cálculos manuales."
+          },
+          "f3": {
+            "title": "Modelo 130 y 303 integrados",
+            "desc": "Genera los datos de tus declaraciones trimestrales en segundos. Menos tiempo con Hacienda, más tiempo facturando."
+          },
+          "f4": {
+            "title": "Contabilidad PGC",
+            "desc": "Asientos contables automáticos según el Plan General Contable español. Sin necesidad de gestor para el día a día."
+          },
+          "f5": {
+            "title": "CRM y presupuestos",
+            "desc": "Gestiona tus clientes, envía presupuestos profesionales y conviértelos en facturas con un clic."
+          },
+          "f6": {
+            "title": "Control horario y proyectos",
+            "desc": "Ficha horas por proyecto, calcula rentabilidad y factura el tiempo trabajado directamente."
+          }
+        }
+      },
+      "comparison": {
+        "title": "¿Por qué YouWhole y no otro ERP?",
+        "subtitle": "Hay muchos programas de facturación. Pero muy pocos pensados para autónomos españoles de verdad.",
+        "colFeat": "Característica",
+        "colYw": "YouWhole",
+        "colOther": "Otros ERPs",
+        "rows": {
+          "r1": {
+            "feat": "VeriFactu certificado AEAT",
+            "yw": "Incluido en todos los planes",
+            "other": "Solo en planes caros o no incluido"
+          },
+          "r2": {
+            "feat": "IRPF automático",
+            "yw": "Sí, por defecto",
+            "other": "Manual o no disponible"
+          },
+          "r3": {
+            "feat": "Modelo 130/303 integrado",
+            "yw": "Datos generados automáticamente",
+            "other": "Export manual o módulo extra"
+          },
+          "r4": {
+            "feat": "Precio base",
+            "yw": "Gratis / 29 EUR/mes",
+            "other": "Desde 30-80 EUR/mes"
+          },
+          "r5": {
+            "feat": "Soporte en español",
+            "yw": "Chat y email en horario español",
+            "other": "Ticketing internacional"
+          },
+          "r6": {
+            "feat": "Sin permanencia",
+            "yw": "Sí, cancela cuando quieras",
+            "other": "Contratos anuales habituales"
+          }
+        }
+      },
+      "faq": {
+        "title": "Preguntas frecuentes",
+        "items": {
+          "q1": {
+            "q": "¿YouWhole es adecuado para autónomos que facturan poco?",
+            "a": "Sí. El plan gratuito incluye hasta 5 clientes y 10 facturas al mes — más que suficiente si estás empezando. Cuando crezcas, el plan Starter desde 29 EUR/mes no tiene límites."
+          },
+          "q2": {
+            "q": "¿Necesito saber contabilidad para usar YouWhole?",
+            "a": "No. La plataforma genera los asientos contables de forma automática. Tú solo introduces facturas y cobros — el sistema hace el resto."
+          },
+          "q3": {
+            "q": "¿Puedo llevar el IRPF yo mismo sin gestor?",
+            "a": "Sí para el día a día. YouWhole calcula las retenciones, genera el resumen del Modelo 130 y te da todos los datos para presentarlo. Para casos complejos, siempre recomendamos revisar con un asesor."
+          },
+          "q4": {
+            "q": "¿Funciona en móvil?",
+            "a": "Sí. YouWhole es una app web completamente responsive. Puedes crear facturas, consultar clientes y ver tu dashboard desde el móvil o tablet."
+          }
+        }
+      },
+      "pricing": {
+        "title": "Precios pensados para autónomos",
+        "subtitle": "Sin letra pequeña. Empieza gratis y escala cuando lo necesites."
+      },
+      "finalCta": {
+        "title": "Pruébalo gratis durante 14 días",
+        "subtitle": "Sin tarjeta de crédito. Sin permanencia. Sin letra pequeña.",
+        "cta": "Crear mi cuenta gratis"
+      }
+    },
+    "facturacionPymes": {
+      "seo": {
+        "title": "Software de Facturación para Pymes — YouWhole",
+        "description": "Software de facturación para pymes españolas con VeriFactu certificado, contabilidad PGC, nóminas, CRM y gestión de proyectos. Todo en uno. Desde 29 EUR/mes sin permanencia.",
+        "ogTitle": "Software de Facturación para Pymes — YouWhole",
+        "ogDescription": "Todo lo que necesita tu pyme: facturación VeriFactu, nóminas, CRM, contabilidad PGC y más. Desde 29 EUR/mes."
+      },
+      "badge": "Todo en uno para pymes",
+      "h1Line1": "Software de facturación para pymes",
+      "h1Highlight": "que va más allá de las facturas",
+      "subtitle": "YouWhole reúne en una sola plataforma todo lo que necesita tu pyme: facturación VeriFactu, contabilidad, nóminas, CRM, inventario y proyectos. Sin integraciones. Sin sorpresas.",
+      "ctaPrimary": "Probar gratis 14 días",
+      "ctaSecondary": "Solicitar demo para mi pyme",
+      "trustLine": "Sin permanencia · Soporte en español · Migración asistida",
+      "modules": {
+        "title": "8 módulos integrados en una sola plataforma",
+        "subtitle": "Olvídate de conectar 5 programas distintos. YouWhole lo tiene todo y comparte los datos entre módulos automáticamente.",
+        "items": {
+          "m1": {
+            "title": "Facturación con VeriFactu",
+            "desc": "Emite facturas certificadas AEAT. Incluye facturas recurrentes, multi-divisa y en varios idiomas (es, ca, eu, gl, en)."
+          },
+          "m2": {
+            "title": "Contabilidad PGC",
+            "desc": "Asientos automáticos según el Plan General Contable español. Cuadre contable en tiempo real sin conocimientos previos."
+          },
+          "m3": {
+            "title": "Nóminas y RRHH",
+            "desc": "Genera nóminas, gestiona contratos y controla el tiempo de trabajo de cada empleado por proyecto."
+          },
+          "m4": {
+            "title": "CRM y ventas",
+            "desc": "Gestiona tu pipeline de ventas con Kanban, registra oportunidades y convierte presupuestos en facturas."
+          },
+          "m5": {
+            "title": "Gestión de proyectos",
+            "desc": "Controla la rentabilidad de cada proyecto, asigna empleados y factura el tiempo trabajado."
+          },
+          "m6": {
+            "title": "Inventario y almacén",
+            "desc": "Controla el stock, gestiona proveedores y genera pedidos de compra automáticos cuando el inventario baja."
+          },
+          "m7": {
+            "title": "Banco y conciliación",
+            "desc": "Conecta tu cuenta bancaria y concilia automáticamente cobros y pagos con tus facturas."
+          },
+          "m8": {
+            "title": "Automatizaciones",
+            "desc": "Recordatorios de impago, facturas recurrentes, alertas de stock y flujos personalizados sin código."
+          }
+        }
+      },
+      "sectors": {
+        "title": "¿Para qué tipo de pyme es YouWhole?",
+        "list": [
+          "Agencias y consultoras",
+          "Empresas de servicios",
+          "Comercios y tiendas",
+          "Constructoras y reformas",
+          "Hostelería y restauración",
+          "Tecnología y startups",
+          "Clínicas y salud",
+          "Transporte y logística",
+          "Educación y formación"
+        ],
+        "footnotePre": "¿Tu sector no aparece?",
+        "footnoteLink": "Escríbenos y te contamos cómo YouWhole se adapta a tu negocio"
+      },
+      "pricing": {
+        "title": "Precios para pymes de cualquier tamaño",
+        "subtitle": "Sin costes ocultos. Sin permanencia. Escala cuando lo necesites."
+      },
+      "finalCta": {
+        "title": "¿Tu pyme lista para el siguiente nivel?",
+        "subtitle": "14 días gratis. Sin tarjeta. El equipo te ayuda con la migración.",
+        "cta": "Empezar gratis ahora"
+      }
+    },
+    "verifactu": {
+      "seo": {
+        "title": "Software VeriFactu Certificado AEAT — YouWhole",
+        "description": "YouWhole es un software de facturación certificado VeriFactu por la Agencia Tributaria. Cumple con la obligación legal desde el primer día. Incluido en todos los planes, incluso el gratuito.",
+        "ogTitle": "Software VeriFactu Certificado AEAT — YouWhole",
+        "ogDescription": "Cumple con la obligación VeriFactu desde el primer día. Incluido en todos los planes de YouWhole."
+      },
+      "badge": "Certificado AEAT",
+      "h1Line1": "Software VeriFactu certificado",
+      "h1Highlight": "incluido en todos los planes",
+      "subtitle": "YouWhole cumple con la obligación VeriFactu de la Agencia Tributaria desde el primer día. Sin configuración. Sin módulos extra. Sin coste adicional.",
+      "cta": "Empezar gratis — VeriFactu incluido",
+      "intro": {
+        "title": "¿Qué es VeriFactu y por qué es obligatorio?",
+        "p1Pre": "VeriFactu es el sistema de verificación de facturas aprobado por la Agencia Tributaria española en el marco del Reglamento de Facturación (RD 1007/2023). Su objetivo es garantizar la",
+        "p1Strong": "integridad e inalterabilidad",
+        "p1Post": "de todas las facturas emitidas por empresas y autónomos en España.",
+        "p2Pre": "Desde 2025, cualquier software de facturación que uses debe estar",
+        "p2Strong": "certificado VeriFactu",
+        "p2Post": "para poder operar legalmente. Usar un programa no certificado puede acarrear sanciones de Hacienda de hasta 50.000 EUR.",
+        "p3": "Con YouWhole, cada factura que emites se registra automáticamente en la AEAT con su huella digital correspondiente. Tú no tienes que hacer nada extra — el sistema lo gestiona en segundo plano."
+      },
+      "howItWorks": {
+        "title": "Cómo funciona VeriFactu en YouWhole",
+        "steps": {
+          "s1": {
+            "t": "Creas la factura",
+            "d": "Introduces los datos del cliente, conceptos y importes como siempre."
+          },
+          "s2": {
+            "t": "Registro automático",
+            "d": "YouWhole genera la huella digital de la factura y la envía a la AEAT en tiempo real."
+          },
+          "s3": {
+            "t": "Confirmación AEAT",
+            "d": "Recibes la confirmación de registro. Tu factura es legalmente válida y verificable."
+          }
+        }
+      },
+      "faq": {
+        "title": "Preguntas frecuentes sobre VeriFactu",
+        "items": {
+          "q1": {
+            "q": "¿Qué es VeriFactu?",
+            "a": "VeriFactu es el sistema de verificación de facturas de la Agencia Tributaria española (AEAT). Desde 2025, todo software de facturación usado por empresas y autónomos debe estar certificado VeriFactu para garantizar la integridad e inalterabilidad de las facturas emitidas."
+          },
+          "q2": {
+            "q": "¿Es obligatorio usar un software con VeriFactu?",
+            "a": "Sí. El Reglamento de Facturación aprobado en 2023 obliga a todos los empresarios y profesionales en España a usar sistemas de facturación que cumplan con VeriFactu. El incumplimiento puede conllevar sanciones de Hacienda."
+          },
+          "q3": {
+            "q": "¿YouWhole está certificado por la AEAT?",
+            "a": "Sí. YouWhole está certificado para el envío de registros de facturación a la AEAT mediante el sistema VeriFactu. Cada factura emitida genera automáticamente el registro correspondiente y lo envía a Hacienda."
+          },
+          "q4": {
+            "q": "¿Tengo que hacer algo especial para activar VeriFactu en YouWhole?",
+            "a": "No. VeriFactu está activo por defecto en todas las cuentas de YouWhole desde el momento del registro. No necesitas configurar nada ni contratar un módulo adicional."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Cumple con VeriFactu desde hoy",
+        "subtitle": "Gratis hasta 10 facturas al mes. Sin tarjeta de crédito.",
+        "cta": "Crear cuenta gratis"
+      }
+    },
+    "holded": {
+      "seo": {
+        "title": "Alternativa a Holded para Autónomos y Pymes — YouWhole",
+        "description": "¿Buscas una alternativa a Holded más completa y asequible? YouWhole incluye VeriFactu certificado, IRPF automático, Modelo 130/303 y soporte en español. Desde 29 EUR/mes.",
+        "ogTitle": "Alternativa a Holded — YouWhole",
+        "ogDescription": "Más completo que Holded para el mercado español. VeriFactu, IRPF, Modelo 130/303 y soporte nativo en español."
+      },
+      "badge": "Comparativa honesta",
+      "h1Line1": "La alternativa a Holded que",
+      "h1Highlight": "sí cumple con Hacienda",
+      "subtitle": "YouWhole incluye VeriFactu certificado, IRPF automático y Modelo 130/303 de serie. Sin módulos extra. Sin sorpresas en la factura.",
+      "ctaPrimary": "Probar YouWhole gratis",
+      "ctaSecondary": "Hablar con el equipo",
+      "trustLine": "14 días gratis · Sin tarjeta · Migración asistida desde Holded",
+      "comparison": {
+        "title": "YouWhole vs Holded",
+        "subtitle": "Comparativa de características para autónomos y pymes españolas",
+        "colFeat": "Característica",
+        "colOther": "Holded",
+        "included": "Incluido",
+        "no": "No",
+        "yes": "Sí",
+        "notAvailable": "No disponible",
+        "footnote": "Información basada en los planes publicados. Actualizado julio 2026.",
+        "rows": {
+          "r1": {
+            "feat": "VeriFactu certificado AEAT",
+            "yw": true,
+            "other": false,
+            "note": "Holded no tiene VeriFactu nativo"
+          },
+          "r2": {
+            "feat": "IRPF automático para autónomos",
+            "yw": true,
+            "other": false,
+            "note": "En Holded es configuración manual"
+          },
+          "r3": {
+            "feat": "Modelo 130/303 integrado",
+            "yw": true,
+            "other": false,
+            "note": "Holded requiere módulo contable extra"
+          },
+          "r4": {
+            "feat": "Plan gratuito real",
+            "yw": true,
+            "other": false,
+            "note": "Holded no tiene plan gratuito permanente"
+          },
+          "r5": {
+            "feat": "Precio base mensual",
+            "yw": "29 EUR",
+            "other": "desde 49 EUR",
+            "note": ""
+          },
+          "r6": {
+            "feat": "Soporte en español nativo",
+            "yw": true,
+            "other": true,
+            "note": ""
+          },
+          "r7": {
+            "feat": "Sin permanencia",
+            "yw": true,
+            "other": false,
+            "note": "Holded cobra anual por defecto"
+          },
+          "r8": {
+            "feat": "Múltiples idiomas (ca, eu, gl)",
+            "yw": true,
+            "other": false,
+            "note": "YouWhole soporta 5 idiomas peninsulares"
+          },
+          "r9": {
+            "feat": "Control horario empleados",
+            "yw": true,
+            "other": true,
+            "note": ""
+          },
+          "r10": {
+            "feat": "Portal de empleado",
+            "yw": true,
+            "other": true,
+            "note": ""
+          }
+        }
+      },
+      "migration": {
+        "title": "Migra desde Holded sin perder tus datos",
+        "subtitle": "Importa tus clientes, facturas y productos desde Holded en minutos. Nuestro equipo te ayuda a hacer la transición sin interrupciones.",
+        "steps": {
+          "s1": {
+            "t": "Exporta desde Holded",
+            "d": "Descarga tus datos en CSV o Excel desde el panel de Holded."
+          },
+          "s2": {
+            "t": "Importa en YouWhole",
+            "d": "Usa nuestro importador para cargar clientes, productos y facturas."
+          },
+          "s3": {
+            "t": "Listo para facturar",
+            "d": "Tu empresa operativa en YouWhole en menos de 1 hora."
+          }
+        },
+        "cta": "Empezar migración gratis"
+      }
+    },
+    "sage": {
+      "seo": {
+        "title": "Alternativa a Sage para Autónomos y Pymes — YouWhole",
+        "description": "¿Sage es demasiado caro o complejo para tu negocio? YouWhole es la alternativa moderna: VeriFactu certificado, IRPF automático, sin instalación y desde 29 EUR/mes.",
+        "ogTitle": "Alternativa a Sage para Autónomos — YouWhole",
+        "ogDescription": "Más sencillo y asequible que Sage. VeriFactu incluido, sin instalación, desde 29 EUR/mes."
+      },
+      "badge": "Comparativa honesta",
+      "h1Line1": "La alternativa a Sage que",
+      "h1Highlight": "no requiere instalación",
+      "subtitle": "YouWhole es 100% en la nube, incluye VeriFactu certificado y cuesta menos que Sage. Sin instalaciones, sin versiones desactualizadas, sin sorpresas.",
+      "ctaPrimary": "Probar YouWhole gratis",
+      "ctaSecondary": "Hablar con el equipo",
+      "trustLine": "14 días gratis · Sin tarjeta · Migración asistida desde Sage",
+      "reasons": {
+        "title": "¿Por qué los autónomos abandonan Sage?",
+        "subtitle": "Sage lleva décadas en el mercado, pero fue diseñado para otra época. Estas son las quejas más habituales.",
+        "items": {
+          "r1": {
+            "t": "Instalación local",
+            "d": "Sage 50 requiere instalar software en cada ordenador. Si cambias de equipo o trabajas en remoto, tienes un problema."
+          },
+          "r2": {
+            "t": "Sin VeriFactu nativo",
+            "d": "Cumplir con la normativa AEAT 2025 requiere un módulo adicional de pago que Sage no incluye por defecto."
+          },
+          "r3": {
+            "t": "Precio de licencias",
+            "d": "Las licencias anuales de Sage se acumulan. Para una pyme pequeña, el coste es difícil de justificar."
+          },
+          "r4": {
+            "t": "Curva de aprendizaje alta",
+            "d": "Sage fue diseñado para contables profesionales. Un autónomo sin formación contable lo encuentra innecesariamente complejo."
+          },
+          "r5": {
+            "t": "Sin app móvil real",
+            "d": "Consultar una factura o registrar un gasto desde el móvil es prácticamente imposible con Sage 50."
+          },
+          "r6": {
+            "t": "Actualizaciones de pago",
+            "d": "Cada nueva versión de Sage requiere pagar la actualización. Con YouWhole, las actualizaciones son automáticas e incluidas."
+          }
+        }
+      },
+      "comparison": {
+        "title": "YouWhole vs Sage",
+        "subtitle": "Comparativa de características para autónomos y pymes",
+        "colFeat": "Característica",
+        "colOther": "Sage",
+        "included": "Incluido",
+        "no": "No",
+        "yes": "Sí",
+        "notAvailable": "No disponible",
+        "footnote": "Información basada en los planes publicados. Actualizado julio 2026.",
+        "rows": {
+          "r1": {
+            "feat": "VeriFactu certificado AEAT",
+            "yw": true,
+            "other": false,
+            "note": "Sage requiere módulo adicional de pago"
+          },
+          "r2": {
+            "feat": "IRPF automático para autónomos",
+            "yw": true,
+            "other": false,
+            "note": "En Sage es configuración manual"
+          },
+          "r3": {
+            "feat": "Basado en la nube (sin instalación)",
+            "yw": true,
+            "other": false,
+            "note": "Sage 50 requiere instalación local"
+          },
+          "r4": {
+            "feat": "Plan gratuito disponible",
+            "yw": true,
+            "other": false,
+            "note": "Sage no tiene plan gratuito"
+          },
+          "r5": {
+            "feat": "Precio base mensual",
+            "yw": "29 EUR",
+            "other": "desde 50 EUR",
+            "note": ""
+          },
+          "r6": {
+            "feat": "Actualizaciones automáticas",
+            "yw": true,
+            "other": false,
+            "note": "Sage requiere comprar nuevas versiones"
+          },
+          "r7": {
+            "feat": "Multi-idioma (ca, eu, gl)",
+            "yw": true,
+            "other": false,
+            "note": "YouWhole soporta 5 idiomas peninsulares"
+          },
+          "r8": {
+            "feat": "Soporte en español",
+            "yw": true,
+            "other": true,
+            "note": ""
+          },
+          "r9": {
+            "feat": "Sin permanencia",
+            "yw": true,
+            "other": false,
+            "note": "Sage cobra licencias anuales"
+          },
+          "r10": {
+            "feat": "Acceso desde móvil",
+            "yw": true,
+            "other": false,
+            "note": "Sage 50 no tiene app móvil nativa"
+          }
+        }
+      },
+      "migration": {
+        "title": "Migra desde Sage sin perder tus datos",
+        "subtitle": "Exporta tus clientes, productos y facturas desde Sage e impórtalos en YouWhole en minutos.",
+        "steps": {
+          "s1": {
+            "t": "Exporta desde Sage",
+            "d": "Exporta clientes, productos y facturas en CSV o Excel desde el panel de Sage."
+          },
+          "s2": {
+            "t": "Importa en YouWhole",
+            "d": "Usa nuestro importador para cargar todos tus datos en minutos."
+          },
+          "s3": {
+            "t": "Listo para facturar",
+            "d": "Tu empresa operativa en YouWhole con VeriFactu activado desde el primer día."
+          }
+        },
+        "cta": "Empezar migración gratis"
+      },
+      "finalCta": {
+        "title": "Deja Sage. Empieza gratis hoy.",
+        "subtitle": "Sin tarjeta. Sin permanencia. Con VeriFactu incluido desde el primer día.",
+        "cta": "Crear cuenta gratis"
+      }
+    },
+    "modelo130": {
+      "seo": {
+        "title": "Modelo 130 Online para Autónomos — YouWhole",
+        "description": "Calcula y prepara el Modelo 130 de forma automática con YouWhole. Suma ingresos, gastos y retenciones del trimestre sin errores. Gratis para autónomos.",
+        "ogTitle": "Modelo 130 Online para Autónomos — YouWhole",
+        "ogDescription": "Calcula el Modelo 130 automáticamente. Sin errores, sin cálculos manuales. Incluido en todos los planes."
+      },
+      "badge": "IRPF trimestral autónomos",
+      "h1Line1": "Modelo 130 calculado",
+      "h1Highlight": "automáticamente cada trimestre",
+      "subtitle": "YouWhole suma tus ingresos y gastos del trimestre, calcula el IRPF y te da el importe exacto del Modelo 130. Sin calculadora. Sin errores. Sin agobios.",
+      "ctaPrimary": "Empezar gratis — sin tarjeta",
+      "ctaSecondary": "Solicitar demo",
+      "trustLine": "Incluido en todos los planes · Cálculo automático · Datos listos para presentar",
+      "intro": {
+        "title": "¿Qué es el Modelo 130 y cuándo hay que presentarlo?",
+        "pPre": "El",
+        "pStrong": "Modelo 130",
+        "pPost": "es la declaración trimestral del IRPF para autónomos en estimación directa. Se presenta cuatro veces al año ante la Agencia Tributaria:",
+        "quarters": {
+          "q1": {
+            "t": "1T",
+            "d": "1-20 abril",
+            "p": "Enero–Marzo"
+          },
+          "q2": {
+            "t": "2T",
+            "d": "1-20 julio",
+            "p": "Abril–Junio"
+          },
+          "q3": {
+            "t": "3T",
+            "d": "1-20 octubre",
+            "p": "Julio–Septiembre"
+          },
+          "q4": {
+            "t": "4T",
+            "d": "1-30 enero",
+            "p": "Octubre–Diciembre"
+          }
+        },
+        "p2Pre": "Si más del 70% de tus facturas llevan retención IRPF (porque tus clientes son empresas que te la aplican), puede que estés",
+        "p2Strong": "exento de presentar el Modelo 130",
+        "p2Post": "YouWhole detecta automáticamente si cumples ese umbral."
+      },
+      "howItWorks": {
+        "title": "Cómo calcula YouWhole tu Modelo 130",
+        "steps": {
+          "s1": {
+            "t": "Registras tus facturas",
+            "d": "Cada factura emitida y recibida queda registrada automáticamente con su IRPF e IVA."
+          },
+          "s2": {
+            "t": "YouWhole acumula el trimestre",
+            "d": "Suma ingresos, gastos deducibles y retenciones ya aplicadas por tus clientes."
+          },
+          "s3": {
+            "t": "Calcula el 20%",
+            "d": "Aplica el 20% de IRPF sobre el beneficio neto del trimestre acumulado."
+          },
+          "s4": {
+            "t": "Te da el resultado",
+            "d": "Obtienes el importe exacto a ingresar en Hacienda listo para presentar."
+          }
+        }
+      },
+      "faq": {
+        "title": "Preguntas frecuentes sobre el Modelo 130",
+        "items": {
+          "q1": {
+            "q": "¿Qué es el Modelo 130?",
+            "a": "El Modelo 130 es la declaración trimestral del IRPF para autónomos en estimación directa. Se presenta en enero, abril, julio y octubre ante la Agencia Tributaria y sirve para liquidar los pagos fraccionados del IRPF."
+          },
+          "q2": {
+            "q": "¿Quién tiene que presentar el Modelo 130?",
+            "a": "Todos los autónomos en estimación directa (normal o simplificada) que no tengan al menos el 70% de sus ingresos con retención IRPF. Si tus clientes son particulares o empresas que no te aplican retención, debes presentar el Modelo 130."
+          },
+          "q3": {
+            "q": "¿Cómo calcula YouWhole el Modelo 130?",
+            "a": "YouWhole suma automáticamente todos tus ingresos y gastos del trimestre, calcula el 20% de IRPF sobre el beneficio neto, resta las retenciones ya aplicadas y te da el importe exacto a pagar. No necesitas hacer ningún cálculo manual."
+          },
+          "q4": {
+            "q": "¿YouWhole presenta el Modelo 130 en la AEAT por mí?",
+            "a": "YouWhole genera todos los datos necesarios para presentar el Modelo 130. La presentación final ante la AEAT la realizas tú desde la Sede Electrónica o tu asesor con los datos que te proporcionamos. Estamos trabajando en la presentación directa."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Olvídate del Modelo 130 manual",
+        "subtitle": "YouWhole lo calcula solo cada trimestre. Empieza gratis hoy.",
+        "cta": "Crear cuenta gratis"
+      }
+    },
+    "rrhh": {
+      "seo": {
+        "title": "Software de Recursos Humanos para Pymes — YouWhole",
+        "description": "Gestiona empleados, nóminas, contratos, vacaciones y control horario en una sola plataforma. Software RRHH para pymes español, sin complicaciones. Desde 29 EUR/mes.",
+        "ogTitle": "Software RRHH para Pymes — YouWhole",
+        "ogDescription": "Nóminas, contratos, vacaciones y control horario integrados con tu facturación. Todo en uno."
+      },
+      "badge": "RRHH integrado con facturación",
+      "h1Line1": "Software de recursos humanos",
+      "h1Highlight": "para pymes que no quieren complicaciones",
+      "subtitle": "Nóminas, contratos, control horario, vacaciones y portal del empleado integrados con tu facturación. Todo en YouWhole, sin necesidad de otro programa de RRHH.",
+      "ctaPrimary": "Probar gratis 14 días",
+      "ctaSecondary": "Solicitar demo",
+      "trustLine": "Sin permanencia · Soporte en español · Cumple normativa laboral española",
+      "features": {
+        "title": "Todo el RRHH de tu pyme en un solo lugar",
+        "subtitle": "Diseñado para gestores que no son expertos en RRHH pero necesitan tenerlo todo bajo control.",
+        "items": {
+          "f1": {
+            "title": "Nóminas automáticas",
+            "desc": "Genera nóminas mensuales con retenciones IRPF, Seguridad Social y deducciones calculadas automáticamente según el contrato."
+          },
+          "f2": {
+            "title": "Control horario con GPS",
+            "desc": "Los empleados fichan entrada y salida desde el móvil. Registro con geolocalización para cumplir la normativa laboral española."
+          },
+          "f3": {
+            "title": "Gestión de contratos",
+            "desc": "Almacena y gestiona todos los contratos laborales de tu equipo. Alertas de vencimiento y renovación automática."
+          },
+          "f4": {
+            "title": "Vacaciones y ausencias",
+            "desc": "Solicitud y aprobación de vacaciones digital. Calendario de equipo para planificar ausencias sin conflictos."
+          },
+          "f5": {
+            "title": "Portal del empleado",
+            "desc": "Cada empleado accede a sus nóminas, contratos y registro de horas desde su propia cuenta sin molestar a RRHH."
+          },
+          "f6": {
+            "title": "Horas por proyecto",
+            "desc": "Asigna horas trabajadas a proyectos específicos para calcular rentabilidad y facturar tiempo a clientes."
+          }
+        }
+      },
+      "compliance": {
+        "title": "Cumple la normativa laboral española sin esfuerzo",
+        "subtitle": "El control horario es obligatorio para todas las empresas en España desde 2019. YouWhole lo gestiona automáticamente.",
+        "items": {
+          "c1": {
+            "title": "Registro horario obligatorio (RD 8/2019)",
+            "desc": "Todos los empleados deben fichar entrada y salida. YouWhole registra y almacena cada fichaje con timestamp y GPS."
+          },
+          "c2": {
+            "title": "Nóminas conformes al convenio",
+            "desc": "Genera nóminas con todos los conceptos laborales: salario base, complementos, IRPF y cotizaciones a la SS."
+          },
+          "c3": {
+            "title": "Exportación para el asesor",
+            "desc": "Exporta todos los datos de RRHH en formato estándar para que tu gestor laboral los use directamente."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "RRHH bajo control desde el primer día",
+        "subtitle": "14 días gratis. Sin tarjeta. El módulo RRHH incluido en todos los planes.",
+        "cta": "Empezar gratis ahora"
+      }
+    },
+    "controlHorario": {
+      "seo": {
+        "title": "Software de Control Horario para Empresas — YouWhole",
+        "description": "Control horario obligatorio para empresas españolas. Fichaje por GPS, QR o web. Exportación para inspección de trabajo. Integrado con nóminas y proyectos. Desde 29 EUR/mes.",
+        "ogTitle": "Software Control Horario Empresas — YouWhole",
+        "ogDescription": "Fichaje GPS, QR y web. Cumple el RD 8/2019 sin complicaciones. Integrado con nóminas y proyectos."
+      },
+      "badge": "Obligatorio desde 2019",
+      "h1Line1": "Control horario digital",
+      "h1Highlight": "que cumple la ley española",
+      "subtitle": "El RD 8/2019 obliga a registrar la jornada de todos tus empleados. YouWhole lo hace automáticamente con GPS, QR o web — integrado con nóminas y proyectos.",
+      "ctaPrimary": "Probar gratis 14 días",
+      "ctaSecondary": "Ver demo",
+      "trustLine": "Sin permanencia · Cumple RD 8/2019 · Integrado con nóminas",
+      "checkinMethods": {
+        "title": "3 formas de fichar, tú eliges",
+        "subtitle": "Adaptado a oficinas, teletrabajo y trabajo en campo.",
+        "items": {
+          "m1": {
+            "title": "App web con GPS",
+            "desc": "El empleado abre YouWhole en el móvil y ficha. La ubicación GPS queda registrada automáticamente para trabajo en campo o teletrabajo.",
+            "badge": "Más usado"
+          },
+          "m2": {
+            "title": "Código QR en oficina",
+            "desc": "Imprime un QR en la entrada de la oficina. Los empleados lo escanean con el móvil para fichar entrada y salida sin tocar nada más.",
+            "badge": "Para oficinas"
+          },
+          "m3": {
+            "title": "Registro manual",
+            "desc": "El administrador puede registrar horas manualmente para empleados sin smartphone o para corregir fichajes erróneos.",
+            "badge": "Backup"
+          }
+        }
+      },
+      "integration": {
+        "title": "Integrado con el resto de tu empresa",
+        "subtitle": "El control horario de YouWhole no es un módulo aislado. Se conecta con nóminas, proyectos y facturación.",
+        "items": {
+          "i1": {
+            "title": "Horas → Nóminas",
+            "desc": "Las horas registradas alimentan directamente el cálculo de nóminas. Las horas extra se calculan solas."
+          },
+          "i2": {
+            "title": "Horas → Proyectos",
+            "desc": "Asigna horas trabajadas a proyectos para calcular rentabilidad y facturar tiempo a clientes."
+          },
+          "i3": {
+            "title": "Horas → Informes",
+            "desc": "Exporta el registro de jornada por empleado, proyecto o fecha. Válido para inspecciones laborales."
+          },
+          "i4": {
+            "title": "Alertas de incidencias",
+            "desc": "Aviso automático cuando un empleado no ha fichado o cuando hay horas extra no autorizadas."
+          }
+        }
+      },
+      "faq": {
+        "title": "Preguntas frecuentes",
+        "items": {
+          "q1": {
+            "q": "¿Es obligatorio el control horario en España?",
+            "a": "Sí. El Real Decreto-ley 8/2019 obliga a todas las empresas españolas a registrar la jornada laboral de sus empleados, independientemente de su tamaño. El incumplimiento puede conllevar multas de hasta 6.250 EUR por trabajador."
+          },
+          "q2": {
+            "q": "¿Cómo fichan los empleados con YouWhole?",
+            "a": "Los empleados pueden fichar desde la app web en el móvil con GPS activado, desde un código QR en la oficina, o el administrador puede registrar las horas manualmente. Todas las opciones quedan registradas con timestamp."
+          },
+          "q3": {
+            "q": "¿Se puede exportar el registro horario?",
+            "a": "Sí. YouWhole permite exportar el registro de horas en formato Excel o CSV, filtrado por empleado, proyecto o rango de fechas. Válido para inspecciones de trabajo y para tu gestor laboral."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Cumple la ley de control horario hoy",
+        "subtitle": "14 días gratis. Sin tarjeta. Activado desde el primer día.",
+        "cta": "Crear cuenta gratis"
+      }
+    },
+    "almacen": {
+      "seo": {
+        "title": "Software de Almacén e Inventario para Pymes — YouWhole",
+        "description": "Controla tu stock en tiempo real, gestiona proveedores y genera pedidos automáticos. Software de almacén e inventario integrado con facturación. Desde 29 EUR/mes.",
+        "ogTitle": "Software Almacén e Inventario Pymes — YouWhole",
+        "ogDescription": "Stock en tiempo real, pedidos automáticos y gestión de proveedores integrados con tu facturación."
+      },
+      "badge": "Inventario integrado con facturación",
+      "h1Line1": "Software de almacén e inventario",
+      "h1Highlight": "que se actualiza solo",
+      "subtitle": "Controla tu stock en tiempo real, gestiona proveedores y genera pedidos automáticos. Todo integrado con tu facturación para que nunca pierdas el control.",
+      "ctaPrimary": "Probar gratis 14 días",
+      "ctaSecondary": "Solicitar demo",
+      "trustLine": "Sin permanencia · Soporte en español · Integrado con ventas y compras",
+      "features": {
+        "title": "Control total de tu inventario",
+        "subtitle": "Diseñado para pymes que necesitan controlar su stock sin dedicarle horas cada semana.",
+        "items": {
+          "f1": {
+            "title": "Stock en tiempo real",
+            "desc": "Cada venta, compra o ajuste actualiza el inventario al instante. Nunca más vendas algo que no tienes."
+          },
+          "f2": {
+            "title": "Alertas de stock mínimo",
+            "desc": "Define el stock mínimo de cada producto. YouWhole te avisa automáticamente cuando toca reordenar."
+          },
+          "f3": {
+            "title": "Pedidos automáticos",
+            "desc": "Genera órdenes de compra a proveedores automáticamente cuando el stock baja del umbral que definas."
+          },
+          "f4": {
+            "title": "Gestión de proveedores",
+            "desc": "Registra precios, condiciones y plazos de cada proveedor. Compara costes y elige el mejor en cada pedido."
+          },
+          "f5": {
+            "title": "Múltiples almacenes",
+            "desc": "Gestiona varios almacenes o ubicaciones desde un solo panel. Transfiere stock entre ubicaciones con un clic."
+          },
+          "f6": {
+            "title": "Integrado con facturación",
+            "desc": "Cada factura de venta descuenta automáticamente el stock. Cada factura de compra lo incrementa."
+          }
+        }
+      },
+      "integration": {
+        "title": "Integrado con toda tu empresa",
+        "subtitle": "El almacén de YouWhole no funciona aislado — se conecta con ventas, compras, CRM y facturación.",
+        "items": {
+          "i1": {
+            "title": "Venta → descuento automático de stock",
+            "desc": "Cuando emites una factura o albarán, el stock se reduce automáticamente. Sin ajustes manuales."
+          },
+          "i2": {
+            "title": "Compra → entrada automática al almacén",
+            "desc": "Cuando registras una factura de proveedor, los productos entran al inventario con su precio de coste."
+          },
+          "i3": {
+            "title": "Presupuesto → reserva de stock",
+            "desc": "Un presupuesto aprobado puede reservar unidades para que no se vendan a otro cliente mientras se confirma."
+          },
+          "i4": {
+            "title": "Valoración de inventario en tiempo real",
+            "desc": "Consulta el valor de tu almacén a precio de coste en cualquier momento desde el panel de control."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Tu almacén bajo control desde hoy",
+        "subtitle": "14 días gratis. Sin tarjeta. Stock integrado con tu facturación desde el primer día.",
+        "cta": "Empezar gratis ahora"
+      }
+    },
+    "crm": {
+      "seo": {
+        "title": "Software CRM para Pymes España — YouWhole",
+        "description": "CRM integrado con facturación para pymes españolas. Gestiona clientes, leads, pipeline de ventas y presupuestos en una sola plataforma. Sin suscripciones extra. Desde 29 EUR/mes.",
+        "ogTitle": "Software CRM para Pymes — YouWhole",
+        "ogDescription": "Gestiona clientes, leads y ventas integrado con tu facturación. Sin herramientas externas."
+      },
+      "badge": "CRM integrado con facturación",
+      "h1Line1": "CRM para pymes que no quieren",
+      "h1Highlight": "pagar por otra herramienta",
+      "subtitle": "YouWhole incluye un CRM completo integrado con tu facturación. Gestiona clientes, leads y pipeline de ventas sin salir de la plataforma — ni pagar una suscripción extra.",
+      "ctaPrimary": "Probar gratis 14 días",
+      "ctaSecondary": "Solicitar demo",
+      "trustLine": "Sin permanencia · CRM incluido en todos los planes · Soporte en español",
+      "features": {
+        "title": "Todo lo que necesita el CRM de tu pyme",
+        "subtitle": "Sin la complejidad de Salesforce ni el precio de HubSpot. Diseñado para pymes reales.",
+        "items": {
+          "f1": {
+            "title": "Gestión de clientes",
+            "desc": "Ficha completa de cada cliente con historial de facturas, presupuestos, contactos y notas. Todo en un solo lugar."
+          },
+          "f2": {
+            "title": "Pipeline de ventas Kanban",
+            "desc": "Visualiza tus oportunidades en un tablero Kanban. Arrastra deals entre etapas y cierra más ventas."
+          },
+          "f3": {
+            "title": "Leads y prospectos",
+            "desc": "Registra leads desde el primer contacto, asígnalos a un comercial y haz seguimiento hasta el cierre."
+          },
+          "f4": {
+            "title": "Presupuestos profesionales",
+            "desc": "Crea presupuestos con tu logo y conviértelos en facturas con un clic cuando el cliente diga sí."
+          },
+          "f5": {
+            "title": "Historial de comunicaciones",
+            "desc": "Registra llamadas, emails y reuniones por cliente. Nunca pierdas el hilo de una negociación."
+          },
+          "f6": {
+            "title": "Integrado con facturación",
+            "desc": "Del presupuesto a la factura VeriFactu en un clic. Sin exportar ni copiar datos entre programas."
+          }
+        }
+      },
+      "why": {
+        "title": "¿Por qué un CRM integrado con facturación?",
+        "subtitle": "La mayoría de pymes usa 3-4 herramientas distintas que no se hablan entre sí. Con YouWhole todo está conectado.",
+        "items": {
+          "w1": {
+            "title": "Presupuesto → Factura en un clic",
+            "desc": "Cuando el cliente acepta el presupuesto, se convierte en factura VeriFactu automáticamente. Sin copiar datos."
+          },
+          "w2": {
+            "title": "Cliente → Historial completo",
+            "desc": "Desde la ficha del cliente ves todas sus facturas, presupuestos, pagos pendientes y comunicaciones anteriores."
+          },
+          "w3": {
+            "title": "Lead → Cliente → Factura",
+            "desc": "El ciclo completo de venta en una sola plataforma: desde el primer contacto hasta el cobro de la factura."
+          },
+          "w4": {
+            "title": "Sin duplicar datos",
+            "desc": "Los datos del cliente se comparten entre CRM, facturación, contabilidad y RRHH. Sin exportaciones ni copiar-pegar."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Empieza a vender más, desde hoy",
+        "subtitle": "CRM incluido en todos los planes. 14 días gratis sin tarjeta.",
+        "cta": "Crear cuenta gratis"
+      }
+    },
+    "contabilidad": {
+      "seo": {
+        "title": "Software de Contabilidad para Pymes España — YouWhole",
+        "description": "Contabilidad automática según el PGC español. Asientos automáticos, balance, cuenta de pérdidas y ganancias, e IVA integrado con facturación. Para pymes y autónomos. Desde 29 EUR/mes.",
+        "ogTitle": "Software Contabilidad Pymes — YouWhole",
+        "ogDescription": "Asientos automáticos según el PGC español. Integrado con facturación VeriFactu. Sin conocimientos contables."
+      },
+      "badge": "Contabilidad automática PGC",
+      "h1Line1": "Software de contabilidad para pymes",
+      "h1Highlight": "que se lleva sola",
+      "subtitle": "YouWhole genera los asientos contables automáticamente según el Plan General Contable español. Tú emites facturas — la contabilidad se hace sola, sin errores, sin conocimientos previos.",
+      "ctaPrimary": "Probar gratis 14 días",
+      "ctaSecondary": "Solicitar demo",
+      "trustLine": "Sin permanencia · PGC español · Acceso para tu asesor",
+      "automatic": {
+        "title": "Qué hace YouWhole automáticamente",
+        "subtitle": "No necesitas tocar la contabilidad. Estos procesos ocurren solos cuando usas la plataforma.",
+        "items": {
+          "a1": {
+            "title": "Asientos de ventas",
+            "desc": "Cada factura emitida genera el asiento de ingreso con su cuenta de IVA repercutido e IRPF retenido."
+          },
+          "a2": {
+            "title": "Asientos de compras",
+            "desc": "Cada factura de proveedor registrada genera el asiento de gasto con IVA soportado deducible."
+          },
+          "a3": {
+            "title": "Libro de IVA",
+            "desc": "El libro de IVA soportado y repercutido se genera automáticamente cada trimestre, listo para presentar."
+          },
+          "a4": {
+            "title": "Balance y P&G",
+            "desc": "Consulta el balance de situación y la cuenta de pérdidas y ganancias en tiempo real, sin esperar al cierre."
+          },
+          "a5": {
+            "title": "Conciliación bancaria",
+            "desc": "Conecta tu banco y concilia cobros y pagos con las facturas pendientes automáticamente."
+          },
+          "a6": {
+            "title": "Acceso del asesor",
+            "desc": "Invita a tu gestor con rol Contable para que acceda a los datos sin tocar la configuración de tu empresa."
+          }
+        }
+      },
+      "pgcTable": {
+        "title": "Cumple con el PGC español sin esfuerzo",
+        "subtitle": "El Plan General Contable español define cómo deben registrarse las operaciones contables. YouWhole lo aplica automáticamente en cada operación.",
+        "colOp": "Operación",
+        "colAccount": "Cuenta PGC",
+        "colAuto": "Automático",
+        "yes": "Sí",
+        "rows": {
+          "r1": {
+            "op": "Factura de venta",
+            "account": "700 – Ventas"
+          },
+          "r2": {
+            "op": "IVA repercutido",
+            "account": "477 – HP IVA repercutido"
+          },
+          "r3": {
+            "op": "IRPF retenido",
+            "account": "473 – HP retenciones IRPF"
+          },
+          "r4": {
+            "op": "Factura de compra",
+            "account": "600/620/621 – Compras y gastos"
+          },
+          "r5": {
+            "op": "IVA soportado",
+            "account": "472 – HP IVA soportado"
+          },
+          "r6": {
+            "op": "Cobro de cliente",
+            "account": "430/570 – Clientes y Tesorería"
+          }
+        }
+      },
+      "faq": {
+        "title": "Preguntas frecuentes",
+        "items": {
+          "q1": {
+            "q": "¿YouWhole lleva la contabilidad automáticamente?",
+            "a": "Sí. Cada factura emitida y recibida genera automáticamente el asiento contable correspondiente según el Plan General Contable español. No necesitas introducir los asientos manualmente."
+          },
+          "q2": {
+            "q": "¿Necesito saber contabilidad para usar YouWhole?",
+            "a": "No. YouWhole genera todos los asientos contables de forma automática. Tú solo introduces las facturas y cobros, y el sistema hace el resto. Para casos complejos, puedes dar acceso a tu asesor contable."
+          },
+          "q3": {
+            "q": "¿Puedo dar acceso a mi gestor o asesor contable?",
+            "a": "Sí. YouWhole permite invitar a tu asesor con rol de Contable. Tendrá acceso a la contabilidad, facturas y datos fiscales sin poder modificar configuraciones sensibles de la empresa."
+          },
+          "q4": {
+            "q": "¿Cumple con el Plan General Contable español?",
+            "a": "Sí. YouWhole genera asientos según el PGC (Plan General Contable) español vigente, con los códigos de cuenta correspondientes para cada tipo de operación: ventas, compras, IVA, IRPF y gastos."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "La contabilidad de tu pyme, en piloto automático",
+        "subtitle": "14 días gratis. Sin tarjeta. Sin conocimientos contables necesarios.",
+        "cta": "Empezar gratis ahora"
+      }
+    },
+    "nominas": {
+      "seo": {
+        "title": "Software de Nóminas para Pymes España — YouWhole",
+        "description": "Genera nóminas automáticas con IRPF y Seguridad Social calculados. Software de nóminas para pymes español integrado con control horario y contabilidad. Desde 29 EUR/mes.",
+        "ogTitle": "Software Nóminas Pymes — YouWhole",
+        "ogDescription": "Nóminas automáticas con IRPF y SS calculados. Integrado con control horario y contabilidad."
+      },
+      "badge": "Nóminas integradas con RRHH",
+      "h1Line1": "Software de nóminas para pymes",
+      "h1Highlight": "sin errores de cálculo",
+      "subtitle": "YouWhole calcula automáticamente el IRPF y la Seguridad Social de cada empleado. Genera nóminas en segundos, integradas con el control horario y la contabilidad.",
+      "ctaPrimary": "Probar gratis 14 días",
+      "ctaSecondary": "Solicitar demo",
+      "trustLine": "Sin permanencia · IRPF y SS automáticos · Soporte en español",
+      "features": {
+        "title": "Nóminas sin complicaciones",
+        "subtitle": "Diseñado para gestores que necesitan procesar nóminas rápido, sin ser expertos en derecho laboral.",
+        "items": {
+          "f1": {
+            "title": "Cálculo automático de IRPF",
+            "desc": "YouWhole calcula la retención IRPF de cada empleado según su situación personal y el tramo que le corresponde."
+          },
+          "f2": {
+            "title": "Seguridad Social",
+            "desc": "Cotizaciones a la Seguridad Social calculadas automáticamente por contingencias comunes, desempleo y formación."
+          },
+          "f3": {
+            "title": "Nómina mensual en segundos",
+            "desc": "Con los datos del contrato y las horas trabajadas, la nómina de cada empleado se genera en un clic."
+          },
+          "f4": {
+            "title": "Integrado con control horario",
+            "desc": "Las horas registradas alimentan directamente la nómina. Las horas extra se calculan y aplican automáticamente."
+          },
+          "f5": {
+            "title": "Portal del empleado",
+            "desc": "Cada empleado accede a sus nóminas históricas desde su cuenta. Sin imprimir, sin enviar por email."
+          },
+          "f6": {
+            "title": "Exportación para gestor laboral",
+            "desc": "Exporta todas las nóminas en formato estándar para que tu gestor laboral las valide antes de presentarlas a la SS."
+          }
+        }
+      },
+      "howItWorks": {
+        "title": "Cómo funciona el proceso de nóminas",
+        "steps": {
+          "s1": {
+            "t": "Configuras el contrato",
+            "d": "Introduces el salario bruto, tipo de contrato, IRPF aplicable y datos de la SS del empleado."
+          },
+          "s2": {
+            "t": "Empleado ficha sus horas",
+            "d": "El control horario registra automáticamente las horas trabajadas cada día del mes."
+          },
+          "s3": {
+            "t": "Generas la nómina",
+            "d": "Con un clic, YouWhole calcula la nómina completa: bruto, deducciones, IRPF, SS y neto."
+          },
+          "s4": {
+            "t": "Empleado la consulta",
+            "d": "El empleado accede a su nómina desde el portal. Tú la exportas para el gestor laboral."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Nóminas listas en minutos cada mes",
+        "subtitle": "14 días gratis. Sin tarjeta. IRPF y SS calculados automáticamente.",
+        "cta": "Empezar gratis ahora"
+      }
+    }
   }
 }

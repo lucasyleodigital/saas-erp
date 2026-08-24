@@ -2668,5 +2668,1075 @@
       "madeInSpain": "Espainian egina",
       "designedBy": "Honek diseinatu eta garatua:"
     }
+  },
+  "satellite": {
+    "erpAutonomos": {
+      "seo": {
+        "title": "Espainiako Autonomoentzako ERPa — YouWhole",
+        "description": "Autonomoek autonomoentzat diseinatutako ERPa. VeriFactu fakturazioa, IRPF automatikoa, 130/303 eredua, PGC kontabilitatea eta CRM. Iraunkortasunik gabe. 29 EUR/hilean hasita.",
+        "ogTitle": "Espainiako Autonomoentzako ERPa — YouWhole",
+        "ogDescription": "Autonomoek autonomoentzat diseinatua. VeriFactu, IRPF, 130/303 eredua eta CRM plataforma bakarrean."
+      },
+      "badge": "Autonomoek autonomoentzat sortua",
+      "h1Line1": "Espainiako autonomoek",
+      "h1Highlight": "behar zuten ERPa",
+      "subtitle": "VeriFactu fakturazioa, IRPF automatikoa, 130/303 eredua, PGC kontabilitatea eta CRM. Benetako autonomo batek lan egiten duen moduan pentsatutako plataforma bakarra.",
+      "ctaPrimary": "Hasi doan — 14 egun txartelik gabe",
+      "ctaSecondary": "Eskatu demo bat",
+      "trustLine": "Iraunkortasunik gabe · Utzi nahi duzunean · Euskarazko laguntza",
+      "features": {
+        "title": "Autonomo batek behar duen guztia",
+        "subtitle": "Espainiako autonomoaren errealitaterako berariaz diseinatua: Ogasuna, bezeroak, denbora eta dirua.",
+        "items": {
+          "f1": {
+            "title": "AEAT ziurtatutako VeriFactu",
+            "desc": "Bete lehen egunetik betebehar legala. Faktura bakoitza automatikoki erregistratzen da Zerga Agentzian."
+          },
+          "f2": {
+            "title": "IRPF automatikoa",
+            "desc": "Kalkulatu eta aplikatu IRPF atxikipena faktura bakoitzean bezero motaren arabera. Errorerik gabe, kalkulu manualik gabe."
+          },
+          "f3": {
+            "title": "130 eta 303 ereduak integratuta",
+            "desc": "Sortu zure hiruhileko aitorpenen datuak segundotan. Denbora gutxiago Ogasunarekin, denbora gehiago fakturatzen."
+          },
+          "f4": {
+            "title": "PGC kontabilitatea",
+            "desc": "Kontabilitate-asiento automatikoak Espainiako Kontu Plan Orokorraren arabera. Kudeatzailerik behar izan gabe eguneroko lanerako."
+          },
+          "f5": {
+            "title": "CRM eta aurrekontuak",
+            "desc": "Kudeatu zure bezeroak, bidali aurrekontu profesionalak eta bihurtu faktura klik batean."
+          },
+          "f6": {
+            "title": "Ordutegi-kontrola eta proiektuak",
+            "desc": "Fitxatu orduak proiektuka, kalkulatu errentagarritasuna eta fakturatu lan egindako denbora zuzenean."
+          }
+        }
+      },
+      "comparison": {
+        "title": "Zergatik YouWhole eta ez beste ERP bat?",
+        "subtitle": "Fakturazio-programa asko daude. Baina oso gutxi Espainiako autonomo errealentzat pentsatuak.",
+        "colFeat": "Ezaugarria",
+        "colYw": "YouWhole",
+        "colOther": "Beste ERPak",
+        "rows": {
+          "r1": {
+            "feat": "AEAT ziurtatutako VeriFactu",
+            "yw": "Plan guztietan barne",
+            "other": "Plan garestietan bakarrik edo barne gabe"
+          },
+          "r2": {
+            "feat": "IRPF automatikoa",
+            "yw": "Bai, lehenetsita",
+            "other": "Eskuzkoa edo ez erabilgarri"
+          },
+          "r3": {
+            "feat": "130/303 eredua integratuta",
+            "yw": "Datuak automatikoki sortuak",
+            "other": "Eskuzko esportazioa edo modulu gehigarria"
+          },
+          "r4": {
+            "feat": "Oinarrizko prezioa",
+            "yw": "Doan / 29 EUR/hilean",
+            "other": "30-80 EUR/hilean hasita"
+          },
+          "r5": {
+            "feat": "Euskarazko laguntza",
+            "yw": "Txata eta emaila Espainiako ordutegian",
+            "other": "Nazioarteko tiketak"
+          },
+          "r6": {
+            "feat": "Iraunkortasunik gabe",
+            "yw": "Bai, utzi nahi duzunean",
+            "other": "Urteko kontratuak ohikoak"
+          }
+        }
+      },
+      "faq": {
+        "title": "Maiz egiten diren galderak",
+        "items": {
+          "q1": {
+            "q": "YouWhole egokia al da gutxi fakturatzen duten autonomoentzat?",
+            "a": "Bai. Doako planak 5 bezero eta 10 faktura arte ditu hilean — nahikoa hasteko. Handitzen zarenean, Starter planak, 29 EUR/hilabetetik hasita, ez du mugarik."
+          },
+          "q2": {
+            "q": "Kontabilitatea jakin behar dut YouWhole erabiltzeko?",
+            "a": "Ez. Plataformak kontabilitate-asientoak automatikoki sortzen ditu. Zuk fakturak eta kobrantzak sartu besterik ez duzu egin behar — sistemak gainerakoa egiten du."
+          },
+          "q3": {
+            "q": "IRPF neuk kudeatu dezaket kudeatzailerik gabe?",
+            "a": "Bai eguneroko lanerako. YouWholek atxikipenak kalkulatzen ditu, 130 ereduaren laburpena sortzen du eta aurkezteko datu guztiak ematen dizkizu. Kasu konplexuetarako, aholkulari batekin berrikustea gomendatzen dugu beti."
+          },
+          "q4": {
+            "q": "Mugikorrean funtzionatzen al du?",
+            "a": "Bai. YouWhole erabat erantzunkorra den web-app bat da. Fakturak sortu, bezeroak kontsultatu eta zure panela ikusi ditzakezu mugikorretik edo tabletatik."
+          }
+        }
+      },
+      "pricing": {
+        "title": "Autonomoentzat pentsatutako prezioak",
+        "subtitle": "Letra txikirik gabe. Hasi doan eta eskalatu behar duzunean."
+      },
+      "finalCta": {
+        "title": "Probatu doan 14 egunez",
+        "subtitle": "Kreditu-txartelik gabe. Iraunkortasunik gabe. Letra txikirik gabe.",
+        "cta": "Sortu nire doako kontua"
+      }
+    },
+    "facturacionPymes": {
+      "seo": {
+        "title": "ETEentzako Fakturazio Softwarea — YouWhole",
+        "description": "Espainiako ETEentzako fakturazio-softwarea, VeriFactu ziurtatuarekin, PGC kontabilitatearekin, nominekin, CRMarekin eta proiektu-kudeaketarekin. Dena batean. 29 EUR/hilean hasita, iraunkortasunik gabe.",
+        "ogTitle": "ETEentzako Fakturazio Softwarea — YouWhole",
+        "ogDescription": "Zure ETEak behar duen guztia: VeriFactu fakturazioa, nominak, CRM, PGC kontabilitatea eta gehiago. 29 EUR/hilean hasita."
+      },
+      "badge": "Dena batean ETEentzat",
+      "h1Line1": "Fakturak baino gehiago den",
+      "h1Highlight": "ETEentzako fakturazio softwarea",
+      "subtitle": "YouWholek zure ETEak behar duen guztia biltzen du plataforma bakarrean: VeriFactu fakturazioa, kontabilitatea, nominak, CRMa, inbentarioa eta proiektuak. Integraziorik gabe. Ezustekorik gabe.",
+      "ctaPrimary": "Probatu doan 14 egunez",
+      "ctaSecondary": "Eskatu demo bat nire ETErako",
+      "trustLine": "Iraunkortasunik gabe · Euskarazko laguntza · Migrazio lagundua",
+      "modules": {
+        "title": "8 modulu integratu plataforma bakarrean",
+        "subtitle": "Ahaztu 5 programa desberdin konektatzeaz. YouWholek dena du eta datuak automatikoki partekatzen ditu moduluen artean.",
+        "items": {
+          "m1": {
+            "title": "VeriFactu fakturazioa",
+            "desc": "Igorri AEAT ziurtatutako fakturak. Faktura errepikakorrak, multi-dibisa eta hainbat hizkuntzatan (es, ca, eu, gl, en) barne."
+          },
+          "m2": {
+            "title": "PGC kontabilitatea",
+            "desc": "Asiento automatikoak Espainiako Kontu Plan Orokorraren arabera. Denbora errealeko kontabilitate-koadratzea aurretiko ezagutzarik gabe."
+          },
+          "m3": {
+            "title": "Nominak eta giza baliabideak",
+            "desc": "Sortu nominak, kudeatu kontratuak eta kontrolatu langile bakoitzaren lan-denbora proiektuka."
+          },
+          "m4": {
+            "title": "CRM eta salmentak",
+            "desc": "Kudeatu zure salmenta-pipelinea Kanban bidez, erregistratu aukerak eta bihurtu aurrekontuak fakturetan."
+          },
+          "m5": {
+            "title": "Proiektu-kudeaketa",
+            "desc": "Kontrolatu proiektu bakoitzaren errentagarritasuna, esleitu langileak eta fakturatu lan egindako denbora."
+          },
+          "m6": {
+            "title": "Inbentarioa eta biltegia",
+            "desc": "Kontrolatu stocka, kudeatu hornitzaileak eta sortu erosketa-eskaera automatikoak inbentarioa jaisten denean."
+          },
+          "m7": {
+            "title": "Bankua eta berdinkatzea",
+            "desc": "Konektatu zure banku-kontua eta berdinkatu automatikoki kobrantzak eta ordainketak zure fakturekin."
+          },
+          "m8": {
+            "title": "Automatizazioak",
+            "desc": "Ordainketa-oroigarriak, faktura errepikakorrak, stock-alertak eta kodearik gabeko fluxu pertsonalizatuak."
+          }
+        }
+      },
+      "sectors": {
+        "title": "Zer ETE motarentzat da YouWhole?",
+        "list": [
+          "Agentziak eta aholkularitzak",
+          "Zerbitzu-enpresak",
+          "Merkataritzak eta dendak",
+          "Eraikuntza eta erreformak",
+          "Ostalaritza eta jatetxeak",
+          "Teknologia eta startupak",
+          "Klinikak eta osasuna",
+          "Garraioa eta logistika",
+          "Hezkuntza eta prestakuntza"
+        ],
+        "footnotePre": "Zure sektorea ez da agertzen?",
+        "footnoteLink": "Idatzi diezagukezu eta esango dizugu YouWhole zure negoziora nola egokitzen den"
+      },
+      "pricing": {
+        "title": "Edozein tamainatako ETEentzako prezioak",
+        "subtitle": "Ezkutuko kosturik gabe. Iraunkortasunik gabe. Eskalatu behar duzunean."
+      },
+      "finalCta": {
+        "title": "Zure ETEa hurrengo mailarako prest?",
+        "subtitle": "14 egun doan. Txartelik gabe. Taldeak migrazioan laguntzen dizu.",
+        "cta": "Hasi doan orain"
+      }
+    },
+    "verifactu": {
+      "seo": {
+        "title": "AEAT Ziurtatutako VeriFactu Softwarea — YouWhole",
+        "description": "YouWhole Zerga Agentziak VeriFactu ziurtatutako fakturazio-softwarea da. Bete lehen egunetik betebehar legala. Plan guztietan barne, doakoa barne.",
+        "ogTitle": "AEAT Ziurtatutako VeriFactu Softwarea — YouWhole",
+        "ogDescription": "Bete VeriFactu betebeharra lehen egunetik. YouWholeren plan guztietan barne."
+      },
+      "badge": "AEAT ziurtatua",
+      "h1Line1": "VeriFactu software ziurtatua,",
+      "h1Highlight": "plan guztietan barne",
+      "subtitle": "YouWholek Zerga Agentziaren VeriFactu betebeharra lehen egunetik betetzen du. Konfiguraziorik gabe. Modulu gehigarririk gabe. Kosturik gabe.",
+      "cta": "Hasi doan — VeriFactu barne",
+      "intro": {
+        "title": "Zer da VeriFactu eta zergatik da nahitaezkoa?",
+        "p1Pre": "VeriFactu Espainiako Zerga Agentziak onartutako fakturen egiaztapen-sistema da, Fakturazio Erregelamenduaren (2023/1007 ED) baitan. Bere helburua",
+        "p1Strong": "osotasuna eta aldaezintasuna",
+        "p1Post": "bermatzea da, Espainian enpresek eta autonomoek igorritako faktura guztietan.",
+        "p2Pre": "2025etik aurrera, erabiltzen duzun edozein fakturazio-softwarek",
+        "p2Strong": "VeriFactu ziurtatua",
+        "p2Post": "izan behar du legez funtzionatzeko. Ziurtatu gabeko programa bat erabiltzeak 50.000 EUR arteko zehapenak ekar ditzake.",
+        "p3": "YouWholerekin, igortzen duzun faktura bakoitza automatikoki erregistratzen da AEATen bere hatz-marka digitalarekin. Zuk ez duzu ezer gehigarririk egin behar — sistemak atzeko planoan kudeatzen du."
+      },
+      "howItWorks": {
+        "title": "Nola funtzionatzen du VeriFactuk YouWholen",
+        "steps": {
+          "s1": {
+            "t": "Faktura sortzen duzu",
+            "d": "Bezeroaren datuak, kontzeptuak eta zenbatekoak sartzen dituzu beti bezala."
+          },
+          "s2": {
+            "t": "Erregistro automatikoa",
+            "d": "YouWholek fakturaren hatz-marka digitala sortzen du eta denbora errealean bidaltzen dio AEATi."
+          },
+          "s3": {
+            "t": "AEAT berrespena",
+            "d": "Erregistro-berrespena jasotzen duzu. Zure faktura legez baliozkoa eta egiaztagarria da."
+          }
+        }
+      },
+      "faq": {
+        "title": "VeriFactu-ri buruzko maiz egiten diren galderak",
+        "items": {
+          "q1": {
+            "q": "Zer da VeriFactu?",
+            "a": "VeriFactu Espainiako Zerga Agentziaren (AEAT) fakturen egiaztapen-sistema da. 2025etik aurrera, enpresek eta autonomoek erabilitako fakturazio-software guztiak VeriFactu ziurtatua izan behar du, igorritako fakturen osotasuna eta aldaezintasuna bermatzeko."
+          },
+          "q2": {
+            "q": "Nahitaezkoa al da VeriFactu duen software bat erabiltzea?",
+            "a": "Bai. 2023an onartutako Fakturazio Erregelamenduak Espainiako enpresaburu eta profesional guztiak behartzen ditu VeriFactu betetzen duten fakturazio-sistemak erabiltzera. Ez betetzeak Ogasunaren zehapenak ekar ditzake."
+          },
+          "q3": {
+            "q": "Ziurtatuta al dago YouWhole AEATen aurrean?",
+            "a": "Bai. YouWhole ziurtatuta dago fakturazio-erregistroak AEATera VeriFactu sistemaren bidez bidaltzeko. Igorritako faktura bakoitzak automatikoki sortzen du dagokion erregistroa eta Ogasunera bidaltzen du."
+          },
+          "q4": {
+            "q": "Zerbait berezia egin behar dut VeriFactu aktibatzeko YouWholen?",
+            "a": "Ez. VeriFactu lehenetsita dago aktibo YouWholeren kontu guztietan erregistratu bezain laster. Ez duzu ezer konfiguratu behar ezta modulu gehigarririk kontratatu ere."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Bete VeriFactu gaurtik",
+        "subtitle": "Doan 10 faktura arte hilean. Kreditu-txartelik gabe.",
+        "cta": "Sortu doako kontua"
+      }
+    },
+    "holded": {
+      "seo": {
+        "title": "Holdedren Alternatiba Autonomo eta ETEentzat — YouWhole",
+        "description": "Holdedren alternatiba osatuago eta merkeago bat bilatzen? YouWholek AEAT ziurtatutako VeriFactu, IRPF automatikoa, 130/303 eredua eta euskarazko laguntza ditu. 29 EUR/hilean hasita.",
+        "ogTitle": "Holdedren Alternatiba — YouWhole",
+        "ogDescription": "Holded baino osatuagoa Espainiako merkaturako. VeriFactu, IRPF, 130/303 eredua eta euskara/gaztelaniazko laguntza jatorrizkoa."
+      },
+      "badge": "Konparaketa zintzoa",
+      "h1Line1": "Ogasunarekin benetan betetzen duen",
+      "h1Highlight": "Holdedren alternatiba",
+      "subtitle": "YouWholek AEAT ziurtatutako VeriFactu, IRPF automatikoa eta 130/303 eredua ditu jatorrizko. Modulu gehigarririk gabe. Fakturan ezustekorik gabe.",
+      "ctaPrimary": "Probatu YouWhole doan",
+      "ctaSecondary": "Hitz egin taldearekin",
+      "trustLine": "14 egun doan · Txartelik gabe · Holdedetik migrazio lagundua",
+      "comparison": {
+        "title": "YouWhole vs Holded",
+        "subtitle": "Espainiako autonomo eta ETEentzako ezaugarrien konparaketa",
+        "colFeat": "Ezaugarria",
+        "colOther": "Holded",
+        "included": "Barne",
+        "no": "Ez",
+        "yes": "Bai",
+        "notAvailable": "Ez erabilgarri",
+        "footnote": "Argitaratutako planetan oinarritutako informazioa. 2026ko uztailean eguneratua.",
+        "rows": {
+          "r1": {
+            "feat": "AEAT ziurtatutako VeriFactu",
+            "yw": true,
+            "other": false,
+            "note": "Holdedek ez du VeriFactu jatorrizkorik"
+          },
+          "r2": {
+            "feat": "IRPF automatikoa autonomoentzat",
+            "yw": true,
+            "other": false,
+            "note": "Holdeden eskuzko konfigurazioa da"
+          },
+          "r3": {
+            "feat": "130/303 eredua integratuta",
+            "yw": true,
+            "other": false,
+            "note": "Holdedek kontabilitate-modulu gehigarria behar du"
+          },
+          "r4": {
+            "feat": "Benetako doako plana",
+            "yw": true,
+            "other": false,
+            "note": "Holdedek ez du iraunkorki doako planik"
+          },
+          "r5": {
+            "feat": "Oinarrizko hileroko prezioa",
+            "yw": "29 EUR",
+            "other": "49 EUR-tik hasita",
+            "note": ""
+          },
+          "r6": {
+            "feat": "Euskara/gaztelaniazko laguntza jatorrizkoa",
+            "yw": true,
+            "other": true,
+            "note": ""
+          },
+          "r7": {
+            "feat": "Iraunkortasunik gabe",
+            "yw": true,
+            "other": false,
+            "note": "Holdedek urtekoa kobratzen du lehenetsita"
+          },
+          "r8": {
+            "feat": "Hizkuntza anitz (ca, eu, gl)",
+            "yw": true,
+            "other": false,
+            "note": "YouWholek 5 hizkuntza penintsular onartzen ditu"
+          },
+          "r9": {
+            "feat": "Langileen ordutegi-kontrola",
+            "yw": true,
+            "other": true,
+            "note": ""
+          },
+          "r10": {
+            "feat": "Langile ataria",
+            "yw": true,
+            "other": true,
+            "note": ""
+          }
+        }
+      },
+      "migration": {
+        "title": "Migratu Holdedetik zure datuak galdu gabe",
+        "subtitle": "Inportatu zure bezeroak, fakturak eta produktuak Holdedetik minutu gutxitan. Gure taldeak trantsizioa etenik gabe egiten laguntzen dizu.",
+        "steps": {
+          "s1": {
+            "t": "Esportatu Holdedetik",
+            "d": "Deskargatu zure datuak CSV edo Excel formatuan Holdeden panelatik."
+          },
+          "s2": {
+            "t": "Inportatu YouWholen",
+            "d": "Erabili gure inportatzailea bezeroak, produktuak eta fakturak kargatzeko."
+          },
+          "s3": {
+            "t": "Fakturatzeko prest",
+            "d": "Zure enpresa YouWholen martxan ordu 1 baino gutxiagoan."
+          }
+        },
+        "cta": "Hasi doako migrazioa"
+      }
+    },
+    "sage": {
+      "seo": {
+        "title": "Sageren Alternatiba Autonomo eta ETEentzat — YouWhole",
+        "description": "Sage garestiegia edo konplexuegia al da zure negoziorako? YouWhole alternatiba modernoa da: VeriFactu ziurtatua, IRPF automatikoa, instalaziorik gabe eta 29 EUR/hilean hasita.",
+        "ogTitle": "Sageren Alternatiba Autonomoentzat — YouWhole",
+        "ogDescription": "Sage baino errazagoa eta merkeagoa. VeriFactu barne, instalaziorik gabe, 29 EUR/hilean hasita."
+      },
+      "badge": "Konparaketa zintzoa",
+      "h1Line1": "Instalaziorik behar ez duen",
+      "h1Highlight": "Sageren alternatiba",
+      "subtitle": "YouWhole %100 hodeian dago, AEAT ziurtatutako VeriFactu du eta Sage baino gutxiago kostatzen da. Instalaziorik gabe, bertsio zaharkiturik gabe, ezustekorik gabe.",
+      "ctaPrimary": "Probatu YouWhole doan",
+      "ctaSecondary": "Hitz egin taldearekin",
+      "trustLine": "14 egun doan · Txartelik gabe · Sagetik migrazio lagundua",
+      "reasons": {
+        "title": "Zergatik uzten dute autonomoek Sage?",
+        "subtitle": "Sagek hamarkadak daramatza merkatuan, baina beste garai baterako diseinatua izan zen. Hauek dira kexa ohikoenak.",
+        "items": {
+          "r1": {
+            "t": "Instalazio lokala",
+            "d": "Sage 50ek ordenagailu bakoitzean softwarea instalatzea eskatzen du. Ekipoz aldatzen baduzu edo urrutitik lan egiten baduzu, arazoa duzu."
+          },
+          "r2": {
+            "t": "VeriFactu jatorrizkorik gabe",
+            "d": "2025eko AEAT araudia betetzeak Sagek lehenetsita ez duen modulu gehigarri ordaindua eskatzen du."
+          },
+          "r3": {
+            "t": "Lizentzia-prezioa",
+            "d": "Sageren urteko lizentziak metatzen dira. ETE txiki batentzat, kostua zaila da justifikatzea."
+          },
+          "r4": {
+            "t": "Ikaskuntza-kurba garaia",
+            "d": "Sage kontularitza profesionalentzat diseinatua izan zen. Kontabilitate-prestakuntzarik gabeko autonomo batentzat behar baino konplexuagoa da."
+          },
+          "r5": {
+            "t": "Benetako app mugikorrik gabe",
+            "d": "Mugikorretik faktura bat kontsultatzea edo gastu bat erregistratzea ia ezinezkoa da Sage 50ekin."
+          },
+          "r6": {
+            "t": "Ordaindutako eguneratzeak",
+            "d": "Sageren bertsio berri bakoitzak eguneraketa ordaintzea eskatzen du. YouWholerekin, eguneratzeak automatikoak dira eta barne daude."
+          }
+        }
+      },
+      "comparison": {
+        "title": "YouWhole vs Sage",
+        "subtitle": "Autonomo eta ETEentzako ezaugarrien konparaketa",
+        "colFeat": "Ezaugarria",
+        "colOther": "Sage",
+        "included": "Barne",
+        "no": "Ez",
+        "yes": "Bai",
+        "notAvailable": "Ez erabilgarri",
+        "footnote": "Argitaratutako planetan oinarritutako informazioa. 2026ko uztailean eguneratua.",
+        "rows": {
+          "r1": {
+            "feat": "AEAT ziurtatutako VeriFactu",
+            "yw": true,
+            "other": false,
+            "note": "Sagek modulu gehigarri ordaindua eskatzen du"
+          },
+          "r2": {
+            "feat": "IRPF automatikoa autonomoentzat",
+            "yw": true,
+            "other": false,
+            "note": "Sagen eskuzko konfigurazioa da"
+          },
+          "r3": {
+            "feat": "Hodeian oinarritua (instalaziorik gabe)",
+            "yw": true,
+            "other": false,
+            "note": "Sage 50ek instalazio lokala eskatzen du"
+          },
+          "r4": {
+            "feat": "Doako plana erabilgarri",
+            "yw": true,
+            "other": false,
+            "note": "Sagek ez du doako planik"
+          },
+          "r5": {
+            "feat": "Oinarrizko hileroko prezioa",
+            "yw": "29 EUR",
+            "other": "50 EUR-tik hasita",
+            "note": ""
+          },
+          "r6": {
+            "feat": "Eguneraketa automatikoak",
+            "yw": true,
+            "other": false,
+            "note": "Sagek bertsio berriak erostea eskatzen du"
+          },
+          "r7": {
+            "feat": "Hizkuntza anitz (ca, eu, gl)",
+            "yw": true,
+            "other": false,
+            "note": "YouWholek 5 hizkuntza penintsular onartzen ditu"
+          },
+          "r8": {
+            "feat": "Euskara/gaztelaniazko laguntza",
+            "yw": true,
+            "other": true,
+            "note": ""
+          },
+          "r9": {
+            "feat": "Iraunkortasunik gabe",
+            "yw": true,
+            "other": false,
+            "note": "Sagek urteko lizentziak kobratzen ditu"
+          },
+          "r10": {
+            "feat": "Mugikorretik sarbidea",
+            "yw": true,
+            "other": false,
+            "note": "Sage 50ek ez du app mugikor jatorrizkorik"
+          }
+        }
+      },
+      "migration": {
+        "title": "Migratu Sagetik zure datuak galdu gabe",
+        "subtitle": "Esportatu zure bezeroak, produktuak eta fakturak Sagetik eta inportatu YouWholen minutu gutxitan.",
+        "steps": {
+          "s1": {
+            "t": "Esportatu Sagetik",
+            "d": "Esportatu bezeroak, produktuak eta fakturak CSV edo Excel formatuan Sageren panelatik."
+          },
+          "s2": {
+            "t": "Inportatu YouWholen",
+            "d": "Erabili gure inportatzailea zure datu guztiak minutu gutxitan kargatzeko."
+          },
+          "s3": {
+            "t": "Fakturatzeko prest",
+            "d": "Zure enpresa YouWholen martxan, VeriFactu aktibatuta lehen egunetik."
+          }
+        },
+        "cta": "Hasi doako migrazioa"
+      },
+      "finalCta": {
+        "title": "Utzi Sage. Hasi doan gaur.",
+        "subtitle": "Txartelik gabe. Iraunkortasunik gabe. VeriFactu barne lehen egunetik.",
+        "cta": "Sortu doako kontua"
+      }
+    },
+    "modelo130": {
+      "seo": {
+        "title": "130 Eredua Online Autonomoentzat — YouWhole",
+        "description": "Kalkulatu eta prestatu 130 eredua automatikoki YouWholerekin. Batu hiruhileko sarrerak, gastuak eta atxikipenak errorerik gabe. Doan autonomoentzat.",
+        "ogTitle": "130 Eredua Online Autonomoentzat — YouWhole",
+        "ogDescription": "Kalkulatu 130 eredua automatikoki. Errorerik gabe, eskuzko kalkulurik gabe. Plan guztietan barne."
+      },
+      "badge": "Autonomoen hiruhileko IRPF",
+      "h1Line1": "130 eredua automatikoki",
+      "h1Highlight": "kalkulatua hiruhilero",
+      "subtitle": "YouWholek zure hiruhileko sarrerak eta gastuak batzen ditu, IRPF kalkulatzen du eta 130 ereduaren zenbateko zehatza ematen dizu. Kalkulagailurik gabe. Errorerik gabe. Kezkarik gabe.",
+      "ctaPrimary": "Hasi doan — txartelik gabe",
+      "ctaSecondary": "Eskatu demo bat",
+      "trustLine": "Plan guztietan barne · Kalkulu automatikoa · Aurkezteko prest dauden datuak",
+      "intro": {
+        "title": "Zer da 130 eredua eta noiz aurkeztu behar da?",
+        "pPre": "",
+        "pStrong": "130 eredua",
+        "pPost": "zuzeneko zenbatespenean dauden autonomoentzako hiruhileko IRPF aitorpena da. Urtean lau aldiz aurkezten da Zerga Agentzian:",
+        "quarters": {
+          "q1": {
+            "t": "1H",
+            "d": "apirilaren 1-20",
+            "p": "Urtarrila–Martxoa"
+          },
+          "q2": {
+            "t": "2H",
+            "d": "uztailaren 1-20",
+            "p": "Apirila–Ekaina"
+          },
+          "q3": {
+            "t": "3H",
+            "d": "urriaren 1-20",
+            "p": "Uztaila–Iraila"
+          },
+          "q4": {
+            "t": "4H",
+            "d": "urtarrilaren 1-30",
+            "p": "Urria–Abendua"
+          }
+        },
+        "p2Pre": "Zure fakturen %70 baino gehiagok IRPF atxikipena badaramate (zure bezeroak atxikipena aplikatzen dizuten enpresak direlako), agian",
+        "p2Strong": "130 eredua aurkeztetik salbuetsita",
+        "p2Post": "egon zaitezke. YouWholek automatikoki detektatzen du atalase hori betetzen duzun."
+      },
+      "howItWorks": {
+        "title": "Nola kalkulatzen du YouWholek zure 130 eredua",
+        "steps": {
+          "s1": {
+            "t": "Zure fakturak erregistratzen dituzu",
+            "d": "Igorritako eta jasotako faktura bakoitza automatikoki erregistratzen da bere IRPF eta BEZarekin."
+          },
+          "s2": {
+            "t": "YouWholek hiruhilekoa metatzen du",
+            "d": "Sarrerak, gastu kengarriak eta zure bezeroek jada aplikatutako atxikipenak batzen ditu."
+          },
+          "s3": {
+            "t": "%20 kalkulatzen du",
+            "d": "Metatutako hiruhilekoko irabazi garbiaren gaineko %20ko IRPF aplikatzen du."
+          },
+          "s4": {
+            "t": "Emaitza ematen dizu",
+            "d": "Ogasunean sartu beharreko zenbateko zehatza lortzen duzu, aurkezteko prest."
+          }
+        }
+      },
+      "faq": {
+        "title": "130 ereduari buruzko maiz egiten diren galderak",
+        "items": {
+          "q1": {
+            "q": "Zer da 130 eredua?",
+            "a": "130 eredua zuzeneko zenbatespenean dauden autonomoentzako hiruhileko IRPF aitorpena da. Urtarrilean, apirilean, uztailean eta urrian aurkezten da Zerga Agentzian eta IRPFaren zati araberako ordainketak likidatzeko balio du."
+          },
+          "q2": {
+            "q": "Nork aurkeztu behar du 130 eredua?",
+            "a": "Zuzeneko zenbatespenean (arrunta edo sinplifikatua) dauden autonomo guztiek, beren diru-sarreren %70a gutxienez IRPF atxikipenarekin ez badute. Zure bezeroak partikularrak edo atxikipenik aplikatzen ez dizuten enpresak badira, 130 eredua aurkeztu behar duzu."
+          },
+          "q3": {
+            "q": "Nola kalkulatzen du YouWholek 130 eredua?",
+            "a": "YouWholek automatikoki batzen ditu zure hiruhileko sarrera eta gastu guztiak, irabazi garbiaren gaineko %20ko IRPF kalkulatzen du, jada aplikatutako atxikipenak kentzen ditu eta ordaindu beharreko zenbateko zehatza ematen dizu. Ez duzu eskuzko kalkulurik egin behar."
+          },
+          "q4": {
+            "q": "YouWholek aurkezten al du 130 eredua AEATen nire ordez?",
+            "a": "YouWholek 130 eredua aurkezteko behar diren datu guztiak sortzen ditu. Azken aurkezpena AEATen aurrean zuk egiten duzu Egoitza Elektronikotik edo zure aholkulariak, guk emandako datuekin. Zuzeneko aurkezpenean lanean ari gara."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Ahaztu eskuzko 130 ereduaz",
+        "subtitle": "YouWholek bakarrik kalkulatzen du hiruhilero. Hasi doan gaur.",
+        "cta": "Sortu doako kontua"
+      }
+    },
+    "rrhh": {
+      "seo": {
+        "title": "ETEentzako Giza Baliabideen Softwarea — YouWhole",
+        "description": "Kudeatu langileak, nominak, kontratuak, oporrak eta ordutegi-kontrola plataforma bakarrean. Espainiako ETEentzako giza baliabideen softwarea, konplikaziorik gabe. 29 EUR/hilean hasita.",
+        "ogTitle": "ETEentzako Giza Baliabideen Softwarea — YouWhole",
+        "ogDescription": "Nominak, kontratuak, oporrak eta ordutegi-kontrola zure fakturazioarekin integratuta. Dena batean."
+      },
+      "badge": "Fakturazioarekin integratutako giza baliabideak",
+      "h1Line1": "Konplikaziorik nahi ez duten",
+      "h1Highlight": "ETEentzako giza baliabideen softwarea",
+      "subtitle": "Nominak, kontratuak, ordutegi-kontrola, oporrak eta langile ataria zure fakturazioarekin integratuta. Dena YouWholen, beste giza baliabide programa bat behar izan gabe.",
+      "ctaPrimary": "Probatu doan 14 egunez",
+      "ctaSecondary": "Eskatu demo bat",
+      "trustLine": "Iraunkortasunik gabe · Euskarazko laguntza · Espainiako lan-araudia betetzen du",
+      "features": {
+        "title": "Zure ETEaren giza baliabide guztiak leku bakarrean",
+        "subtitle": "Giza baliabideetan aditu ez diren baina dena kontrolpean izan behar duten kudeatzaileentzat diseinatua.",
+        "items": {
+          "f1": {
+            "title": "Nomina automatikoak",
+            "desc": "Sortu hileroko nominak, kontratuaren arabera automatikoki kalkulatutako IRPF, Gizarte Segurantza eta kenkariekin."
+          },
+          "f2": {
+            "title": "GPS bidezko ordutegi-kontrola",
+            "desc": "Langileek sarrera eta irteera fitxatzen dute mugikorretik. Geolokalizazio-erregistroa Espainiako lan-araudia betetzeko."
+          },
+          "f3": {
+            "title": "Kontratu-kudeaketa",
+            "desc": "Gorde eta kudeatu zure taldearen lan-kontratu guztiak. Iraungitze- eta berritze-alerta automatikoak."
+          },
+          "f4": {
+            "title": "Oporrak eta absentziak",
+            "desc": "Oporren digitalizazioa eskatu eta onartu. Taldearen egutegia absentziak gatazkarik gabe planifikatzeko."
+          },
+          "f5": {
+            "title": "Langile ataria",
+            "desc": "Langile bakoitzak bere nominak, kontratuak eta ordu-erregistroa kontsulta ditzake bere kontutik, giza baliabideak molestatu gabe."
+          },
+          "f6": {
+            "title": "Proiektuka orduak",
+            "desc": "Esleitu lan egindako orduak proiektu jakinei errentagarritasuna kalkulatzeko eta bezeroei denbora fakturatzeko."
+          }
+        }
+      },
+      "compliance": {
+        "title": "Bete Espainiako lan-araudia esfortzurik gabe",
+        "subtitle": "Ordutegi-kontrola nahitaezkoa da Espainiako enpresa guztientzat 2019tik. YouWholek automatikoki kudeatzen du.",
+        "items": {
+          "c1": {
+            "title": "Nahitaezko ordutegi-erregistroa (8/2019 ED)",
+            "desc": "Langile guztiek sarrera eta irteera fitxatu behar dute. YouWholek fitxaketa bakoitza denbora-zigiluarekin eta GPSekin erregistratzen eta gordetzen du."
+          },
+          "c2": {
+            "title": "Hitzarmenaren araberako nominak",
+            "desc": "Sortu nominak lan-kontzeptu guztiekin: oinarrizko soldata, osagarriak, IRPF eta GSaren kotizazioak."
+          },
+          "c3": {
+            "title": "Aholkularirako esportazioa",
+            "desc": "Esportatu giza baliabideen datu guztiak formatu estandarrean, zure lan-kudeatzaileak zuzenean erabil ditzan."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Giza baliabideak kontrolpean lehen egunetik",
+        "subtitle": "14 egun doan. Txartelik gabe. Giza baliabideen modulua plan guztietan barne.",
+        "cta": "Hasi doan orain"
+      }
+    },
+    "controlHorario": {
+      "seo": {
+        "title": "Enpresentzako Ordutegi-kontrol Softwarea — YouWhole",
+        "description": "Espainiako enpresentzako ordutegi-kontrol nahitaezkoa. GPS, QR edo web bidezko fitxaketa. Lan Ikuskaritzarako esportazioa. Nomina eta proiektuekin integratua. 29 EUR/hilean hasita.",
+        "ogTitle": "Enpresentzako Ordutegi-kontrol Softwarea — YouWhole",
+        "ogDescription": "GPS, QR eta web bidezko fitxaketa. Bete 8/2019 EDa konplikaziorik gabe. Nomina eta proiektuekin integratua."
+      },
+      "badge": "Nahitaezkoa 2019tik",
+      "h1Line1": "Espainiako legea betetzen duen",
+      "h1Highlight": "ordutegi-kontrol digitala",
+      "subtitle": "8/2019 EDk zure langile guztien lanaldia erregistratzera behartzen du. YouWholek automatikoki egiten du GPS, QR edo web bidez — nomina eta proiektuekin integratuta.",
+      "ctaPrimary": "Probatu doan 14 egunez",
+      "ctaSecondary": "Ikusi demoa",
+      "trustLine": "Iraunkortasunik gabe · 8/2019 EDa betetzen du · Nominarekin integratua",
+      "checkinMethods": {
+        "title": "Fitxatzeko 3 modu, zuk aukeratzen duzu",
+        "subtitle": "Bulego, telelan eta landa-lanera egokitua.",
+        "items": {
+          "m1": {
+            "title": "GPS bidezko web-app",
+            "desc": "Langileak YouWhole mugikorrean irekitzen du eta fitxatzen du. GPS kokapena automatikoki erregistratzen da landa-lanerako edo telelanerako.",
+            "badge": "Gehien erabilia"
+          },
+          "m2": {
+            "title": "QR kodea bulegoan",
+            "desc": "Inprimatu QR bat bulegoaren sarreran. Langileek mugikorrarekin eskaneatzen dute sarrera eta irteera fitxatzeko, ezer gehiago ukitu gabe.",
+            "badge": "Bulegoentzat"
+          },
+          "m3": {
+            "title": "Eskuzko erregistroa",
+            "desc": "Administratzaileak orduak eskuz erregistra ditzake smartphonerik ez duten langileentzat edo okerreko fitxaketak zuzentzeko.",
+            "badge": "Babeskopia"
+          }
+        }
+      },
+      "integration": {
+        "title": "Zure enpresaren gainerakoarekin integratua",
+        "subtitle": "YouWholeren ordutegi-kontrola ez da modulu isolatu bat. Nominak, proiektuak eta fakturazioarekin konektatzen da.",
+        "items": {
+          "i1": {
+            "title": "Orduak → Nominak",
+            "desc": "Erregistratutako orduek zuzenean elikatzen dute nominaren kalkulua. Aparteko orduak berez kalkulatzen dira."
+          },
+          "i2": {
+            "title": "Orduak → Proiektuak",
+            "desc": "Esleitu lan egindako orduak proiektuei errentagarritasuna kalkulatzeko eta bezeroei denbora fakturatzeko."
+          },
+          "i3": {
+            "title": "Orduak → Txostenak",
+            "desc": "Esportatu lanaldi-erregistroa langile, proiektu edo dataka. Lan-ikuskaritzetarako baliozkoa."
+          },
+          "i4": {
+            "title": "Gorabeheren alertak",
+            "desc": "Abisu automatikoa langile bat fitxatu ez duenean edo baimenik gabeko aparteko ordurik dagoenean."
+          }
+        }
+      },
+      "faq": {
+        "title": "Maiz egiten diren galderak",
+        "items": {
+          "q1": {
+            "q": "Nahitaezkoa al da ordutegi-kontrola Espainian?",
+            "a": "Bai. 8/2019 Errege Lege Dekretuak Espainiako enpresa guztiak behartzen ditu langileen lanaldia erregistratzera, tamainaz gorabehera. Ez betetzeak langileko 6.250 EUR arteko isunak ekar ditzake."
+          },
+          "q2": {
+            "q": "Nola fitxatzen dute langileek YouWholerekin?",
+            "a": "Langileek GPS aktibatuta duten web-app mugikorretik fitxatu dezakete, bulegoko QR kode batetik, edo administratzaileak orduak eskuz erregistratu ditzake. Aukera guztiak denbora-zigiluarekin erregistratzen dira."
+          },
+          "q3": {
+            "q": "Ordutegi-erregistroa esportatu daiteke?",
+            "a": "Bai. YouWholek Excel edo CSV formatuan esportatzeko aukera ematen du, langile, proiektu edo data-tarteka iragazita. Lan-ikuskaritzetarako eta zure lan-kudeatzailerentzat baliozkoa."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Bete ordutegi-kontrol legea gaur",
+        "subtitle": "14 egun doan. Txartelik gabe. Lehen egunetik aktibatua.",
+        "cta": "Sortu doako kontua"
+      }
+    },
+    "almacen": {
+      "seo": {
+        "title": "ETEentzako Biltegi eta Inbentario Softwarea — YouWhole",
+        "description": "Kontrolatu zure stocka denbora errealean, kudeatu hornitzaileak eta sortu eskaera automatikoak. Fakturazioarekin integratutako biltegi eta inbentario softwarea. 29 EUR/hilean hasita.",
+        "ogTitle": "ETEentzako Biltegi eta Inbentario Softwarea — YouWhole",
+        "ogDescription": "Denbora errealeko stocka, eskaera automatikoak eta hornitzaile-kudeaketa zure fakturazioarekin integratuta."
+      },
+      "badge": "Fakturazioarekin integratutako inbentarioa",
+      "h1Line1": "Bere kabuz eguneratzen den",
+      "h1Highlight": "biltegi eta inbentario softwarea",
+      "subtitle": "Kontrolatu zure stocka denbora errealean, kudeatu hornitzaileak eta sortu eskaera automatikoak. Dena zure fakturazioarekin integratuta, kontrola inoiz galdu ez dezazun.",
+      "ctaPrimary": "Probatu doan 14 egunez",
+      "ctaSecondary": "Eskatu demo bat",
+      "trustLine": "Iraunkortasunik gabe · Euskarazko laguntza · Salmenta eta erosketekin integratua",
+      "features": {
+        "title": "Zure inbentarioaren kontrol osoa",
+        "subtitle": "Astero orduak eman gabe stocka kontrolatu behar duten ETEentzat diseinatua.",
+        "items": {
+          "f1": {
+            "title": "Denbora errealeko stocka",
+            "desc": "Salmenta, erosketa edo doikuntza bakoitzak berehala eguneratzen du inbentarioa. Ez saldu inoiz ez duzun zerbait."
+          },
+          "f2": {
+            "title": "Gutxieneko stock-alertak",
+            "desc": "Definitu produktu bakoitzaren gutxieneko stocka. YouWholek automatikoki abisatzen dizu berritu behar duzunean."
+          },
+          "f3": {
+            "title": "Eskaera automatikoak",
+            "desc": "Sortu hornitzaileei erosketa-eskaerak automatikoki, stocka definitzen duzun atalasetik behera jaisten denean."
+          },
+          "f4": {
+            "title": "Hornitzaile-kudeaketa",
+            "desc": "Erregistratu hornitzaile bakoitzaren prezioak, baldintzak eta epeak. Konparatu kostuak eta aukeratu onena eskaera bakoitzean."
+          },
+          "f5": {
+            "title": "Biltegi anitz",
+            "desc": "Kudeatu hainbat biltegi edo kokapen panel bakarretik. Transferitu stocka kokapenen artean klik batean."
+          },
+          "f6": {
+            "title": "Fakturazioarekin integratua",
+            "desc": "Salmenta-faktura bakoitzak automatikoki kentzen du stocka. Erosketa-faktura bakoitzak handitzen du."
+          }
+        }
+      },
+      "integration": {
+        "title": "Zure enpresa osoarekin integratua",
+        "subtitle": "YouWholeren biltegia ez da isolatuta funtzionatzen — salmentekin, erosketekin, CRMarekin eta fakturazioarekin konektatzen da.",
+        "items": {
+          "i1": {
+            "title": "Salmenta → stockaren beherapen automatikoa",
+            "desc": "Faktura edo albarán bat igortzen duzunean, stocka automatikoki murrizten da. Eskuzko doikuntzarik gabe."
+          },
+          "i2": {
+            "title": "Erosketa → biltegirako sarrera automatikoa",
+            "desc": "Hornitzaile-faktura bat erregistratzen duzunean, produktuak bere kostu-prezioarekin sartzen dira inbentariora."
+          },
+          "i3": {
+            "title": "Aurrekontua → stock-erreserba",
+            "desc": "Onartutako aurrekontu batek unitateak erreserba ditzake, berresten den bitartean beste bezero bati saldu ez dakizkion."
+          },
+          "i4": {
+            "title": "Denbora errealeko inbentario-balorazioa",
+            "desc": "Kontsultatu zure biltegiaren balioa kostu-prezioan une oro kontrol-paneletik."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Zure biltegia kontrolpean gaurtik",
+        "subtitle": "14 egun doan. Txartelik gabe. Stocka zure fakturazioarekin integratuta lehen egunetik.",
+        "cta": "Hasi doan orain"
+      }
+    },
+    "crm": {
+      "seo": {
+        "title": "ETEentzako CRM Softwarea Espainian — YouWhole",
+        "description": "Espainiako ETEentzako fakturazioarekin integratutako CRMa. Kudeatu bezeroak, leadak, salmenta-pipelinea eta aurrekontuak plataforma bakarrean. Aparteko harpidetzarik gabe. 29 EUR/hilean hasita.",
+        "ogTitle": "ETEentzako CRM Softwarea — YouWhole",
+        "ogDescription": "Kudeatu bezeroak, leadak eta salmentak zure fakturazioarekin integratuta. Kanpoko tresnarik gabe."
+      },
+      "badge": "Fakturazioarekin integratutako CRMa",
+      "h1Line1": "Beste tresna baten alde",
+      "h1Highlight": "ordaindu nahi ez duten ETEentzako CRMa",
+      "subtitle": "YouWholek zure fakturazioarekin integratutako CRM osoa dakar. Kudeatu bezeroak, leadak eta salmenta-pipelinea plataformatik atera gabe — ezta aparteko harpidetzarik ordaindu gabe ere.",
+      "ctaPrimary": "Probatu doan 14 egunez",
+      "ctaSecondary": "Eskatu demo bat",
+      "trustLine": "Iraunkortasunik gabe · CRMa plan guztietan barne · Euskarazko laguntza",
+      "features": {
+        "title": "Zure ETEaren CRMak behar duen guztia",
+        "subtitle": "Salesforceren konplexutasunik gabe eta HubSpoten prezio gabe. ETE errealentzat diseinatua.",
+        "items": {
+          "f1": {
+            "title": "Bezero-kudeaketa",
+            "desc": "Bezero bakoitzaren fitxa osoa fakturen, aurrekontuen, kontaktuen eta oharren historiarekin. Dena leku bakarrean."
+          },
+          "f2": {
+            "title": "Kanban salmenta-pipelinea",
+            "desc": "Ikusi zure aukerak Kanban taula batean. Arrastatu dealak faseen artean eta itxi salmenta gehiago."
+          },
+          "f3": {
+            "title": "Leadak eta prospektuak",
+            "desc": "Erregistratu leadak lehen kontaktutik, esleitu komertzial bati eta egin jarraipena itxi arte."
+          },
+          "f4": {
+            "title": "Aurrekontu profesionalak",
+            "desc": "Sortu zure logoarekin aurrekontuak eta bihurtu faktura klik batean bezeroak baietz esaten duenean."
+          },
+          "f5": {
+            "title": "Komunikazio-historia",
+            "desc": "Erregistratu deiak, emailak eta bilerak bezeroka. Ez galdu inoiz negoziazio baten haria."
+          },
+          "f6": {
+            "title": "Fakturazioarekin integratua",
+            "desc": "Aurrekontutik VeriFactu fakturara klik batean. Datuak programen artean esportatu edo kopiatu gabe."
+          }
+        }
+      },
+      "why": {
+        "title": "Zergatik fakturazioarekin integratutako CRM bat?",
+        "subtitle": "ETE gehienek elkarrekin hitz egiten ez duten 3-4 tresna desberdin erabiltzen dituzte. YouWholerekin dena konektatuta dago.",
+        "items": {
+          "w1": {
+            "title": "Aurrekontua → Faktura klik batean",
+            "desc": "Bezeroak aurrekontua onartzen duenean, automatikoki VeriFactu faktura bihurtzen da. Datuak kopiatu gabe."
+          },
+          "w2": {
+            "title": "Bezeroa → Historia osoa",
+            "desc": "Bezeroaren fitxatik bere faktura, aurrekontu, ordainketa pendiente eta aurreko komunikazio guztiak ikusten dituzu."
+          },
+          "w3": {
+            "title": "Leada → Bezeroa → Faktura",
+            "desc": "Salmenta-ziklo osoa plataforma bakarrean: lehen kontaktutik fakturaren kobrantzara arte."
+          },
+          "w4": {
+            "title": "Datuak bikoiztu gabe",
+            "desc": "Bezeroaren datuak CRM, fakturazio, kontabilitate eta giza baliabideen artean partekatzen dira. Esportaziorik edo kopiatu-itsatsirik gabe."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Hasi gehiago saltzen, gaurtik",
+        "subtitle": "CRMa plan guztietan barne. 14 egun doan txartelik gabe.",
+        "cta": "Sortu doako kontua"
+      }
+    },
+    "contabilidad": {
+      "seo": {
+        "title": "ETEentzako Kontabilitate Softwarea Espainian — YouWhole",
+        "description": "Kontabilitate automatikoa Espainiako PGCaren arabera. Asiento automatikoak, balantzea, galera eta irabazien kontua, eta BEZa fakturazioarekin integratuta. ETE eta autonomoentzat. 29 EUR/hilean hasita.",
+        "ogTitle": "ETEentzako Kontabilitate Softwarea — YouWhole",
+        "ogDescription": "Asiento automatikoak Espainiako PGCaren arabera. VeriFactu fakturazioarekin integratua. Kontabilitate-ezagutzarik gabe."
+      },
+      "badge": "PGC kontabilitate automatikoa",
+      "h1Line1": "Bere kabuz eramaten den",
+      "h1Highlight": "ETEentzako kontabilitate softwarea",
+      "subtitle": "YouWholek kontabilitate-asientoak automatikoki sortzen ditu Espainiako Kontu Plan Orokorraren arabera. Zuk fakturak igorri — kontabilitatea bakarrik egiten da, errorerik gabe, aurretiko ezagutzarik gabe.",
+      "ctaPrimary": "Probatu doan 14 egunez",
+      "ctaSecondary": "Eskatu demo bat",
+      "trustLine": "Iraunkortasunik gabe · Espainiako PGCa · Zure aholkularirentzako sarbidea",
+      "automatic": {
+        "title": "Zer egiten du YouWholek automatikoki",
+        "subtitle": "Ez duzu kontabilitatea ukitu behar. Prozesu hauek berez gertatzen dira plataforma erabiltzen duzunean.",
+        "items": {
+          "a1": {
+            "title": "Salmenta-asientoak",
+            "desc": "Igorritako faktura bakoitzak sarrera-asientoa sortzen du, bere errepikatutako BEZ eta atxikitako IRPFaren kontuarekin."
+          },
+          "a2": {
+            "title": "Erosketa-asientoak",
+            "desc": "Erregistratutako hornitzaile-faktura bakoitzak gastu-asientoa sortzen du, jasandako BEZ kengarriarekin."
+          },
+          "a3": {
+            "title": "BEZ liburua",
+            "desc": "Jasandako eta errepikatutako BEZaren liburua automatikoki sortzen da hiruhilero, aurkezteko prest."
+          },
+          "a4": {
+            "title": "Balantzea eta G&I",
+            "desc": "Kontsultatu egoera-balantzea eta galera eta irabazien kontua denbora errealean, itxiera itxaron gabe."
+          },
+          "a5": {
+            "title": "Banku-berdinkatzea",
+            "desc": "Konektatu zure bankua eta berdinkatu kobrantzak eta ordainketak pendiente dauden fakturekin automatikoki."
+          },
+          "a6": {
+            "title": "Aholkulariaren sarbidea",
+            "desc": "Gonbidatu zure kudeatzailea Kontularia rolarekin, zure enpresaren konfigurazioa ukitu gabe datuak erabiltzeko."
+          }
+        }
+      },
+      "pgcTable": {
+        "title": "Bete Espainiako PGCa esfortzurik gabe",
+        "subtitle": "Espainiako Kontu Plan Orokorrak kontabilitate-eragiketak nola erregistratu behar diren definitzen du. YouWholek automatikoki aplikatzen du eragiketa bakoitzean.",
+        "colOp": "Eragiketa",
+        "colAccount": "PGC kontua",
+        "colAuto": "Automatikoa",
+        "yes": "Bai",
+        "rows": {
+          "r1": {
+            "op": "Salmenta-faktura",
+            "account": "700 – Salmentak"
+          },
+          "r2": {
+            "op": "Errepikatutako BEZa",
+            "account": "477 – OA errepikatutako BEZa"
+          },
+          "r3": {
+            "op": "Atxikitako IRPFa",
+            "account": "473 – OA IRPF atxikipenak"
+          },
+          "r4": {
+            "op": "Erosketa-faktura",
+            "account": "600/620/621 – Erosketak eta gastuak"
+          },
+          "r5": {
+            "op": "Jasandako BEZa",
+            "account": "472 – OA jasandako BEZa"
+          },
+          "r6": {
+            "op": "Bezero-kobrantza",
+            "account": "430/570 – Bezeroak eta Diruzaintza"
+          }
+        }
+      },
+      "faq": {
+        "title": "Maiz egiten diren galderak",
+        "items": {
+          "q1": {
+            "q": "YouWholek automatikoki eramaten al du kontabilitatea?",
+            "a": "Bai. Igorritako eta jasotako faktura bakoitzak automatikoki sortzen du dagokion kontabilitate-asientoa Espainiako Kontu Plan Orokorraren arabera. Ez duzu asientoak eskuz sartu behar."
+          },
+          "q2": {
+            "q": "Kontabilitatea jakin behar dut YouWhole erabiltzeko?",
+            "a": "Ez. YouWholek kontabilitate-asiento guztiak automatikoki sortzen ditu. Zuk fakturak eta kobrantzak sartu besterik ez duzu egiten, eta sistemak gainerakoa egiten du. Kasu konplexuetarako, zure kontabilitate-aholkulariari sarbidea eman diezaiokezu."
+          },
+          "q3": {
+            "q": "Sarbidea eman diezaioket nire kudeatzaile edo aholkulariari?",
+            "a": "Bai. YouWholek zure aholkularia Kontularia rolarekin gonbidatzeko aukera ematen du. Kontabilitate, faktura eta datu fiskalak erabiltzeko sarbidea izango du, enpresaren konfigurazio sentikorra aldatu ezin izango duen bitartean."
+          },
+          "q4": {
+            "q": "Bete al du Espainiako Kontu Plan Orokorra?",
+            "a": "Bai. YouWholek indarrean dagoen Espainiako PGCaren (Kontu Plan Orokorra) araberako asientoak sortzen ditu, eragiketa mota bakoitzari dagozkion kontu-kodeekin: salmentak, erosketak, BEZa, IRPFa eta gastuak."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Zure ETEaren kontabilitatea, pilotu automatikoan",
+        "subtitle": "14 egun doan. Txartelik gabe. Kontabilitate-ezagutzarik behar ez da.",
+        "cta": "Hasi doan orain"
+      }
+    },
+    "nominas": {
+      "seo": {
+        "title": "ETEentzako Nomina Softwarea Espainian — YouWhole",
+        "description": "Sortu nomina automatikoak IRPF eta Gizarte Segurantza kalkulatuekin. Espainiako ETEentzako nomina-softwarea, ordutegi-kontrola eta kontabilitatearekin integratua. 29 EUR/hilean hasita.",
+        "ogTitle": "ETEentzako Nomina Softwarea — YouWhole",
+        "ogDescription": "Nomina automatikoak IRPF eta GS kalkulatuekin. Ordutegi-kontrola eta kontabilitatearekin integratua."
+      },
+      "badge": "Giza baliabideekin integratutako nominak",
+      "h1Line1": "Kalkulu-errorerik gabeko",
+      "h1Highlight": "ETEentzako nomina softwarea",
+      "subtitle": "YouWholek automatikoki kalkulatzen ditu langile bakoitzaren IRPFa eta Gizarte Segurantza. Sortu nominak segundotan, ordutegi-kontrola eta kontabilitatearekin integratuta.",
+      "ctaPrimary": "Probatu doan 14 egunez",
+      "ctaSecondary": "Eskatu demo bat",
+      "trustLine": "Iraunkortasunik gabe · IRPF eta GS automatikoak · Euskarazko laguntza",
+      "features": {
+        "title": "Nominak konplikaziorik gabe",
+        "subtitle": "Lan-zuzenbidean adituak izan gabe nominak azkar prozesatu behar dituzten kudeatzaileentzat diseinatua.",
+        "items": {
+          "f1": {
+            "title": "IRPF kalkulu automatikoa",
+            "desc": "YouWholek langile bakoitzaren IRPF atxikipena kalkulatzen du bere egoera pertsonalaren eta dagokion tartearen arabera."
+          },
+          "f2": {
+            "title": "Gizarte Segurantza",
+            "desc": "Gizarte Segurantzako kotizazioak automatikoki kalkulatuak, kontingentzia arruntak, langabezia eta prestakuntza kontuan hartuta."
+          },
+          "f3": {
+            "title": "Hileroko nomina segundotan",
+            "desc": "Kontratuaren datuekin eta lan egindako orduekin, langile bakoitzaren nomina klik batean sortzen da."
+          },
+          "f4": {
+            "title": "Ordutegi-kontrolarekin integratua",
+            "desc": "Erregistratutako orduek zuzenean elikatzen dute nomina. Aparteko orduak automatikoki kalkulatzen eta aplikatzen dira."
+          },
+          "f5": {
+            "title": "Langile ataria",
+            "desc": "Langile bakoitzak bere kontutik atzitzen du bere nomina historikoa. Inprimatu gabe, emailez bidali gabe."
+          },
+          "f6": {
+            "title": "Lan-kudeatzailerako esportazioa",
+            "desc": "Esportatu nomina guztiak formatu estandarrean, zure lan-kudeatzaileak GSri aurkeztu aurretik balida ditzan."
+          }
+        }
+      },
+      "howItWorks": {
+        "title": "Nola funtzionatzen du nomina-prozesuak",
+        "steps": {
+          "s1": {
+            "t": "Kontratua konfiguratzen duzu",
+            "d": "Soldata gordina, kontratu mota, aplikagarri den IRPFa eta langilearen GS datuak sartzen dituzu."
+          },
+          "s2": {
+            "t": "Langileak bere orduak fitxatzen ditu",
+            "d": "Ordutegi-kontrolak automatikoki erregistratzen ditu hilabeteko egun bakoitzean lan egindako orduak."
+          },
+          "s3": {
+            "t": "Nomina sortzen duzu",
+            "d": "Klik batekin, YouWholek nomina osoa kalkulatzen du: gordina, kenkariak, IRPFa, GSa eta garbia."
+          },
+          "s4": {
+            "t": "Langileak kontsultatzen du",
+            "d": "Langileak bere nomina atarian kontsultatzen du. Zuk lan-kudeatzailerako esportatzen duzu."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Nominak minutu gutxitan hilero prest",
+        "subtitle": "14 egun doan. Txartelik gabe. IRPF eta GS automatikoki kalkulatuak.",
+        "cta": "Hasi doan orain"
+      }
+    }
   }
 }

@@ -2722,5 +2722,1075 @@
       "madeInSpain": "Fet a Espanya",
       "designedBy": "Dissenyat i desenvolupat per"
     }
+  },
+  "satellite": {
+    "erpAutonomos": {
+      "seo": {
+        "title": "ERP per a Autònoms a Espanya — YouWhole",
+        "description": "L'ERP dissenyat per autònoms per a autònoms. Facturació amb VeriFactu, IRPF automàtic, Model 130/303, comptabilitat PGC i CRM. Sense permanència. Des de 29 EUR/mes.",
+        "ogTitle": "ERP per a Autònoms a Espanya — YouWhole",
+        "ogDescription": "Dissenyat per autònoms per a autònoms. VeriFactu, IRPF, Model 130/303 i CRM en una sola plataforma."
+      },
+      "badge": "Creat per autònoms per a autònoms",
+      "h1Line1": "L'ERP que els autònoms espanyols",
+      "h1Highlight": "necessitaven",
+      "subtitle": "Facturació amb VeriFactu, IRPF automàtic, Model 130/303, comptabilitat PGC i CRM. Tot en una plataforma pensada per a com treballa un autònom de veritat.",
+      "ctaPrimary": "Comença gratis — 14 dies sense targeta",
+      "ctaSecondary": "Sol·licitar demo",
+      "trustLine": "Sense permanència · Cancel·la quan vulguis · Suport en català",
+      "features": {
+        "title": "Tot el que necessita un autònom",
+        "subtitle": "Dissenyat des de zero per a la realitat de l'autònom espanyol: Hisenda, clients, temps i diners.",
+        "items": {
+          "f1": {
+            "title": "VeriFactu certificat AEAT",
+            "desc": "Compleix amb l'obligació legal des del primer dia. Cada factura es registra automàticament a l'Agència Tributària."
+          },
+          "f2": {
+            "title": "IRPF automàtic",
+            "desc": "Calcula i aplica la retenció IRPF a cada factura segons el tipus de client. Sense errors, sense càlculs manuals."
+          },
+          "f3": {
+            "title": "Model 130 i 303 integrats",
+            "desc": "Genera les dades de les teves declaracions trimestrals en segons. Menys temps amb Hisenda, més temps facturant."
+          },
+          "f4": {
+            "title": "Comptabilitat PGC",
+            "desc": "Assentaments comptables automàtics segons el Pla General Comptable espanyol. Sense necessitat de gestor per al dia a dia."
+          },
+          "f5": {
+            "title": "CRM i pressupostos",
+            "desc": "Gestiona els teus clients, envia pressupostos professionals i converteix-los en factures amb un clic."
+          },
+          "f6": {
+            "title": "Control horari i projectes",
+            "desc": "Fitxa hores per projecte, calcula rendibilitat i factura el temps treballat directament."
+          }
+        }
+      },
+      "comparison": {
+        "title": "Per què YouWhole i no un altre ERP?",
+        "subtitle": "Hi ha molts programes de facturació. Però molt pocs pensats per a autònoms espanyols de veritat.",
+        "colFeat": "Característica",
+        "colYw": "YouWhole",
+        "colOther": "Altres ERP",
+        "rows": {
+          "r1": {
+            "feat": "VeriFactu certificat AEAT",
+            "yw": "Inclòs en tots els plans",
+            "other": "Només en plans cars o no inclòs"
+          },
+          "r2": {
+            "feat": "IRPF automàtic",
+            "yw": "Sí, per defecte",
+            "other": "Manual o no disponible"
+          },
+          "r3": {
+            "feat": "Model 130/303 integrat",
+            "yw": "Dades generades automàticament",
+            "other": "Exportació manual o mòdul extra"
+          },
+          "r4": {
+            "feat": "Preu base",
+            "yw": "Gratis / 29 EUR/mes",
+            "other": "Des de 30-80 EUR/mes"
+          },
+          "r5": {
+            "feat": "Suport en català/castellà",
+            "yw": "Xat i email en horari espanyol",
+            "other": "Ticketing internacional"
+          },
+          "r6": {
+            "feat": "Sense permanència",
+            "yw": "Sí, cancel·la quan vulguis",
+            "other": "Contractes anuals habituals"
+          }
+        }
+      },
+      "faq": {
+        "title": "Preguntes freqüents",
+        "items": {
+          "q1": {
+            "q": "És YouWhole adequat per a autònoms que facturen poc?",
+            "a": "Sí. El pla gratuït inclou fins a 5 clients i 10 factures al mes — més que suficient si estàs començant. Quan creixis, el pla Starter des de 29 EUR/mes no té límits."
+          },
+          "q2": {
+            "q": "Necessito saber comptabilitat per fer servir YouWhole?",
+            "a": "No. La plataforma genera els assentaments comptables de forma automàtica. Tu només introdueixes factures i cobraments — el sistema fa la resta."
+          },
+          "q3": {
+            "q": "Puc portar l'IRPF jo mateix sense gestor?",
+            "a": "Sí per al dia a dia. YouWhole calcula les retencions, genera el resum del Model 130 i et dona totes les dades per presentar-lo. Per a casos complexos, sempre recomanem revisar amb un assessor."
+          },
+          "q4": {
+            "q": "Funciona al mòbil?",
+            "a": "Sí. YouWhole és una app web completament responsive. Pots crear factures, consultar clients i veure el teu tauler des del mòbil o la tauleta."
+          }
+        }
+      },
+      "pricing": {
+        "title": "Preus pensats per a autònoms",
+        "subtitle": "Sense lletra petita. Comença gratis i escala quan ho necessitis."
+      },
+      "finalCta": {
+        "title": "Prova'l gratis durant 14 dies",
+        "subtitle": "Sense targeta de crèdit. Sense permanència. Sense lletra petita.",
+        "cta": "Crear el meu compte gratis"
+      }
+    },
+    "facturacionPymes": {
+      "seo": {
+        "title": "Programari de Facturació per a Pimes — YouWhole",
+        "description": "Programari de facturació per a pimes espanyoles amb VeriFactu certificat, comptabilitat PGC, nòmines, CRM i gestió de projectes. Tot en un. Des de 29 EUR/mes sense permanència.",
+        "ogTitle": "Programari de Facturació per a Pimes — YouWhole",
+        "ogDescription": "Tot el que necessita la teva pime: facturació VeriFactu, nòmines, CRM, comptabilitat PGC i més. Des de 29 EUR/mes."
+      },
+      "badge": "Tot en un per a pimes",
+      "h1Line1": "Programari de facturació per a pimes",
+      "h1Highlight": "que va més enllà de les factures",
+      "subtitle": "YouWhole reuneix en una sola plataforma tot el que necessita la teva pime: facturació VeriFactu, comptabilitat, nòmines, CRM, inventari i projectes. Sense integracions. Sense sorpreses.",
+      "ctaPrimary": "Provar gratis 14 dies",
+      "ctaSecondary": "Sol·licitar demo per a la meva pime",
+      "trustLine": "Sense permanència · Suport en català · Migració assistida",
+      "modules": {
+        "title": "8 mòduls integrats en una sola plataforma",
+        "subtitle": "Oblida't de connectar 5 programes diferents. YouWhole ho té tot i comparteix les dades entre mòduls automàticament.",
+        "items": {
+          "m1": {
+            "title": "Facturació amb VeriFactu",
+            "desc": "Emet factures certificades AEAT. Inclou factures recurrents, multi-divisa i en diversos idiomes (es, ca, eu, gl, en)."
+          },
+          "m2": {
+            "title": "Comptabilitat PGC",
+            "desc": "Assentaments automàtics segons el Pla General Comptable espanyol. Quadre comptable en temps real sense coneixements previs."
+          },
+          "m3": {
+            "title": "Nòmines i RRHH",
+            "desc": "Genera nòmines, gestiona contractes i controla el temps de treball de cada empleat per projecte."
+          },
+          "m4": {
+            "title": "CRM i vendes",
+            "desc": "Gestiona el teu pipeline de vendes amb Kanban, registra oportunitats i converteix pressupostos en factures."
+          },
+          "m5": {
+            "title": "Gestió de projectes",
+            "desc": "Controla la rendibilitat de cada projecte, assigna empleats i factura el temps treballat."
+          },
+          "m6": {
+            "title": "Inventari i magatzem",
+            "desc": "Controla l'estoc, gestiona proveïdors i genera comandes de compra automàtiques quan l'inventari baixa."
+          },
+          "m7": {
+            "title": "Banc i conciliació",
+            "desc": "Connecta el teu compte bancari i concilia automàticament cobraments i pagaments amb les teves factures."
+          },
+          "m8": {
+            "title": "Automatitzacions",
+            "desc": "Recordatoris d'impagament, factures recurrents, alertes d'estoc i fluxos personalitzats sense codi."
+          }
+        }
+      },
+      "sectors": {
+        "title": "Per a quin tipus de pime és YouWhole?",
+        "list": [
+          "Agències i consultories",
+          "Empreses de serveis",
+          "Comerços i botigues",
+          "Constructores i reformes",
+          "Hostaleria i restauració",
+          "Tecnologia i startups",
+          "Clíniques i salut",
+          "Transport i logística",
+          "Educació i formació"
+        ],
+        "footnotePre": "El teu sector no apareix?",
+        "footnoteLink": "Escriu-nos i t'expliquem com YouWhole s'adapta al teu negoci"
+      },
+      "pricing": {
+        "title": "Preus per a pimes de qualsevol mida",
+        "subtitle": "Sense costos ocults. Sense permanència. Escala quan ho necessitis."
+      },
+      "finalCta": {
+        "title": "La teva pime preparada per al següent nivell?",
+        "subtitle": "14 dies gratis. Sense targeta. L'equip t'ajuda amb la migració.",
+        "cta": "Començar gratis ara"
+      }
+    },
+    "verifactu": {
+      "seo": {
+        "title": "Programari VeriFactu Certificat AEAT — YouWhole",
+        "description": "YouWhole és un programari de facturació certificat VeriFactu per l'Agència Tributària. Compleix amb l'obligació legal des del primer dia. Inclòs en tots els plans, fins i tot el gratuït.",
+        "ogTitle": "Programari VeriFactu Certificat AEAT — YouWhole",
+        "ogDescription": "Compleix amb l'obligació VeriFactu des del primer dia. Inclòs en tots els plans de YouWhole."
+      },
+      "badge": "Certificat AEAT",
+      "h1Line1": "Programari VeriFactu certificat",
+      "h1Highlight": "inclòs en tots els plans",
+      "subtitle": "YouWhole compleix amb l'obligació VeriFactu de l'Agència Tributària des del primer dia. Sense configuració. Sense mòduls extra. Sense cost addicional.",
+      "cta": "Comença gratis — VeriFactu inclòs",
+      "intro": {
+        "title": "Què és VeriFactu i per què és obligatori?",
+        "p1Pre": "VeriFactu és el sistema de verificació de factures aprovat per l'Agència Tributària espanyola en el marc del Reglament de Facturació (RD 1007/2023). El seu objectiu és garantir la",
+        "p1Strong": "integritat i inalterabilitat",
+        "p1Post": "de totes les factures emeses per empreses i autònoms a Espanya.",
+        "p2Pre": "Des de 2025, qualsevol programari de facturació que facis servir ha d'estar",
+        "p2Strong": "certificat VeriFactu",
+        "p2Post": "per poder operar legalment. Utilitzar un programa no certificat pot comportar sancions d'Hisenda de fins a 50.000 EUR.",
+        "p3": "Amb YouWhole, cada factura que emets es registra automàticament a l'AEAT amb la seva empremta digital corresponent. Tu no has de fer res extra — el sistema ho gestiona en segon pla."
+      },
+      "howItWorks": {
+        "title": "Com funciona VeriFactu a YouWhole",
+        "steps": {
+          "s1": {
+            "t": "Crees la factura",
+            "d": "Introdueixes les dades del client, conceptes i imports com sempre."
+          },
+          "s2": {
+            "t": "Registre automàtic",
+            "d": "YouWhole genera l'empremta digital de la factura i l'envia a l'AEAT en temps real."
+          },
+          "s3": {
+            "t": "Confirmació AEAT",
+            "d": "Reps la confirmació de registre. La teva factura és legalment vàlida i verificable."
+          }
+        }
+      },
+      "faq": {
+        "title": "Preguntes freqüents sobre VeriFactu",
+        "items": {
+          "q1": {
+            "q": "Què és VeriFactu?",
+            "a": "VeriFactu és el sistema de verificació de factures de l'Agència Tributària espanyola (AEAT). Des de 2025, tot programari de facturació utilitzat per empreses i autònoms ha d'estar certificat VeriFactu per garantir la integritat i inalterabilitat de les factures emeses."
+          },
+          "q2": {
+            "q": "És obligatori fer servir un programari amb VeriFactu?",
+            "a": "Sí. El Reglament de Facturació aprovat el 2023 obliga tots els empresaris i professionals a Espanya a fer servir sistemes de facturació que compleixin amb VeriFactu. L'incompliment pot comportar sancions d'Hisenda."
+          },
+          "q3": {
+            "q": "Està YouWhole certificat per l'AEAT?",
+            "a": "Sí. YouWhole està certificat per a l'enviament de registres de facturació a l'AEAT mitjançant el sistema VeriFactu. Cada factura emesa genera automàticament el registre corresponent i l'envia a Hisenda."
+          },
+          "q4": {
+            "q": "He de fer alguna cosa especial per activar VeriFactu a YouWhole?",
+            "a": "No. VeriFactu està actiu per defecte a tots els comptes de YouWhole des del moment del registre. No cal configurar res ni contractar cap mòdul addicional."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Compleix amb VeriFactu des d'avui",
+        "subtitle": "Gratis fins a 10 factures al mes. Sense targeta de crèdit.",
+        "cta": "Crear compte gratis"
+      }
+    },
+    "holded": {
+      "seo": {
+        "title": "Alternativa a Holded per a Autònoms i Pimes — YouWhole",
+        "description": "Busques una alternativa a Holded més completa i assequible? YouWhole inclou VeriFactu certificat, IRPF automàtic, Model 130/303 i suport en català. Des de 29 EUR/mes.",
+        "ogTitle": "Alternativa a Holded — YouWhole",
+        "ogDescription": "Més complet que Holded per al mercat espanyol. VeriFactu, IRPF, Model 130/303 i suport natiu en català i castellà."
+      },
+      "badge": "Comparativa honesta",
+      "h1Line1": "L'alternativa a Holded que",
+      "h1Highlight": "sí que compleix amb Hisenda",
+      "subtitle": "YouWhole inclou VeriFactu certificat, IRPF automàtic i Model 130/303 de sèrie. Sense mòduls extra. Sense sorpreses a la factura.",
+      "ctaPrimary": "Provar YouWhole gratis",
+      "ctaSecondary": "Parlar amb l'equip",
+      "trustLine": "14 dies gratis · Sense targeta · Migració assistida des de Holded",
+      "comparison": {
+        "title": "YouWhole vs Holded",
+        "subtitle": "Comparativa de característiques per a autònoms i pimes espanyoles",
+        "colFeat": "Característica",
+        "colOther": "Holded",
+        "included": "Inclòs",
+        "no": "No",
+        "yes": "Sí",
+        "notAvailable": "No disponible",
+        "footnote": "Informació basada en els plans publicats. Actualitzat juliol 2026.",
+        "rows": {
+          "r1": {
+            "feat": "VeriFactu certificat AEAT",
+            "yw": true,
+            "other": false,
+            "note": "Holded no té VeriFactu natiu"
+          },
+          "r2": {
+            "feat": "IRPF automàtic per a autònoms",
+            "yw": true,
+            "other": false,
+            "note": "A Holded és configuració manual"
+          },
+          "r3": {
+            "feat": "Model 130/303 integrat",
+            "yw": true,
+            "other": false,
+            "note": "Holded requereix mòdul comptable extra"
+          },
+          "r4": {
+            "feat": "Pla gratuït real",
+            "yw": true,
+            "other": false,
+            "note": "Holded no té pla gratuït permanent"
+          },
+          "r5": {
+            "feat": "Preu base mensual",
+            "yw": "29 EUR",
+            "other": "des de 49 EUR",
+            "note": ""
+          },
+          "r6": {
+            "feat": "Suport natiu en català/castellà",
+            "yw": true,
+            "other": true,
+            "note": ""
+          },
+          "r7": {
+            "feat": "Sense permanència",
+            "yw": true,
+            "other": false,
+            "note": "Holded cobra anual per defecte"
+          },
+          "r8": {
+            "feat": "Múltiples idiomes (ca, eu, gl)",
+            "yw": true,
+            "other": false,
+            "note": "YouWhole suporta 5 idiomes peninsulars"
+          },
+          "r9": {
+            "feat": "Control horari empleats",
+            "yw": true,
+            "other": true,
+            "note": ""
+          },
+          "r10": {
+            "feat": "Portal d'empleat",
+            "yw": true,
+            "other": true,
+            "note": ""
+          }
+        }
+      },
+      "migration": {
+        "title": "Migra des de Holded sense perdre les teves dades",
+        "subtitle": "Importa els teus clients, factures i productes des de Holded en minuts. El nostre equip t'ajuda a fer la transició sense interrupcions.",
+        "steps": {
+          "s1": {
+            "t": "Exporta des de Holded",
+            "d": "Descarrega les teves dades en CSV o Excel des del panell de Holded."
+          },
+          "s2": {
+            "t": "Importa a YouWhole",
+            "d": "Utilitza el nostre importador per carregar clients, productes i factures."
+          },
+          "s3": {
+            "t": "Preparat per facturar",
+            "d": "La teva empresa operativa a YouWhole en menys d'1 hora."
+          }
+        },
+        "cta": "Començar migració gratis"
+      }
+    },
+    "sage": {
+      "seo": {
+        "title": "Alternativa a Sage per a Autònoms i Pimes — YouWhole",
+        "description": "Sage és massa car o complex per al teu negoci? YouWhole és l'alternativa moderna: VeriFactu certificat, IRPF automàtic, sense instal·lació i des de 29 EUR/mes.",
+        "ogTitle": "Alternativa a Sage per a Autònoms — YouWhole",
+        "ogDescription": "Més senzill i assequible que Sage. VeriFactu inclòs, sense instal·lació, des de 29 EUR/mes."
+      },
+      "badge": "Comparativa honesta",
+      "h1Line1": "L'alternativa a Sage que",
+      "h1Highlight": "no requereix instal·lació",
+      "subtitle": "YouWhole és 100% al núvol, inclou VeriFactu certificat i costa menys que Sage. Sense instal·lacions, sense versions desactualitzades, sense sorpreses.",
+      "ctaPrimary": "Provar YouWhole gratis",
+      "ctaSecondary": "Parlar amb l'equip",
+      "trustLine": "14 dies gratis · Sense targeta · Migració assistida des de Sage",
+      "reasons": {
+        "title": "Per què els autònoms abandonen Sage?",
+        "subtitle": "Sage porta dècades al mercat, però va ser dissenyat per a una altra època. Aquestes són les queixes més habituals.",
+        "items": {
+          "r1": {
+            "t": "Instal·lació local",
+            "d": "Sage 50 requereix instal·lar programari a cada ordinador. Si canvies d'equip o treballes en remot, tens un problema."
+          },
+          "r2": {
+            "t": "Sense VeriFactu natiu",
+            "d": "Complir la normativa AEAT 2025 requereix un mòdul addicional de pagament que Sage no inclou per defecte."
+          },
+          "r3": {
+            "t": "Preu de llicències",
+            "d": "Les llicències anuals de Sage s'acumulen. Per a una pime petita, el cost és difícil de justificar."
+          },
+          "r4": {
+            "t": "Corba d'aprenentatge alta",
+            "d": "Sage va ser dissenyat per a comptables professionals. Un autònom sense formació comptable el troba innecessàriament complex."
+          },
+          "r5": {
+            "t": "Sense app mòbil real",
+            "d": "Consultar una factura o registrar una despesa des del mòbil és pràcticament impossible amb Sage 50."
+          },
+          "r6": {
+            "t": "Actualitzacions de pagament",
+            "d": "Cada nova versió de Sage requereix pagar l'actualització. Amb YouWhole, les actualitzacions són automàtiques i incloses."
+          }
+        }
+      },
+      "comparison": {
+        "title": "YouWhole vs Sage",
+        "subtitle": "Comparativa de característiques per a autònoms i pimes",
+        "colFeat": "Característica",
+        "colOther": "Sage",
+        "included": "Inclòs",
+        "no": "No",
+        "yes": "Sí",
+        "notAvailable": "No disponible",
+        "footnote": "Informació basada en els plans publicats. Actualitzat juliol 2026.",
+        "rows": {
+          "r1": {
+            "feat": "VeriFactu certificat AEAT",
+            "yw": true,
+            "other": false,
+            "note": "Sage requereix mòdul addicional de pagament"
+          },
+          "r2": {
+            "feat": "IRPF automàtic per a autònoms",
+            "yw": true,
+            "other": false,
+            "note": "A Sage és configuració manual"
+          },
+          "r3": {
+            "feat": "Basat al núvol (sense instal·lació)",
+            "yw": true,
+            "other": false,
+            "note": "Sage 50 requereix instal·lació local"
+          },
+          "r4": {
+            "feat": "Pla gratuït disponible",
+            "yw": true,
+            "other": false,
+            "note": "Sage no té pla gratuït"
+          },
+          "r5": {
+            "feat": "Preu base mensual",
+            "yw": "29 EUR",
+            "other": "des de 50 EUR",
+            "note": ""
+          },
+          "r6": {
+            "feat": "Actualitzacions automàtiques",
+            "yw": true,
+            "other": false,
+            "note": "Sage requereix comprar noves versions"
+          },
+          "r7": {
+            "feat": "Multi-idioma (ca, eu, gl)",
+            "yw": true,
+            "other": false,
+            "note": "YouWhole suporta 5 idiomes peninsulars"
+          },
+          "r8": {
+            "feat": "Suport en català/castellà",
+            "yw": true,
+            "other": true,
+            "note": ""
+          },
+          "r9": {
+            "feat": "Sense permanència",
+            "yw": true,
+            "other": false,
+            "note": "Sage cobra llicències anuals"
+          },
+          "r10": {
+            "feat": "Accés des del mòbil",
+            "yw": true,
+            "other": false,
+            "note": "Sage 50 no té app mòbil nativa"
+          }
+        }
+      },
+      "migration": {
+        "title": "Migra des de Sage sense perdre les teves dades",
+        "subtitle": "Exporta els teus clients, productes i factures des de Sage i importa'ls a YouWhole en minuts.",
+        "steps": {
+          "s1": {
+            "t": "Exporta des de Sage",
+            "d": "Exporta clients, productes i factures en CSV o Excel des del panell de Sage."
+          },
+          "s2": {
+            "t": "Importa a YouWhole",
+            "d": "Utilitza el nostre importador per carregar totes les teves dades en minuts."
+          },
+          "s3": {
+            "t": "Preparat per facturar",
+            "d": "La teva empresa operativa a YouWhole amb VeriFactu activat des del primer dia."
+          }
+        },
+        "cta": "Començar migració gratis"
+      },
+      "finalCta": {
+        "title": "Deixa Sage. Comença gratis avui.",
+        "subtitle": "Sense targeta. Sense permanència. Amb VeriFactu inclòs des del primer dia.",
+        "cta": "Crear compte gratis"
+      }
+    },
+    "modelo130": {
+      "seo": {
+        "title": "Model 130 Online per a Autònoms — YouWhole",
+        "description": "Calcula i prepara el Model 130 de forma automàtica amb YouWhole. Suma ingressos, despeses i retencions del trimestre sense errors. Gratis per a autònoms.",
+        "ogTitle": "Model 130 Online per a Autònoms — YouWhole",
+        "ogDescription": "Calcula el Model 130 automàticament. Sense errors, sense càlculs manuals. Inclòs en tots els plans."
+      },
+      "badge": "IRPF trimestral autònoms",
+      "h1Line1": "Model 130 calculat",
+      "h1Highlight": "automàticament cada trimestre",
+      "subtitle": "YouWhole suma els teus ingressos i despeses del trimestre, calcula l'IRPF i et dona l'import exacte del Model 130. Sense calculadora. Sense errors. Sense neguits.",
+      "ctaPrimary": "Comença gratis — sense targeta",
+      "ctaSecondary": "Sol·licitar demo",
+      "trustLine": "Inclòs en tots els plans · Càlcul automàtic · Dades preparades per presentar",
+      "intro": {
+        "title": "Què és el Model 130 i quan cal presentar-lo?",
+        "pPre": "El",
+        "pStrong": "Model 130",
+        "pPost": "és la declaració trimestral de l'IRPF per a autònoms en estimació directa. Es presenta quatre vegades l'any davant l'Agència Tributària:",
+        "quarters": {
+          "q1": {
+            "t": "1T",
+            "d": "1-20 abril",
+            "p": "Gener–Març"
+          },
+          "q2": {
+            "t": "2T",
+            "d": "1-20 juliol",
+            "p": "Abril–Juny"
+          },
+          "q3": {
+            "t": "3T",
+            "d": "1-20 octubre",
+            "p": "Juliol–Setembre"
+          },
+          "q4": {
+            "t": "4T",
+            "d": "1-30 gener",
+            "p": "Octubre–Desembre"
+          }
+        },
+        "p2Pre": "Si més del 70% de les teves factures porten retenció IRPF (perquè els teus clients són empreses que te la apliquen), pot ser que estiguis",
+        "p2Strong": "exempt de presentar el Model 130",
+        "p2Post": "YouWhole detecta automàticament si compleixes aquest llindar."
+      },
+      "howItWorks": {
+        "title": "Com calcula YouWhole el teu Model 130",
+        "steps": {
+          "s1": {
+            "t": "Registres les teves factures",
+            "d": "Cada factura emesa i rebuda queda registrada automàticament amb el seu IRPF i IVA."
+          },
+          "s2": {
+            "t": "YouWhole acumula el trimestre",
+            "d": "Suma ingressos, despeses deduïbles i retencions ja aplicades pels teus clients."
+          },
+          "s3": {
+            "t": "Calcula el 20%",
+            "d": "Aplica el 20% d'IRPF sobre el benefici net del trimestre acumulat."
+          },
+          "s4": {
+            "t": "Et dona el resultat",
+            "d": "Obtens l'import exacte a ingressar a Hisenda preparat per presentar."
+          }
+        }
+      },
+      "faq": {
+        "title": "Preguntes freqüents sobre el Model 130",
+        "items": {
+          "q1": {
+            "q": "Què és el Model 130?",
+            "a": "El Model 130 és la declaració trimestral de l'IRPF per a autònoms en estimació directa. Es presenta al gener, abril, juliol i octubre davant l'Agència Tributària i serveix per liquidar els pagaments fraccionats de l'IRPF."
+          },
+          "q2": {
+            "q": "Qui ha de presentar el Model 130?",
+            "a": "Tots els autònoms en estimació directa (normal o simplificada) que no tinguin almenys el 70% dels seus ingressos amb retenció IRPF. Si els teus clients són particulars o empreses que no t'apliquen retenció, has de presentar el Model 130."
+          },
+          "q3": {
+            "q": "Com calcula YouWhole el Model 130?",
+            "a": "YouWhole suma automàticament tots els teus ingressos i despeses del trimestre, calcula el 20% d'IRPF sobre el benefici net, resta les retencions ja aplicades i et dona l'import exacte a pagar. No cal fer cap càlcul manual."
+          },
+          "q4": {
+            "q": "YouWhole presenta el Model 130 a l'AEAT per mi?",
+            "a": "YouWhole genera totes les dades necessàries per presentar el Model 130. La presentació final davant l'AEAT la fas tu des de la Seu Electrònica o el teu assessor amb les dades que et proporcionem. Estem treballant en la presentació directa."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Oblida't del Model 130 manual",
+        "subtitle": "YouWhole el calcula sol cada trimestre. Comença gratis avui.",
+        "cta": "Crear compte gratis"
+      }
+    },
+    "rrhh": {
+      "seo": {
+        "title": "Programari de Recursos Humans per a Pimes — YouWhole",
+        "description": "Gestiona empleats, nòmines, contractes, vacances i control horari en una sola plataforma. Programari RRHH per a pimes espanyoles, sense complicacions. Des de 29 EUR/mes.",
+        "ogTitle": "Programari RRHH per a Pimes — YouWhole",
+        "ogDescription": "Nòmines, contractes, vacances i control horari integrats amb la teva facturació. Tot en un."
+      },
+      "badge": "RRHH integrat amb facturació",
+      "h1Line1": "Programari de recursos humans",
+      "h1Highlight": "per a pimes que no volen complicacions",
+      "subtitle": "Nòmines, contractes, control horari, vacances i portal de l'empleat integrats amb la teva facturació. Tot a YouWhole, sense necessitat d'un altre programa de RRHH.",
+      "ctaPrimary": "Provar gratis 14 dies",
+      "ctaSecondary": "Sol·licitar demo",
+      "trustLine": "Sense permanència · Suport en català · Compleix la normativa laboral espanyola",
+      "features": {
+        "title": "Tot el RRHH de la teva pime en un sol lloc",
+        "subtitle": "Dissenyat per a gestors que no són experts en RRHH però necessiten tenir-ho tot sota control.",
+        "items": {
+          "f1": {
+            "title": "Nòmines automàtiques",
+            "desc": "Genera nòmines mensuals amb retencions IRPF, Seguretat Social i deduccions calculades automàticament segons el contracte."
+          },
+          "f2": {
+            "title": "Control horari amb GPS",
+            "desc": "Els empleats fitxen entrada i sortida des del mòbil. Registre amb geolocalització per complir la normativa laboral espanyola."
+          },
+          "f3": {
+            "title": "Gestió de contractes",
+            "desc": "Emmagatzema i gestiona tots els contractes laborals del teu equip. Alertes de venciment i renovació automàtica."
+          },
+          "f4": {
+            "title": "Vacances i absències",
+            "desc": "Sol·licitud i aprovació de vacances digital. Calendari d'equip per planificar absències sense conflictes."
+          },
+          "f5": {
+            "title": "Portal de l'empleat",
+            "desc": "Cada empleat accedeix a les seves nòmines, contractes i registre d'hores des del seu propi compte sense molestar RRHH."
+          },
+          "f6": {
+            "title": "Hores per projecte",
+            "desc": "Assigna hores treballades a projectes específics per calcular rendibilitat i facturar temps a clients."
+          }
+        }
+      },
+      "compliance": {
+        "title": "Compleix la normativa laboral espanyola sense esforç",
+        "subtitle": "El control horari és obligatori per a totes les empreses a Espanya des de 2019. YouWhole ho gestiona automàticament.",
+        "items": {
+          "c1": {
+            "title": "Registre horari obligatori (RD 8/2019)",
+            "desc": "Tots els empleats han de fitxar entrada i sortida. YouWhole registra i emmagatzema cada fitxatge amb marca horària i GPS."
+          },
+          "c2": {
+            "title": "Nòmines conformes al conveni",
+            "desc": "Genera nòmines amb tots els conceptes laborals: salari base, complements, IRPF i cotitzacions a la SS."
+          },
+          "c3": {
+            "title": "Exportació per a l'assessor",
+            "desc": "Exporta totes les dades de RRHH en format estàndard perquè el teu gestor laboral les faci servir directament."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "RRHH sota control des del primer dia",
+        "subtitle": "14 dies gratis. Sense targeta. El mòdul RRHH inclòs en tots els plans.",
+        "cta": "Començar gratis ara"
+      }
+    },
+    "controlHorario": {
+      "seo": {
+        "title": "Programari de Control Horari per a Empreses — YouWhole",
+        "description": "Control horari obligatori per a empreses espanyoles. Fitxatge per GPS, QR o web. Exportació per a inspecció de treball. Integrat amb nòmines i projectes. Des de 29 EUR/mes.",
+        "ogTitle": "Programari Control Horari Empreses — YouWhole",
+        "ogDescription": "Fitxatge GPS, QR i web. Compleix el RD 8/2019 sense complicacions. Integrat amb nòmines i projectes."
+      },
+      "badge": "Obligatori des de 2019",
+      "h1Line1": "Control horari digital",
+      "h1Highlight": "que compleix la llei espanyola",
+      "subtitle": "El RD 8/2019 obliga a registrar la jornada de tots els teus empleats. YouWhole ho fa automàticament amb GPS, QR o web — integrat amb nòmines i projectes.",
+      "ctaPrimary": "Provar gratis 14 dies",
+      "ctaSecondary": "Veure demo",
+      "trustLine": "Sense permanència · Compleix RD 8/2019 · Integrat amb nòmines",
+      "checkinMethods": {
+        "title": "3 maneres de fitxar, tu tries",
+        "subtitle": "Adaptat a oficines, teletreball i treball de camp.",
+        "items": {
+          "m1": {
+            "title": "App web amb GPS",
+            "desc": "L'empleat obre YouWhole al mòbil i fitxa. La ubicació GPS queda registrada automàticament per a treball de camp o teletreball.",
+            "badge": "Més utilitzat"
+          },
+          "m2": {
+            "title": "Codi QR a l'oficina",
+            "desc": "Imprimeix un QR a l'entrada de l'oficina. Els empleats l'escanegen amb el mòbil per fitxar entrada i sortida sense tocar res més.",
+            "badge": "Per a oficines"
+          },
+          "m3": {
+            "title": "Registre manual",
+            "desc": "L'administrador pot registrar hores manualment per a empleats sense smartphone o per corregir fitxatges erronis.",
+            "badge": "Còpia de seguretat"
+          }
+        }
+      },
+      "integration": {
+        "title": "Integrat amb la resta de la teva empresa",
+        "subtitle": "El control horari de YouWhole no és un mòdul aïllat. Es connecta amb nòmines, projectes i facturació.",
+        "items": {
+          "i1": {
+            "title": "Hores → Nòmines",
+            "desc": "Les hores registrades alimenten directament el càlcul de nòmines. Les hores extra es calculen soles."
+          },
+          "i2": {
+            "title": "Hores → Projectes",
+            "desc": "Assigna hores treballades a projectes per calcular rendibilitat i facturar temps a clients."
+          },
+          "i3": {
+            "title": "Hores → Informes",
+            "desc": "Exporta el registre de jornada per empleat, projecte o data. Vàlid per a inspeccions laborals."
+          },
+          "i4": {
+            "title": "Alertes d'incidències",
+            "desc": "Avís automàtic quan un empleat no ha fitxat o quan hi ha hores extra no autoritzades."
+          }
+        }
+      },
+      "faq": {
+        "title": "Preguntes freqüents",
+        "items": {
+          "q1": {
+            "q": "És obligatori el control horari a Espanya?",
+            "a": "Sí. El Reial Decret llei 8/2019 obliga totes les empreses espanyoles a registrar la jornada laboral dels seus empleats, independentment de la seva mida. L'incompliment pot comportar multes de fins a 6.250 EUR per treballador."
+          },
+          "q2": {
+            "q": "Com fitxen els empleats amb YouWhole?",
+            "a": "Els empleats poden fitxar des de l'app web al mòbil amb GPS activat, des d'un codi QR a l'oficina, o l'administrador pot registrar les hores manualment. Totes les opcions queden registrades amb marca horària."
+          },
+          "q3": {
+            "q": "Es pot exportar el registre horari?",
+            "a": "Sí. YouWhole permet exportar el registre d'hores en format Excel o CSV, filtrat per empleat, projecte o rang de dates. Vàlid per a inspeccions de treball i per al teu gestor laboral."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Compleix la llei de control horari avui",
+        "subtitle": "14 dies gratis. Sense targeta. Activat des del primer dia.",
+        "cta": "Crear compte gratis"
+      }
+    },
+    "almacen": {
+      "seo": {
+        "title": "Programari de Magatzem i Inventari per a Pimes — YouWhole",
+        "description": "Controla el teu estoc en temps real, gestiona proveïdors i genera comandes automàtiques. Programari de magatzem i inventari integrat amb facturació. Des de 29 EUR/mes.",
+        "ogTitle": "Programari Magatzem i Inventari Pimes — YouWhole",
+        "ogDescription": "Estoc en temps real, comandes automàtiques i gestió de proveïdors integrats amb la teva facturació."
+      },
+      "badge": "Inventari integrat amb facturació",
+      "h1Line1": "Programari de magatzem i inventari",
+      "h1Highlight": "que s'actualitza sol",
+      "subtitle": "Controla el teu estoc en temps real, gestiona proveïdors i genera comandes automàtiques. Tot integrat amb la teva facturació perquè mai perdis el control.",
+      "ctaPrimary": "Provar gratis 14 dies",
+      "ctaSecondary": "Sol·licitar demo",
+      "trustLine": "Sense permanència · Suport en català · Integrat amb vendes i compres",
+      "features": {
+        "title": "Control total del teu inventari",
+        "subtitle": "Dissenyat per a pimes que necessiten controlar el seu estoc sense dedicar-hi hores cada setmana.",
+        "items": {
+          "f1": {
+            "title": "Estoc en temps real",
+            "desc": "Cada venda, compra o ajust actualitza l'inventari a l'instant. Mai més venguis alguna cosa que no tens."
+          },
+          "f2": {
+            "title": "Alertes d'estoc mínim",
+            "desc": "Defineix l'estoc mínim de cada producte. YouWhole t'avisa automàticament quan toca reposar."
+          },
+          "f3": {
+            "title": "Comandes automàtiques",
+            "desc": "Genera ordres de compra a proveïdors automàticament quan l'estoc baixa del llindar que defineixis."
+          },
+          "f4": {
+            "title": "Gestió de proveïdors",
+            "desc": "Registra preus, condicions i terminis de cada proveïdor. Compara costos i tria el millor a cada comanda."
+          },
+          "f5": {
+            "title": "Múltiples magatzems",
+            "desc": "Gestiona diversos magatzems o ubicacions des d'un sol panell. Transfereix estoc entre ubicacions amb un clic."
+          },
+          "f6": {
+            "title": "Integrat amb facturació",
+            "desc": "Cada factura de venda descompta automàticament l'estoc. Cada factura de compra l'incrementa."
+          }
+        }
+      },
+      "integration": {
+        "title": "Integrat amb tota la teva empresa",
+        "subtitle": "El magatzem de YouWhole no funciona aïllat — es connecta amb vendes, compres, CRM i facturació.",
+        "items": {
+          "i1": {
+            "title": "Venda → descompte automàtic d'estoc",
+            "desc": "Quan emets una factura o albarà, l'estoc es redueix automàticament. Sense ajustos manuals."
+          },
+          "i2": {
+            "title": "Compra → entrada automàtica al magatzem",
+            "desc": "Quan registres una factura de proveïdor, els productes entren a l'inventari amb el seu preu de cost."
+          },
+          "i3": {
+            "title": "Pressupost → reserva d'estoc",
+            "desc": "Un pressupost aprovat pot reservar unitats perquè no es venguin a un altre client mentre es confirma."
+          },
+          "i4": {
+            "title": "Valoració d'inventari en temps real",
+            "desc": "Consulta el valor del teu magatzem a preu de cost en qualsevol moment des del panell de control."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "El teu magatzem sota control des d'avui",
+        "subtitle": "14 dies gratis. Sense targeta. Estoc integrat amb la teva facturació des del primer dia.",
+        "cta": "Començar gratis ara"
+      }
+    },
+    "crm": {
+      "seo": {
+        "title": "Programari CRM per a Pimes Espanya — YouWhole",
+        "description": "CRM integrat amb facturació per a pimes espanyoles. Gestiona clients, leads, pipeline de vendes i pressupostos en una sola plataforma. Sense subscripcions extra. Des de 29 EUR/mes.",
+        "ogTitle": "Programari CRM per a Pimes — YouWhole",
+        "ogDescription": "Gestiona clients, leads i vendes integrat amb la teva facturació. Sense eines externes."
+      },
+      "badge": "CRM integrat amb facturació",
+      "h1Line1": "CRM per a pimes que no volen",
+      "h1Highlight": "pagar per una altra eina",
+      "subtitle": "YouWhole inclou un CRM complet integrat amb la teva facturació. Gestiona clients, leads i pipeline de vendes sense sortir de la plataforma — ni pagar una subscripció extra.",
+      "ctaPrimary": "Provar gratis 14 dies",
+      "ctaSecondary": "Sol·licitar demo",
+      "trustLine": "Sense permanència · CRM inclòs en tots els plans · Suport en català",
+      "features": {
+        "title": "Tot el que necessita el CRM de la teva pime",
+        "subtitle": "Sense la complexitat de Salesforce ni el preu de HubSpot. Dissenyat per a pimes reals.",
+        "items": {
+          "f1": {
+            "title": "Gestió de clients",
+            "desc": "Fitxa completa de cada client amb historial de factures, pressupostos, contactes i notes. Tot en un sol lloc."
+          },
+          "f2": {
+            "title": "Pipeline de vendes Kanban",
+            "desc": "Visualitza les teves oportunitats en un tauler Kanban. Arrossega deals entre etapes i tanca més vendes."
+          },
+          "f3": {
+            "title": "Leads i prospectes",
+            "desc": "Registra leads des del primer contacte, assigna'ls a un comercial i fes seguiment fins al tancament."
+          },
+          "f4": {
+            "title": "Pressupostos professionals",
+            "desc": "Crea pressupostos amb el teu logo i converteix-los en factures amb un clic quan el client digui que sí."
+          },
+          "f5": {
+            "title": "Historial de comunicacions",
+            "desc": "Registra trucades, emails i reunions per client. Mai perdis el fil d'una negociació."
+          },
+          "f6": {
+            "title": "Integrat amb facturació",
+            "desc": "Del pressupost a la factura VeriFactu en un clic. Sense exportar ni copiar dades entre programes."
+          }
+        }
+      },
+      "why": {
+        "title": "Per què un CRM integrat amb facturació?",
+        "subtitle": "La majoria de pimes fan servir 3-4 eines diferents que no es parlen entre elles. Amb YouWhole tot està connectat.",
+        "items": {
+          "w1": {
+            "title": "Pressupost → Factura en un clic",
+            "desc": "Quan el client accepta el pressupost, es converteix en factura VeriFactu automàticament. Sense copiar dades."
+          },
+          "w2": {
+            "title": "Client → Historial complet",
+            "desc": "Des de la fitxa del client veus totes les seves factures, pressupostos, pagaments pendents i comunicacions anteriors."
+          },
+          "w3": {
+            "title": "Lead → Client → Factura",
+            "desc": "El cicle complet de venda en una sola plataforma: des del primer contacte fins al cobrament de la factura."
+          },
+          "w4": {
+            "title": "Sense duplicar dades",
+            "desc": "Les dades del client es comparteixen entre CRM, facturació, comptabilitat i RRHH. Sense exportacions ni copiar-enganxar."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Comença a vendre més, des d'avui",
+        "subtitle": "CRM inclòs en tots els plans. 14 dies gratis sense targeta.",
+        "cta": "Crear compte gratis"
+      }
+    },
+    "contabilidad": {
+      "seo": {
+        "title": "Programari de Comptabilitat per a Pimes Espanya — YouWhole",
+        "description": "Comptabilitat automàtica segons el PGC espanyol. Assentaments automàtics, balanç, compte de pèrdues i guanys, i IVA integrat amb facturació. Per a pimes i autònoms. Des de 29 EUR/mes.",
+        "ogTitle": "Programari Comptabilitat Pimes — YouWhole",
+        "ogDescription": "Assentaments automàtics segons el PGC espanyol. Integrat amb facturació VeriFactu. Sense coneixements comptables."
+      },
+      "badge": "Comptabilitat automàtica PGC",
+      "h1Line1": "Programari de comptabilitat per a pimes",
+      "h1Highlight": "que es porta sola",
+      "subtitle": "YouWhole genera els assentaments comptables automàticament segons el Pla General Comptable espanyol. Tu emets factures — la comptabilitat es fa sola, sense errors, sense coneixements previs.",
+      "ctaPrimary": "Provar gratis 14 dies",
+      "ctaSecondary": "Sol·licitar demo",
+      "trustLine": "Sense permanència · PGC espanyol · Accés per al teu assessor",
+      "automatic": {
+        "title": "Què fa YouWhole automàticament",
+        "subtitle": "No necessites tocar la comptabilitat. Aquests processos passen sols quan fas servir la plataforma.",
+        "items": {
+          "a1": {
+            "title": "Assentaments de vendes",
+            "desc": "Cada factura emesa genera l'assentament d'ingrés amb el seu compte d'IVA repercutit i IRPF retingut."
+          },
+          "a2": {
+            "title": "Assentaments de compres",
+            "desc": "Cada factura de proveïdor registrada genera l'assentament de despesa amb IVA suportat deduïble."
+          },
+          "a3": {
+            "title": "Llibre d'IVA",
+            "desc": "El llibre d'IVA suportat i repercutit es genera automàticament cada trimestre, preparat per presentar."
+          },
+          "a4": {
+            "title": "Balanç i P&G",
+            "desc": "Consulta el balanç de situació i el compte de pèrdues i guanys en temps real, sense esperar al tancament."
+          },
+          "a5": {
+            "title": "Conciliació bancària",
+            "desc": "Connecta el teu banc i concilia cobraments i pagaments amb les factures pendents automàticament."
+          },
+          "a6": {
+            "title": "Accés de l'assessor",
+            "desc": "Convida el teu gestor amb rol de Comptable perquè accedeixi a les dades sense tocar la configuració de la teva empresa."
+          }
+        }
+      },
+      "pgcTable": {
+        "title": "Compleix amb el PGC espanyol sense esforç",
+        "subtitle": "El Pla General Comptable espanyol defineix com s'han de registrar les operacions comptables. YouWhole ho aplica automàticament a cada operació.",
+        "colOp": "Operació",
+        "colAccount": "Compte PGC",
+        "colAuto": "Automàtic",
+        "yes": "Sí",
+        "rows": {
+          "r1": {
+            "op": "Factura de venda",
+            "account": "700 – Vendes"
+          },
+          "r2": {
+            "op": "IVA repercutit",
+            "account": "477 – HP IVA repercutit"
+          },
+          "r3": {
+            "op": "IRPF retingut",
+            "account": "473 – HP retencions IRPF"
+          },
+          "r4": {
+            "op": "Factura de compra",
+            "account": "600/620/621 – Compres i despeses"
+          },
+          "r5": {
+            "op": "IVA suportat",
+            "account": "472 – HP IVA suportat"
+          },
+          "r6": {
+            "op": "Cobrament de client",
+            "account": "430/570 – Clients i Tresoreria"
+          }
+        }
+      },
+      "faq": {
+        "title": "Preguntes freqüents",
+        "items": {
+          "q1": {
+            "q": "YouWhole porta la comptabilitat automàticament?",
+            "a": "Sí. Cada factura emesa i rebuda genera automàticament l'assentament comptable corresponent segons el Pla General Comptable espanyol. No cal introduir els assentaments manualment."
+          },
+          "q2": {
+            "q": "Necessito saber comptabilitat per fer servir YouWhole?",
+            "a": "No. YouWhole genera tots els assentaments comptables de forma automàtica. Tu només introdueixes les factures i cobraments, i el sistema fa la resta. Per a casos complexos, pots donar accés al teu assessor comptable."
+          },
+          "q3": {
+            "q": "Puc donar accés al meu gestor o assessor comptable?",
+            "a": "Sí. YouWhole permet convidar el teu assessor amb rol de Comptable. Tindrà accés a la comptabilitat, factures i dades fiscals sense poder modificar configuracions sensibles de l'empresa."
+          },
+          "q4": {
+            "q": "Compleix amb el Pla General Comptable espanyol?",
+            "a": "Sí. YouWhole genera assentaments segons el PGC (Pla General Comptable) espanyol vigent, amb els codis de compte corresponents per a cada tipus d'operació: vendes, compres, IVA, IRPF i despeses."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "La comptabilitat de la teva pime, en pilot automàtic",
+        "subtitle": "14 dies gratis. Sense targeta. Sense coneixements comptables necessaris.",
+        "cta": "Començar gratis ara"
+      }
+    },
+    "nominas": {
+      "seo": {
+        "title": "Programari de Nòmines per a Pimes Espanya — YouWhole",
+        "description": "Genera nòmines automàtiques amb IRPF i Seguretat Social calculats. Programari de nòmines per a pimes espanyoles integrat amb control horari i comptabilitat. Des de 29 EUR/mes.",
+        "ogTitle": "Programari Nòmines Pimes — YouWhole",
+        "ogDescription": "Nòmines automàtiques amb IRPF i SS calculats. Integrat amb control horari i comptabilitat."
+      },
+      "badge": "Nòmines integrades amb RRHH",
+      "h1Line1": "Programari de nòmines per a pimes",
+      "h1Highlight": "sense errors de càlcul",
+      "subtitle": "YouWhole calcula automàticament l'IRPF i la Seguretat Social de cada empleat. Genera nòmines en segons, integrades amb el control horari i la comptabilitat.",
+      "ctaPrimary": "Provar gratis 14 dies",
+      "ctaSecondary": "Sol·licitar demo",
+      "trustLine": "Sense permanència · IRPF i SS automàtics · Suport en català",
+      "features": {
+        "title": "Nòmines sense complicacions",
+        "subtitle": "Dissenyat per a gestors que necessiten processar nòmines ràpid, sense ser experts en dret laboral.",
+        "items": {
+          "f1": {
+            "title": "Càlcul automàtic d'IRPF",
+            "desc": "YouWhole calcula la retenció IRPF de cada empleat segons la seva situació personal i el tram que li correspon."
+          },
+          "f2": {
+            "title": "Seguretat Social",
+            "desc": "Cotitzacions a la Seguretat Social calculades automàticament per contingències comunes, atur i formació."
+          },
+          "f3": {
+            "title": "Nòmina mensual en segons",
+            "desc": "Amb les dades del contracte i les hores treballades, la nòmina de cada empleat es genera en un clic."
+          },
+          "f4": {
+            "title": "Integrat amb control horari",
+            "desc": "Les hores registrades alimenten directament la nòmina. Les hores extra es calculen i apliquen automàticament."
+          },
+          "f5": {
+            "title": "Portal de l'empleat",
+            "desc": "Cada empleat accedeix a les seves nòmines històriques des del seu compte. Sense imprimir, sense enviar per email."
+          },
+          "f6": {
+            "title": "Exportació per a gestor laboral",
+            "desc": "Exporta totes les nòmines en format estàndard perquè el teu gestor laboral les validi abans de presentar-les a la SS."
+          }
+        }
+      },
+      "howItWorks": {
+        "title": "Com funciona el procés de nòmines",
+        "steps": {
+          "s1": {
+            "t": "Configures el contracte",
+            "d": "Introdueixes el salari brut, tipus de contracte, IRPF aplicable i dades de la SS de l'empleat."
+          },
+          "s2": {
+            "t": "L'empleat fitxa les seves hores",
+            "d": "El control horari registra automàticament les hores treballades cada dia del mes."
+          },
+          "s3": {
+            "t": "Generes la nòmina",
+            "d": "Amb un clic, YouWhole calcula la nòmina completa: brut, deduccions, IRPF, SS i net."
+          },
+          "s4": {
+            "t": "L'empleat la consulta",
+            "d": "L'empleat accedeix a la seva nòmina des del portal. Tu l'exportes per al gestor laboral."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Nòmines llestes en minuts cada mes",
+        "subtitle": "14 dies gratis. Sense targeta. IRPF i SS calculats automàticament.",
+        "cta": "Començar gratis ara"
+      }
+    }
   }
 }

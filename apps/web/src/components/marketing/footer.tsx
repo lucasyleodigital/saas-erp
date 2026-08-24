@@ -1,9 +1,30 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+
+// Satellite landing pages that have translated [locale] variants —
+// link to the localized URL instead of the always-Spanish bare path.
+const TRANSLATED_SLUGS = new Set([
+  "/erp-autonomos-espana",
+  "/software-facturacion-pymes",
+  "/software-contabilidad-pymes",
+  "/software-crm-pymes",
+  "/software-recursos-humanos-pymes",
+  "/software-nominas-pymes",
+  "/software-control-horario",
+  "/software-almacen-inventario",
+  "/modelo-130-online",
+  "/alternativa-holded",
+  "/alternativa-sage-autonomos",
+  "/verifactu-software-certificado",
+]);
 
 export function MarketingFooter() {
   const t = useTranslations("marketing.footer");
+  const locale = useLocale();
+
+  const localize = (href: string) =>
+    locale !== "es" && TRANSLATED_SLUGS.has(href) ? `/${locale}${href}` : href;
 
   const FOOTER_LINKS = [
     {
@@ -82,7 +103,7 @@ export function MarketingFooter() {
                 {col.links.map((l) => (
                   <li key={l.href}>
                     <a
-                      href={l.href}
+                      href={localize(l.href)}
                       className="text-xs text-muted-foreground hover:text-foreground transition-colors"
                     >
                       {l.label}

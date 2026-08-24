@@ -4,11 +4,20 @@ import { type NextRequest, NextResponse } from "next/server";
 
 const intlMiddleware = createMiddleware(routing);
 
+// Satellite SEO landing pages — public marketing pages, must never require auth
+const SATELLITE_PATHS = [
+  "/erp-autonomos-espana", "/software-facturacion-pymes", "/verifactu-software-certificado",
+  "/alternativa-holded", "/alternativa-sage-autonomos", "/modelo-130-online",
+  "/software-recursos-humanos-pymes", "/software-control-horario", "/software-almacen-inventario",
+  "/software-crm-pymes", "/software-contabilidad-pymes", "/software-nominas-pymes",
+];
+
 // Paths that don't require authentication (without locale prefix)
 const PUBLIC_PATHS = [
   "/", "/login", "/registro", "/recuperar-password", "/auth/callback",
   "/privacidad", "/aviso-legal", "/terminos", "/cookies", "/ayuda",
   "/sobre-nosotros", "/contacto",
+  ...SATELLITE_PATHS,
 ];
 
 export function middleware(request: NextRequest) {
@@ -72,7 +81,7 @@ export function middleware(request: NextRequest) {
   // A locale-prefixed home route (e.g. /en, /ca) must still go through intlMiddleware —
   // otherwise next-intl can't resolve the request locale for server-side translations
   // (getMessages/useTranslations), even though the URL segment is correct.
-  const NO_LOCALE_PATHS = ["/", "/auth/callback", "/privacidad", "/aviso-legal", "/terminos", "/cookies", "/ayuda", "/sobre-nosotros", "/contacto"];
+  const NO_LOCALE_PATHS = ["/", "/auth/callback", "/privacidad", "/aviso-legal", "/terminos", "/cookies", "/ayuda", "/sobre-nosotros", "/contacto", ...SATELLITE_PATHS];
   if (!localeMatch && (NO_LOCALE_PATHS.includes(pathname) || pathname.startsWith("/fichar"))) {
     return NextResponse.next();
   }

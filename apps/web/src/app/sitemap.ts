@@ -10,6 +10,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // it redirects to the canonical root APP_URL to avoid duplicate content.
   const TRANSLATED_LOCALES = LOCALES.filter((l) => l !== "es");
 
+  // Satellite SEO landing pages — each has a Spanish canonical (bare path)
+  // plus translated /ca, /eu, /gl, /en variants.
+  const SATELLITE_PAGES: { slug: string; priority: number }[] = [
+    { slug: "erp-autonomos-espana", priority: 0.95 },
+    { slug: "software-facturacion-pymes", priority: 0.95 },
+    { slug: "verifactu-software-certificado", priority: 0.9 },
+    { slug: "alternativa-holded", priority: 0.9 },
+    { slug: "alternativa-sage-autonomos", priority: 0.9 },
+    { slug: "modelo-130-online", priority: 0.85 },
+    { slug: "software-recursos-humanos-pymes", priority: 0.9 },
+    { slug: "software-control-horario", priority: 0.9 },
+    { slug: "software-almacen-inventario", priority: 0.9 },
+    { slug: "software-crm-pymes", priority: 0.9 },
+    { slug: "software-contabilidad-pymes", priority: 0.9 },
+    { slug: "software-nominas-pymes", priority: 0.9 },
+  ];
+
+  const satelliteUrls: MetadataRoute.Sitemap = SATELLITE_PAGES.flatMap(({ slug, priority }) => [
+    { url: `${APP_URL}/${slug}`, lastModified: now, changeFrequency: "monthly" as const, priority },
+    ...TRANSLATED_LOCALES.map((locale) => ({
+      url: `${APP_URL}/${locale}/${slug}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority,
+    })),
+  ]);
+
   return [
     // Raíz y landing principal
     { url: APP_URL, lastModified: now, changeFrequency: "weekly", priority: 1 },
@@ -20,19 +47,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     })),
 
-    // Landing pages SEO
-    { url: `${APP_URL}/erp-autonomos-espana`, lastModified: now, changeFrequency: "monthly", priority: 0.95 },
-    { url: `${APP_URL}/software-facturacion-pymes`, lastModified: now, changeFrequency: "monthly", priority: 0.95 },
-    { url: `${APP_URL}/verifactu-software-certificado`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${APP_URL}/alternativa-holded`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${APP_URL}/alternativa-sage-autonomos`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${APP_URL}/modelo-130-online`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
-    { url: `${APP_URL}/software-recursos-humanos-pymes`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${APP_URL}/software-control-horario`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${APP_URL}/software-almacen-inventario`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${APP_URL}/software-crm-pymes`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${APP_URL}/software-contabilidad-pymes`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${APP_URL}/software-nominas-pymes`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    // Landing pages SEO (+ variantes de idioma)
+    ...satelliteUrls,
 
     // Páginas de marketing
     { url: `${APP_URL}/sobre-nosotros`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },

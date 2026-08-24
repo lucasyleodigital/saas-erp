@@ -2723,5 +2723,1075 @@
       "madeInSpain": "Made in Spain",
       "designedBy": "Designed and developed by"
     }
+  },
+  "satellite": {
+    "erpAutonomos": {
+      "seo": {
+        "title": "ERP for Freelancers in Spain — YouWhole",
+        "description": "The ERP built by freelancers for freelancers. VeriFactu invoicing, automatic withholding tax, tax forms 130/303, Spanish GAAP accounting and CRM. No lock-in. From €29/month.",
+        "ogTitle": "ERP for Freelancers in Spain — YouWhole",
+        "ogDescription": "Built by freelancers, for freelancers. VeriFactu, withholding tax, tax forms 130/303 and CRM in a single platform."
+      },
+      "badge": "Built by freelancers, for freelancers",
+      "h1Line1": "The ERP that Spanish freelancers",
+      "h1Highlight": "actually needed",
+      "subtitle": "VeriFactu invoicing, automatic withholding tax, tax forms 130/303, Spanish GAAP accounting and CRM. One platform built around how freelancers really work.",
+      "ctaPrimary": "Start for free — 14 days, no card",
+      "ctaSecondary": "Request a demo",
+      "trustLine": "No lock-in contract · Cancel anytime · Support in English",
+      "features": {
+        "title": "Everything a freelancer needs",
+        "subtitle": "Built from the ground up for the Spanish freelancer's reality: the tax office, clients, time, and money.",
+        "items": {
+          "f1": {
+            "title": "AEAT-certified VeriFactu",
+            "desc": "Meets the legal requirement from day one. Every invoice is automatically registered with the Spanish Tax Agency."
+          },
+          "f2": {
+            "title": "Automatic withholding tax",
+            "desc": "Calculates and applies the IRPF withholding on every invoice based on client type. No errors, no manual math."
+          },
+          "f3": {
+            "title": "Tax forms 130 and 303 built in",
+            "desc": "Generates your quarterly return data in seconds. Less time with the tax office, more time invoicing."
+          },
+          "f4": {
+            "title": "Spanish GAAP accounting",
+            "desc": "Automatic accounting entries under the official Spanish chart of accounts (PGC). No need for an accountant for day-to-day work."
+          },
+          "f5": {
+            "title": "CRM and quotes",
+            "desc": "Manage your clients, send professional quotes, and turn them into invoices with one click."
+          },
+          "f6": {
+            "title": "Time tracking and projects",
+            "desc": "Log hours per project, calculate profitability, and bill worked time directly."
+          }
+        }
+      },
+      "comparison": {
+        "title": "Why YouWhole instead of another ERP?",
+        "subtitle": "There are plenty of invoicing programs out there. Very few are actually built for real Spanish freelancers.",
+        "colFeat": "Feature",
+        "colYw": "YouWhole",
+        "colOther": "Other ERPs",
+        "rows": {
+          "r1": {
+            "feat": "AEAT-certified VeriFactu",
+            "yw": "Included in every plan",
+            "other": "Only on expensive plans, or not included"
+          },
+          "r2": {
+            "feat": "Automatic withholding tax",
+            "yw": "Yes, by default",
+            "other": "Manual or unavailable"
+          },
+          "r3": {
+            "feat": "Built-in tax forms 130/303",
+            "yw": "Data generated automatically",
+            "other": "Manual export or extra module"
+          },
+          "r4": {
+            "feat": "Starting price",
+            "yw": "Free / €29/month",
+            "other": "From €30–80/month"
+          },
+          "r5": {
+            "feat": "Support in English",
+            "yw": "Chat and email during Spain business hours",
+            "other": "International ticketing"
+          },
+          "r6": {
+            "feat": "No lock-in contract",
+            "yw": "Yes, cancel anytime",
+            "other": "Annual contracts are the norm"
+          }
+        }
+      },
+      "faq": {
+        "title": "Frequently asked questions",
+        "items": {
+          "q1": {
+            "q": "Is YouWhole suited for freelancers who invoice very little?",
+            "a": "Yes. The Free plan includes up to 5 clients and 10 invoices a month — more than enough to get started. As you grow, the Starter plan from €29/month has no limits."
+          },
+          "q2": {
+            "q": "Do I need to know accounting to use YouWhole?",
+            "a": "No. The platform generates accounting entries automatically. You just enter invoices and payments — the system handles the rest."
+          },
+          "q3": {
+            "q": "Can I handle my own withholding tax without an accountant?",
+            "a": "Yes, for day-to-day use. YouWhole calculates withholdings, generates the tax form 130 summary, and gives you everything you need to file it. For complex cases, we always recommend checking with an advisor."
+          },
+          "q4": {
+            "q": "Does it work on mobile?",
+            "a": "Yes. YouWhole is a fully responsive web app. You can create invoices, look up clients, and check your dashboard from your phone or tablet."
+          }
+        }
+      },
+      "pricing": {
+        "title": "Pricing built for freelancers",
+        "subtitle": "No fine print. Start free and scale up whenever you need to."
+      },
+      "finalCta": {
+        "title": "Try it free for 14 days",
+        "subtitle": "No credit card. No lock-in. No fine print.",
+        "cta": "Create my free account"
+      }
+    },
+    "facturacionPymes": {
+      "seo": {
+        "title": "Invoicing Software for SMEs — YouWhole",
+        "description": "Invoicing software for Spanish SMEs with certified VeriFactu, Spanish GAAP accounting, payroll, CRM, and project management. All in one. From €29/month, no lock-in.",
+        "ogTitle": "Invoicing Software for SMEs — YouWhole",
+        "ogDescription": "Everything your SME needs: VeriFactu invoicing, payroll, CRM, Spanish GAAP accounting, and more. From €29/month."
+      },
+      "badge": "All-in-one for SMEs",
+      "h1Line1": "Invoicing software for SMEs",
+      "h1Highlight": "that goes far beyond invoices",
+      "subtitle": "YouWhole brings everything your SME needs together in one platform: VeriFactu invoicing, accounting, payroll, CRM, inventory, and projects. No integrations. No surprises.",
+      "ctaPrimary": "Try free for 14 days",
+      "ctaSecondary": "Request a demo for my SME",
+      "trustLine": "No lock-in · Support in English · Assisted migration",
+      "modules": {
+        "title": "8 modules built into one platform",
+        "subtitle": "Forget connecting 5 different tools. YouWhole has it all, and shares data across modules automatically.",
+        "items": {
+          "m1": {
+            "title": "VeriFactu invoicing",
+            "desc": "Issue AEAT-certified invoices. Includes recurring invoices, multi-currency, and multiple languages (es, ca, eu, gl, en)."
+          },
+          "m2": {
+            "title": "Spanish GAAP accounting",
+            "desc": "Automatic entries under the official Spanish chart of accounts. Real-time accounting balance with no prior knowledge needed."
+          },
+          "m3": {
+            "title": "Payroll & HR",
+            "desc": "Generate payroll, manage contracts, and track each employee's hours by project."
+          },
+          "m4": {
+            "title": "CRM & sales",
+            "desc": "Manage your sales pipeline with Kanban, log opportunities, and turn quotes into invoices."
+          },
+          "m5": {
+            "title": "Project management",
+            "desc": "Track profitability per project, assign employees, and bill worked time."
+          },
+          "m6": {
+            "title": "Inventory & warehouse",
+            "desc": "Track stock, manage suppliers, and automatically generate purchase orders when inventory runs low."
+          },
+          "m7": {
+            "title": "Banking & reconciliation",
+            "desc": "Connect your bank account and automatically reconcile payments with your invoices."
+          },
+          "m8": {
+            "title": "Automations",
+            "desc": "Payment reminders, recurring invoices, stock alerts, and custom no-code workflows."
+          }
+        }
+      },
+      "sectors": {
+        "title": "What kind of SME is YouWhole built for?",
+        "list": [
+          "Agencies and consultancies",
+          "Service businesses",
+          "Retail and shops",
+          "Construction and renovation",
+          "Hospitality and restaurants",
+          "Tech and startups",
+          "Clinics and healthcare",
+          "Transport and logistics",
+          "Education and training"
+        ],
+        "footnotePre": "Don't see your sector?",
+        "footnoteLink": "Reach out and we'll tell you how YouWhole fits your business"
+      },
+      "pricing": {
+        "title": "Pricing for SMEs of any size",
+        "subtitle": "No hidden costs. No lock-in. Scale up whenever you need to."
+      },
+      "finalCta": {
+        "title": "Is your SME ready for the next level?",
+        "subtitle": "14-day free trial. No card. Our team helps with migration.",
+        "cta": "Start for free now"
+      }
+    },
+    "verifactu": {
+      "seo": {
+        "title": "AEAT-Certified VeriFactu Software — YouWhole",
+        "description": "YouWhole is invoicing software certified for VeriFactu by the Spanish Tax Agency. Meets the legal requirement from day one. Included in every plan, even the free one.",
+        "ogTitle": "AEAT-Certified VeriFactu Software — YouWhole",
+        "ogDescription": "Meets the VeriFactu requirement from day one. Included in every YouWhole plan."
+      },
+      "badge": "AEAT certified",
+      "h1Line1": "Certified VeriFactu software,",
+      "h1Highlight": "included in every plan",
+      "subtitle": "YouWhole meets the Spanish Tax Agency's VeriFactu requirement from day one. No setup. No extra modules. No added cost.",
+      "cta": "Start for free — VeriFactu included",
+      "intro": {
+        "title": "What is VeriFactu and why is it mandatory?",
+        "p1Pre": "VeriFactu is the invoice verification system approved by the Spanish Tax Agency under the Invoicing Regulation (RD 1007/2023). Its goal is to guarantee the",
+        "p1Strong": "integrity and immutability",
+        "p1Post": "of every invoice issued by businesses and freelancers in Spain.",
+        "p2Pre": "Since 2025, any invoicing software you use must be",
+        "p2Strong": "VeriFactu certified",
+        "p2Post": "to operate legally. Using uncertified software can lead to tax office fines of up to €50,000.",
+        "p3": "With YouWhole, every invoice you issue is automatically registered with the AEAT along with its digital fingerprint. There's nothing extra for you to do — the system handles it in the background."
+      },
+      "howItWorks": {
+        "title": "How VeriFactu works in YouWhole",
+        "steps": {
+          "s1": {
+            "t": "You create the invoice",
+            "d": "Enter client details, line items, and amounts as usual."
+          },
+          "s2": {
+            "t": "Automatic registration",
+            "d": "YouWhole generates the invoice's digital fingerprint and sends it to the AEAT in real time."
+          },
+          "s3": {
+            "t": "AEAT confirmation",
+            "d": "You receive registration confirmation. Your invoice is legally valid and verifiable."
+          }
+        }
+      },
+      "faq": {
+        "title": "Frequently asked questions about VeriFactu",
+        "items": {
+          "q1": {
+            "q": "What is VeriFactu?",
+            "a": "VeriFactu is the Spanish Tax Agency's (AEAT) invoice verification system. Since 2025, any invoicing software used by businesses and freelancers must be VeriFactu certified to guarantee the integrity and immutability of issued invoices."
+          },
+          "q2": {
+            "q": "Is it mandatory to use VeriFactu-enabled software?",
+            "a": "Yes. The Invoicing Regulation approved in 2023 requires all businesses and professionals in Spain to use invoicing systems that comply with VeriFactu. Non-compliance can lead to tax office fines."
+          },
+          "q3": {
+            "q": "Is YouWhole certified by the AEAT?",
+            "a": "Yes. YouWhole is certified to submit invoicing records to the AEAT through the VeriFactu system. Every invoice issued automatically generates the corresponding record and sends it to the tax office."
+          },
+          "q4": {
+            "q": "Do I need to do anything special to activate VeriFactu in YouWhole?",
+            "a": "No. VeriFactu is active by default on every YouWhole account from the moment you sign up. There's nothing to configure and no extra module to purchase."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Be VeriFactu compliant starting today",
+        "subtitle": "Free for up to 10 invoices a month. No credit card.",
+        "cta": "Create a free account"
+      }
+    },
+    "holded": {
+      "seo": {
+        "title": "Holded Alternative for Freelancers and SMEs — YouWhole",
+        "description": "Looking for a more complete, more affordable alternative to Holded? YouWhole includes certified VeriFactu, automatic withholding tax, tax forms 130/303, and support in English. From €29/month.",
+        "ogTitle": "Holded Alternative — YouWhole",
+        "ogDescription": "More complete than Holded for the Spanish market. VeriFactu, withholding tax, tax forms 130/303, and native support in English and Spanish."
+      },
+      "badge": "An honest comparison",
+      "h1Line1": "The Holded alternative that",
+      "h1Highlight": "actually meets tax office requirements",
+      "subtitle": "YouWhole includes certified VeriFactu, automatic withholding tax, and tax forms 130/303 out of the box. No extra modules. No surprises on the invoice.",
+      "ctaPrimary": "Try YouWhole for free",
+      "ctaSecondary": "Talk to the team",
+      "trustLine": "14-day free trial · No card · Assisted migration from Holded",
+      "comparison": {
+        "title": "YouWhole vs Holded",
+        "subtitle": "A feature comparison for Spanish freelancers and SMEs",
+        "colFeat": "Feature",
+        "colOther": "Holded",
+        "included": "Included",
+        "no": "No",
+        "yes": "Yes",
+        "notAvailable": "Not available",
+        "footnote": "Based on published plans. Updated July 2026.",
+        "rows": {
+          "r1": {
+            "feat": "AEAT-certified VeriFactu",
+            "yw": true,
+            "other": false,
+            "note": "Holded has no native VeriFactu"
+          },
+          "r2": {
+            "feat": "Automatic withholding tax for freelancers",
+            "yw": true,
+            "other": false,
+            "note": "Manual configuration in Holded"
+          },
+          "r3": {
+            "feat": "Built-in tax forms 130/303",
+            "yw": true,
+            "other": false,
+            "note": "Holded requires an extra accounting module"
+          },
+          "r4": {
+            "feat": "A real free plan",
+            "yw": true,
+            "other": false,
+            "note": "Holded has no permanent free plan"
+          },
+          "r5": {
+            "feat": "Starting monthly price",
+            "yw": "€29",
+            "other": "from €49",
+            "note": ""
+          },
+          "r6": {
+            "feat": "Native support in English/Spanish",
+            "yw": true,
+            "other": true,
+            "note": ""
+          },
+          "r7": {
+            "feat": "No lock-in contract",
+            "yw": true,
+            "other": false,
+            "note": "Holded bills annually by default"
+          },
+          "r8": {
+            "feat": "Multiple languages (ca, eu, gl)",
+            "yw": true,
+            "other": false,
+            "note": "YouWhole supports 5 Spanish regional languages"
+          },
+          "r9": {
+            "feat": "Employee time tracking",
+            "yw": true,
+            "other": true,
+            "note": ""
+          },
+          "r10": {
+            "feat": "Employee portal",
+            "yw": true,
+            "other": true,
+            "note": ""
+          }
+        }
+      },
+      "migration": {
+        "title": "Migrate from Holded without losing your data",
+        "subtitle": "Import your clients, invoices, and products from Holded in minutes. Our team helps you make the switch without interruptions.",
+        "steps": {
+          "s1": {
+            "t": "Export from Holded",
+            "d": "Download your data as CSV or Excel from the Holded dashboard."
+          },
+          "s2": {
+            "t": "Import into YouWhole",
+            "d": "Use our importer to load clients, products, and invoices."
+          },
+          "s3": {
+            "t": "Ready to invoice",
+            "d": "Your business up and running on YouWhole in under an hour."
+          }
+        },
+        "cta": "Start free migration"
+      }
+    },
+    "sage": {
+      "seo": {
+        "title": "Sage Alternative for Freelancers and SMEs — YouWhole",
+        "description": "Is Sage too expensive or too complex for your business? YouWhole is the modern alternative: certified VeriFactu, automatic withholding tax, no installation, from €29/month.",
+        "ogTitle": "Sage Alternative for Freelancers — YouWhole",
+        "ogDescription": "Simpler and more affordable than Sage. VeriFactu included, no installation, from €29/month."
+      },
+      "badge": "An honest comparison",
+      "h1Line1": "The Sage alternative that",
+      "h1Highlight": "requires no installation",
+      "subtitle": "YouWhole is 100% cloud-based, includes certified VeriFactu, and costs less than Sage. No installs, no outdated versions, no surprises.",
+      "ctaPrimary": "Try YouWhole for free",
+      "ctaSecondary": "Talk to the team",
+      "trustLine": "14-day free trial · No card · Assisted migration from Sage",
+      "reasons": {
+        "title": "Why are freelancers leaving Sage?",
+        "subtitle": "Sage has been around for decades, but it was built for a different era. Here are the most common complaints.",
+        "items": {
+          "r1": {
+            "t": "Local installation",
+            "d": "Sage 50 requires installing software on every computer. Switch devices or work remotely, and you've got a problem."
+          },
+          "r2": {
+            "t": "No native VeriFactu",
+            "d": "Meeting the 2025 AEAT regulation requires a paid add-on module that Sage doesn't include by default."
+          },
+          "r3": {
+            "t": "License costs",
+            "d": "Sage's annual licenses add up. For a small SME, the cost is hard to justify."
+          },
+          "r4": {
+            "t": "Steep learning curve",
+            "d": "Sage was designed for professional accountants. A freelancer with no accounting background finds it needlessly complex."
+          },
+          "r5": {
+            "t": "No real mobile app",
+            "d": "Checking an invoice or logging an expense from your phone is practically impossible with Sage 50."
+          },
+          "r6": {
+            "t": "Paid updates",
+            "d": "Every new Sage version requires paying for the upgrade. With YouWhole, updates are automatic and included."
+          }
+        }
+      },
+      "comparison": {
+        "title": "YouWhole vs Sage",
+        "subtitle": "A feature comparison for freelancers and SMEs",
+        "colFeat": "Feature",
+        "colOther": "Sage",
+        "included": "Included",
+        "no": "No",
+        "yes": "Yes",
+        "notAvailable": "Not available",
+        "footnote": "Based on published plans. Updated July 2026.",
+        "rows": {
+          "r1": {
+            "feat": "AEAT-certified VeriFactu",
+            "yw": true,
+            "other": false,
+            "note": "Sage requires a paid add-on module"
+          },
+          "r2": {
+            "feat": "Automatic withholding tax for freelancers",
+            "yw": true,
+            "other": false,
+            "note": "Manual configuration in Sage"
+          },
+          "r3": {
+            "feat": "Cloud-based (no installation)",
+            "yw": true,
+            "other": false,
+            "note": "Sage 50 requires local installation"
+          },
+          "r4": {
+            "feat": "Free plan available",
+            "yw": true,
+            "other": false,
+            "note": "Sage has no free plan"
+          },
+          "r5": {
+            "feat": "Starting monthly price",
+            "yw": "€29",
+            "other": "from €50",
+            "note": ""
+          },
+          "r6": {
+            "feat": "Automatic updates",
+            "yw": true,
+            "other": false,
+            "note": "Sage requires purchasing new versions"
+          },
+          "r7": {
+            "feat": "Multi-language (ca, eu, gl)",
+            "yw": true,
+            "other": false,
+            "note": "YouWhole supports 5 Spanish regional languages"
+          },
+          "r8": {
+            "feat": "Support in English/Spanish",
+            "yw": true,
+            "other": true,
+            "note": ""
+          },
+          "r9": {
+            "feat": "No lock-in contract",
+            "yw": true,
+            "other": false,
+            "note": "Sage bills annual licenses"
+          },
+          "r10": {
+            "feat": "Mobile access",
+            "yw": true,
+            "other": false,
+            "note": "Sage 50 has no native mobile app"
+          }
+        }
+      },
+      "migration": {
+        "title": "Migrate from Sage without losing your data",
+        "subtitle": "Export your clients, products, and invoices from Sage and import them into YouWhole in minutes.",
+        "steps": {
+          "s1": {
+            "t": "Export from Sage",
+            "d": "Export clients, products, and invoices as CSV or Excel from the Sage dashboard."
+          },
+          "s2": {
+            "t": "Import into YouWhole",
+            "d": "Use our importer to load all your data in minutes."
+          },
+          "s3": {
+            "t": "Ready to invoice",
+            "d": "Your business up and running on YouWhole with VeriFactu enabled from day one."
+          }
+        },
+        "cta": "Start free migration"
+      },
+      "finalCta": {
+        "title": "Leave Sage. Start for free today.",
+        "subtitle": "No card. No lock-in. VeriFactu included from day one.",
+        "cta": "Create a free account"
+      }
+    },
+    "modelo130": {
+      "seo": {
+        "title": "Tax Form 130 Online for Freelancers — YouWhole",
+        "description": "Calculate and prepare tax form 130 automatically with YouWhole. Adds up quarterly income, expenses, and withholdings with zero errors. Free for freelancers.",
+        "ogTitle": "Tax Form 130 Online for Freelancers — YouWhole",
+        "ogDescription": "Calculate tax form 130 automatically. No errors, no manual math. Included in every plan."
+      },
+      "badge": "Quarterly withholding tax for freelancers",
+      "h1Line1": "Tax form 130 calculated",
+      "h1Highlight": "automatically every quarter",
+      "subtitle": "YouWhole adds up your quarterly income and expenses, calculates the withholding tax, and gives you the exact amount for tax form 130. No calculator. No errors. No stress.",
+      "ctaPrimary": "Start for free — no card",
+      "ctaSecondary": "Request a demo",
+      "trustLine": "Included in every plan · Automatic calculation · Filing-ready data",
+      "intro": {
+        "title": "What is tax form 130 and when is it due?",
+        "pPre": "",
+        "pStrong": "Tax form 130",
+        "pPost": "is the quarterly withholding-tax return for freelancers under direct estimation. It's filed four times a year with the Spanish Tax Agency:",
+        "quarters": {
+          "q1": {
+            "t": "Q1",
+            "d": "April 1–20",
+            "p": "January–March"
+          },
+          "q2": {
+            "t": "Q2",
+            "d": "July 1–20",
+            "p": "April–June"
+          },
+          "q3": {
+            "t": "Q3",
+            "d": "October 1–20",
+            "p": "July–September"
+          },
+          "q4": {
+            "t": "Q4",
+            "d": "January 1–30",
+            "p": "October–December"
+          }
+        },
+        "p2Pre": "If more than 70% of your invoices already carry withholding tax (because your clients are businesses that apply it), you may be",
+        "p2Strong": "exempt from filing tax form 130",
+        "p2Post": "YouWhole automatically detects whether you meet that threshold."
+      },
+      "howItWorks": {
+        "title": "How YouWhole calculates your tax form 130",
+        "steps": {
+          "s1": {
+            "t": "You log your invoices",
+            "d": "Every invoice issued and received is automatically recorded with its withholding tax and VAT."
+          },
+          "s2": {
+            "t": "YouWhole accumulates the quarter",
+            "d": "Adds up income, deductible expenses, and withholdings already applied by your clients."
+          },
+          "s3": {
+            "t": "Calculates the 20%",
+            "d": "Applies 20% withholding tax on the accumulated net profit for the quarter."
+          },
+          "s4": {
+            "t": "Gives you the result",
+            "d": "You get the exact amount to pay the tax office, ready to file."
+          }
+        }
+      },
+      "faq": {
+        "title": "Frequently asked questions about tax form 130",
+        "items": {
+          "q1": {
+            "q": "What is tax form 130?",
+            "a": "Tax form 130 is the quarterly withholding-tax return for freelancers under direct estimation. It's filed in January, April, July, and October with the Spanish Tax Agency and settles the installment payments toward annual withholding tax."
+          },
+          "q2": {
+            "q": "Who has to file tax form 130?",
+            "a": "All freelancers under direct estimation (normal or simplified) who don't have at least 70% of their income already subject to withholding tax. If your clients are individuals or businesses that don't withhold tax from your invoices, you must file tax form 130."
+          },
+          "q3": {
+            "q": "How does YouWhole calculate tax form 130?",
+            "a": "YouWhole automatically adds up all your quarterly income and expenses, applies 20% withholding tax on the net profit, subtracts withholdings already applied, and gives you the exact amount to pay. No manual calculation needed."
+          },
+          "q4": {
+            "q": "Does YouWhole file tax form 130 with the AEAT for me?",
+            "a": "YouWhole generates all the data you need to file tax form 130. You submit it yourself through the AEAT's electronic office, or your advisor does it, using the data we provide. We're working on direct filing."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Forget manual tax form 130",
+        "subtitle": "YouWhole calculates it on its own every quarter. Start for free today.",
+        "cta": "Create a free account"
+      }
+    },
+    "rrhh": {
+      "seo": {
+        "title": "HR Software for SMEs — YouWhole",
+        "description": "Manage employees, payroll, contracts, vacation, and time tracking in one platform. Spanish SME HR software, no complications. From €29/month.",
+        "ogTitle": "HR Software for SMEs — YouWhole",
+        "ogDescription": "Payroll, contracts, vacation, and time tracking integrated with your invoicing. All in one."
+      },
+      "badge": "HR integrated with invoicing",
+      "h1Line1": "HR software",
+      "h1Highlight": "for SMEs that don't want complications",
+      "subtitle": "Payroll, contracts, time tracking, vacation, and an employee portal integrated with your invoicing. Everything in YouWhole — no need for a separate HR tool.",
+      "ctaPrimary": "Try free for 14 days",
+      "ctaSecondary": "Request a demo",
+      "trustLine": "No lock-in · Support in English · Meets Spanish labor regulations",
+      "features": {
+        "title": "Your SME's entire HR in one place",
+        "subtitle": "Built for managers who aren't HR experts but still need everything under control.",
+        "items": {
+          "f1": {
+            "title": "Automatic payroll",
+            "desc": "Generate monthly payroll with withholding tax, Social Security, and deductions automatically calculated based on the contract."
+          },
+          "f2": {
+            "title": "GPS time tracking",
+            "desc": "Employees clock in and out from their phone. GPS-logged records to meet Spanish labor regulations."
+          },
+          "f3": {
+            "title": "Contract management",
+            "desc": "Store and manage every labor contract for your team. Automatic expiration and renewal alerts."
+          },
+          "f4": {
+            "title": "Vacation & absences",
+            "desc": "Digital vacation requests and approvals. Team calendar to plan absences without conflicts."
+          },
+          "f5": {
+            "title": "Employee portal",
+            "desc": "Every employee accesses their payslips, contracts, and hours from their own account, without bothering HR."
+          },
+          "f6": {
+            "title": "Hours by project",
+            "desc": "Assign worked hours to specific projects to calculate profitability and bill time to clients."
+          }
+        }
+      },
+      "compliance": {
+        "title": "Meet Spanish labor regulations effortlessly",
+        "subtitle": "Time tracking has been mandatory for every business in Spain since 2019. YouWhole handles it automatically.",
+        "items": {
+          "c1": {
+            "title": "Mandatory time recording (RD 8/2019)",
+            "desc": "Every employee must clock in and out. YouWhole logs and stores each entry with a timestamp and GPS location."
+          },
+          "c2": {
+            "title": "Payroll compliant with collective agreements",
+            "desc": "Generate payslips with every labor concept: base salary, supplements, withholding tax, and Social Security contributions."
+          },
+          "c3": {
+            "title": "Export for your advisor",
+            "desc": "Export all HR data in a standard format so your labor advisor can use it directly."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "HR under control from day one",
+        "subtitle": "14-day free trial. No card. The HR module is included in every plan.",
+        "cta": "Start for free now"
+      }
+    },
+    "controlHorario": {
+      "seo": {
+        "title": "Time Tracking Software for Businesses — YouWhole",
+        "description": "Mandatory time tracking for Spanish businesses. GPS, QR, or web clock-in. Export for labor inspections. Integrated with payroll and projects. From €29/month.",
+        "ogTitle": "Time Tracking Software for Businesses — YouWhole",
+        "ogDescription": "GPS, QR, and web clock-in. Meets RD 8/2019 with no complications. Integrated with payroll and projects."
+      },
+      "badge": "Mandatory since 2019",
+      "h1Line1": "Digital time tracking",
+      "h1Highlight": "that meets Spanish law",
+      "subtitle": "RD 8/2019 requires you to log every employee's working hours. YouWhole does it automatically with GPS, QR, or web — integrated with payroll and projects.",
+      "ctaPrimary": "Try free for 14 days",
+      "ctaSecondary": "See a demo",
+      "trustLine": "No lock-in · Meets RD 8/2019 · Integrated with payroll",
+      "checkinMethods": {
+        "title": "3 ways to clock in, you choose",
+        "subtitle": "Built for offices, remote work, and field work.",
+        "items": {
+          "m1": {
+            "title": "Web app with GPS",
+            "desc": "The employee opens YouWhole on their phone and clocks in. GPS location is automatically logged for field work or remote work.",
+            "badge": "Most used"
+          },
+          "m2": {
+            "title": "QR code in the office",
+            "desc": "Print a QR code at the office entrance. Employees scan it with their phone to clock in and out — nothing else to touch.",
+            "badge": "For offices"
+          },
+          "m3": {
+            "title": "Manual entry",
+            "desc": "The admin can log hours manually for employees without a smartphone, or to correct erroneous entries.",
+            "badge": "Backup"
+          }
+        }
+      },
+      "integration": {
+        "title": "Integrated with the rest of your business",
+        "subtitle": "YouWhole's time tracking isn't an isolated module. It connects to payroll, projects, and invoicing.",
+        "items": {
+          "i1": {
+            "title": "Hours → Payroll",
+            "desc": "Logged hours feed directly into payroll calculations. Overtime is calculated automatically."
+          },
+          "i2": {
+            "title": "Hours → Projects",
+            "desc": "Assign worked hours to projects to calculate profitability and bill time to clients."
+          },
+          "i3": {
+            "title": "Hours → Reports",
+            "desc": "Export time records by employee, project, or date. Valid for labor inspections."
+          },
+          "i4": {
+            "title": "Incident alerts",
+            "desc": "Automatic notification when an employee hasn't clocked in, or when there's unauthorized overtime."
+          }
+        }
+      },
+      "faq": {
+        "title": "Frequently asked questions",
+        "items": {
+          "q1": {
+            "q": "Is time tracking mandatory in Spain?",
+            "a": "Yes. Royal Decree-Law 8/2019 requires every Spanish business to log its employees' working hours, regardless of size. Non-compliance can lead to fines of up to €6,250 per worker."
+          },
+          "q2": {
+            "q": "How do employees clock in with YouWhole?",
+            "a": "Employees can clock in from the mobile web app with GPS enabled, from a QR code in the office, or an admin can log hours manually. Every option is logged with a timestamp."
+          },
+          "q3": {
+            "q": "Can the time record be exported?",
+            "a": "Yes. YouWhole lets you export the hours record as Excel or CSV, filtered by employee, project, or date range. Valid for labor inspections and for your labor advisor."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Meet the time-tracking law today",
+        "subtitle": "14-day free trial. No card. Active from day one.",
+        "cta": "Create a free account"
+      }
+    },
+    "almacen": {
+      "seo": {
+        "title": "Warehouse & Inventory Software for SMEs — YouWhole",
+        "description": "Track your stock in real time, manage suppliers, and generate automatic orders. Warehouse and inventory software integrated with invoicing. From €29/month.",
+        "ogTitle": "Warehouse & Inventory Software for SMEs — YouWhole",
+        "ogDescription": "Real-time stock, automatic orders, and supplier management integrated with your invoicing."
+      },
+      "badge": "Inventory integrated with invoicing",
+      "h1Line1": "Warehouse and inventory software",
+      "h1Highlight": "that updates itself",
+      "subtitle": "Track your stock in real time, manage suppliers, and generate automatic orders. All integrated with your invoicing so you never lose control.",
+      "ctaPrimary": "Try free for 14 days",
+      "ctaSecondary": "Request a demo",
+      "trustLine": "No lock-in · Support in English · Integrated with sales and purchasing",
+      "features": {
+        "title": "Total control over your inventory",
+        "subtitle": "Built for SMEs that need to control their stock without spending hours on it every week.",
+        "items": {
+          "f1": {
+            "title": "Real-time stock",
+            "desc": "Every sale, purchase, or adjustment updates inventory instantly. Never sell something you don't have again."
+          },
+          "f2": {
+            "title": "Low-stock alerts",
+            "desc": "Set the minimum stock level for each product. YouWhole automatically warns you when it's time to reorder."
+          },
+          "f3": {
+            "title": "Automatic orders",
+            "desc": "Automatically generate purchase orders to suppliers when stock drops below the threshold you define."
+          },
+          "f4": {
+            "title": "Supplier management",
+            "desc": "Log prices, terms, and lead times for each supplier. Compare costs and pick the best option for each order."
+          },
+          "f5": {
+            "title": "Multiple warehouses",
+            "desc": "Manage several warehouses or locations from one dashboard. Transfer stock between locations with one click."
+          },
+          "f6": {
+            "title": "Integrated with invoicing",
+            "desc": "Every sales invoice automatically deducts stock. Every purchase invoice adds to it."
+          }
+        }
+      },
+      "integration": {
+        "title": "Integrated with your entire business",
+        "subtitle": "YouWhole's warehouse doesn't work in isolation — it connects to sales, purchasing, CRM, and invoicing.",
+        "items": {
+          "i1": {
+            "title": "Sale → automatic stock deduction",
+            "desc": "When you issue an invoice or delivery note, stock is automatically reduced. No manual adjustments."
+          },
+          "i2": {
+            "title": "Purchase → automatic warehouse entry",
+            "desc": "When you log a supplier invoice, products enter inventory with their cost price."
+          },
+          "i3": {
+            "title": "Quote → stock reservation",
+            "desc": "An approved quote can reserve units so they're not sold to another client while it's being confirmed."
+          },
+          "i4": {
+            "title": "Real-time inventory valuation",
+            "desc": "Check your warehouse's value at cost price at any time from the control panel."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Your warehouse under control starting today",
+        "subtitle": "14-day free trial. No card. Stock integrated with your invoicing from day one.",
+        "cta": "Start for free now"
+      }
+    },
+    "crm": {
+      "seo": {
+        "title": "CRM Software for SMEs in Spain — YouWhole",
+        "description": "CRM integrated with invoicing for Spanish SMEs. Manage clients, leads, sales pipeline, and quotes in one platform. No extra subscriptions. From €29/month.",
+        "ogTitle": "CRM Software for SMEs — YouWhole",
+        "ogDescription": "Manage clients, leads, and sales integrated with your invoicing. No external tools."
+      },
+      "badge": "CRM integrated with invoicing",
+      "h1Line1": "CRM for SMEs that don't want",
+      "h1Highlight": "to pay for another tool",
+      "subtitle": "YouWhole includes a complete CRM integrated with your invoicing. Manage clients, leads, and your sales pipeline without leaving the platform — or paying an extra subscription.",
+      "ctaPrimary": "Try free for 14 days",
+      "ctaSecondary": "Request a demo",
+      "trustLine": "No lock-in · CRM included in every plan · Support in English",
+      "features": {
+        "title": "Everything your SME's CRM needs",
+        "subtitle": "Without Salesforce's complexity or HubSpot's price tag. Built for real SMEs.",
+        "items": {
+          "f1": {
+            "title": "Client management",
+            "desc": "A complete record for every client with invoice, quote, contact, and note history. Everything in one place."
+          },
+          "f2": {
+            "title": "Kanban sales pipeline",
+            "desc": "Visualize your deals on a Kanban board. Drag deals through stages and close more sales."
+          },
+          "f3": {
+            "title": "Leads and prospects",
+            "desc": "Log leads from the first contact, assign them to a salesperson, and track them through to close."
+          },
+          "f4": {
+            "title": "Professional quotes",
+            "desc": "Create quotes with your logo and turn them into invoices with one click once the client says yes."
+          },
+          "f5": {
+            "title": "Communication history",
+            "desc": "Log calls, emails, and meetings per client. Never lose track of a negotiation."
+          },
+          "f6": {
+            "title": "Integrated with invoicing",
+            "desc": "From quote to VeriFactu invoice in one click. No exporting or copying data between programs."
+          }
+        }
+      },
+      "why": {
+        "title": "Why a CRM integrated with invoicing?",
+        "subtitle": "Most SMEs use 3-4 different tools that don't talk to each other. With YouWhole, everything is connected.",
+        "items": {
+          "w1": {
+            "title": "Quote → Invoice in one click",
+            "desc": "When the client accepts the quote, it automatically becomes a VeriFactu invoice. No data copying."
+          },
+          "w2": {
+            "title": "Client → Complete history",
+            "desc": "From the client record, you see every invoice, quote, pending payment, and past communication."
+          },
+          "w3": {
+            "title": "Lead → Client → Invoice",
+            "desc": "The full sales cycle in one platform: from the first contact to getting the invoice paid."
+          },
+          "w4": {
+            "title": "No duplicate data",
+            "desc": "Client data is shared across CRM, invoicing, accounting, and HR. No exports, no copy-pasting."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Start selling more, from today",
+        "subtitle": "CRM included in every plan. 14-day free trial, no card.",
+        "cta": "Create a free account"
+      }
+    },
+    "contabilidad": {
+      "seo": {
+        "title": "Accounting Software for SMEs in Spain — YouWhole",
+        "description": "Automatic accounting under Spanish GAAP. Automatic entries, balance sheet, profit & loss statement, and VAT integrated with invoicing. For SMEs and freelancers. From €29/month.",
+        "ogTitle": "Accounting Software for SMEs — YouWhole",
+        "ogDescription": "Automatic entries under Spanish GAAP. Integrated with VeriFactu invoicing. No accounting knowledge required."
+      },
+      "badge": "Automatic Spanish GAAP accounting",
+      "h1Line1": "Accounting software for SMEs",
+      "h1Highlight": "that keeps itself",
+      "subtitle": "YouWhole automatically generates accounting entries under the official Spanish chart of accounts. You issue invoices — the accounting handles itself, with zero errors and no prior knowledge required.",
+      "ctaPrimary": "Try free for 14 days",
+      "ctaSecondary": "Request a demo",
+      "trustLine": "No lock-in · Spanish GAAP · Access for your advisor",
+      "automatic": {
+        "title": "What YouWhole does automatically",
+        "subtitle": "You never need to touch the accounting. These processes happen on their own as you use the platform.",
+        "items": {
+          "a1": {
+            "title": "Sales entries",
+            "desc": "Every invoice issued generates the revenue entry with its output-VAT and withholding-tax accounts."
+          },
+          "a2": {
+            "title": "Purchase entries",
+            "desc": "Every logged supplier invoice generates the expense entry with deductible input VAT."
+          },
+          "a3": {
+            "title": "VAT ledger",
+            "desc": "The input and output VAT ledger is automatically generated every quarter, ready to file."
+          },
+          "a4": {
+            "title": "Balance sheet & P&L",
+            "desc": "Check your balance sheet and profit & loss statement in real time, without waiting for year-end close."
+          },
+          "a5": {
+            "title": "Bank reconciliation",
+            "desc": "Connect your bank and automatically reconcile payments with outstanding invoices."
+          },
+          "a6": {
+            "title": "Advisor access",
+            "desc": "Invite your accountant with an Accountant role so they can access the data without touching your company's settings."
+          }
+        }
+      },
+      "pgcTable": {
+        "title": "Meet Spanish GAAP effortlessly",
+        "subtitle": "The official Spanish chart of accounts defines how accounting operations must be recorded. YouWhole applies it automatically to every transaction.",
+        "colOp": "Transaction",
+        "colAccount": "GAAP account",
+        "colAuto": "Automatic",
+        "yes": "Yes",
+        "rows": {
+          "r1": {
+            "op": "Sales invoice",
+            "account": "700 – Sales"
+          },
+          "r2": {
+            "op": "Output VAT",
+            "account": "477 – Output VAT payable"
+          },
+          "r3": {
+            "op": "Withholding tax",
+            "account": "473 – Withholding tax payable"
+          },
+          "r4": {
+            "op": "Purchase invoice",
+            "account": "600/620/621 – Purchases & expenses"
+          },
+          "r5": {
+            "op": "Input VAT",
+            "account": "472 – Input VAT receivable"
+          },
+          "r6": {
+            "op": "Client payment",
+            "account": "430/570 – Clients & Cash"
+          }
+        }
+      },
+      "faq": {
+        "title": "Frequently asked questions",
+        "items": {
+          "q1": {
+            "q": "Does YouWhole keep the accounting automatically?",
+            "a": "Yes. Every invoice issued and received automatically generates the corresponding accounting entry under the official Spanish chart of accounts. You never need to enter entries manually."
+          },
+          "q2": {
+            "q": "Do I need to know accounting to use YouWhole?",
+            "a": "No. YouWhole generates all accounting entries automatically. You just enter invoices and payments, and the system does the rest. For complex cases, you can give your accountant access."
+          },
+          "q3": {
+            "q": "Can I give my accountant access?",
+            "a": "Yes. YouWhole lets you invite your advisor with an Accountant role. They'll have access to accounting, invoices, and tax data without being able to change sensitive company settings."
+          },
+          "q4": {
+            "q": "Does it comply with the official Spanish chart of accounts?",
+            "a": "Yes. YouWhole generates entries under the current Spanish GAAP (PGC), with the correct account codes for each type of transaction: sales, purchases, VAT, withholding tax, and expenses."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Your SME's accounting, on autopilot",
+        "subtitle": "14-day free trial. No card. No accounting knowledge required.",
+        "cta": "Start for free now"
+      }
+    },
+    "nominas": {
+      "seo": {
+        "title": "Payroll Software for SMEs in Spain — YouWhole",
+        "description": "Generate automatic payroll with withholding tax and Social Security calculated. Spanish SME payroll software integrated with time tracking and accounting. From €29/month.",
+        "ogTitle": "Payroll Software for SMEs — YouWhole",
+        "ogDescription": "Automatic payroll with withholding tax and Social Security calculated. Integrated with time tracking and accounting."
+      },
+      "badge": "Payroll integrated with HR",
+      "h1Line1": "Payroll software for SMEs",
+      "h1Highlight": "with zero calculation errors",
+      "subtitle": "YouWhole automatically calculates each employee's withholding tax and Social Security contributions. Generate payroll in seconds, integrated with time tracking and accounting.",
+      "ctaPrimary": "Try free for 14 days",
+      "ctaSecondary": "Request a demo",
+      "trustLine": "No lock-in · Automatic tax and Social Security · Support in English",
+      "features": {
+        "title": "Payroll without complications",
+        "subtitle": "Built for managers who need to process payroll fast, without being labor-law experts.",
+        "items": {
+          "f1": {
+            "title": "Automatic withholding-tax calculation",
+            "desc": "YouWhole calculates each employee's withholding tax based on their personal situation and applicable bracket."
+          },
+          "f2": {
+            "title": "Social Security",
+            "desc": "Social Security contributions automatically calculated for common contingencies, unemployment, and training."
+          },
+          "f3": {
+            "title": "Monthly payroll in seconds",
+            "desc": "With the contract data and worked hours, each employee's payslip is generated with one click."
+          },
+          "f4": {
+            "title": "Integrated with time tracking",
+            "desc": "Logged hours feed directly into payroll. Overtime is calculated and applied automatically."
+          },
+          "f5": {
+            "title": "Employee portal",
+            "desc": "Every employee accesses their payslip history from their own account. No printing, no emailing."
+          },
+          "f6": {
+            "title": "Export for labor advisor",
+            "desc": "Export all payroll in a standard format so your labor advisor can validate it before filing with Social Security."
+          }
+        }
+      },
+      "howItWorks": {
+        "title": "How the payroll process works",
+        "steps": {
+          "s1": {
+            "t": "You set up the contract",
+            "d": "Enter the gross salary, contract type, applicable withholding tax, and the employee's Social Security data."
+          },
+          "s2": {
+            "t": "The employee clocks their hours",
+            "d": "Time tracking automatically logs the hours worked each day of the month."
+          },
+          "s3": {
+            "t": "You generate the payslip",
+            "d": "With one click, YouWhole calculates the full payslip: gross, deductions, withholding tax, Social Security, and net."
+          },
+          "s4": {
+            "t": "The employee checks it",
+            "d": "The employee accesses their payslip from the portal. You export it for the labor advisor."
+          }
+        }
+      },
+      "finalCta": {
+        "title": "Payroll ready in minutes every month",
+        "subtitle": "14-day free trial. No card. Withholding tax and Social Security calculated automatically.",
+        "cta": "Start for free now"
+      }
+    }
   }
 }
