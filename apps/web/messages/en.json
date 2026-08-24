@@ -174,7 +174,11 @@
     },
     "recentInvoices": "Recent invoices",
     "topClients": "Top clients",
-    "revenueChart": "Revenue evolution",
+    "revenueChart": {
+      "title": "Revenue vs Expenses",
+      "revenue": "Revenue",
+      "expenses": "Expenses"
+    },
     "dealsFunnel": "Sales funnel",
     "quickActions": "Quick actions",
     "newInvoice": "New invoice",
@@ -263,11 +267,6 @@
           "PAID": "Paid"
         }
       }
-    },
-    "revenueChart": {
-      "title": "Revenue vs Expenses",
-      "revenue": "Revenue",
-      "expenses": "Expenses"
     },
     "funnel": {
       "title": "Sales funnel",
@@ -1201,10 +1200,22 @@
       "notifDetailedComingSoon": "Coming soon",
       "notifComingSoon": "Coming soon",
       "notifItems": {
-        "overdueInvoices": { "label": "Overdue invoices", "description": "Alert when an invoice passes its due date" },
-        "newLeads": { "label": "New leads", "description": "Notification when a new lead enters the pipeline" },
-        "paymentsReceived": { "label": "Payments received", "description": "Alert when a payment is registered or an invoice is reconciled" },
-        "weeklySummary": { "label": "Weekly summary", "description": "Activity summary every Monday morning" }
+        "overdueInvoices": {
+          "label": "Overdue invoices",
+          "description": "Alert when an invoice passes its due date"
+        },
+        "newLeads": {
+          "label": "New leads",
+          "description": "Notification when a new lead enters the pipeline"
+        },
+        "paymentsReceived": {
+          "label": "Payments received",
+          "description": "Alert when a payment is registered or an invoice is reconciled"
+        },
+        "weeklySummary": {
+          "label": "Weekly summary",
+          "description": "Activity summary every Monday morning"
+        }
       }
     }
   },
@@ -2283,6 +2294,434 @@
       "rejected": "Rejected",
       "expired": "Expired"
     }
+  },
+  "marketing": {
+    "seo": {
+      "title": "YouWhole — All-in-one ERP for Spanish freelancers and SMEs",
+      "description": "The ERP built by freelancers for freelancers and SMEs. VeriFactu invoicing, automatic withholding tax, tax forms 130/303, CRM, accounting and payroll. 14-day free trial, no card required."
+    },
+    "nav": {
+      "features": "Features",
+      "verifactu": "VeriFactu",
+      "pricing": "Pricing",
+      "login": "Log in",
+      "cta": "Start for free",
+      "openMenu": "Open menu",
+      "closeMenu": "Close menu"
+    },
+    "hero": {
+      "badge": "VeriFactu certified · AEAT 2025 compliant",
+      "titleLine1": "All-in-one",
+      "titleLine2": "for your business",
+      "subtitle": "VeriFactu invoicing, automatic withholding tax, tax forms 130/303, CRM and accounting. Built by freelancers, for freelancers and small businesses.",
+      "ctaPrimary": "Start for free",
+      "ctaSecondary": "See features",
+      "trust": {
+        "verifactu": "VeriFactu AEAT",
+        "trial": "14-day free trial",
+        "noLockIn": "No lock-in contract",
+        "support": "Support in English"
+      },
+      "preview": {
+        "dashboard": "Dashboard",
+        "invoices": "Invoices",
+        "clients": "Clients",
+        "crmDeals": "CRM / Deals",
+        "accounting": "Accounting",
+        "inventory": "Inventory",
+        "payroll": "Payroll",
+        "billed": "Billed",
+        "clientsStat": "Clients",
+        "toCollect": "Outstanding",
+        "deals": "Deals",
+        "vsLastMonth": "vs last month",
+        "monthlyBilling": "Monthly billing 2025",
+        "annualGrowth": "↑ 18% YoY",
+        "pipelineCrm": "CRM Pipeline",
+        "lead": "Lead",
+        "proposal": "Proposal",
+        "negotiation": "Negotiation"
+      }
+    },
+    "stats": {
+      "modules": "Integrated modules",
+      "languages": "Official languages of Spain",
+      "uptime": "Guaranteed uptime",
+      "trial": "Free trial, no card required",
+      "daysSuffix": " days"
+    },
+    "features": {
+      "badge": "15 modules included",
+      "title": "Everything your business needs",
+      "subtitle": "Purpose-built for the Spanish market. No external integrations, no add-on subscriptions.",
+      "items": {
+        "invoicing": {
+          "title": "Electronic invoicing",
+          "desc": "Create, send and get paid with professional invoices built on VeriFactu. AEAT-ready XML generated automatically on every invoice."
+        },
+        "verifactuNative": {
+          "title": "Native VeriFactu",
+          "desc": "Chained SHA256 hashing, an immutable record and direct submission to the AEAT. Full compliance from day one."
+        },
+        "crm": {
+          "title": "Built-in CRM",
+          "desc": "Manage clients and leads from the same place you invoice. No integrations, no exports."
+        },
+        "pipeline": {
+          "title": "Kanban pipeline",
+          "desc": "Drag and drop to move deals through your pipeline stages. Close more deals with full visibility."
+        },
+        "accounting": {
+          "title": "Spanish GAAP accounting",
+          "desc": "General ledger, the official Spanish chart of accounts (PGC), automatic closings and balance sheets linked to your invoices."
+        },
+        "inventory": {
+          "title": "Inventory & warehouse",
+          "desc": "Stock control, movement tracking and low-stock alerts. Transfers between warehouses included."
+        },
+        "payroll": {
+          "title": "Payroll & HR",
+          "desc": "Manage employees, contracts and monthly payroll. Export to A3/Nominaplus format."
+        },
+        "automations": {
+          "title": "Automations",
+          "desc": "Recurring invoices, payment reminders and workflows with zero manual setup."
+        },
+        "reporting": {
+          "title": "Reporting & analytics",
+          "desc": "A real-time dashboard with billing, collections and profitability metrics for your business."
+        },
+        "notifications": {
+          "title": "Notifications",
+          "desc": "Real-time alerts for due dates, payments received and team activity."
+        },
+        "projects": {
+          "title": "Projects & profitability",
+          "desc": "Track budget, hours and margin per project. Link invoices and hours to see true profitability."
+        },
+        "timeTracking": {
+          "title": "Time tracking + GPS",
+          "desc": "GPS-verified clock-in, employee self-service portal, weekly calendar, automatic overtime, exportable labor-inspection reports and QR clock-in."
+        },
+        "multiLanguage": {
+          "title": "Multi-language & multi-currency",
+          "desc": "Interface and PDFs in Spanish, Catalan, Basque, Galician and English. Invoice in 20+ currencies with ECB exchange rates."
+        },
+        "bankReconciliation": {
+          "title": "Bank reconciliation",
+          "desc": "Import CSV or Excel statements from your bank and automatically reconcile them with outstanding invoices."
+        },
+        "backup": {
+          "title": "Backup & audit trail",
+          "desc": "Download all your data in one click. A full audit log tracking who did what, and when."
+        }
+      }
+    },
+    "howItWorks": {
+      "badge": "Start today",
+      "title": "Up and running in under 5 minutes",
+      "subtitle": "No training, no consultant, no hours of setup. YouWhole is built to get going on its own.",
+      "steps": {
+        "step1": {
+          "number": "01",
+          "title": "Create your account in 30 seconds",
+          "desc": "Sign up with your email. No credit card, no fine print. Your business ready to invoice within minutes."
+        },
+        "step2": {
+          "number": "02",
+          "title": "Import your existing data",
+          "desc": "Upload your client list from Excel or CSV, or connect your current accountant's tools. Migration is guided and automatic."
+        },
+        "step3": {
+          "number": "03",
+          "title": "Invoice, manage and grow",
+          "desc": "CRM, VeriFactu invoicing, accounting and payroll, all connected. One dashboard for your entire business."
+        }
+      },
+      "stepLabel": "STEP",
+      "cta": "Create a free account — no card required"
+    },
+    "verifactu": {
+      "badge": "VeriFactu certified",
+      "titleLine1": "Full tax compliance",
+      "titleLine2": "from day one",
+      "subtitle": "Spain's VeriFactu Law (Anti-Fraud Law 11/2021) requires every invoice to be registered with the AEAT starting in 2025. With YouWhole it happens automatically — no setup, no extra work.",
+      "flow": {
+        "company": {
+          "label": "Your business",
+          "sublabel": "Issues the invoice"
+        },
+        "youwhole": {
+          "label": "YouWhole",
+          "sublabel": "Signs with SHA256 and processes it"
+        },
+        "aeat": {
+          "label": "AEAT",
+          "sublabel": "Registers and confirms"
+        },
+        "compliance": {
+          "label": "Compliance",
+          "sublabel": "100% legally guaranteed"
+        }
+      },
+      "points": {
+        "hash": {
+          "title": "Chained SHA256 hash",
+          "desc": "Every invoice is signed with the hash of the previous one, forming an immutable chain that guarantees the integrity of every record."
+        },
+        "registry": {
+          "title": "Direct AEAT registration",
+          "desc": "Automatically submitted to the Spanish Tax Agency's VERI*FACTU system, including the verification QR code."
+        },
+        "xml": {
+          "title": "Certified XML",
+          "desc": "We generate the XML according to the AEAT's official technical specification, with every mandatory field included."
+        },
+        "validation": {
+          "title": "Automatic validation",
+          "desc": "Every record is verified before submission to guarantee full compliance with the Anti-Fraud Law."
+        }
+      }
+    },
+    "testimonials": {
+      "title": "What our customers say",
+      "subtitle": "Freelancers and small businesses already running their entire operation on YouWhole.",
+      "items": {
+        "maria": {
+          "role": "CEO, Diseño Creativo SL",
+          "quote": "YouWhole has saved us more than 10 hours a week on bookkeeping. VeriFactu was ready out of the box — zero setup on our end."
+        },
+        "carlos": {
+          "role": "Founder, TechStart Barcelona",
+          "quote": "I tried other ERPs and they were all too complex. We had YouWhole running in a single day. Having CRM connected to invoicing is a game changer for us."
+        },
+        "ana": {
+          "role": "Director, Proyectos Integrales",
+          "quote": "VeriFactu compliance with the AEAT used to worry me, but with YouWhole it's completely automatic. Now I invoice and know I'm 100% up to date with the tax office."
+        }
+      }
+    },
+    "demo": {
+      "badge": "Interactive demo",
+      "title": "See YouWhole in action",
+      "subtitle": "From your first invoice to your year-end close, all in one place.",
+      "tabs": {
+        "invoices": "Invoicing",
+        "crm": "CRM Pipeline",
+        "analytics": "Analytics"
+      },
+      "footerHint": "Click the tabs to explore · Advances automatically",
+      "sidebar": {
+        "dashboard": "Dashboard",
+        "invoices": "Invoices",
+        "clientsCrm": "CRM Clients",
+        "accounting": "Accounting",
+        "analytics": "Analytics",
+        "payroll": "Payroll"
+      },
+      "invoicesScreen": {
+        "title": "New Invoice",
+        "draft": "Draft",
+        "client": "Client",
+        "concept": "Description",
+        "amount": "Amount (€)",
+        "registered": "Registered with VeriFactu ✓",
+        "hashLine": "SHA256 hash: AB2F9C44 · AEAT confirmed",
+        "invoiceNumber": "INVOICE #2025-0094",
+        "qrSigned": "VeriFactu QR · SHA256 signed"
+      },
+      "crmScreen": {
+        "title": "CRM Pipeline",
+        "opportunities": "6 deals · €19,600",
+        "advanced": "Deal advanced — Constructora Bernal → Proposal",
+        "prospect": "Prospect",
+        "lead": "Lead",
+        "proposal": "Proposal",
+        "won": "Won ✓"
+      },
+      "analyticsScreen": {
+        "title": "2025 Analytics",
+        "realtime": "Real-time data",
+        "billed": "Billed",
+        "collected": "Collected",
+        "pipeline": "Pipeline",
+        "opportunitiesShort": "+5 deals",
+        "monthlyBilling": "Monthly billing 2025",
+        "paidNotif": "Invoice paid · Restaurante La Marina",
+        "momentsAgo": "Moments ago"
+      }
+    },
+    "faq": {
+      "badge": "Frequently asked questions",
+      "title": "Got questions?",
+      "subtitle": "Here are answers to the most common questions. If you can't find yours, reach us on chat.",
+      "items": {
+        "q1": {
+          "q": "What is VeriFactu and why do I need it?",
+          "a": "VeriFactu is the Spanish Tax Agency's invoice verification system. Since 2025, any business using invoicing software is required to use VeriFactu-certified systems. YouWhole includes it by default — there's nothing extra you need to do to comply with the law."
+        },
+        "q2": {
+          "q": "What happens when the 14-day trial ends?",
+          "a": "If you don't add a payment method, your account automatically moves to the Free plan (up to 5 clients and 10 invoices per month). You won't be charged and your account won't be cancelled. You decide when — and whether — to upgrade."
+        },
+        "q3": {
+          "q": "Can I import my data from another program or from Excel?",
+          "a": "Yes. You can import clients, products and historical invoices from Excel or CSV files. We also offer migration assistance from the most common invoicing programs used in Spain. Get in touch and we'll help."
+        },
+        "q4": {
+          "q": "How many users can my company have?",
+          "a": "The Free plan includes 1 user. Starter includes 3 users, Pro up to 10, and Enterprise allows unlimited users with role- and department-level permission controls."
+        },
+        "q5": {
+          "q": "Is it safe to store my invoices and company data in YouWhole?",
+          "a": "Yes. All your data is encrypted and stored on European servers under GDPR compliance, with automatic daily backups and access protected by two-factor authentication (2FA). We never share your data with third parties."
+        },
+        "q6": {
+          "q": "Can I cancel my subscription whenever I want?",
+          "a": "Yes, with no lock-in and no penalties. If you cancel, you keep access until the end of your already-paid period. After that, your account moves to the Free plan and you keep all your data."
+        },
+        "q7": {
+          "q": "Does YouWhole work for any type of Spanish business?",
+          "a": "It's built for freelancers and SMEs in any sector: services, retail, construction, technology, hospitality and more. If you have specific needs as a large company or franchise, reach out and we'll set up a personalized demo."
+        },
+        "q8": {
+          "q": "Do you offer technical support in English?",
+          "a": "Yes, always. We offer chat and email support in English, Monday to Friday, 9am to 6pm (Spain time). Pro and Enterprise customers also get priority support."
+        }
+      }
+    },
+    "pricing": {
+      "plans": {
+        "free": {
+          "label": "Free",
+          "description": "Try it with no commitment",
+          "cta": "Current plan",
+          "features": [
+            "5 clients",
+            "10 invoices / month",
+            "1 user",
+            "VeriFactu included",
+            "Basic dashboard"
+          ]
+        },
+        "starter": {
+          "label": "Starter",
+          "description": "For freelancers and micro-businesses",
+          "cta": "Start with Starter",
+          "features": [
+            "Unlimited clients",
+            "Unlimited invoices",
+            "3 users",
+            "VeriFactu included",
+            "CRM + Pipeline",
+            "Basic accounting",
+            "Time tracking (3 employees)",
+            "3 automations",
+            "Downloadable backups",
+            "Email support"
+          ]
+        },
+        "pro": {
+          "label": "Pro",
+          "description": "For growing SMEs",
+          "cta": "Start with Pro",
+          "badge": "Most popular",
+          "features": [
+            "Everything in Starter",
+            "10 users",
+            "Full accounting (tax forms 130/303/347)",
+            "Payroll & HR",
+            "Time tracking (10 employees + GPS)",
+            "Employee self-service portal",
+            "Unlimited automations",
+            "API and webhooks",
+            "Full audit trail",
+            "Priority support"
+          ]
+        },
+        "enterprise": {
+          "label": "Enterprise",
+          "description": "For companies and franchises",
+          "cta": "Contact sales",
+          "features": [
+            "Everything in Pro",
+            "Unlimited users",
+            "Unlimited employees",
+            "Multi-company",
+            "99.5% guaranteed SLA",
+            "Dedicated support (phone + chat)",
+            "Personalized onboarding",
+            "Custom contract and billing"
+          ]
+        }
+      },
+      "free": "Free",
+      "perMonth": "/month",
+      "mostPopular": "Most popular",
+      "current": "Current",
+      "currentPlan": "Current plan",
+      "redirecting": "Redirecting..."
+    },
+    "pricingSection": {
+      "badge": "No fine print",
+      "title": "Clear, transparent pricing",
+      "subtitle": "No hidden costs, no lock-in contracts. Start for free and upgrade whenever you need to.",
+      "footnote": "All prices include VAT · Cancel anytime"
+    },
+    "finalCta": {
+      "titleLine1": "Ready to take your business",
+      "titleHighlight": "to the next level?",
+      "subtitle": "Join the businesses already running their operations on YouWhole. 14-day free trial, no credit card required.",
+      "ctaPrimary": "Create a free account",
+      "ctaSecondary": "I already have an account"
+    },
+    "footer": {
+      "tagline": "The ERP built by freelancers for freelancers and SMEs. VeriFactu, withholding tax, CRM and invoicing in a single tool.",
+      "columns": {
+        "product": {
+          "title": "Product",
+          "features": "Features",
+          "pricing": "Pricing",
+          "verifactu": "VeriFactu"
+        },
+        "solutions": {
+          "title": "Solutions",
+          "selfEmployed": "ERP for freelancers",
+          "invoicing": "Invoicing for SMEs",
+          "accounting": "Accounting",
+          "crm": "CRM",
+          "hr": "HR",
+          "payroll": "Payroll",
+          "timeTracking": "Time tracking",
+          "inventory": "Warehouse & inventory",
+          "model130": "Tax form 130"
+        },
+        "comparisons": {
+          "title": "Comparisons",
+          "holded": "Holded alternative",
+          "sage": "Sage alternative"
+        },
+        "company": {
+          "title": "Company",
+          "about": "About us",
+          "contact": "Contact"
+        },
+        "legal": {
+          "title": "Legal",
+          "notice": "Legal notice",
+          "privacy": "Privacy policy",
+          "terms": "Terms & conditions",
+          "cookies": "Cookie policy"
+        },
+        "support": {
+          "title": "Support",
+          "help": "Help center",
+          "technicalSupport": "Technical support"
+        }
+      },
+      "rightsReserved": "All rights reserved.",
+      "madeInSpain": "Made in Spain",
+      "designedBy": "Designed and developed by"
+    }
   }
 }
-

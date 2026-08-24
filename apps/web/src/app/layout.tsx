@@ -5,6 +5,9 @@ import { QueryProvider } from "@/components/providers/query-provider";
 import { CookieBanner } from "@/components/layout/cookie-banner";
 import { Toaster } from "sonner";
 import Script from "next/script";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale } from "next-intl/server";
+import esMessages from "../../messages/es.json";
 import "./globals.css";
 
 const GA_ID = "G-BMYELB3HTF";
@@ -58,7 +61,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: APP_URL,
     languages: {
-      "es": `${APP_URL}/es`,
+      "es": APP_URL,
       "ca": `${APP_URL}/ca`,
       "eu": `${APP_URL}/eu`,
       "gl": `${APP_URL}/gl`,
@@ -105,11 +108,13 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const locale = await getLocale();
+
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen`}
       >
@@ -119,11 +124,13 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <QueryProvider>
-            {children}
-            <CookieBanner />
-            <Toaster richColors position="top-right" />
-          </QueryProvider>
+          <NextIntlClientProvider locale="es" messages={{ marketing: esMessages.marketing }}>
+            <QueryProvider>
+              {children}
+              <CookieBanner />
+              <Toaster richColors position="top-right" />
+            </QueryProvider>
+          </NextIntlClientProvider>
         </ThemeProvider>
 
         <Script

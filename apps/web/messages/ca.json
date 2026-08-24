@@ -174,7 +174,11 @@
     },
     "recentInvoices": "Factures recents",
     "topClients": "Millors clients",
-    "revenueChart": "Evolucio d'ingressos",
+    "revenueChart": {
+      "title": "Ingressos vs Despeses",
+      "revenue": "Ingressos",
+      "expenses": "Despeses"
+    },
     "dealsFunnel": "Embut de vendes",
     "quickActions": "Accions rapides",
     "newInvoice": "Nova factura",
@@ -263,11 +267,6 @@
           "PAID": "Pagada"
         }
       }
-    },
-    "revenueChart": {
-      "title": "Ingressos vs Despeses",
-      "revenue": "Ingressos",
-      "expenses": "Despeses"
     },
     "funnel": {
       "title": "Embut de vendes",
@@ -1201,10 +1200,22 @@
       "notifDetailedComingSoon": "Properament disponible",
       "notifComingSoon": "Properament",
       "notifItems": {
-        "overdueInvoices": { "label": "Factures vençudes", "description": "Avís quan una factura supera la data de venciment" },
-        "newLeads": { "label": "Nous leads", "description": "Notificació quan entra un nou lead al pipeline" },
-        "paymentsReceived": { "label": "Pagaments rebuts", "description": "Avís quan es registra un pagament o es reconcilia una factura" },
-        "weeklySummary": { "label": "Resum setmanal", "description": "Resum d'activitat cada dilluns al matí" }
+        "overdueInvoices": {
+          "label": "Factures vençudes",
+          "description": "Avís quan una factura supera la data de venciment"
+        },
+        "newLeads": {
+          "label": "Nous leads",
+          "description": "Notificació quan entra un nou lead al pipeline"
+        },
+        "paymentsReceived": {
+          "label": "Pagaments rebuts",
+          "description": "Avís quan es registra un pagament o es reconcilia una factura"
+        },
+        "weeklySummary": {
+          "label": "Resum setmanal",
+          "description": "Resum d'activitat cada dilluns al matí"
+        }
       }
     }
   },
@@ -2282,6 +2293,434 @@
       "rejected": "Rebutjat",
       "expired": "Expirat"
     }
+  },
+  "marketing": {
+    "seo": {
+      "title": "YouWhole — ERP per a autònoms i pimes espanyoles",
+      "description": "ERP creat per autònoms per a autònoms i pimes. Facturació amb VeriFactu, IRPF automàtic, Model 130/303, CRM, comptabilitat i nòmines. 14 dies gratis, sense targeta."
+    },
+    "nav": {
+      "features": "Funcionalitats",
+      "verifactu": "VeriFactu",
+      "pricing": "Preus",
+      "login": "Iniciar sessió",
+      "cta": "Comença gratis",
+      "openMenu": "Obrir menú",
+      "closeMenu": "Tancar menú"
+    },
+    "hero": {
+      "badge": "VeriFactu certificat · Compliment AEAT 2025",
+      "titleLine1": "Tot en un",
+      "titleLine2": "per a la teva empresa",
+      "subtitle": "Facturació amb VeriFactu, IRPF automàtic, Model 130/303, CRM i comptabilitat. Creat per autònoms per a autònoms i pimes.",
+      "ctaPrimary": "Comença gratis",
+      "ctaSecondary": "Veure funcionalitats",
+      "trust": {
+        "verifactu": "VeriFactu AEAT",
+        "trial": "14 dies gratis",
+        "noLockIn": "Sense permanència",
+        "support": "Suport en català"
+      },
+      "preview": {
+        "dashboard": "Tauler",
+        "invoices": "Factures",
+        "clients": "Clients",
+        "crmDeals": "CRM / Oportunitats",
+        "accounting": "Comptabilitat",
+        "inventory": "Inventari",
+        "payroll": "Nòmines",
+        "billed": "Facturat",
+        "clientsStat": "Clients",
+        "toCollect": "Per cobrar",
+        "deals": "Oportunitats",
+        "vsLastMonth": "vs mes anterior",
+        "monthlyBilling": "Facturació mensual 2025",
+        "annualGrowth": "↑ 18% anual",
+        "pipelineCrm": "Pipeline CRM",
+        "lead": "Lead",
+        "proposal": "Proposta",
+        "negotiation": "Negociació"
+      }
+    },
+    "stats": {
+      "modules": "Mòduls integrats",
+      "languages": "Idiomes oficials d'Espanya",
+      "uptime": "Disponibilitat garantida",
+      "trial": "Prova gratis sense targeta",
+      "daysSuffix": " dies"
+    },
+    "features": {
+      "badge": "15 mòduls inclosos",
+      "title": "Tot el que necessita la teva empresa",
+      "subtitle": "Dissenyat específicament per al mercat espanyol. Sense integracions externes, sense subscripcions addicionals.",
+      "items": {
+        "invoicing": {
+          "title": "Facturació electrònica",
+          "desc": "Crea, envia i cobra factures professionals amb VeriFactu integrat. Generació de XML per a l'AEAT automàtica en cada factura."
+        },
+        "verifactuNative": {
+          "title": "VeriFactu natiu",
+          "desc": "Hash SHA256 encadenat, registre immutable i enviament directe a l'AEAT. Compliment total des del primer dia."
+        },
+        "crm": {
+          "title": "CRM integrat",
+          "desc": "Gestiona clients i leads des d'on factures. Sense integracions ni exportacions."
+        },
+        "pipeline": {
+          "title": "Pipeline Kanban",
+          "desc": "Arrossega i deixa anar per moure oportunitats entre etapes. Tanca més oportunitats amb visibilitat total."
+        },
+        "accounting": {
+          "title": "Comptabilitat PGC",
+          "desc": "Llibre diari, pla de comptes PGC espanyol, tancaments i balanços automàtics connectats a les teves factures."
+        },
+        "inventory": {
+          "title": "Inventari i magatzem",
+          "desc": "Control d'estoc, moviments i alertes de mínims. Transferències entre magatzems incloses."
+        },
+        "payroll": {
+          "title": "Nòmines i RRHH",
+          "desc": "Gestió d'empleats, contractes i nòmines mensuals. Exportació a format A3/Nominaplus."
+        },
+        "automations": {
+          "title": "Automatitzacions",
+          "desc": "Factures recurrents, recordatoris de cobrament i fluxos de treball sense configuració manual."
+        },
+        "reporting": {
+          "title": "Reporting & Analítica",
+          "desc": "Tauler en temps real amb mètriques de facturació, cobraments i rendibilitat de la teva empresa."
+        },
+        "notifications": {
+          "title": "Notificacions",
+          "desc": "Alertes de venciments, pagaments rebuts i activitat de l'equip en temps real."
+        },
+        "projects": {
+          "title": "Projectes i rendibilitat",
+          "desc": "Control de pressupost, hores i marge per projecte. Vincula factures i hores per veure la rendibilitat real."
+        },
+        "timeTracking": {
+          "title": "Control horari + GPS",
+          "desc": "Fitxatge amb geolocalització, portal de l'empleat, calendari setmanal, hores extra automàtiques, exportar informe per a la Inspecció de Treball i fitxatge per QR."
+        },
+        "multiLanguage": {
+          "title": "Multi-idioma i multi-divisa",
+          "desc": "Interfície i PDF en castellà, català, èuscar, gallec i anglès. Factura en 20+ divises amb tipus de canvi del BCE."
+        },
+        "bankReconciliation": {
+          "title": "Conciliació bancària",
+          "desc": "Importa extractes CSV o Excel del teu banc i concilia automàticament amb factures pendents de cobrament."
+        },
+        "backup": {
+          "title": "Còpia de seguretat i auditoria",
+          "desc": "Descarrega totes les teves dades en un clic. Registre d'auditoria amb historial de qui va fer què i quan."
+        }
+      }
+    },
+    "howItWorks": {
+      "badge": "Comença avui",
+      "title": "En marxa en menys de 5 minuts",
+      "subtitle": "Sense formació, sense consultor, sense hores de configuració. YouWhole està dissenyat per arrencar sol.",
+      "steps": {
+        "step1": {
+          "number": "01",
+          "title": "Crea el teu compte en 30 segons",
+          "desc": "Registra't amb el teu email. Sense targeta de crèdit, sense lletra petita. La teva empresa preparada per facturar en minuts."
+        },
+        "step2": {
+          "number": "02",
+          "title": "Importa les teves dades existents",
+          "desc": "Puja el teu llistat de clients des d'Excel, CSV o connecta amb la teva gestoria actual. La migració és guiada i automàtica."
+        },
+        "step3": {
+          "number": "03",
+          "title": "Factura, gestiona i creix",
+          "desc": "CRM, facturació VeriFactu, comptabilitat i nòmines connectats. Un sol panell per a tota la teva empresa."
+        }
+      },
+      "stepLabel": "PAS",
+      "cta": "Crear compte gratis — sense targeta"
+    },
+    "verifactu": {
+      "badge": "VeriFactu certificat",
+      "titleLine1": "Compliment fiscal total",
+      "titleLine2": "des del primer dia",
+      "subtitle": "La Llei VeriFactu (Llei Antifrau 11/2021) obliga a registrar cada factura a l'AEAT des de 2025. Amb YouWhole passa automàticament — sense configuració, sense feina extra.",
+      "flow": {
+        "company": {
+          "label": "La teva empresa",
+          "sublabel": "Emets la factura"
+        },
+        "youwhole": {
+          "label": "YouWhole",
+          "sublabel": "Firma SHA256 i processa"
+        },
+        "aeat": {
+          "label": "AEAT",
+          "sublabel": "Registra i confirma"
+        },
+        "compliance": {
+          "label": "Compliment",
+          "sublabel": "100% legal garantit"
+        }
+      },
+      "points": {
+        "hash": {
+          "title": "Hash SHA256 encadenat",
+          "desc": "Cada factura firma l'anterior, creant una cadena immutable que garanteix la integritat de tots els registres."
+        },
+        "registry": {
+          "title": "Registre directe a l'AEAT",
+          "desc": "Enviament automàtic al sistema VERI*FACTU de l'Agència Tributària amb codi QR de verificació inclòs."
+        },
+        "xml": {
+          "title": "XML certificat",
+          "desc": "Generem l'XML segons l'especificació tècnica oficial de l'AEAT amb tots els camps obligatoris."
+        },
+        "validation": {
+          "title": "Validació automàtica",
+          "desc": "Verifiquem cada registre abans de l'enviament per garantir el compliment total amb la Llei Antifrau."
+        }
+      }
+    },
+    "testimonials": {
+      "title": "El que diuen els nostres clients",
+      "subtitle": "Autònoms i pimes que ja gestionen el seu negoci complet amb YouWhole.",
+      "items": {
+        "maria": {
+          "role": "CEO, Disseny Creatiu SL",
+          "quote": "YouWhole ens ha estalviat més de 10 hores setmanals de gestió comptable. La integració de VeriFactu va ser automàtica — zero configuració per part nostra."
+        },
+        "carlos": {
+          "role": "Fundador, TechStart Barcelona",
+          "quote": "Vaig provar altres ERP i tots eren massa complexos. Amb YouWhole el vam tenir funcionant en un dia. El CRM connectat amb la facturació és un canvi de joc per a nosaltres."
+        },
+        "ana": {
+          "role": "Directora, Projectes Integrals",
+          "quote": "El compliment VeriFactu amb l'AEAT em feia por, però amb YouWhole és completament automàtic. Ara facturo i sé que estic 100% al dia amb Hisenda."
+        }
+      }
+    },
+    "demo": {
+      "badge": "Demo interactiva",
+      "title": "Veu YouWhole en acció",
+      "subtitle": "Des de la primera factura fins al tancament de l'any, tot en un sol lloc.",
+      "tabs": {
+        "invoices": "Facturació",
+        "crm": "Pipeline CRM",
+        "analytics": "Analítica"
+      },
+      "footerHint": "Fes clic a les pestanyes per explorar · Avança automàticament",
+      "sidebar": {
+        "dashboard": "Tauler",
+        "invoices": "Factures",
+        "clientsCrm": "Clients CRM",
+        "accounting": "Comptabilitat",
+        "analytics": "Analítica",
+        "payroll": "Nòmines"
+      },
+      "invoicesScreen": {
+        "title": "Nova Factura",
+        "draft": "Esborrany",
+        "client": "Client",
+        "concept": "Concepte",
+        "amount": "Import (€)",
+        "registered": "Registrada a VeriFactu ✓",
+        "hashLine": "Hash SHA256: AB2F9C44 · AEAT confirmat",
+        "invoiceNumber": "FACTURA #2025-0094",
+        "qrSigned": "VeriFactu QR · Signat SHA256"
+      },
+      "crmScreen": {
+        "title": "Pipeline CRM",
+        "opportunities": "6 oportunitats · 19.600€",
+        "advanced": "Oportunitat avançada — Constructora Bernal → Proposta",
+        "prospect": "Prospecte",
+        "lead": "Lead",
+        "proposal": "Proposta",
+        "won": "Guanyat ✓"
+      },
+      "analyticsScreen": {
+        "title": "Analítica 2025",
+        "realtime": "Dades en temps real",
+        "billed": "Facturat",
+        "collected": "Cobrat",
+        "pipeline": "Pipeline",
+        "opportunitiesShort": "+5 oport.",
+        "monthlyBilling": "Facturació mensual 2025",
+        "paidNotif": "Factura cobrada · Restaurant La Marina",
+        "momentsAgo": "Fa un moment"
+      }
+    },
+    "faq": {
+      "badge": "Preguntes freqüents",
+      "title": "Tens dubtes?",
+      "subtitle": "Aquí resolem les preguntes més habituals. Si no trobes la teva resposta, escriu-nos pel xat.",
+      "items": {
+        "q1": {
+          "q": "Què és VeriFactu i per què el necessito?",
+          "a": "VeriFactu és el sistema de verificació de factures de l'Agència Tributària espanyola. Des de 2025, tota empresa que utilitzi un programari de facturació està obligada a fer servir sistemes certificats VeriFactu. YouWhole l'inclou de sèrie — no cal fer res extra per complir la llei."
+        },
+        "q2": {
+          "q": "Què passa quan acaba el període de prova de 14 dies?",
+          "a": "Si no introdueixes cap mètode de pagament, el teu compte passa automàticament al pla Gratuït (fins a 5 clients i 10 factures al mes). No se't cobra res ni es cancel·la el teu compte. Tu decideixes quan i si vols fer upgrade."
+        },
+        "q3": {
+          "q": "Puc importar les meves dades des d'un altre programa o Excel?",
+          "a": "Sí. Pots importar clients, productes i factures històriques des d'arxius Excel o CSV. També comptem amb assistència de migració des dels programes de facturació més habituals a Espanya. Contacta'ns i t'ajudem."
+        },
+        "q4": {
+          "q": "Quants usuaris pot tenir la meva empresa?",
+          "a": "El pla Gratuït inclou 1 usuari. El pla Starter inclou 3 usuaris, el Pro fins a 10 i l'Enterprise permet usuaris il·limitats amb control de rols i permisos per departament."
+        },
+        "q5": {
+          "q": "És segur guardar les meves factures i dades d'empresa a YouWhole?",
+          "a": "Sí. Totes les teves dades s'emmagatzemen xifrades en servidors europeus amb compliment RGPD, còpies de seguretat diàries automàtiques i accés protegit mitjançant autenticació de doble factor (2FA). Mai compartim les teves dades amb tercers."
+        },
+        "q6": {
+          "q": "Puc cancel·lar la meva subscripció quan vulgui?",
+          "a": "Sí, sense permanència ni penalitzacions. Si cancel·les, continues tenint accés fins al final del període ja pagat. Després, el teu compte passa al pla Gratuït i conserves totes les teves dades."
+        },
+        "q7": {
+          "q": "YouWhole funciona per a qualsevol tipus d'empresa espanyola?",
+          "a": "Està dissenyat per a autònoms i pimes de qualsevol sector: serveis, comerç, construcció, tecnologia, hostaleria... Si tens necessitats específiques de gran empresa o franquícia, escriu-nos i preparem una demo personalitzada."
+        },
+        "q8": {
+          "q": "Teniu suport tècnic en català?",
+          "a": "Sí, sempre. Comptem amb suport per xat i email en català, de dilluns a divendres de 9:00 a 18:00 (hora espanyola). Els clients Pro i Enterprise també tenen accés a suport prioritari."
+        }
+      }
+    },
+    "pricing": {
+      "plans": {
+        "free": {
+          "label": "Gratuït",
+          "description": "Per provar sense compromís",
+          "cta": "Pla actual",
+          "features": [
+            "5 clients",
+            "10 factures / mes",
+            "1 usuari",
+            "VeriFactu inclòs",
+            "Tauler bàsic"
+          ]
+        },
+        "starter": {
+          "label": "Starter",
+          "description": "Per a autònoms i micropimes",
+          "cta": "Començar Starter",
+          "features": [
+            "Clients il·limitats",
+            "Factures il·limitades",
+            "3 usuaris",
+            "VeriFactu inclòs",
+            "CRM + Pipeline",
+            "Comptabilitat bàsica",
+            "Control horari (3 empleats)",
+            "3 automatitzacions",
+            "Còpia de seguretat descarregable",
+            "Suport per email"
+          ]
+        },
+        "pro": {
+          "label": "Pro",
+          "description": "Per a pimes en creixement",
+          "cta": "Començar Pro",
+          "badge": "Popular",
+          "features": [
+            "Tot de l'Starter",
+            "10 usuaris",
+            "Comptabilitat completa (Model 130/303/347)",
+            "Nòmines i RRHH",
+            "Control horari (10 empleats + GPS)",
+            "Portal de l'empleat amb fitxatge",
+            "Automatitzacions il·limitades",
+            "API i Webhooks",
+            "Auditoria completa",
+            "Suport prioritari"
+          ]
+        },
+        "enterprise": {
+          "label": "Enterprise",
+          "description": "Per a empreses i franquícies",
+          "cta": "Contactar vendes",
+          "features": [
+            "Tot del Pro",
+            "Usuaris il·limitats",
+            "Empleats il·limitats",
+            "Multi-empresa",
+            "SLA 99,5% garantit",
+            "Suport dedicat (telèfon + xat)",
+            "Onboarding personalitzat",
+            "Contracte i facturació a mida"
+          ]
+        }
+      },
+      "free": "Gratis",
+      "perMonth": "/mes",
+      "mostPopular": "Més popular",
+      "current": "Actual",
+      "currentPlan": "Pla actual",
+      "redirecting": "Redirigint..."
+    },
+    "pricingSection": {
+      "badge": "Sense lletra petita",
+      "title": "Preus clars i transparents",
+      "subtitle": "Sense costos ocults ni permanència. Comença gratis i actualitza quan ho necessitis.",
+      "footnote": "Tots els preus inclouen l'IVA · Cancel·la quan vulguis"
+    },
+    "finalCta": {
+      "titleLine1": "Preparat per portar la teva empresa",
+      "titleHighlight": "al següent nivell?",
+      "subtitle": "Uneix-te a les empreses que ja gestionen el seu negoci amb YouWhole. 14 dies gratis, sense targeta de crèdit.",
+      "ctaPrimary": "Crear compte gratis",
+      "ctaSecondary": "Ja tinc compte"
+    },
+    "footer": {
+      "tagline": "L'ERP creat per autònoms per a autònoms i pimes. VeriFactu, IRPF, CRM i facturació en una sola eina.",
+      "columns": {
+        "product": {
+          "title": "Producte",
+          "features": "Funcionalitats",
+          "pricing": "Preus",
+          "verifactu": "VeriFactu"
+        },
+        "solutions": {
+          "title": "Solucions",
+          "selfEmployed": "ERP per a autònoms",
+          "invoicing": "Facturació pimes",
+          "accounting": "Comptabilitat",
+          "crm": "CRM",
+          "hr": "Recursos humans",
+          "payroll": "Nòmines",
+          "timeTracking": "Control horari",
+          "inventory": "Magatzem i inventari",
+          "model130": "Model 130"
+        },
+        "comparisons": {
+          "title": "Comparatives",
+          "holded": "Alternativa a Holded",
+          "sage": "Alternativa a Sage"
+        },
+        "company": {
+          "title": "Empresa",
+          "about": "Sobre nosaltres",
+          "contact": "Contacte"
+        },
+        "legal": {
+          "title": "Legal",
+          "notice": "Avís legal",
+          "privacy": "Política de privacitat",
+          "terms": "Termes i condicions",
+          "cookies": "Política de cookies"
+        },
+        "support": {
+          "title": "Suport",
+          "help": "Centre d'ajuda",
+          "technicalSupport": "Suport tècnic"
+        }
+      },
+      "rightsReserved": "Tots els drets reservats.",
+      "madeInSpain": "Fet a Espanya",
+      "designedBy": "Dissenyat i desenvolupat per"
+    }
   }
 }
-

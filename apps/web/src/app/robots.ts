@@ -10,6 +10,10 @@ export default function robots(): MetadataRoute.Robots {
         allow: [
           "/",
           "/es/",
+          "/ca",
+          "/eu",
+          "/gl",
+          "/en",
           "/sobre-nosotros",
           "/contacto",
           "/ayuda",

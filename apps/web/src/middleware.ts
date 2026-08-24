@@ -67,9 +67,13 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // These pages live at root (no locale prefix) — bypass intl middleware
+  // These pages live at root with NO locale prefix in the URL — bypass intl middleware.
+  // Important: only bypass when the request truly has no /es, /ca, /eu, /gl, /en prefix.
+  // A locale-prefixed home route (e.g. /en, /ca) must still go through intlMiddleware —
+  // otherwise next-intl can't resolve the request locale for server-side translations
+  // (getMessages/useTranslations), even though the URL segment is correct.
   const NO_LOCALE_PATHS = ["/", "/auth/callback", "/privacidad", "/aviso-legal", "/terminos", "/cookies", "/ayuda", "/sobre-nosotros", "/contacto"];
-  if (NO_LOCALE_PATHS.includes(pathWithoutLocale) || NO_LOCALE_PATHS.includes(pathname) || pathname.startsWith("/fichar")) {
+  if (!localeMatch && (NO_LOCALE_PATHS.includes(pathname) || pathname.startsWith("/fichar"))) {
     return NextResponse.next();
   }
 

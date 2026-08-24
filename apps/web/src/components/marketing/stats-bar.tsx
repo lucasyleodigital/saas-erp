@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { useTranslations, useLocale } from "next-intl";
 
 interface Stat {
   value: number;
@@ -9,13 +10,6 @@ interface Stat {
   label: string;
   prefix?: string;
 }
-
-const STATS: Stat[] = [
-  { value: 15, suffix: "+", label: "Modulos integrados" },
-  { value: 5, suffix: "", label: "Idiomas oficiales de Espana" },
-  { value: 99.9, suffix: "%", label: "Disponibilidad garantizada" },
-  { value: 14, suffix: " dias", label: "Prueba gratis sin tarjeta" },
-];
 
 function AnimatedNumber({ target, suffix, prefix = "" }: { target: number; suffix: string; prefix?: string }) {
   const [count, setCount] = useState(0);
@@ -48,7 +42,8 @@ function AnimatedNumber({ target, suffix, prefix = "" }: { target: number; suffi
     return () => observer.disconnect();
   }, [target, isDecimal]);
 
-  const display = isDecimal ? count.toFixed(1) : Math.floor(count).toLocaleString("es-ES");
+  const locale = useLocale();
+  const display = isDecimal ? count.toFixed(1) : Math.floor(count).toLocaleString(locale);
 
   return (
     <span ref={ref}>
@@ -58,6 +53,15 @@ function AnimatedNumber({ target, suffix, prefix = "" }: { target: number; suffi
 }
 
 export function StatsBar() {
+  const t = useTranslations("marketing.stats");
+
+  const STATS: Stat[] = [
+    { value: 15, suffix: "+", label: t("modules") },
+    { value: 5, suffix: "", label: t("languages") },
+    { value: 99.9, suffix: "%", label: t("uptime") },
+    { value: 14, suffix: t("daysSuffix"), label: t("trial") },
+  ];
+
   return (
     <section className="py-20 border-y border-border bg-background">
       <div className="container mx-auto px-4">

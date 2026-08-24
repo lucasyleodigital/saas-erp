@@ -2,38 +2,23 @@
 
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
+import { useTranslations } from "next-intl";
 
-const TESTIMONIALS = [
-  {
-    name: "María García",
-    role: "CEO, Diseño Creativo SL",
-    initials: "MG",
-    color: "#0d9488",
-    quote:
-      "YouWhole nos ha ahorrado más de 10 horas semanales de gestión contable. La integración de VeriFactu fue automática — cero configuración por nuestra parte.",
-    stars: 5,
-  },
-  {
-    name: "Carlos López",
-    role: "Fundador, TechStart Barcelona",
-    initials: "CL",
-    color: "#6366f1",
-    quote:
-      "Probé otros ERPs y todos eran demasiado complejos. YouWhole lo tenemos funcionando en un día. El CRM conectado con facturación es un cambio de juego para nosotros.",
-    stars: 5,
-  },
-  {
-    name: "Ana Martínez",
-    role: "Directora, Proyectos Integrales",
-    initials: "AM",
-    color: "#f59e0b",
-    quote:
-      "El cumplimiento VeriFactu con la AEAT me daba miedo, pero con YouWhole es completamente automático. Ahora facturo y sé que estoy 100% al día con Hacienda.",
-    stars: 5,
-  },
-];
+const TESTIMONIALS_META = [
+  { key: "maria", name: "María García", initials: "MG", color: "#0d9488", stars: 5 },
+  { key: "carlos", name: "Carlos López", initials: "CL", color: "#6366f1", stars: 5 },
+  { key: "ana", name: "Ana Martínez", initials: "AM", color: "#f59e0b", stars: 5 },
+] as const;
 
 export function Testimonials() {
+  const t = useTranslations("marketing.testimonials");
+
+  const TESTIMONIALS = TESTIMONIALS_META.map((meta) => ({
+    ...meta,
+    role: t(`items.${meta.key}.role`),
+    quote: t(`items.${meta.key}.quote`),
+  }));
+
   return (
     <section className="py-24 bg-muted/20">
       <div className="container mx-auto px-4">
@@ -44,10 +29,10 @@ export function Testimonials() {
           viewport={{ once: true }}
         >
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-            Lo que dicen nuestros clientes
+            {t("title")}
           </h2>
           <p className="text-muted-foreground max-w-md mx-auto">
-            Autonomos y pymes que ya gestionan su negocio completo con YouWhole.
+            {t("subtitle")}
           </p>
         </motion.div>
 

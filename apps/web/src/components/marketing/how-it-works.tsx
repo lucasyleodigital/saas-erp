@@ -3,38 +3,24 @@
 import { motion } from "framer-motion";
 import { UserPlus, Upload, TrendingUp } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
-const STEPS = [
-  {
-    number: "01",
-    icon: UserPlus,
-    title: "Crea tu cuenta en 30 segundos",
-    desc: "Regístrate con tu email. Sin tarjeta de crédito, sin letra pequeña. Tu empresa lista para facturar en minutos.",
-    color: "#0d9488",
-    bg: "rgba(13,148,136,0.1)",
-    border: "rgba(13,148,136,0.25)",
-  },
-  {
-    number: "02",
-    icon: Upload,
-    title: "Importa tus datos existentes",
-    desc: "Sube tu listado de clientes desde Excel, CSV o conecta con tu gestoría actual. La migración es guiada y automática.",
-    color: "#f59e0b",
-    bg: "rgba(245,158,11,0.1)",
-    border: "rgba(245,158,11,0.25)",
-  },
-  {
-    number: "03",
-    icon: TrendingUp,
-    title: "Factura, gestiona y crece",
-    desc: "CRM, facturación VeriFactu, contabilidad y nóminas conectados. Un solo panel para toda tu empresa.",
-    color: "#6366f1",
-    bg: "rgba(99,102,241,0.1)",
-    border: "rgba(99,102,241,0.25)",
-  },
-];
+const STEP_META = [
+  { key: "step1", icon: UserPlus, color: "#0d9488", bg: "rgba(13,148,136,0.1)", border: "rgba(13,148,136,0.25)" },
+  { key: "step2", icon: Upload, color: "#f59e0b", bg: "rgba(245,158,11,0.1)", border: "rgba(245,158,11,0.25)" },
+  { key: "step3", icon: TrendingUp, color: "#6366f1", bg: "rgba(99,102,241,0.1)", border: "rgba(99,102,241,0.25)" },
+] as const;
 
 export function HowItWorks() {
+  const t = useTranslations("marketing.howItWorks");
+
+  const STEPS = STEP_META.map((meta) => ({
+    ...meta,
+    number: t(`steps.${meta.key}.number`),
+    title: t(`steps.${meta.key}.title`),
+    desc: t(`steps.${meta.key}.desc`),
+  }));
+
   return (
     <section className="py-24 bg-background overflow-hidden">
       <div className="container mx-auto px-4">
@@ -52,14 +38,13 @@ export function HowItWorks() {
               color: "#0d9488",
             }}
           >
-            Empieza hoy
+            {t("badge")}
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-            En marcha en menos de 5 minutos
+            {t("title")}
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto text-lg">
-            Sin formación, sin consultor, sin horas de configuración.
-            YouWhole está diseñado para arrancar solo.
+            {t("subtitle")}
           </p>
         </motion.div>
 
@@ -101,7 +86,7 @@ export function HowItWorks() {
                     className="text-xs font-mono font-bold mb-2 tracking-widest"
                     style={{ color: step.color }}
                   >
-                    PASO {step.number}
+                    {t("stepLabel")} {step.number}
                   </div>
                   <h3 className="text-xl font-semibold mb-3">{step.title}</h3>
                   <p className="text-muted-foreground leading-relaxed text-sm max-w-xs">
@@ -129,7 +114,7 @@ export function HowItWorks() {
               boxShadow: "0 4px 24px rgba(13,148,136,0.35)",
             }}
           >
-            Crear cuenta gratis — sin tarjeta
+            {t("cta")}
           </Link>
         </motion.div>
       </div>

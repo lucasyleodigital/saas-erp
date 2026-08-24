@@ -16,6 +16,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
+import { useTranslations } from "next-intl";
 
 interface Plan {
   key: string;
@@ -27,78 +28,8 @@ interface Plan {
   badge?: string;
 }
 
-const PLANS: Plan[] = [
-  {
-    key: "FREE",
-    label: "Gratuito",
-    price: 0,
-    description: "Para probar sin compromiso",
-    features: [
-      "5 clientes",
-      "10 facturas / mes",
-      "1 usuario",
-      "VeriFactu incluido",
-      "Dashboard basico",
-    ],
-    cta: "Plan actual",
-  },
-  {
-    key: "STARTER",
-    label: "Starter",
-    price: 29,
-    description: "Para autonomos y micropymes",
-    features: [
-      "Clientes ilimitados",
-      "Facturas ilimitadas",
-      "3 usuarios",
-      "VeriFactu incluido",
-      "CRM + Pipeline",
-      "Contabilidad basica",
-      "Control horario (3 empleados)",
-      "3 automatizaciones",
-      "Backup descargable",
-      "Soporte por email",
-    ],
-    cta: "Empezar Starter",
-  },
-  {
-    key: "PRO",
-    label: "Pro",
-    price: 79,
-    description: "Para pymes en crecimiento",
-    features: [
-      "Todo del Starter",
-      "10 usuarios",
-      "Contabilidad completa (Modelo 130/303/347)",
-      "Nominas y RRHH",
-      "Control horario (10 empleados + GPS)",
-      "Portal empleado con fichaje",
-      "Automatizaciones ilimitadas",
-      "API y Webhooks",
-      "Auditoria completa",
-      "Soporte prioritario",
-    ],
-    cta: "Empezar Pro",
-    badge: "Popular",
-  },
-  {
-    key: "ENTERPRISE",
-    label: "Enterprise",
-    price: 199,
-    description: "Para empresas y franquicias",
-    features: [
-      "Todo del Pro",
-      "Usuarios ilimitados",
-      "Empleados ilimitados",
-      "Multi-empresa",
-      "SLA 99.5% garantizado",
-      "Soporte dedicado (telefono + chat)",
-      "Onboarding personalizado",
-      "Contrato y facturacion a medida",
-    ],
-    cta: "Contactar ventas",
-  },
-];
+const PLAN_KEYS = ["free", "starter", "pro", "enterprise"] as const;
+const PLAN_PRICES: Record<(typeof PLAN_KEYS)[number], number> = { free: 0, starter: 29, pro: 79, enterprise: 199 };
 
 interface PricingCardsProps {
   currentPlan?: string;
@@ -106,9 +37,20 @@ interface PricingCardsProps {
 }
 
 export function PricingCards({ currentPlan = "FREE", onUpgrade }: PricingCardsProps) {
+  const t = useTranslations("marketing.pricing");
   const [loading, setLoading] = useState<string | null>(null);
   const [showContract, setShowContract] = useState(false);
   const [contractAccepted, setContractAccepted] = useState(false);
+
+  const PLANS: Plan[] = PLAN_KEYS.map((tKey) => ({
+    key: tKey.toUpperCase(),
+    label: t(`plans.${tKey}.label`),
+    price: PLAN_PRICES[tKey],
+    description: t(`plans.${tKey}.description`),
+    features: t.raw(`plans.${tKey}.features`) as string[],
+    cta: t(`plans.${tKey}.cta`),
+    badge: tKey === "pro" ? t("mostPopular") : undefined,
+  }));
 
   async function goToStripe(planKey: string) {
     setLoading(planKey);
@@ -144,7 +86,7 @@ export function PricingCards({ currentPlan = "FREE", onUpgrade }: PricingCardsPr
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {PLANS.map((plan) => {
         const isCurrent = plan.key === currentPlan;
-        const isPopular = plan.badge === "Popular";
+        const isPopular = plan.key === "PRO";
 
         return (
           <Card
@@ -157,21 +99,21 @@ export function PricingCards({ currentPlan = "FREE", onUpgrade }: PricingCardsPr
           >
             {isPopular && (
               <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                <Badge className="shadow-sm">Más popular</Badge>
+                <Badge className="shadow-sm">{plan.badge}</Badge>
               </div>
             )}
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-base">{plan.label}</span>
-                {isCurrent && <Badge variant="outline">Actual</Badge>}
+                {isCurrent && <Badge variant="outline">{t("current")}</Badge>}
               </div>
               <div className="mt-2">
                 {plan.price === 0 ? (
-                  <span className="text-3xl font-bold">Gratis</span>
+                  <span className="text-3xl font-bold">{t("free")}</span>
                 ) : (
                   <div className="flex items-baseline gap-1">
                     <span className="text-3xl font-bold">{plan.price}€</span>
-                    <span className="text-muted-foreground text-sm">/mes</span>
+                    <span className="text-muted-foreground text-sm">{t("perMonth")}</span>
                   </div>
                 )}
               </div>
@@ -204,9 +146,9 @@ export function PricingCards({ currentPlan = "FREE", onUpgrade }: PricingCardsPr
                 onClick={() => !isCurrent && handleUpgrade(plan.key)}
               >
                 {loading === plan.key
-                  ? "Redirigiendo..."
+                  ? t("redirecting")
                   : isCurrent
-                  ? "Plan actual"
+                  ? t("currentPlan")
                   : plan.cta}
               </Button>
             </CardContent>

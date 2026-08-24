@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Shield, Zap, Globe, Star } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 function ParticleCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -137,6 +138,7 @@ function ParticleCanvas() {
 }
 
 export function Hero() {
+  const t = useTranslations("marketing.hero");
   const sectionRef = useRef<HTMLElement>(null);
   const [mouse, setMouse] = useState({ x: 0, y: 0, visible: false });
   const { scrollY } = useScroll();
@@ -241,7 +243,7 @@ export function Hero() {
             }}
           >
             <Shield className="h-3.5 w-3.5" />
-            VeriFactu certificado · Cumplimiento AEAT 2025
+            {t("badge")}
             <span className="h-2 w-2 rounded-full animate-pulse" style={{ background: "#2dd4bf" }} />
           </div>
         </motion.div>
@@ -270,7 +272,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25, duration: 0.55 }}
         >
-          Todo en uno
+          {t("titleLine1")}
           <br />
           <span
             style={{
@@ -280,7 +282,7 @@ export function Hero() {
               backgroundClip: "text",
             }}
           >
-            para tu empresa
+            {t("titleLine2")}
           </span>
         </motion.h1>
 
@@ -292,8 +294,7 @@ export function Hero() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.38 }}
         >
-          Facturacion con VeriFactu, IRPF automatico, Modelo 130/303, CRM y contabilidad.
-          Creado por autonomos para autonomos y pymes.
+          {t("subtitle")}
         </motion.p>
 
         {/* CTAs */}
@@ -311,7 +312,7 @@ export function Hero() {
               boxShadow: "0 0 35px rgba(13,148,136,0.5), 0 4px 24px rgba(0,0,0,0.5)",
             }}
           >
-            Empezar gratis
+            {t("ctaPrimary")}
             <ArrowRight className="h-4 w-4" />
           </Link>
           <a
@@ -323,7 +324,7 @@ export function Hero() {
               backdropFilter: "blur(10px)",
             }}
           >
-            Ver funcionalidades
+            {t("ctaSecondary")}
           </a>
         </motion.div>
 
@@ -336,10 +337,10 @@ export function Hero() {
           transition={{ delay: 0.58 }}
         >
           {[
-            { icon: Shield, text: "VeriFactu AEAT" },
-            { icon: Zap, text: "14 días gratis" },
-            { icon: Globe, text: "Sin permanencia" },
-            { icon: Star, text: "Soporte en español" },
+            { icon: Shield, text: t("trust.verifactu") },
+            { icon: Zap, text: t("trust.trial") },
+            { icon: Globe, text: t("trust.noLockIn") },
+            { icon: Star, text: t("trust.support") },
           ].map(({ icon: Icon, text }) => (
             <div key={text} className="flex items-center gap-1.5">
               <Icon className="h-4 w-4" style={{ color: "#0d9488" }} />
@@ -391,13 +392,13 @@ export function Hero() {
                 <span className="text-xs font-semibold" style={{ color: "#94a3b8" }}>YouWhole</span>
               </div>
               {[
-                { label: "Dashboard", active: true },
-                { label: "Facturas", active: false },
-                { label: "Clientes", active: false },
-                { label: "CRM / Deals", active: false },
-                { label: "Contabilidad", active: false },
-                { label: "Inventario", active: false },
-                { label: "Nóminas", active: false },
+                { label: t("preview.dashboard"), active: true },
+                { label: t("preview.invoices"), active: false },
+                { label: t("preview.clients"), active: false },
+                { label: t("preview.crmDeals"), active: false },
+                { label: t("preview.accounting"), active: false },
+                { label: t("preview.inventory"), active: false },
+                { label: t("preview.payroll"), active: false },
               ].map(({ label, active }) => (
                 <div
                   key={label}
@@ -414,23 +415,23 @@ export function Hero() {
             <div className="flex-1 p-5 overflow-hidden">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
                 {[
-                  { label: "Facturado", value: "48.250 €", delta: "+12%", color: "#0d9488" },
-                  { label: "Clientes", value: "124", delta: "+8", color: "#6366f1" },
-                  { label: "Por cobrar", value: "8.400 €", delta: "-3%", color: "#f59e0b" },
-                  { label: "Deals", value: "17", delta: "+5", color: "#ec4899" },
+                  { label: t("preview.billed"), value: "48.250 €", delta: "+12%", color: "#0d9488" },
+                  { label: t("preview.clientsStat"), value: "124", delta: "+8", color: "#6366f1" },
+                  { label: t("preview.toCollect"), value: "8.400 €", delta: "-3%", color: "#f59e0b" },
+                  { label: t("preview.deals"), value: "17", delta: "+5", color: "#ec4899" },
                 ].map((s) => (
                   <div key={s.label} className="rounded-xl p-3 border" style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}>
                     <div className="text-[9px] uppercase tracking-wide mb-1" style={{ color: "#475569" }}>{s.label}</div>
                     <div className="text-sm font-bold mb-0.5" style={{ color: s.color }}>{s.value}</div>
-                    <div className="text-[9px]" style={{ color: s.delta.startsWith("+") ? "#22c55e" : "#f87171" }}>{s.delta} vs mes anterior</div>
+                    <div className="text-[9px]" style={{ color: s.delta.startsWith("+") ? "#22c55e" : "#f87171" }}>{s.delta} {t("preview.vsLastMonth")}</div>
                   </div>
                 ))}
               </div>
               <div className="grid grid-cols-3 gap-3">
                 <div className="col-span-2 rounded-xl border p-4" style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.06)" }}>
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] font-medium" style={{ color: "#94a3b8" }}>Facturación mensual 2025</span>
-                    <span className="text-[9px] px-2 py-0.5 rounded-full" style={{ background: "rgba(13,148,136,0.15)", color: "#2dd4bf" }}>↑ 18% anual</span>
+                    <span className="text-[10px] font-medium" style={{ color: "#94a3b8" }}>{t("preview.monthlyBilling")}</span>
+                    <span className="text-[9px] px-2 py-0.5 rounded-full" style={{ background: "rgba(13,148,136,0.15)", color: "#2dd4bf" }}>{t("preview.annualGrowth")}</span>
                   </div>
                   <div className="flex items-end gap-1 h-20">
                     {[28, 45, 35, 60, 50, 72, 62, 85, 68, 55, 78, 100].map((h, i) => (
@@ -444,7 +445,7 @@ export function Hero() {
                   </div>
                 </div>
                 <div className="rounded-xl border p-4 flex flex-col items-center justify-center" style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.06)" }}>
-                  <div className="text-[10px] font-medium mb-3" style={{ color: "#94a3b8" }}>Pipeline CRM</div>
+                  <div className="text-[10px] font-medium mb-3" style={{ color: "#94a3b8" }}>{t("preview.pipelineCrm")}</div>
                   <svg viewBox="0 0 64 64" className="w-16 h-16 mb-3">
                     <circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="9" />
                     <circle cx="32" cy="32" r="24" fill="none" stroke="#0d9488" strokeWidth="9" strokeDasharray="75 75" strokeDashoffset="-3" strokeLinecap="round" transform="rotate(-90 32 32)" />
@@ -452,7 +453,7 @@ export function Hero() {
                     <circle cx="32" cy="32" r="24" fill="none" stroke="#6366f1" strokeWidth="9" strokeDasharray="18 132" strokeDashoffset="-110" strokeLinecap="round" transform="rotate(-90 32 32)" />
                   </svg>
                   <div className="w-full space-y-1">
-                    {[{ label: "Lead", pct: "50%", color: "#0d9488" }, { label: "Propuesta", pct: "21%", color: "#f59e0b" }, { label: "Negociación", pct: "12%", color: "#6366f1" }].map((s) => (
+                    {[{ label: t("preview.lead"), pct: "50%", color: "#0d9488" }, { label: t("preview.proposal"), pct: "21%", color: "#f59e0b" }, { label: t("preview.negotiation"), pct: "12%", color: "#6366f1" }].map((s) => (
                       <div key={s.label} className="flex items-center justify-between" style={{ fontSize: 9 }}>
                         <div className="flex items-center gap-1">
                           <div className="w-1.5 h-1.5 rounded-full" style={{ background: s.color }} />

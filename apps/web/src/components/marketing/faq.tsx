@@ -3,43 +3,11 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import { useTranslations } from "next-intl";
 
-const FAQS = [
-  {
-    q: "¿Qué es VeriFactu y por qué lo necesito?",
-    a: "VeriFactu es el sistema de verificación de facturas de la Agencia Tributaria española. Desde 2025, toda empresa que use un software de facturación está obligada a usar sistemas certificados VeriFactu. YouWhole lo incluye de serie — no necesitas hacer nada extra para cumplir la ley.",
-  },
-  {
-    q: "¿Qué pasa cuando termina el período de prueba de 14 días?",
-    a: "Si no introduces ningún método de pago, tu cuenta pasa automáticamente al plan Gratuito (hasta 5 clientes y 10 facturas al mes). No se te cobra nada ni se cancela tu cuenta. Tú decides cuándo y si quieres hacer upgrade.",
-  },
-  {
-    q: "¿Puedo importar mis datos desde otro programa o Excel?",
-    a: "Sí. Puedes importar clientes, productos y facturas históricas desde archivos Excel o CSV. También contamos con asistencia de migración desde los programas de facturación más habituales en España. Contáctanos y te ayudamos.",
-  },
-  {
-    q: "¿Cuántos usuarios puede tener mi empresa?",
-    a: "El plan Gratuito incluye 1 usuario. El plan Starter incluye 3 usuarios, el Pro hasta 10 y el Enterprise permite usuarios ilimitados con control de roles y permisos por departamento.",
-  },
-  {
-    q: "¿Es seguro guardar mis facturas y datos de empresa en YouWhole?",
-    a: "Sí. Todos tus datos se almacenan cifrados en servidores europeos con cumplimiento RGPD, backups diarios automáticos y acceso protegido mediante autenticación de doble factor (2FA). Jamás compartimos tus datos con terceros.",
-  },
-  {
-    q: "¿Puedo cancelar mi suscripción cuando quiera?",
-    a: "Sí, sin permanencia ni penalizaciones. Si cancelas, sigues teniendo acceso hasta el final del período ya pagado. Después, tu cuenta pasa al plan Gratuito y conservas todos tus datos.",
-  },
-  {
-    q: "¿YouWhole funciona para cualquier tipo de empresa española?",
-    a: "Está diseñado para autónomos y pymes de cualquier sector: servicios, comercio, construcción, tecnología, hostelería... Si tienes necesidades específicas de gran empresa o franquicia, escríbenos y preparamos una demo personalizada.",
-  },
-  {
-    q: "¿Tienen soporte técnico en español?",
-    a: "Sí, siempre. Contamos con soporte por chat y email en español, de lunes a viernes de 9:00 a 18:00 (hora española). Los clientes Pro y Enterprise también tienen acceso a soporte prioritario.",
-  },
-];
+const FAQ_KEYS = ["q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8"] as const;
 
-function FaqItem({ item, index }: { item: (typeof FAQS)[0]; index: number }) {
+function FaqItem({ item, index }: { item: { q: string; a: string }; index: number }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -82,6 +50,13 @@ function FaqItem({ item, index }: { item: (typeof FAQS)[0]; index: number }) {
 }
 
 export function Faq() {
+  const t = useTranslations("marketing.faq");
+
+  const FAQS = FAQ_KEYS.map((key) => ({
+    q: t(`items.${key}.q`),
+    a: t(`items.${key}.a`),
+  }));
+
   return (
     <section id="faq" className="py-24 bg-muted/20">
       <div className="container mx-auto px-4">
@@ -99,12 +74,11 @@ export function Faq() {
               color: "#0d9488",
             }}
           >
-            Preguntas frecuentes
+            {t("badge")}
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">¿Tienes dudas?</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4">{t("title")}</h2>
           <p className="text-muted-foreground max-w-md mx-auto">
-            Aquí resolvemos las preguntas más habituales. Si no encuentras tu respuesta,
-            escríbenos por el chat.
+            {t("subtitle")}
           </p>
         </motion.div>
 

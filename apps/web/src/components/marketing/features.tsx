@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import {
   FileText,
   Users,
@@ -19,147 +20,37 @@ import {
   HardDrive,
 } from "lucide-react";
 
-const MAIN_FEATURES = [
-  {
-    icon: FileText,
-    title: "Facturación electrónica",
-    desc: "Crea, envía y cobra facturas profesionales con VeriFactu integrado. Generación de XML para AEAT automática en cada factura.",
-    color: "#0d9488",
-    bg: "rgba(13,148,136,0.08)",
-    border: "rgba(13,148,136,0.2)",
-    glow: "rgba(13,148,136,0.15)",
-    size: "large",
-  },
-  {
-    icon: Shield,
-    title: "VeriFactu nativo",
-    desc: "Hash SHA256 en cadena, registro inmutable y envío directo a la AEAT. Cumplimiento total desde el primer día.",
-    color: "#6366f1",
-    bg: "rgba(99,102,241,0.08)",
-    border: "rgba(99,102,241,0.2)",
-    glow: "rgba(99,102,241,0.12)",
-  },
-  {
-    icon: Users,
-    title: "CRM integrado",
-    desc: "Gestiona clientes y leads desde donde facturas. Sin integraciones ni exportaciones.",
-    color: "#f59e0b",
-    bg: "rgba(245,158,11,0.08)",
-    border: "rgba(245,158,11,0.2)",
-    glow: "rgba(245,158,11,0.12)",
-  },
-  {
-    icon: BarChart3,
-    title: "Pipeline Kanban",
-    desc: "Drag & drop para mover oportunidades entre etapas. Cierra mas oportunidades con visibilidad total.",
-    color: "#ec4899",
-    bg: "rgba(236,72,153,0.08)",
-    border: "rgba(236,72,153,0.2)",
-    glow: "rgba(236,72,153,0.12)",
-  },
-  {
-    icon: Calculator,
-    title: "Contabilidad PGC",
-    desc: "Libro diario, plan de cuentas PGC español, cierres y balances automáticos conectados a tus facturas.",
-    color: "#10b981",
-    bg: "rgba(16,185,129,0.08)",
-    border: "rgba(16,185,129,0.2)",
-    glow: "rgba(16,185,129,0.12)",
-  },
-  {
-    icon: Package,
-    title: "Inventario y almacén",
-    desc: "Control de stock, movimientos y alertas de mínimos. Transferencias entre almacenes incluidas.",
-    color: "#3b82f6",
-    bg: "rgba(59,130,246,0.08)",
-    border: "rgba(59,130,246,0.2)",
-    glow: "rgba(59,130,246,0.12)",
-  },
-  {
-    icon: ClipboardList,
-    title: "Nóminas y RRHH",
-    desc: "Gestión de empleados, contratos y nóminas mensuales. Exportación a formato A3/Nominaplus.",
-    color: "#8b5cf6",
-    bg: "rgba(139,92,246,0.08)",
-    border: "rgba(139,92,246,0.2)",
-    glow: "rgba(139,92,246,0.12)",
-  },
-  {
-    icon: Zap,
-    title: "Automatizaciones",
-    desc: "Facturas recurrentes, recordatorios de cobro y flujos de trabajo sin configuración manual.",
-    color: "#f97316",
-    bg: "rgba(249,115,22,0.08)",
-    border: "rgba(249,115,22,0.2)",
-    glow: "rgba(249,115,22,0.12)",
-  },
-  {
-    icon: TrendingUp,
-    title: "Reporting & Analytics",
-    desc: "Dashboard en tiempo real con métricas de facturación, cobros y rentabilidad de tu empresa.",
-    color: "#06b6d4",
-    bg: "rgba(6,182,212,0.08)",
-    border: "rgba(6,182,212,0.2)",
-    glow: "rgba(6,182,212,0.12)",
-  },
-  {
-    icon: Bell,
-    title: "Notificaciones",
-    desc: "Alertas de vencimientos, pagos recibidos y actividad del equipo en tiempo real.",
-    color: "#14b8a6",
-    bg: "rgba(20,184,166,0.08)",
-    border: "rgba(20,184,166,0.2)",
-    glow: "rgba(20,184,166,0.12)",
-  },
-  {
-    icon: FolderKanban,
-    title: "Proyectos y rentabilidad",
-    desc: "Control de presupuesto, horas y margen por proyecto. Vincula facturas y horas para ver la rentabilidad real.",
-    color: "#a855f7",
-    bg: "rgba(168,85,247,0.08)",
-    border: "rgba(168,85,247,0.2)",
-    glow: "rgba(168,85,247,0.12)",
-  },
-  {
-    icon: Timer,
-    title: "Control horario + GPS",
-    desc: "Fichaje con geolocalizacion, portal del empleado, calendario semanal, horas extra automaticas, exportar informe para Inspeccion de Trabajo y fichaje por QR.",
-    color: "#e11d48",
-    bg: "rgba(225,29,72,0.08)",
-    border: "rgba(225,29,72,0.2)",
-    glow: "rgba(225,29,72,0.12)",
-  },
-  {
-    icon: Globe,
-    title: "Multi-idioma y multi-divisa",
-    desc: "Interfaz y PDFs en castellano, catalan, euskera, gallego e ingles. Factura en 20+ divisas con tipos de cambio del BCE.",
-    color: "#0ea5e9",
-    bg: "rgba(14,165,233,0.08)",
-    border: "rgba(14,165,233,0.2)",
-    glow: "rgba(14,165,233,0.12)",
-  },
-  {
-    icon: Landmark,
-    title: "Conciliacion bancaria",
-    desc: "Importa extractos CSV o Excel de tu banco y concilia automaticamente con facturas pendientes de cobro.",
-    color: "#84cc16",
-    bg: "rgba(132,204,22,0.08)",
-    border: "rgba(132,204,22,0.2)",
-    glow: "rgba(132,204,22,0.12)",
-  },
-  {
-    icon: HardDrive,
-    title: "Backup y auditoria",
-    desc: "Descarga todos tus datos en un clic. Registro de auditoria con historial de quien hizo que y cuando.",
-    color: "#64748b",
-    bg: "rgba(100,116,139,0.08)",
-    border: "rgba(100,116,139,0.2)",
-    glow: "rgba(100,116,139,0.12)",
-  },
-];
+const FEATURE_META = [
+  { key: "invoicing", icon: FileText, color: "#0d9488", bg: "rgba(13,148,136,0.08)", border: "rgba(13,148,136,0.2)", glow: "rgba(13,148,136,0.15)", size: "large" },
+  { key: "verifactuNative", icon: Shield, color: "#6366f1", bg: "rgba(99,102,241,0.08)", border: "rgba(99,102,241,0.2)", glow: "rgba(99,102,241,0.12)" },
+  { key: "crm", icon: Users, color: "#f59e0b", bg: "rgba(245,158,11,0.08)", border: "rgba(245,158,11,0.2)", glow: "rgba(245,158,11,0.12)" },
+  { key: "pipeline", icon: BarChart3, color: "#ec4899", bg: "rgba(236,72,153,0.08)", border: "rgba(236,72,153,0.2)", glow: "rgba(236,72,153,0.12)" },
+  { key: "accounting", icon: Calculator, color: "#10b981", bg: "rgba(16,185,129,0.08)", border: "rgba(16,185,129,0.2)", glow: "rgba(16,185,129,0.12)" },
+  { key: "inventory", icon: Package, color: "#3b82f6", bg: "rgba(59,130,246,0.08)", border: "rgba(59,130,246,0.2)", glow: "rgba(59,130,246,0.12)" },
+  { key: "payroll", icon: ClipboardList, color: "#8b5cf6", bg: "rgba(139,92,246,0.08)", border: "rgba(139,92,246,0.2)", glow: "rgba(139,92,246,0.12)" },
+  { key: "automations", icon: Zap, color: "#f97316", bg: "rgba(249,115,22,0.08)", border: "rgba(249,115,22,0.2)", glow: "rgba(249,115,22,0.12)" },
+  { key: "reporting", icon: TrendingUp, color: "#06b6d4", bg: "rgba(6,182,212,0.08)", border: "rgba(6,182,212,0.2)", glow: "rgba(6,182,212,0.12)" },
+  { key: "notifications", icon: Bell, color: "#14b8a6", bg: "rgba(20,184,166,0.08)", border: "rgba(20,184,166,0.2)", glow: "rgba(20,184,166,0.12)" },
+  { key: "projects", icon: FolderKanban, color: "#a855f7", bg: "rgba(168,85,247,0.08)", border: "rgba(168,85,247,0.2)", glow: "rgba(168,85,247,0.12)" },
+  { key: "timeTracking", icon: Timer, color: "#e11d48", bg: "rgba(225,29,72,0.08)", border: "rgba(225,29,72,0.2)", glow: "rgba(225,29,72,0.12)" },
+  { key: "multiLanguage", icon: Globe, color: "#0ea5e9", bg: "rgba(14,165,233,0.08)", border: "rgba(14,165,233,0.2)", glow: "rgba(14,165,233,0.12)" },
+  { key: "bankReconciliation", icon: Landmark, color: "#84cc16", bg: "rgba(132,204,22,0.08)", border: "rgba(132,204,22,0.2)", glow: "rgba(132,204,22,0.12)" },
+  { key: "backup", icon: HardDrive, color: "#64748b", bg: "rgba(100,116,139,0.08)", border: "rgba(100,116,139,0.2)", glow: "rgba(100,116,139,0.12)" },
+] as const;
+
+interface FeatureCardData {
+  key: string;
+  icon: (typeof FEATURE_META)[number]["icon"];
+  color: string;
+  bg: string;
+  border: string;
+  glow: string;
+  title: string;
+  desc: string;
+}
 
 interface FeatureCardProps {
-  feature: (typeof MAIN_FEATURES)[0];
+  feature: FeatureCardData;
   index: number;
   large?: boolean;
 }
@@ -217,6 +108,14 @@ const BOKEH = [
 ];
 
 export function Features() {
+  const t = useTranslations("marketing.features");
+
+  const MAIN_FEATURES: FeatureCardData[] = FEATURE_META.map((meta) => ({
+    ...meta,
+    title: t(`items.${meta.key}.title`),
+    desc: t(`items.${meta.key}.desc`),
+  }));
+
   const main = MAIN_FEATURES[0]!;
   const rest = MAIN_FEATURES.slice(1);
   const secondRow = rest.slice(0, 3);
@@ -275,14 +174,13 @@ export function Features() {
               color: "#2dd4bf",
             }}
           >
-            15 modulos incluidos
+            {t("badge")}
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-white">
-            Todo lo que necesita tu empresa
+            {t("title")}
           </h2>
           <p className="max-w-xl mx-auto text-lg" style={{ color: "#94a3b8" }}>
-            Diseñado específicamente para el mercado español. Sin integraciones
-            externas, sin suscripciones adicionales.
+            {t("subtitle")}
           </p>
         </motion.div>
 
@@ -293,7 +191,7 @@ export function Features() {
           </div>
           <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-5">
             {secondRow.map((f, i) => (
-              <FeatureCard key={f.title} feature={f} index={i + 1} />
+              <FeatureCard key={f.key} feature={f} index={i + 1} />
             ))}
           </div>
         </div>
@@ -301,21 +199,21 @@ export function Features() {
         {/* Row 2: 3 equal */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-5">
           {thirdRow.map((f, i) => (
-            <FeatureCard key={f.title} feature={f} index={i + 4} />
+            <FeatureCard key={f.key} feature={f} index={i + 4} />
           ))}
         </div>
 
         {/* Row 3: 3 equal */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-5">
           {fourthRow.map((f, i) => (
-            <FeatureCard key={f.title} feature={f} index={i + 7} />
+            <FeatureCard key={f.key} feature={f} index={i + 7} />
           ))}
         </div>
 
         {/* Row 4: 3 equal */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-5">
           {fifthRow.map((f, i) => (
-            <FeatureCard key={f.title} feature={f} index={i + 10} />
+            <FeatureCard key={f.key} feature={f} index={i + 10} />
           ))}
         </div>
 
@@ -323,7 +221,7 @@ export function Features() {
         {sixthRow.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {sixthRow.map((f, i) => (
-              <FeatureCard key={f.title} feature={f} index={i + 13} />
+              <FeatureCard key={f.key} feature={f} index={i + 13} />
             ))}
           </div>
         )}

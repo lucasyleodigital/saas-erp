@@ -1,62 +1,65 @@
 import Link from "next/link";
 import Image from "next/image";
-
-const FOOTER_LINKS = [
-  {
-    title: "Producto",
-    links: [
-      { href: "#features", label: "Funcionalidades" },
-      { href: "#pricing", label: "Precios" },
-      { href: "/verifactu-software-certificado", label: "VeriFactu" },
-    ],
-  },
-  {
-    title: "Soluciones",
-    links: [
-      { href: "/erp-autonomos-espana", label: "ERP para autónomos" },
-      { href: "/software-facturacion-pymes", label: "Facturación pymes" },
-      { href: "/software-contabilidad-pymes", label: "Contabilidad" },
-      { href: "/software-crm-pymes", label: "CRM" },
-      { href: "/software-recursos-humanos-pymes", label: "Recursos humanos" },
-      { href: "/software-nominas-pymes", label: "Nóminas" },
-      { href: "/software-control-horario", label: "Control horario" },
-      { href: "/software-almacen-inventario", label: "Almacén e inventario" },
-      { href: "/modelo-130-online", label: "Modelo 130" },
-    ],
-  },
-  {
-    title: "Comparativas",
-    links: [
-      { href: "/alternativa-holded", label: "Alternativa a Holded" },
-      { href: "/alternativa-sage-autonomos", label: "Alternativa a Sage" },
-    ],
-  },
-  {
-    title: "Empresa",
-    links: [
-      { href: "/sobre-nosotros", label: "Sobre nosotros" },
-      { href: "/contacto", label: "Contacto" },
-    ],
-  },
-  {
-    title: "Legal",
-    links: [
-      { href: "/aviso-legal", label: "Aviso legal" },
-      { href: "/privacidad", label: "Política de privacidad" },
-      { href: "/terminos", label: "Términos y condiciones" },
-      { href: "/cookies", label: "Política de cookies" },
-    ],
-  },
-  {
-    title: "Soporte",
-    links: [
-      { href: "/ayuda", label: "Centro de ayuda" },
-      { href: "mailto:hola@youwhole.com", label: "Soporte tecnico" },
-    ],
-  },
-];
+import { useTranslations } from "next-intl";
 
 export function MarketingFooter() {
+  const t = useTranslations("marketing.footer");
+
+  const FOOTER_LINKS = [
+    {
+      title: t("columns.product.title"),
+      links: [
+        { href: "#features", label: t("columns.product.features") },
+        { href: "#pricing", label: t("columns.product.pricing") },
+        { href: "/verifactu-software-certificado", label: t("columns.product.verifactu") },
+      ],
+    },
+    {
+      title: t("columns.solutions.title"),
+      links: [
+        { href: "/erp-autonomos-espana", label: t("columns.solutions.selfEmployed") },
+        { href: "/software-facturacion-pymes", label: t("columns.solutions.invoicing") },
+        { href: "/software-contabilidad-pymes", label: t("columns.solutions.accounting") },
+        { href: "/software-crm-pymes", label: t("columns.solutions.crm") },
+        { href: "/software-recursos-humanos-pymes", label: t("columns.solutions.hr") },
+        { href: "/software-nominas-pymes", label: t("columns.solutions.payroll") },
+        { href: "/software-control-horario", label: t("columns.solutions.timeTracking") },
+        { href: "/software-almacen-inventario", label: t("columns.solutions.inventory") },
+        { href: "/modelo-130-online", label: t("columns.solutions.model130") },
+      ],
+    },
+    {
+      title: t("columns.comparisons.title"),
+      links: [
+        { href: "/alternativa-holded", label: t("columns.comparisons.holded") },
+        { href: "/alternativa-sage-autonomos", label: t("columns.comparisons.sage") },
+      ],
+    },
+    {
+      title: t("columns.company.title"),
+      links: [
+        { href: "/sobre-nosotros", label: t("columns.company.about") },
+        { href: "/contacto", label: t("columns.company.contact") },
+      ],
+    },
+    {
+      title: t("columns.legal.title"),
+      links: [
+        { href: "/aviso-legal", label: t("columns.legal.notice") },
+        { href: "/privacidad", label: t("columns.legal.privacy") },
+        { href: "/terminos", label: t("columns.legal.terms") },
+        { href: "/cookies", label: t("columns.legal.cookies") },
+      ],
+    },
+    {
+      title: t("columns.support.title"),
+      links: [
+        { href: "/ayuda", label: t("columns.support.help") },
+        { href: "mailto:hola@youwhole.com", label: t("columns.support.technicalSupport") },
+      ],
+    },
+  ];
+
   return (
     <footer className="border-t border-border bg-muted/20 py-16">
       <div className="container mx-auto px-4">
@@ -67,8 +70,7 @@ export function MarketingFooter() {
               <Image src="/logo.png" alt="YouWhole" width={130} height={36} className="object-contain" />
             </Link>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              El ERP creado por autonomos para autonomos y pymes.
-              VeriFactu, IRPF, CRM y facturacion en una sola herramienta.
+              {t("tagline")}
             </p>
           </div>
 
@@ -94,14 +96,13 @@ export function MarketingFooter() {
 
         <div className="border-t border-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
           <span>
-            © {new Date().getFullYear()} YouWhole. Todos los derechos
-            reservados.
+            © {new Date().getFullYear()} YouWhole. {t("rightsReserved")}
           </span>
           <div className="flex items-center gap-4">
-            <span>Hecho en España</span>
+            <span>{t("madeInSpain")}</span>
             <span className="hidden sm:inline text-border">·</span>
             <span className="hidden sm:inline">
-              Diseñado y desarrollado por{" "}
+              {t("designedBy")}{" "}
               <a
                 href="https://lucasyleodigital.com"
                 target="_blank"

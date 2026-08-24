@@ -6,16 +6,19 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
-
-const NAV_LINKS = [
-  { href: "#features", label: "Funcionalidades" },
-  { href: "#verifactu", label: "VeriFactu" },
-  { href: "#pricing", label: "Precios" },
-];
+import { useTranslations } from "next-intl";
+import { LanguageSwitcher } from "@/components/layout/language-switcher";
 
 export function MarketingNav() {
+  const t = useTranslations("marketing.nav");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  const NAV_LINKS = [
+    { href: "#features", label: t("features") },
+    { href: "#verifactu", label: t("verifactu") },
+    { href: "#pricing", label: t("pricing") },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -64,13 +67,14 @@ export function MarketingNav() {
 
         {/* Desktop CTAs */}
         <div className="hidden md:flex items-center gap-3">
+          <LanguageSwitcher />
           {scrolled ? (
             <>
               <Button variant="ghost" size="sm" asChild>
-                <Link href="/login">Iniciar sesión</Link>
+                <Link href="/login">{t("login")}</Link>
               </Button>
               <Button size="sm" asChild>
-                <Link href="/registro">Empezar gratis</Link>
+                <Link href="/registro">{t("cta")}</Link>
               </Button>
             </>
           ) : (
@@ -79,7 +83,7 @@ export function MarketingNav() {
                 href="/login"
                 className="text-sm font-medium text-white/70 hover:text-white transition-colors px-3 py-1.5"
               >
-                Iniciar sesión
+                {t("login")}
               </Link>
               <Link
                 href="/registro"
@@ -89,23 +93,26 @@ export function MarketingNav() {
                   boxShadow: "0 0 20px rgba(13,148,136,0.4)",
                 }}
               >
-                Empezar gratis
+                {t("cta")}
               </Link>
             </>
           )}
         </div>
 
         {/* Mobile toggle */}
-        <button
-          className={cn(
-            "md:hidden p-2 transition-colors",
-            scrolled ? "text-muted-foreground hover:text-foreground" : "text-white/70 hover:text-white"
-          )}
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
-        >
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        <div className="md:hidden flex items-center gap-1">
+          <LanguageSwitcher />
+          <button
+            className={cn(
+              "p-2 transition-colors",
+              scrolled ? "text-muted-foreground hover:text-foreground" : "text-white/70 hover:text-white"
+            )}
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label={mobileOpen ? t("closeMenu") : t("openMenu")}
+          >
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
@@ -125,12 +132,12 @@ export function MarketingNav() {
             <div className="pt-3 border-t border-border flex flex-col gap-2">
               <Button variant="outline" size="sm" asChild>
                 <Link href="/login" onClick={() => setMobileOpen(false)}>
-                  Iniciar sesión
+                  {t("login")}
                 </Link>
               </Button>
               <Button size="sm" asChild>
                 <Link href="/registro" onClick={() => setMobileOpen(false)}>
-                  Empezar gratis
+                  {t("cta")}
                 </Link>
               </Button>
             </div>

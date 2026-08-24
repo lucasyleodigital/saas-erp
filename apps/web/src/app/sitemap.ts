@@ -3,22 +3,22 @@ import type { MetadataRoute } from "next";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.com";
 const LOCALES = ["es", "ca", "eu", "gl", "en"];
 
-function localizedUrls(path: string, priority: number, changeFrequency: MetadataRoute.Sitemap[0]["changeFrequency"]): MetadataRoute.Sitemap {
-  return LOCALES.map((locale) => ({
-    url: `${APP_URL}/${locale}${path}`,
-    lastModified: new Date(),
-    changeFrequency,
-    priority,
-  }));
-}
-
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
+
+  // Locale variants of the home page — "es" is intentionally excluded:
+  // it redirects to the canonical root APP_URL to avoid duplicate content.
+  const TRANSLATED_LOCALES = LOCALES.filter((l) => l !== "es");
 
   return [
     // Raíz y landing principal
     { url: APP_URL, lastModified: now, changeFrequency: "weekly", priority: 1 },
-    ...localizedUrls("", 1, "weekly"),
+    ...TRANSLATED_LOCALES.map((locale) => ({
+      url: `${APP_URL}/${locale}`,
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: 1,
+    })),
 
     // Landing pages SEO
     { url: `${APP_URL}/erp-autonomos-espana`, lastModified: now, changeFrequency: "monthly", priority: 0.95 },

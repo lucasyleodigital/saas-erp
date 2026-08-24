@@ -174,7 +174,11 @@
     },
     "recentInvoices": "Azken fakturak",
     "topClients": "Bezero onenak",
-    "revenueChart": "Diru-sarreren bilakaera",
+    "revenueChart": {
+      "title": "Diru-sarrerak vs Gastuak",
+      "revenue": "Diru-sarrerak",
+      "expenses": "Gastuak"
+    },
     "dealsFunnel": "Salmenta-inbutua",
     "quickActions": "Ekintza azkarrak",
     "newInvoice": "Faktura berria",
@@ -263,11 +267,6 @@
           "PAID": "Ordaindua"
         }
       }
-    },
-    "revenueChart": {
-      "title": "Diru-sarrerak vs Gastuak",
-      "revenue": "Diru-sarrerak",
-      "expenses": "Gastuak"
     },
     "funnel": {
       "title": "Salmenta-inbutua",
@@ -1201,10 +1200,22 @@
       "notifDetailedComingSoon": "Laster",
       "notifComingSoon": "Laster",
       "notifItems": {
-        "overdueInvoices": { "label": "Iraungitako fakturak", "description": "Alerta faktura bat muga-eguna gainditzen duenean" },
-        "newLeads": { "label": "Lead berriak", "description": "Jakinarazpena lead berri bat pipeline-an sartzen denean" },
-        "paymentsReceived": { "label": "Jasotako ordainketak", "description": "Alerta ordainketa bat erregistratzen denean" },
-        "weeklySummary": { "label": "Asteko laburpena", "description": "Jardueren laburpena astelehen goizero" }
+        "overdueInvoices": {
+          "label": "Iraungitako fakturak",
+          "description": "Alerta faktura bat muga-eguna gainditzen duenean"
+        },
+        "newLeads": {
+          "label": "Lead berriak",
+          "description": "Jakinarazpena lead berri bat pipeline-an sartzen denean"
+        },
+        "paymentsReceived": {
+          "label": "Jasotako ordainketak",
+          "description": "Alerta ordainketa bat erregistratzen denean"
+        },
+        "weeklySummary": {
+          "label": "Asteko laburpena",
+          "description": "Jardueren laburpena astelehen goizero"
+        }
       }
     }
   },
@@ -2228,6 +2239,434 @@
       "rejected": "Ukatuta",
       "expired": "Iraungita"
     }
+  },
+  "marketing": {
+    "seo": {
+      "title": "YouWhole — Espainiako autonomo eta ETEentzako ERPa",
+      "description": "Autonomoek autonomoentzat sortutako ERPa. VeriFactu fakturazioa, IRPF automatikoa, 130/303 eredua, CRM, kontabilitatea eta nominak. 14 egun doan, txartelik gabe."
+    },
+    "nav": {
+      "features": "Funtzionalitateak",
+      "verifactu": "VeriFactu",
+      "pricing": "Prezioak",
+      "login": "Hasi saioa",
+      "cta": "Hasi doan",
+      "openMenu": "Ireki menua",
+      "closeMenu": "Itxi menua"
+    },
+    "hero": {
+      "badge": "VeriFactu ziurtatua · AEAT 2025 betetzea",
+      "titleLine1": "Dena batean",
+      "titleLine2": "zure enpresarentzat",
+      "subtitle": "VeriFactu fakturazioa, IRPF automatikoa, 130/303 eredua, CRM eta kontabilitatea. Autonomoek autonomo eta ETEentzat sortua.",
+      "ctaPrimary": "Hasi doan",
+      "ctaSecondary": "Ikusi funtzionalitateak",
+      "trust": {
+        "verifactu": "VeriFactu AEAT",
+        "trial": "14 egun doan",
+        "noLockIn": "Iraunkortasunik gabe",
+        "support": "Euskarazko laguntza"
+      },
+      "preview": {
+        "dashboard": "Panela",
+        "invoices": "Fakturak",
+        "clients": "Bezeroak",
+        "crmDeals": "CRM / Aukerak",
+        "accounting": "Kontabilitatea",
+        "inventory": "Inbentarioa",
+        "payroll": "Nominak",
+        "billed": "Fakturatua",
+        "clientsStat": "Bezeroak",
+        "toCollect": "Kobratzeko",
+        "deals": "Aukerak",
+        "vsLastMonth": "aurreko hilabetearekiko",
+        "monthlyBilling": "2025eko hileroko fakturazioa",
+        "annualGrowth": "↑ %18 urtean",
+        "pipelineCrm": "CRM Pipelinea",
+        "lead": "Lead-a",
+        "proposal": "Proposamena",
+        "negotiation": "Negoziazioa"
+      }
+    },
+    "stats": {
+      "modules": "Modulu integratuak",
+      "languages": "Espainiako hizkuntza ofizialak",
+      "uptime": "Bermatutako erabilgarritasuna",
+      "trial": "Doako proba txartelik gabe",
+      "daysSuffix": " egun"
+    },
+    "features": {
+      "badge": "15 modulu barne",
+      "title": "Zure enpresak behar duen guztia",
+      "subtitle": "Espainiako merkaturako berariaz diseinatua. Kanpo-integraziorik gabe, harpidetza gehigarririk gabe.",
+      "items": {
+        "invoicing": {
+          "title": "Faktura elektronikoa",
+          "desc": "Sortu, bidali eta kobratu faktura profesionalak VeriFactu integratuarekin. AEATerako XML automatikoki sortzen da faktura bakoitzean."
+        },
+        "verifactuNative": {
+          "title": "VeriFactu jatorrizkoa",
+          "desc": "SHA256 kate-hash-a, erregistro aldaezina eta AEATera zuzeneko bidalketa. Betetze osoa lehen egunetik."
+        },
+        "crm": {
+          "title": "CRM integratua",
+          "desc": "Kudeatu bezeroak eta lead-ak fakturatzen duzun leku beretik. Integraziorik edo esportaziorik gabe."
+        },
+        "pipeline": {
+          "title": "Kanban Pipelinea",
+          "desc": "Arrastatu eta askatu aukerak faseen artean mugitzeko. Itxi aukera gehiago ikusgarritasun osoarekin."
+        },
+        "accounting": {
+          "title": "PGC kontabilitatea",
+          "desc": "Egunkari liburua, PGC espainiar kontu-plana, itxierak eta balantze automatikoak zure fakturekin konektatuta."
+        },
+        "inventory": {
+          "title": "Inbentarioa eta biltegia",
+          "desc": "Stock kontrola, mugimenduak eta gutxieneko alertak. Biltegien arteko transferentziak barne."
+        },
+        "payroll": {
+          "title": "Nominak eta giza baliabideak",
+          "desc": "Langileen, kontratuen eta hileroko nominen kudeaketa. A3/Nominaplus formatura esportazioa."
+        },
+        "automations": {
+          "title": "Automatizazioak",
+          "desc": "Faktura errepikakorrak, kobrantza-oroigarriak eta konfigurazio manualik gabeko lan-fluxuak."
+        },
+        "reporting": {
+          "title": "Txostenak eta analitika",
+          "desc": "Denbora errealeko panela fakturazio, kobrantza eta enpresaren errentagarritasun-metrikekin."
+        },
+        "notifications": {
+          "title": "Jakinarazpenak",
+          "desc": "Epemuga, jasotako ordainketa eta taldearen jarduera-alertak denbora errealean."
+        },
+        "projects": {
+          "title": "Proiektuak eta errentagarritasuna",
+          "desc": "Aurrekontu, ordu eta marjinaren kontrola proiektu bakoitzeko. Lotu fakturak eta orduak benetako errentagarritasuna ikusteko."
+        },
+        "timeTracking": {
+          "title": "Ordutegi-kontrola + GPS",
+          "desc": "Geolokalizazioarekin fitxaketa, langilearen atari, asteko egutegia, aparteko orduak automatikoki, Lan Ikuskaritzarako txostena esportatu eta QR bidezko fitxaketa."
+        },
+        "multiLanguage": {
+          "title": "Hizkuntza eta moneta anitz",
+          "desc": "Interfazea eta PDFak gaztelaniaz, katalanez, euskaraz, galizieraz eta ingelesez. Fakturatu 20 dibisa baino gehiagotan EBZren truke-tasekin."
+        },
+        "bankReconciliation": {
+          "title": "Banku-berdinkatzea",
+          "desc": "Inportatu zure bankuko CSV edo Excel laburpenak eta berdinkatu automatikoki kobratzeko dauden fakturekin."
+        },
+        "backup": {
+          "title": "Babeskopia eta auditoretza",
+          "desc": "Deskargatu zure datu guztiak klik batean. Auditoretza-erregistroa, nork zer eta noiz egin zuen jasotzen duena."
+        }
+      }
+    },
+    "howItWorks": {
+      "badge": "Hasi gaur",
+      "title": "Martxan 5 minutu baino gutxiagotan",
+      "subtitle": "Formakuntzarik gabe, aholkularirik gabe, konfigurazio-ordurik gabe. YouWhole bere kabuz abiarazteko diseinatuta dago.",
+      "steps": {
+        "step1": {
+          "number": "01",
+          "title": "Sortu zure kontua 30 segundotan",
+          "desc": "Erregistratu zure emailarekin. Kreditu-txartelik gabe, letra txikirik gabe. Zure enpresa fakturatzeko prest minutu gutxitan."
+        },
+        "step2": {
+          "number": "02",
+          "title": "Inportatu dituzun datuak",
+          "desc": "Igo zure bezero-zerrenda Excel edo CSV bidez, edo konektatu zure gestoriarekin. Migrazioa gidatua eta automatikoa da."
+        },
+        "step3": {
+          "number": "03",
+          "title": "Fakturatu, kudeatu eta hazi",
+          "desc": "CRM, VeriFactu fakturazioa, kontabilitatea eta nominak konektatuta. Panel bakarra zure enpresa osorako."
+        }
+      },
+      "stepLabel": "URRATSA",
+      "cta": "Sortu doako kontua — txartelik gabe"
+    },
+    "verifactu": {
+      "badge": "VeriFactu ziurtatua",
+      "titleLine1": "Betetze fiskal osoa",
+      "titleLine2": "lehen egunetik",
+      "subtitle": "VeriFactu Legeak (11/2021 Iruzur Aurkako Legea) 2025etik faktura bakoitza AEATen erregistratzera behartzen du. YouWholerekin automatikoki gertatzen da — konfiguraziorik gabe, lan gehigarririk gabe.",
+      "flow": {
+        "company": {
+          "label": "Zure enpresa",
+          "sublabel": "Faktura igortzen duzu"
+        },
+        "youwhole": {
+          "label": "YouWhole",
+          "sublabel": "SHA256 sinatu eta prozesatzen du"
+        },
+        "aeat": {
+          "label": "AEAT",
+          "sublabel": "Erregistratu eta berresten du"
+        },
+        "compliance": {
+          "label": "Betetzea",
+          "sublabel": "%100 legez bermatua"
+        }
+      },
+      "points": {
+        "hash": {
+          "title": "SHA256 kate-hash-a",
+          "desc": "Faktura bakoitzak aurrekoa sinatzen du, erregistro guztien osotasuna bermatzen duen kate aldaezina sortuz."
+        },
+        "registry": {
+          "title": "AEATen zuzeneko erregistroa",
+          "desc": "Zerga Agentziaren VERI*FACTU sistemara automatikoki bidaltzen da, egiaztapen QR kodearekin barne."
+        },
+        "xml": {
+          "title": "XML ziurtatua",
+          "desc": "AEATen espezifikazio tekniko ofizialaren araberako XML sortzen dugu, eremu behartsu guztiekin."
+        },
+        "validation": {
+          "title": "Balidazio automatikoa",
+          "desc": "Erregistro bakoitza egiaztatzen dugu bidali aurretik, Iruzur Aurkako Legea guztiz betetzen dela bermatzeko."
+        }
+      }
+    },
+    "testimonials": {
+      "title": "Gure bezeroek diotena",
+      "subtitle": "Beren negozio osoa YouWholerekin dagoeneko kudeatzen duten autonomoak eta ETEak.",
+      "items": {
+        "maria": {
+          "role": "CEO, Diseño Creativo SL",
+          "quote": "YouWholek astean 10 ordu baino gehiago aurreztu dizkigu kontabilitate-kudeaketan. VeriFactu-ren integrazioa automatikoa izan zen — gure aldetik konfiguraziorik gabe."
+        },
+        "carlos": {
+          "role": "Sortzailea, TechStart Barcelona",
+          "quote": "Beste ERP batzuk probatu nituen eta guztiak konplexuegiak ziren. YouWholerekin egun batean genuen martxan. Fakturazioarekin konektatutako CRMa jokoa aldatzen digu."
+        },
+        "ana": {
+          "role": "Zuzendaria, Proyectos Integrales",
+          "quote": "AEATekin VeriFactu betetzeak beldurra ematen zidan, baina YouWholerekin erabat automatikoa da. Orain fakturatzen dut eta Ogasunarekin %100 eguneratuta nagoela dakit."
+        }
+      }
+    },
+    "demo": {
+      "badge": "Demo interaktiboa",
+      "title": "Ikusi YouWhole ekintzan",
+      "subtitle": "Lehen fakturatik urtearen itxierara, dena leku bakarrean.",
+      "tabs": {
+        "invoices": "Fakturazioa",
+        "crm": "CRM Pipelinea",
+        "analytics": "Analitika"
+      },
+      "footerHint": "Egin klik fitxetan esploratzeko · Automatikoki aurreratzen da",
+      "sidebar": {
+        "dashboard": "Panela",
+        "invoices": "Fakturak",
+        "clientsCrm": "CRM bezeroak",
+        "accounting": "Kontabilitatea",
+        "analytics": "Analitika",
+        "payroll": "Nominak"
+      },
+      "invoicesScreen": {
+        "title": "Faktura berria",
+        "draft": "Zirriborroa",
+        "client": "Bezeroa",
+        "concept": "Kontzeptua",
+        "amount": "Zenbatekoa (€)",
+        "registered": "VeriFactu-n erregistratua ✓",
+        "hashLine": "SHA256 Hash-a: AB2F9C44 · AEAT berretsia",
+        "invoiceNumber": "FAKTURA #2025-0094",
+        "qrSigned": "VeriFactu QR · SHA256 sinatua"
+      },
+      "crmScreen": {
+        "title": "CRM Pipelinea",
+        "opportunities": "6 aukera · 19.600€",
+        "advanced": "Aukera aurreratua — Constructora Bernal → Proposamena",
+        "prospect": "Prospektua",
+        "lead": "Lead-a",
+        "proposal": "Proposamena",
+        "won": "Irabazia ✓"
+      },
+      "analyticsScreen": {
+        "title": "2025eko analitika",
+        "realtime": "Denbora errealeko datuak",
+        "billed": "Fakturatua",
+        "collected": "Kobratua",
+        "pipeline": "Pipelinea",
+        "opportunitiesShort": "+5 aukera",
+        "monthlyBilling": "2025eko hileroko fakturazioa",
+        "paidNotif": "Faktura kobratua · Restaurante La Marina",
+        "momentsAgo": "Une batzuk lehenago"
+      }
+    },
+    "faq": {
+      "badge": "Maiz egiten diren galderak",
+      "title": "Zalantzak dituzu?",
+      "subtitle": "Hemen ohiko galderak erantzuten ditugu. Zure erantzuna aurkitzen ez baduzu, idatzi diezagukezu txaten bidez.",
+      "items": {
+        "q1": {
+          "q": "Zer da VeriFactu eta zergatik behar dut?",
+          "a": "VeriFactu Espainiako Zerga Agentziaren fakturen egiaztapen-sistema da. 2025etik aurrera, fakturazio-software bat erabiltzen duen enpresa orok VeriFactu ziurtatutako sistemak erabili behar ditu. YouWholek jatorriz dakar — ez duzu ezer gehigarririk egin behar legea betetzeko."
+        },
+        "q2": {
+          "q": "Zer gertatzen da 14 eguneko doako epea amaitzen denean?",
+          "a": "Ordainketa-metodorik sartzen ez baduzu, zure kontua automatikoki Doako planera pasatzen da (5 bezero eta 10 faktura hilean gehienez). Ez zaizu ezer kobratzen ezta zure kontua ezeztatzen ere. Zuk erabakitzen duzu noiz eta upgrade egin nahi duzun."
+        },
+        "q3": {
+          "q": "Beste programa batetik edo Exceletik nire datuak inportatu ditzaket?",
+          "a": "Bai. Bezeroak, produktuak eta historiako fakturak Excel edo CSV artxiboetatik inportatu ditzakezu. Espainian ohikoenak diren fakturazio-programetatik migratzeko laguntza ere badugu. Jarri gurekin harremanetan eta lagunduko dizugu."
+        },
+        "q4": {
+          "q": "Zenbat erabiltzaile izan ditzake nire enpresak?",
+          "a": "Doako planak erabiltzaile 1 dakar. Starter planak 3 erabiltzaile, Prok 10 arte eta Enterprisek erabiltzaile mugagabeak, saileko rol eta baimen-kontrolarekin."
+        },
+        "q5": {
+          "q": "Seguru al dago nire fakturak eta enpresa-datuak YouWholen gordetzea?",
+          "a": "Bai. Zure datu guztiak Europako zerbitzarietan zifratuta gordetzen dira, RGPD betez, eguneroko babeskopia automatikoekin eta bi faktoreko autentifikazioz (2FA) babestutako sarbidearekin. Inoiz ez ditugu zure datuak hirugarrenekin partekatzen."
+        },
+        "q6": {
+          "q": "Nire harpidetza nahi dudanean ezezta dezaket?",
+          "a": "Bai, iraunkortasunik edo zigorrik gabe. Ezeztatuz gero, ordaindutako aldiaren amaierara arte edukiko duzu sarbidea. Ondoren, zure kontua Doako planera pasatzen da eta zure datu guztiak gordetzen dituzu."
+        },
+        "q7": {
+          "q": "YouWholek Espainiako edozein enpresa motarentzat balio du?",
+          "a": "Edozein sektoretako autonomo eta ETEentzat diseinatuta dago: zerbitzuak, merkataritza, eraikuntza, teknologia, ostalaritza... Enpresa handi edo frankizia baten premia zehatzak badituzu, idatzi diezagukezu eta demo pertsonalizatu bat prestatuko dugu."
+        },
+        "q8": {
+          "q": "Euskarazko laguntza teknikorik ba al duzue?",
+          "a": "Bai, beti. Txat eta email bidezko laguntza dugu gaztelaniaz, astelehenetik ostiralera 9:00etatik 18:00etara (Espainiako ordua). Pro eta Enterprise bezeroek lehentasunezko laguntza ere badute."
+        }
+      }
+    },
+    "pricing": {
+      "plans": {
+        "free": {
+          "label": "Doakoa",
+          "description": "Konpromisorik gabe probatzeko",
+          "cta": "Egungo plana",
+          "features": [
+            "5 bezero",
+            "10 faktura / hilean",
+            "Erabiltzaile 1",
+            "VeriFactu barne",
+            "Oinarrizko panela"
+          ]
+        },
+        "starter": {
+          "label": "Starter",
+          "description": "Autonomo eta mikroenpresentzat",
+          "cta": "Hasi Starter",
+          "features": [
+            "Bezero mugagabeak",
+            "Faktura mugagabeak",
+            "3 erabiltzaile",
+            "VeriFactu barne",
+            "CRM + Pipelinea",
+            "Oinarrizko kontabilitatea",
+            "Ordutegi-kontrola (3 langile)",
+            "3 automatizazio",
+            "Deskargagarria den babeskopia",
+            "Email bidezko laguntza"
+          ]
+        },
+        "pro": {
+          "label": "Pro",
+          "description": "Hazten ari diren ETEentzat",
+          "cta": "Hasi Pro",
+          "badge": "Ohikoena",
+          "features": [
+            "Starterreko guztia",
+            "10 erabiltzaile",
+            "Kontabilitate osoa (130/303/347 ereduak)",
+            "Nominak eta giza baliabideak",
+            "Ordutegi-kontrola (10 langile + GPS)",
+            "Fitxaketarekin langile-ataria",
+            "Automatizazio mugagabeak",
+            "API eta Webhooks",
+            "Auditoretza osoa",
+            "Lehentasunezko laguntza"
+          ]
+        },
+        "enterprise": {
+          "label": "Enterprise",
+          "description": "Enpresa eta frankiziantzat",
+          "cta": "Salmentekin harremanetan jarri",
+          "features": [
+            "Proko guztia",
+            "Erabiltzaile mugagabeak",
+            "Langile mugagabeak",
+            "Enpresa anitz",
+            "%99,5eko SLA bermatua",
+            "Laguntza dedikatua (telefonoa + txata)",
+            "Onboarding pertsonalizatua",
+            "Kontratu eta fakturazio pertsonalizatua"
+          ]
+        }
+      },
+      "free": "Doan",
+      "perMonth": "/hilean",
+      "mostPopular": "Ohikoena",
+      "current": "Egungoa",
+      "currentPlan": "Egungo plana",
+      "redirecting": "Bideratzen..."
+    },
+    "pricingSection": {
+      "badge": "Letra txikirik gabe",
+      "title": "Prezio argi eta gardenak",
+      "subtitle": "Ezkutuko kosturik edo iraunkortasunik gabe. Hasi doan eta eguneratu behar duzunean.",
+      "footnote": "Prezio guztiek BEZa dute barne · Utzi nahi duzunean"
+    },
+    "finalCta": {
+      "titleLine1": "Prest zaude zure enpresa",
+      "titleHighlight": "hurrengo mailara eramateko?",
+      "subtitle": "Elkartu YouWholerekin dagoeneko beren negozioa kudeatzen duten enpresekin. 14 egun doan, kreditu-txartelik gabe.",
+      "ctaPrimary": "Sortu doako kontua",
+      "ctaSecondary": "Kontua daukat jada"
+    },
+    "footer": {
+      "tagline": "Autonomoek autonomo eta ETEentzat sortutako ERPa. VeriFactu, IRPF, CRM eta fakturazioa tresna bakarrean.",
+      "columns": {
+        "product": {
+          "title": "Produktua",
+          "features": "Funtzionalitateak",
+          "pricing": "Prezioak",
+          "verifactu": "VeriFactu"
+        },
+        "solutions": {
+          "title": "Soluzioak",
+          "selfEmployed": "ERPa autonomoentzat",
+          "invoicing": "ETEentzako fakturazioa",
+          "accounting": "Kontabilitatea",
+          "crm": "CRM",
+          "hr": "Giza baliabideak",
+          "payroll": "Nominak",
+          "timeTracking": "Ordutegi-kontrola",
+          "inventory": "Biltegia eta inbentarioa",
+          "model130": "130 eredua"
+        },
+        "comparisons": {
+          "title": "Konparaketak",
+          "holded": "Holdeden alternatiba",
+          "sage": "Sageren alternatiba"
+        },
+        "company": {
+          "title": "Enpresa",
+          "about": "Gutaz",
+          "contact": "Kontaktua"
+        },
+        "legal": {
+          "title": "Legala",
+          "notice": "Ohar legala",
+          "privacy": "Pribatutasun politika",
+          "terms": "Baldintzak",
+          "cookies": "Cookie politika"
+        },
+        "support": {
+          "title": "Laguntza",
+          "help": "Laguntza gunea",
+          "technicalSupport": "Laguntza teknikoa"
+        }
+      },
+      "rightsReserved": "Eskubide guztiak erreserbatuta.",
+      "madeInSpain": "Espainian egina",
+      "designedBy": "Honek diseinatu eta garatua:"
+    }
   }
 }
-

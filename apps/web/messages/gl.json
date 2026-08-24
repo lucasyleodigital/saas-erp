@@ -174,7 +174,11 @@
     },
     "recentInvoices": "Facturas recentes",
     "topClients": "Mellores clientes",
-    "revenueChart": "Evolucion de ingresos",
+    "revenueChart": {
+      "title": "Ingresos vs Gastos",
+      "revenue": "Ingresos",
+      "expenses": "Gastos"
+    },
     "dealsFunnel": "Funil de vendas",
     "quickActions": "Accions rapidas",
     "newInvoice": "Nova factura",
@@ -263,11 +267,6 @@
           "PAID": "Pagada"
         }
       }
-    },
-    "revenueChart": {
-      "title": "Ingresos vs Gastos",
-      "revenue": "Ingresos",
-      "expenses": "Gastos"
     },
     "funnel": {
       "title": "Funil de vendas",
@@ -1193,10 +1192,22 @@
       "notifDetailedComingSoon": "Proximamente",
       "notifComingSoon": "Proximamente",
       "notifItems": {
-        "overdueInvoices": { "label": "Facturas vencidas", "description": "Aviso cando unha factura supera a data de vencemento" },
-        "newLeads": { "label": "Novos leads", "description": "Notificación cando entra un novo lead no pipeline" },
-        "paymentsReceived": { "label": "Pagamentos recibidos", "description": "Aviso cando se rexistra un pagamento ou se reconcilia unha factura" },
-        "weeklySummary": { "label": "Resumo semanal", "description": "Resumo de actividade cada luns pola mañá" }
+        "overdueInvoices": {
+          "label": "Facturas vencidas",
+          "description": "Aviso cando unha factura supera a data de vencemento"
+        },
+        "newLeads": {
+          "label": "Novos leads",
+          "description": "Notificación cando entra un novo lead no pipeline"
+        },
+        "paymentsReceived": {
+          "label": "Pagamentos recibidos",
+          "description": "Aviso cando se rexistra un pagamento ou se reconcilia unha factura"
+        },
+        "weeklySummary": {
+          "label": "Resumo semanal",
+          "description": "Resumo de actividade cada luns pola mañá"
+        }
       }
     }
   },
@@ -2143,6 +2154,434 @@
       "rejected": "Rexeitado",
       "expired": "Expirado"
     }
+  },
+  "marketing": {
+    "seo": {
+      "title": "YouWhole — ERP para autónomos e pemes españolas",
+      "description": "ERP creado por autónomos para autónomos e pemes. Facturación con VeriFactu, IRPF automático, Modelo 130/303, CRM, contabilidade e nóminas. 14 días gratis, sen tarxeta."
+    },
+    "nav": {
+      "features": "Funcionalidades",
+      "verifactu": "VeriFactu",
+      "pricing": "Prezos",
+      "login": "Iniciar sesión",
+      "cta": "Comezar gratis",
+      "openMenu": "Abrir menú",
+      "closeMenu": "Pechar menú"
+    },
+    "hero": {
+      "badge": "VeriFactu certificado · Cumprimento AEAT 2025",
+      "titleLine1": "Todo nun",
+      "titleLine2": "para a túa empresa",
+      "subtitle": "Facturación con VeriFactu, IRPF automático, Modelo 130/303, CRM e contabilidade. Creado por autónomos para autónomos e pemes.",
+      "ctaPrimary": "Comezar gratis",
+      "ctaSecondary": "Ver funcionalidades",
+      "trust": {
+        "verifactu": "VeriFactu AEAT",
+        "trial": "14 días gratis",
+        "noLockIn": "Sen permanencia",
+        "support": "Soporte en galego"
+      },
+      "preview": {
+        "dashboard": "Panel",
+        "invoices": "Facturas",
+        "clients": "Clientes",
+        "crmDeals": "CRM / Oportunidades",
+        "accounting": "Contabilidade",
+        "inventory": "Inventario",
+        "payroll": "Nóminas",
+        "billed": "Facturado",
+        "clientsStat": "Clientes",
+        "toCollect": "Por cobrar",
+        "deals": "Oportunidades",
+        "vsLastMonth": "vs mes anterior",
+        "monthlyBilling": "Facturación mensual 2025",
+        "annualGrowth": "↑ 18% anual",
+        "pipelineCrm": "Pipeline CRM",
+        "lead": "Lead",
+        "proposal": "Proposta",
+        "negotiation": "Negociación"
+      }
+    },
+    "stats": {
+      "modules": "Módulos integrados",
+      "languages": "Idiomas oficiais de España",
+      "uptime": "Dispoñibilidade garantida",
+      "trial": "Proba gratis sen tarxeta",
+      "daysSuffix": " días"
+    },
+    "features": {
+      "badge": "15 módulos incluídos",
+      "title": "Todo o que precisa a túa empresa",
+      "subtitle": "Deseñado especificamente para o mercado español. Sen integracións externas, sen subscricións adicionais.",
+      "items": {
+        "invoicing": {
+          "title": "Facturación electrónica",
+          "desc": "Crea, envía e cobra facturas profesionais con VeriFactu integrado. Xeración de XML para a AEAT automática en cada factura."
+        },
+        "verifactuNative": {
+          "title": "VeriFactu nativo",
+          "desc": "Hash SHA256 en cadea, rexistro inmutable e envío directo á AEAT. Cumprimento total desde o primeiro día."
+        },
+        "crm": {
+          "title": "CRM integrado",
+          "desc": "Xestiona clientes e leads desde onde facturas. Sen integracións nin exportacións."
+        },
+        "pipeline": {
+          "title": "Pipeline Kanban",
+          "desc": "Arrastra e solta para mover oportunidades entre etapas. Pecha máis oportunidades con visibilidade total."
+        },
+        "accounting": {
+          "title": "Contabilidade PGC",
+          "desc": "Libro diario, plan de contas PGC español, peches e balances automáticos conectados ás túas facturas."
+        },
+        "inventory": {
+          "title": "Inventario e almacén",
+          "desc": "Control de stock, movementos e alertas de mínimos. Transferencias entre almacéns incluídas."
+        },
+        "payroll": {
+          "title": "Nóminas e RRHH",
+          "desc": "Xestión de empregados, contratos e nóminas mensuais. Exportación a formato A3/Nominaplus."
+        },
+        "automations": {
+          "title": "Automatizacións",
+          "desc": "Facturas recorrentes, lembretes de cobro e fluxos de traballo sen configuración manual."
+        },
+        "reporting": {
+          "title": "Informes e analítica",
+          "desc": "Panel en tempo real con métricas de facturación, cobros e rendibilidade da túa empresa."
+        },
+        "notifications": {
+          "title": "Notificacións",
+          "desc": "Alertas de vencementos, pagamentos recibidos e actividade do equipo en tempo real."
+        },
+        "projects": {
+          "title": "Proxectos e rendibilidade",
+          "desc": "Control de orzamento, horas e marxe por proxecto. Vincula facturas e horas para ver a rendibilidade real."
+        },
+        "timeTracking": {
+          "title": "Control horario + GPS",
+          "desc": "Fichaxe con xeolocalización, portal do empregado, calendario semanal, horas extra automáticas, exportar informe para Inspección de Traballo e fichaxe por QR."
+        },
+        "multiLanguage": {
+          "title": "Multi-idioma e multi-divisa",
+          "desc": "Interface e PDFs en castelán, catalán, éuscaro, galego e inglés. Factura en 20+ divisas cos tipos de cambio do BCE."
+        },
+        "bankReconciliation": {
+          "title": "Conciliación bancaria",
+          "desc": "Importa extractos CSV ou Excel do teu banco e concilia automaticamente con facturas pendentes de cobro."
+        },
+        "backup": {
+          "title": "Copia de seguridade e auditoría",
+          "desc": "Descarga todos os teus datos nun clic. Rexistro de auditoría co historial de quen fixo que e cando."
+        }
+      }
+    },
+    "howItWorks": {
+      "badge": "Comeza hoxe",
+      "title": "En marcha en menos de 5 minutos",
+      "subtitle": "Sen formación, sen consultor, sen horas de configuración. YouWhole está deseñado para arrincar só.",
+      "steps": {
+        "step1": {
+          "number": "01",
+          "title": "Crea a túa conta en 30 segundos",
+          "desc": "Rexístrate co teu email. Sen tarxeta de crédito, sen letra pequena. A túa empresa lista para facturar en minutos."
+        },
+        "step2": {
+          "number": "02",
+          "title": "Importa os teus datos existentes",
+          "desc": "Sube o teu listado de clientes desde Excel, CSV ou conecta coa túa xestoría actual. A migración é guiada e automática."
+        },
+        "step3": {
+          "number": "03",
+          "title": "Factura, xestiona e medra",
+          "desc": "CRM, facturación VeriFactu, contabilidade e nóminas conectados. Un só panel para toda a túa empresa."
+        }
+      },
+      "stepLabel": "PASO",
+      "cta": "Crear conta gratis — sen tarxeta"
+    },
+    "verifactu": {
+      "badge": "VeriFactu certificado",
+      "titleLine1": "Cumprimento fiscal total",
+      "titleLine2": "desde o primeiro día",
+      "subtitle": "A Lei VeriFactu (Lei Antifraude 11/2021) obriga a rexistrar cada factura na AEAT desde 2025. Con YouWhole ocorre automaticamente — sen configuración, sen traballo extra.",
+      "flow": {
+        "company": {
+          "label": "A túa empresa",
+          "sublabel": "Emites a factura"
+        },
+        "youwhole": {
+          "label": "YouWhole",
+          "sublabel": "Asina SHA256 e procesa"
+        },
+        "aeat": {
+          "label": "AEAT",
+          "sublabel": "Rexistra e confirma"
+        },
+        "compliance": {
+          "label": "Cumprimento",
+          "sublabel": "100% legal garantido"
+        }
+      },
+      "points": {
+        "hash": {
+          "title": "Hash SHA256 en cadea",
+          "desc": "Cada factura asina a anterior, creando unha cadea inmutable que garante a integridade de todos os rexistros."
+        },
+        "registry": {
+          "title": "Rexistro directo na AEAT",
+          "desc": "Envío automático ao sistema VERI*FACTU da Axencia Tributaria co código QR de verificación incluído."
+        },
+        "xml": {
+          "title": "XML certificado",
+          "desc": "Xeramos o XML segundo a especificación técnica oficial da AEAT con todos os campos obrigatorios."
+        },
+        "validation": {
+          "title": "Validación automática",
+          "desc": "Verificamos cada rexistro antes do envío para garantir o cumprimento total coa Lei Antifraude."
+        }
+      }
+    },
+    "testimonials": {
+      "title": "O que din os nosos clientes",
+      "subtitle": "Autónomos e pemes que xa xestionan o seu negocio completo con YouWhole.",
+      "items": {
+        "maria": {
+          "role": "CEO, Diseño Creativo SL",
+          "quote": "YouWhole aforroulle máis de 10 horas semanais de xestión contable á nosa empresa. A integración de VeriFactu foi automática — cero configuración pola nosa banda."
+        },
+        "carlos": {
+          "role": "Fundador, TechStart Barcelona",
+          "quote": "Probei outros ERP e todos eran demasiado complexos. Con YouWhole tivémolo funcionando nun día. O CRM conectado coa facturación é un cambio de xogo para nós."
+        },
+        "ana": {
+          "role": "Directora, Proyectos Integrales",
+          "quote": "O cumprimento VeriFactu coa AEAT dábame medo, pero con YouWhole é completamente automático. Agora facturo e sei que estou 100% ao día con Facenda."
+        }
+      }
+    },
+    "demo": {
+      "badge": "Demo interactiva",
+      "title": "Ve YouWhole en acción",
+      "subtitle": "Desde a primeira factura ata o peche do ano, todo nun só lugar.",
+      "tabs": {
+        "invoices": "Facturación",
+        "crm": "Pipeline CRM",
+        "analytics": "Analítica"
+      },
+      "footerHint": "Fai clic nas pestanas para explorar · Avanza automaticamente",
+      "sidebar": {
+        "dashboard": "Panel",
+        "invoices": "Facturas",
+        "clientsCrm": "Clientes CRM",
+        "accounting": "Contabilidade",
+        "analytics": "Analítica",
+        "payroll": "Nóminas"
+      },
+      "invoicesScreen": {
+        "title": "Nova Factura",
+        "draft": "Borrador",
+        "client": "Cliente",
+        "concept": "Concepto",
+        "amount": "Importe (€)",
+        "registered": "Rexistrada en VeriFactu ✓",
+        "hashLine": "Hash SHA256: AB2F9C44 · AEAT confirmado",
+        "invoiceNumber": "FACTURA #2025-0094",
+        "qrSigned": "VeriFactu QR · Asinado SHA256"
+      },
+      "crmScreen": {
+        "title": "Pipeline CRM",
+        "opportunities": "6 oportunidades · 19.600€",
+        "advanced": "Oportunidade avanzada — Constructora Bernal → Proposta",
+        "prospect": "Prospecto",
+        "lead": "Lead",
+        "proposal": "Proposta",
+        "won": "Gañado ✓"
+      },
+      "analyticsScreen": {
+        "title": "Analítica 2025",
+        "realtime": "Datos en tempo real",
+        "billed": "Facturado",
+        "collected": "Cobrado",
+        "pipeline": "Pipeline",
+        "opportunitiesShort": "+5 oport.",
+        "monthlyBilling": "Facturación mensual 2025",
+        "paidNotif": "Factura cobrada · Restaurante La Marina",
+        "momentsAgo": "Hai un momento"
+      }
+    },
+    "faq": {
+      "badge": "Preguntas frecuentes",
+      "title": "Tes dúbidas?",
+      "subtitle": "Aquí resolvemos as preguntas máis habituais. Se non atopas a túa resposta, escríbenos polo chat.",
+      "items": {
+        "q1": {
+          "q": "Que é VeriFactu e por que o necesito?",
+          "a": "VeriFactu é o sistema de verificación de facturas da Axencia Tributaria española. Desde 2025, toda empresa que use un software de facturación está obrigada a usar sistemas certificados VeriFactu. YouWhole inclúeo de serie — non necesitas facer nada extra para cumprir a lei."
+        },
+        "q2": {
+          "q": "Que ocorre cando remata o período de proba de 14 días?",
+          "a": "Se non introduces ningún método de pagamento, a túa conta pasa automaticamente ao plan Gratuíto (ata 5 clientes e 10 facturas ao mes). Non se che cobra nada nin se cancela a túa conta. Ti decides cando e se queres facer upgrade."
+        },
+        "q3": {
+          "q": "Podo importar os meus datos desde outro programa ou Excel?",
+          "a": "Si. Podes importar clientes, produtos e facturas históricas desde arquivos Excel ou CSV. Tamén contamos con asistencia de migración desde os programas de facturación máis habituais en España. Contáctanos e axudámoste."
+        },
+        "q4": {
+          "q": "Cantos usuarios pode ter a miña empresa?",
+          "a": "O plan Gratuíto inclúe 1 usuario. O plan Starter inclúe 3 usuarios, o Pro ata 10 e o Enterprise permite usuarios ilimitados con control de roles e permisos por departamento."
+        },
+        "q5": {
+          "q": "É seguro gardar as miñas facturas e datos de empresa en YouWhole?",
+          "a": "Si. Todos os teus datos gárdanse cifrados en servidores europeos con cumprimento RGPD, copias de seguridade diarias automáticas e acceso protexido mediante autenticación de dobre factor (2FA). Nunca compartimos os teus datos con terceiros."
+        },
+        "q6": {
+          "q": "Podo cancelar a miña subscrición cando queira?",
+          "a": "Si, sen permanencia nin penalizacións. Se cancelas, segues tendo acceso ata o final do período xa pagado. Despois, a túa conta pasa ao plan Gratuíto e conservas todos os teus datos."
+        },
+        "q7": {
+          "q": "YouWhole funciona para calquera tipo de empresa española?",
+          "a": "Está deseñado para autónomos e pemes de calquera sector: servizos, comercio, construción, tecnoloxía, hostalería... Se tes necesidades específicas de gran empresa ou franquía, escríbenos e preparamos unha demo personalizada."
+        },
+        "q8": {
+          "q": "Tedes soporte técnico en galego?",
+          "a": "Si, sempre. Contamos con soporte por chat e email en galego, de luns a venres de 9:00 a 18:00 (hora española). Os clientes Pro e Enterprise tamén teñen acceso a soporte prioritario."
+        }
+      }
+    },
+    "pricing": {
+      "plans": {
+        "free": {
+          "label": "Gratuíto",
+          "description": "Para probar sen compromiso",
+          "cta": "Plan actual",
+          "features": [
+            "5 clientes",
+            "10 facturas / mes",
+            "1 usuario",
+            "VeriFactu incluído",
+            "Panel básico"
+          ]
+        },
+        "starter": {
+          "label": "Starter",
+          "description": "Para autónomos e micropemes",
+          "cta": "Comezar Starter",
+          "features": [
+            "Clientes ilimitados",
+            "Facturas ilimitadas",
+            "3 usuarios",
+            "VeriFactu incluído",
+            "CRM + Pipeline",
+            "Contabilidade básica",
+            "Control horario (3 empregados)",
+            "3 automatizacións",
+            "Copia de seguridade descargable",
+            "Soporte por email"
+          ]
+        },
+        "pro": {
+          "label": "Pro",
+          "description": "Para pemes en crecemento",
+          "cta": "Comezar Pro",
+          "badge": "Popular",
+          "features": [
+            "Todo do Starter",
+            "10 usuarios",
+            "Contabilidade completa (Modelo 130/303/347)",
+            "Nóminas e RRHH",
+            "Control horario (10 empregados + GPS)",
+            "Portal empregado con fichaxe",
+            "Automatizacións ilimitadas",
+            "API e Webhooks",
+            "Auditoría completa",
+            "Soporte prioritario"
+          ]
+        },
+        "enterprise": {
+          "label": "Enterprise",
+          "description": "Para empresas e franquías",
+          "cta": "Contactar vendas",
+          "features": [
+            "Todo do Pro",
+            "Usuarios ilimitados",
+            "Empregados ilimitados",
+            "Multi-empresa",
+            "SLA 99,5% garantido",
+            "Soporte dedicado (teléfono + chat)",
+            "Onboarding personalizado",
+            "Contrato e facturación a medida"
+          ]
+        }
+      },
+      "free": "Gratis",
+      "perMonth": "/mes",
+      "mostPopular": "Máis popular",
+      "current": "Actual",
+      "currentPlan": "Plan actual",
+      "redirecting": "Redirixindo..."
+    },
+    "pricingSection": {
+      "badge": "Sen letra pequena",
+      "title": "Prezos claros e transparentes",
+      "subtitle": "Sen custos ocultos nin permanencia. Comeza gratis e actualiza cando o necesites.",
+      "footnote": "Todos os prezos inclúen o IVE · Cancela cando queiras"
+    },
+    "finalCta": {
+      "titleLine1": "Listo para levar a túa empresa",
+      "titleHighlight": "ao seguinte nivel?",
+      "subtitle": "Únete ás empresas que xa xestionan o seu negocio con YouWhole. 14 días gratis, sen tarxeta de crédito.",
+      "ctaPrimary": "Crear conta gratis",
+      "ctaSecondary": "Xa teño conta"
+    },
+    "footer": {
+      "tagline": "O ERP creado por autónomos para autónomos e pemes. VeriFactu, IRPF, CRM e facturación nunha soa ferramenta.",
+      "columns": {
+        "product": {
+          "title": "Produto",
+          "features": "Funcionalidades",
+          "pricing": "Prezos",
+          "verifactu": "VeriFactu"
+        },
+        "solutions": {
+          "title": "Solucións",
+          "selfEmployed": "ERP para autónomos",
+          "invoicing": "Facturación pemes",
+          "accounting": "Contabilidade",
+          "crm": "CRM",
+          "hr": "Recursos humanos",
+          "payroll": "Nóminas",
+          "timeTracking": "Control horario",
+          "inventory": "Almacén e inventario",
+          "model130": "Modelo 130"
+        },
+        "comparisons": {
+          "title": "Comparativas",
+          "holded": "Alternativa a Holded",
+          "sage": "Alternativa a Sage"
+        },
+        "company": {
+          "title": "Empresa",
+          "about": "Sobre nós",
+          "contact": "Contacto"
+        },
+        "legal": {
+          "title": "Legal",
+          "notice": "Aviso legal",
+          "privacy": "Política de privacidade",
+          "terms": "Termos e condicións",
+          "cookies": "Política de cookies"
+        },
+        "support": {
+          "title": "Soporte",
+          "help": "Centro de axuda",
+          "technicalSupport": "Soporte técnico"
+        }
+      },
+      "rightsReserved": "Todos os dereitos reservados.",
+      "madeInSpain": "Feito en España",
+      "designedBy": "Deseñado e desenvolvido por"
+    }
   }
 }
-

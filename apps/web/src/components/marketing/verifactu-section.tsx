@@ -2,70 +2,37 @@
 
 import { motion } from "framer-motion";
 import { Shield, Lock, FileCheck, CheckCircle, ArrowRight, Building2, Zap, Landmark } from "lucide-react";
+import { useTranslations } from "next-intl";
 
-const POINTS = [
-  {
-    icon: Shield,
-    title: "Hash SHA256 en cadena",
-    desc: "Cada factura firma la anterior, creando una cadena inmutable que garantiza la integridad de todos los registros.",
-    color: "#0d9488",
-  },
-  {
-    icon: Lock,
-    title: "Registro directo en AEAT",
-    desc: "Envío automático al sistema VERI*FACTU de la Agencia Tributaria con código QR de verificación incluido.",
-    color: "#6366f1",
-  },
-  {
-    icon: FileCheck,
-    title: "XML certificado",
-    desc: "Generamos el XML según la especificación técnica oficial de AEAT con todos los campos obligatorios.",
-    color: "#f59e0b",
-  },
-  {
-    icon: CheckCircle,
-    title: "Validación automática",
-    desc: "Verificamos cada registro antes del envío para garantizar el cumplimiento total con la Ley Antifraude.",
-    color: "#10b981",
-  },
-];
+const POINTS_META = [
+  { key: "hash", icon: Shield, color: "#0d9488" },
+  { key: "registry", icon: Lock, color: "#6366f1" },
+  { key: "xml", icon: FileCheck, color: "#f59e0b" },
+  { key: "validation", icon: CheckCircle, color: "#10b981" },
+] as const;
 
-const FLOW_STEPS = [
-  {
-    label: "Tu empresa",
-    sublabel: "Emites la factura",
-    Icon: Building2,
-    color: "#0d9488",
-    border: "rgba(13,148,136,0.4)",
-    bg: "rgba(13,148,136,0.12)",
-  },
-  {
-    label: "YouWhole",
-    sublabel: "Firma SHA256 y procesa",
-    Icon: Zap,
-    color: "#6366f1",
-    border: "rgba(99,102,241,0.4)",
-    bg: "rgba(99,102,241,0.12)",
-  },
-  {
-    label: "AEAT",
-    sublabel: "Registra y confirma",
-    Icon: Landmark,
-    color: "#f59e0b",
-    border: "rgba(245,158,11,0.4)",
-    bg: "rgba(245,158,11,0.12)",
-  },
-  {
-    label: "Cumplimiento",
-    sublabel: "100% legal garantizado",
-    Icon: CheckCircle,
-    color: "#10b981",
-    border: "rgba(16,185,129,0.4)",
-    bg: "rgba(16,185,129,0.12)",
-  },
-];
+const FLOW_META = [
+  { key: "company", Icon: Building2, color: "#0d9488", border: "rgba(13,148,136,0.4)", bg: "rgba(13,148,136,0.12)" },
+  { key: "youwhole", Icon: Zap, color: "#6366f1", border: "rgba(99,102,241,0.4)", bg: "rgba(99,102,241,0.12)" },
+  { key: "aeat", Icon: Landmark, color: "#f59e0b", border: "rgba(245,158,11,0.4)", bg: "rgba(245,158,11,0.12)" },
+  { key: "compliance", Icon: CheckCircle, color: "#10b981", border: "rgba(16,185,129,0.4)", bg: "rgba(16,185,129,0.12)" },
+] as const;
 
 export function VerifactuSection() {
+  const t = useTranslations("marketing.verifactu");
+
+  const POINTS = POINTS_META.map((meta) => ({
+    ...meta,
+    title: t(`points.${meta.key}.title`),
+    desc: t(`points.${meta.key}.desc`),
+  }));
+
+  const FLOW_STEPS = FLOW_META.map((meta) => ({
+    ...meta,
+    label: t(`flow.${meta.key}.label`),
+    sublabel: t(`flow.${meta.key}.sublabel`),
+  }));
+
   return (
     <section
       id="verifactu"
@@ -98,16 +65,15 @@ export function VerifactuSection() {
             }}
           >
             <Shield className="h-3.5 w-3.5" />
-            VeriFactu certificado
+            {t("badge")}
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4">
-            Cumplimiento fiscal total
+            {t("titleLine1")}
             <br />
-            <span style={{ color: "#2dd4bf" }}>desde el primer día</span>
+            <span style={{ color: "#2dd4bf" }}>{t("titleLine2")}</span>
           </h2>
           <p className="text-lg max-w-2xl mx-auto" style={{ color: "#94a3b8" }}>
-            La Ley VeriFactu (Ley Antifraude 11/2021) obliga a registrar cada factura en la AEAT
-            desde 2025. Con YouWhole ocurre automáticamente — sin configuración, sin trabajo extra.
+            {t("subtitle")}
           </p>
         </motion.div>
 

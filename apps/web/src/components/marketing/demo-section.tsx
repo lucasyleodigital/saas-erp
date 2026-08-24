@@ -3,14 +3,15 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText, Users, BarChart2, Check, Zap } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 type TabId = "facturas" | "crm" | "analitica";
 
-const TABS: { id: TabId; label: string; icon: typeof FileText }[] = [
-  { id: "facturas", label: "Facturación", icon: FileText },
-  { id: "crm", label: "Pipeline CRM", icon: Users },
-  { id: "analitica", label: "Analítica", icon: BarChart2 },
-];
+const TAB_ICONS: Record<TabId, typeof FileText> = {
+  facturas: FileText,
+  crm: Users,
+  analitica: BarChart2,
+};
 
 const TAB_DURATION = 6500;
 
@@ -35,6 +36,7 @@ function Cursor() {
 }
 
 function FacturasScreen() {
+  const t = useTranslations("marketing.demo.invoicesScreen");
   const [step, setStep] = useState(0);
   const cliente = useTypewriter("Restaurante La Marina S.L.", 32, step >= 0);
   const concepto = useTypewriter("Servicios digitales — Junio 2025", 28, step >= 1);
@@ -50,15 +52,15 @@ function FacturasScreen() {
   return (
     <div className="p-5 h-full flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-white font-semibold text-sm">Nueva Factura</h3>
-        <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: "rgba(13,148,136,0.18)", color: "#2dd4bf" }}>Borrador</span>
+        <h3 className="text-white font-semibold text-sm">{t("title")}</h3>
+        <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: "rgba(13,148,136,0.18)", color: "#2dd4bf" }}>{t("draft")}</span>
       </div>
       <div className="grid grid-cols-2 gap-4 flex-1">
         <div className="space-y-3">
           {[
-            { label: "Cliente", value: cliente, active: step >= 0, color: "white" },
-            { label: "Concepto", value: concepto, active: step >= 1, color: "white" },
-            { label: "Importe (€)", value: importe, active: step >= 2, color: "#0d9488" },
+            { label: t("client"), value: cliente, active: step >= 0, color: "white" },
+            { label: t("concept"), value: concepto, active: step >= 1, color: "white" },
+            { label: t("amount"), value: importe, active: step >= 2, color: "#0d9488" },
           ].map(({ label, value, active, color }) => (
             <div key={label}>
               <label className="text-[9px] uppercase tracking-widest mb-1 block" style={{ color: "#475569" }}>{label}</label>
@@ -79,8 +81,8 @@ function FacturasScreen() {
                   <Check className="h-3.5 w-3.5" style={{ color: "#2dd4bf" }} />
                 </div>
                 <div>
-                  <p className="text-[11px] font-semibold" style={{ color: "#2dd4bf" }}>Registrado en VeriFactu ✓</p>
-                  <p className="text-[9px]" style={{ color: "#475569" }}>Hash SHA256: AB2F9C44 · AEAT confirmado</p>
+                  <p className="text-[11px] font-semibold" style={{ color: "#2dd4bf" }}>{t("registered")}</p>
+                  <p className="text-[9px]" style={{ color: "#475569" }}>{t("hashLine")}</p>
                 </div>
               </motion.div>
             )}
@@ -90,7 +92,7 @@ function FacturasScreen() {
         {/* Invoice preview */}
         <div className="rounded-xl border overflow-hidden flex flex-col" style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}>
           <div className="px-3 py-2 border-b flex items-center justify-between" style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}>
-            <span className="text-[9px] font-bold tracking-wider" style={{ color: "#64748b" }}>FACTURA #2025-0094</span>
+            <span className="text-[9px] font-bold tracking-wider" style={{ color: "#64748b" }}>{t("invoiceNumber")}</span>
             {step >= 3 && (
               <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="h-2 w-2 rounded-full" style={{ background: "#22c55e" }} />
             )}
@@ -109,7 +111,7 @@ function FacturasScreen() {
             {step >= 3 && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-3 pt-3 border-t flex items-center gap-1.5" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
                 <Zap className="h-3 w-3" style={{ color: "#f59e0b" }} />
-                <span style={{ fontSize: 8, color: "#475569" }}>VeriFactu QR · Firmado SHA256</span>
+                <span style={{ fontSize: 8, color: "#475569" }}>{t("qrSigned")}</span>
               </motion.div>
             )}
           </div>
@@ -119,25 +121,28 @@ function FacturasScreen() {
   );
 }
 
-const PIPELINE_COLS = [
-  { label: "Prospecto", color: "#475569", bg: "rgba(71,85,105,0.15)", cards: [{ name: "Ferretería López", val: "1.200€" }, { name: "Clínica Dental Vidal", val: "800€" }] },
-  { label: "Lead", color: "#6366f1", bg: "rgba(99,102,241,0.15)", cards: [{ name: "Constructora Bernal", val: "5.500€" }] },
-  { label: "Propuesta", color: "#f59e0b", bg: "rgba(245,158,11,0.15)", cards: [{ name: "Grupo Textil Nord", val: "8.900€" }] },
-  { label: "Ganado ✓", color: "#22c55e", bg: "rgba(34,197,94,0.12)", cards: [{ name: "Restaurante La Marina", val: "3.200€" }] },
+const PIPELINE_COLS_META = [
+  { key: "prospect", color: "#475569", bg: "rgba(71,85,105,0.15)", cards: [{ name: "Ferretería López", val: "1.200€" }, { name: "Clínica Dental Vidal", val: "800€" }] },
+  { key: "lead", color: "#6366f1", bg: "rgba(99,102,241,0.15)", cards: [{ name: "Constructora Bernal", val: "5.500€" }] },
+  { key: "proposal", color: "#f59e0b", bg: "rgba(245,158,11,0.15)", cards: [{ name: "Grupo Textil Nord", val: "8.900€" }] },
+  { key: "won", color: "#22c55e", bg: "rgba(34,197,94,0.12)", cards: [{ name: "Restaurante La Marina", val: "3.200€" }] },
 ];
 
 function CrmScreen() {
+  const t = useTranslations("marketing.demo.crmScreen");
   const [moved, setMoved] = useState(false);
   useEffect(() => {
-    const t = setTimeout(() => setMoved(true), 2800);
-    return () => clearTimeout(t);
+    const timeoutId = setTimeout(() => setMoved(true), 2800);
+    return () => clearTimeout(timeoutId);
   }, []);
+
+  const PIPELINE_COLS = PIPELINE_COLS_META.map((col) => ({ ...col, label: t(col.key) }));
 
   return (
     <div className="p-5 h-full flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <h3 className="text-white font-semibold text-sm">Pipeline CRM</h3>
-        <span className="text-[9px]" style={{ color: "#64748b" }}>6 oportunidades · 19.600€</span>
+        <h3 className="text-white font-semibold text-sm">{t("title")}</h3>
+        <span className="text-[9px]" style={{ color: "#64748b" }}>{t("opportunities")}</span>
       </div>
       <div className="flex gap-2.5 flex-1 overflow-hidden">
         {PIPELINE_COLS.map((col, ci) => (
@@ -196,7 +201,7 @@ function CrmScreen() {
             style={{ background: "rgba(34,197,94,0.08)", borderColor: "rgba(34,197,94,0.25)" }}
           >
             <Check className="h-3.5 w-3.5 shrink-0" style={{ color: "#22c55e" }} />
-            <p className="text-[10px] font-medium text-white">Oportunidad avanzada — Constructora Bernal → Propuesta</p>
+            <p className="text-[10px] font-medium text-white">{t("advanced")}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -208,6 +213,7 @@ const BAR_H = [28, 42, 35, 58, 48, 70, 60, 82, 66, 54, 76, 100];
 const MONTHS = ["E", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
 
 function AnaliticaScreen() {
+  const t = useTranslations("marketing.demo.analyticsScreen");
   const [bars, setBars] = useState(false);
   const [notif, setNotif] = useState(false);
   useEffect(() => {
@@ -219,17 +225,17 @@ function AnaliticaScreen() {
   return (
     <div className="p-5 h-full flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <h3 className="text-white font-semibold text-sm">Analítica 2025</h3>
+        <h3 className="text-white font-semibold text-sm">{t("title")}</h3>
         <div className="flex items-center gap-1.5">
           <span className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ background: "#22c55e" }} />
-          <span className="text-[9px]" style={{ color: "#475569" }}>Datos en tiempo real</span>
+          <span className="text-[9px]" style={{ color: "#475569" }}>{t("realtime")}</span>
         </div>
       </div>
       <div className="grid grid-cols-3 gap-2">
         {[
-          { label: "Facturado", value: "48.250€", delta: "+18%", color: "#0d9488" },
-          { label: "Cobrado", value: "39.800€", delta: "+12%", color: "#22c55e" },
-          { label: "Pipeline", value: "22.800€", delta: "+5 oport.", color: "#6366f1" },
+          { label: t("billed"), value: "48.250€", delta: "+18%", color: "#0d9488" },
+          { label: t("collected"), value: "39.800€", delta: "+12%", color: "#22c55e" },
+          { label: t("pipeline"), value: "22.800€", delta: t("opportunitiesShort"), color: "#6366f1" },
         ].map((k) => (
           <div key={k.label} className="rounded-xl p-2.5 border" style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}>
             <div className="text-[8px] mb-1" style={{ color: "#475569" }}>{k.label}</div>
@@ -239,7 +245,7 @@ function AnaliticaScreen() {
         ))}
       </div>
       <div className="flex-1 rounded-xl border p-3 flex flex-col min-h-0" style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}>
-        <div className="text-[8px] mb-2" style={{ color: "#475569" }}>Facturación mensual 2025</div>
+        <div className="text-[8px] mb-2" style={{ color: "#475569" }}>{t("monthlyBilling")}</div>
         <div className="flex items-end gap-1 flex-1">
           {BAR_H.map((h, i) => (
             <motion.div
@@ -275,8 +281,8 @@ function AnaliticaScreen() {
               <Check className="h-3.5 w-3.5" style={{ color: "#2dd4bf" }} />
             </div>
             <div>
-              <p className="text-[10px] font-semibold text-white">Factura cobrada · Restaurante La Marina</p>
-              <p className="text-[9px]" style={{ color: "#64748b" }}>+3.200,00 € · Hace un momento</p>
+              <p className="text-[10px] font-semibold text-white">{t("paidNotif")}</p>
+              <p className="text-[9px]" style={{ color: "#64748b" }}>+3.200,00 € · {t("momentsAgo")}</p>
             </div>
           </motion.div>
         )}
@@ -285,19 +291,31 @@ function AnaliticaScreen() {
   );
 }
 
-const SIDEBAR_ITEMS: { label: string; ids: TabId[] }[] = [
-  { label: "Dashboard", ids: ["analitica"] },
-  { label: "Facturas", ids: ["facturas"] },
-  { label: "Clientes CRM", ids: ["crm"] },
-  { label: "Contabilidad", ids: [] },
-  { label: "Analítica", ids: ["analitica"] },
-  { label: "Nóminas", ids: [] },
+const SIDEBAR_META: { key: string; ids: TabId[] }[] = [
+  { key: "dashboard", ids: ["analitica"] },
+  { key: "invoices", ids: ["facturas"] },
+  { key: "clientsCrm", ids: ["crm"] },
+  { key: "accounting", ids: [] },
+  { key: "analytics", ids: ["analitica"] },
+  { key: "payroll", ids: [] },
 ];
 
 export function DemoSection() {
+  const t = useTranslations("marketing.demo");
+
+  const SIDEBAR_ITEMS = SIDEBAR_META.map((item) => ({
+    ids: item.ids,
+    label: t(`sidebar.${item.key}`),
+  }));
   const [activeTab, setActiveTab] = useState<TabId>("facturas");
   const [progress, setProgress] = useState(0);
   const cycleKey = useRef(0);
+
+  const TABS: { id: TabId; label: string; icon: typeof FileText }[] = [
+    { id: "facturas", label: t("tabs.invoices"), icon: TAB_ICONS.facturas },
+    { id: "crm", label: t("tabs.crm"), icon: TAB_ICONS.crm },
+    { id: "analitica", label: t("tabs.analytics"), icon: TAB_ICONS.analitica },
+  ];
 
   useEffect(() => {
     const key = cycleKey.current;
@@ -312,7 +330,7 @@ export function DemoSection() {
     const advanceId = setTimeout(() => {
       if (key !== cycleKey.current) return;
       setActiveTab((prev) => {
-        const idx = TABS.findIndex((t) => t.id === prev);
+        const idx = TABS.findIndex((tab) => tab.id === prev);
         const next = TABS[(idx + 1) % TABS.length];
         return next ? next.id : prev;
       });
@@ -346,13 +364,13 @@ export function DemoSection() {
             style={{ background: "rgba(13,148,136,0.08)", borderColor: "rgba(13,148,136,0.25)", color: "#0d9488" }}
           >
             <span className="h-2 w-2 rounded-full animate-pulse" style={{ background: "#0d9488" }} />
-            Demo interactiva
+            {t("badge")}
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-            Ve YouWhole en acción
+            {t("title")}
           </h2>
           <p className="max-w-md mx-auto" style={{ color: "#64748b" }}>
-            Desde la primera factura hasta el cierre del año, todo en un solo lugar.
+            {t("subtitle")}
           </p>
         </motion.div>
 
@@ -467,7 +485,7 @@ export function DemoSection() {
 
           {/* Footer hint */}
           <p className="text-center text-xs mt-5" style={{ color: "#334155" }}>
-            Haz clic en las pestañas para explorar · Se avanza automáticamente
+            {t("footerHint")}
           </p>
         </div>
       </div>
