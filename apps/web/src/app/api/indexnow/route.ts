@@ -3,25 +3,33 @@ import { NextResponse } from "next/server";
 const INDEXNOW_KEY = "ebe57ad2f65cf9a20a3f58c185ce5372";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.com";
 
+const TRANSLATED_LOCALES = ["ca", "eu", "gl", "en"];
+
+const SATELLITE_SLUGS = [
+  "erp-autonomos-espana",
+  "software-facturacion-pymes",
+  "verifactu-software-certificado",
+  "alternativa-holded",
+  "alternativa-sage-autonomos",
+  "modelo-130-online",
+  "software-recursos-humanos-pymes",
+  "software-control-horario",
+  "software-almacen-inventario",
+  "software-crm-pymes",
+  "software-contabilidad-pymes",
+  "software-nominas-pymes",
+];
+
 const PUBLIC_URLS = [
   APP_URL,
-  `${APP_URL}/es`,
   `${APP_URL}/ca`,
   `${APP_URL}/eu`,
   `${APP_URL}/gl`,
   `${APP_URL}/en`,
-  `${APP_URL}/erp-autonomos-espana`,
-  `${APP_URL}/software-facturacion-pymes`,
-  `${APP_URL}/verifactu-software-certificado`,
-  `${APP_URL}/alternativa-holded`,
-  `${APP_URL}/alternativa-sage-autonomos`,
-  `${APP_URL}/modelo-130-online`,
-  `${APP_URL}/software-recursos-humanos-pymes`,
-  `${APP_URL}/software-control-horario`,
-  `${APP_URL}/software-almacen-inventario`,
-  `${APP_URL}/software-crm-pymes`,
-  `${APP_URL}/software-contabilidad-pymes`,
-  `${APP_URL}/software-nominas-pymes`,
+  ...SATELLITE_SLUGS.flatMap((slug) => [
+    `${APP_URL}/${slug}`,
+    ...TRANSLATED_LOCALES.map((locale) => `${APP_URL}/${locale}/${slug}`),
+  ]),
   `${APP_URL}/sobre-nosotros`,
   `${APP_URL}/contacto`,
   `${APP_URL}/ayuda`,
