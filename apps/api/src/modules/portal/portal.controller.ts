@@ -3,6 +3,8 @@ import {
 } from "@nestjs/common";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { PortalService } from "./portal.service";
+import { PortalCheckoutDto } from "./dto/checkout.dto";
+import { VerifyPaymentDto } from "./dto/verify-payment.dto";
 
 @Controller("portal")
 export class PortalController {
@@ -42,7 +44,7 @@ export class PortalController {
   createPayment(
     @Param("token") token: string,
     @Param("invoiceId") invoiceId: string,
-    @Body() dto: { successUrl: string; cancelUrl: string },
+    @Body() dto: PortalCheckoutDto,
   ) {
     return this.service.createPaymentSession(token, invoiceId, dto.successUrl, dto.cancelUrl);
   }
@@ -51,7 +53,7 @@ export class PortalController {
   @HttpCode(200)
   verifyPayment(
     @Param("token") token: string,
-    @Body() dto: { invoiceId: string; sessionId: string },
+    @Body() dto: VerifyPaymentDto,
   ) {
     return this.service.verifyPayment(token, dto.invoiceId, dto.sessionId);
   }

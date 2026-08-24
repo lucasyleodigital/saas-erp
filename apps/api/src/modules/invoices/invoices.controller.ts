@@ -6,6 +6,10 @@ import { ApiTags } from "@nestjs/swagger";
 import { InvoicesService } from "./invoices.service";
 import { BillingService } from "../billing/billing.service";
 import { CreateInvoiceDto } from "./dto/create-invoice.dto";
+import { SetRecurringDto } from "./dto/set-recurring.dto";
+import { PaymentLinkDto } from "./dto/payment-link.dto";
+import { BulkUpdateStatusDto } from "./dto/bulk-update-status.dto";
+import { RegisterPaymentDto } from "./dto/register-payment.dto";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
 import type { JwtPayload } from "@saas/types";
@@ -58,7 +62,7 @@ export class InvoicesController {
   setRecurring(
     @CurrentUser() u: JwtPayload,
     @Param("id") id: string,
-    @Body() body: { isRecurring: boolean; interval?: string },
+    @Body() body: SetRecurringDto,
   ) {
     return this.svc.setRecurring(u.companyId, id, body.isRecurring, body.interval);
   }
@@ -68,7 +72,7 @@ export class InvoicesController {
   createPaymentLink(
     @CurrentUser() u: JwtPayload,
     @Param("id") id: string,
-    @Body() body: { successUrl: string; cancelUrl: string },
+    @Body() body: PaymentLinkDto,
   ) {
     return this.billing.createInvoicePaymentLink(u.companyId, id, body.successUrl, body.cancelUrl);
   }
@@ -86,7 +90,7 @@ export class InvoicesController {
   @HttpCode(HttpStatus.OK)
   bulkUpdateStatus(
     @CurrentUser() u: JwtPayload,
-    @Body() body: { ids: string[]; status: string },
+    @Body() body: BulkUpdateStatusDto,
   ) {
     return this.svc.bulkUpdateStatus(u.companyId, body.ids, body.status);
   }
@@ -95,7 +99,7 @@ export class InvoicesController {
   registerPayment(
     @CurrentUser() u: JwtPayload,
     @Param("id") id: string,
-    @Body() body: { amount: number; method: string },
+    @Body() body: RegisterPaymentDto,
   ) {
     return this.svc.registerPayment(u.companyId, id, body.amount, body.method);
   }

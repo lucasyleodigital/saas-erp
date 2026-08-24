@@ -35,12 +35,37 @@ export class BillingService {
     return this.stripe;
   }
 
+  // Prevents open-redirect: successUrl/cancelUrl are attacker-controllable
+  // request bodies that Stripe redirects the browser to after checkout.
+  // Reject anything that doesn't point back at our own frontend.
+  private assertOwnOrigin(url: string): void {
+    const clientUrl = this.config.get<string>("CLIENT_URL", "http://localhost:3000");
+    const allowedOrigins = new Set([new URL(clientUrl).origin]);
+    if (clientUrl.includes("youwhole.com")) {
+      allowedOrigins.add("https://www.youwhole.com");
+      allowedOrigins.add("https://youwhole.com");
+      allowedOrigins.add("https://saas-erp-pi.vercel.app");
+    }
+    let origin: string;
+    try {
+      origin = new URL(url).origin;
+    } catch {
+      throw new BadRequestException("URL de redirección no válida");
+    }
+    if (!allowedOrigins.has(origin)) {
+      throw new BadRequestException("URL de redirección no permitida");
+    }
+  }
+
   async createCheckoutSession(
     companyId: string,
     plan: "STARTER" | "PRO" | "ENTERPRISE",
     successUrl: string,
     cancelUrl: string
   ) {
+    this.assertOwnOrigin(successUrl);
+    this.assertOwnOrigin(cancelUrl);
+
     const company = await this.prisma.company.findUniqueOrThrow({
       where: { id: companyId },
     });
@@ -76,6 +101,8 @@ export class BillingService {
   }
 
   async createPortalSession(companyId: string, returnUrl: string) {
+    this.assertOwnOrigin(returnUrl);
+
     const company = await this.prisma.company.findUniqueOrThrow({
       where: { id: companyId },
     });
@@ -98,6 +125,9 @@ export class BillingService {
     successUrl: string,
     cancelUrl: string,
   ) {
+    this.assertOwnOrigin(successUrl);
+    this.assertOwnOrigin(cancelUrl);
+
     const invoice = await this.prisma.invoice.findFirst({
       where: { id: invoiceId, companyId },
       include: { client: true, company: true },

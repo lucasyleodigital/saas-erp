@@ -4,13 +4,38 @@ import {
   BadRequestException,
   ConflictException,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { randomUUID } from "crypto";
 import Stripe from "stripe";
 import { PrismaService } from "../../database/prisma.service";
 
 @Injectable()
 export class PortalService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private config: ConfigService,
+  ) {}
+
+  // Prevents open-redirect: successUrl/cancelUrl come from an unauthenticated,
+  // token-gated public endpoint. Reject anything that isn't our own frontend.
+  private assertOwnOrigin(url: string): void {
+    const clientUrl = this.config.get<string>("CLIENT_URL", "http://localhost:3000");
+    const allowedOrigins = new Set([new URL(clientUrl).origin]);
+    if (clientUrl.includes("youwhole.com")) {
+      allowedOrigins.add("https://www.youwhole.com");
+      allowedOrigins.add("https://youwhole.com");
+      allowedOrigins.add("https://saas-erp-pi.vercel.app");
+    }
+    let origin: string;
+    try {
+      origin = new URL(url).origin;
+    } catch {
+      throw new BadRequestException("URL de redirección no válida");
+    }
+    if (!allowedOrigins.has(origin)) {
+      throw new BadRequestException("URL de redirección no permitida");
+    }
+  }
 
   private getStripe(): Stripe {
     const key = process.env.STRIPE_SECRET_KEY;
@@ -120,6 +145,9 @@ export class PortalService {
     successUrl: string,
     cancelUrl: string
   ) {
+    this.assertOwnOrigin(successUrl);
+    this.assertOwnOrigin(cancelUrl);
+
     const client = await this.prisma.client.findUnique({ where: { portalToken: token } });
     if (!client) throw new NotFoundException("Portal no encontrado");
 

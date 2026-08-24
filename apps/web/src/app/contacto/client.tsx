@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Mail, Wrench, Phone, Clock, MapPin, CheckCircle } from "lucide-react";
 import { MarketingFooter } from "@/components/marketing/footer";
 import { trackEvent } from "@/lib/analytics";
+import { api } from "@/lib/api";
 
 const CONTACT_INFO = [
   {
@@ -39,17 +40,9 @@ export function ContactoClient() {
     e.preventDefault();
     setStatus("sending");
     try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      if (res.ok) {
-        trackEvent("generate_lead", { form_name: "contacto" });
-        setStatus("ok");
-      } else {
-        setStatus("error");
-      }
+      await api.post("/contact", form);
+      trackEvent("generate_lead", { form_name: "contacto" });
+      setStatus("ok");
     } catch {
       setStatus("error");
     }

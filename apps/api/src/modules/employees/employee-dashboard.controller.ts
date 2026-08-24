@@ -4,6 +4,9 @@ import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
 import { PrismaService } from "../../database/prisma.service";
 import { TimeEntriesService } from "./time-entries.service";
+import { RequestLeaveDto } from "./dto/request-leave.dto";
+import { ClockInDto } from "./dto/clock-in.dto";
+import { ClockOutDto } from "./dto/clock-out.dto";
 import type { JwtPayload } from "@saas/types";
 
 @ApiTags("Employee Dashboard")
@@ -106,7 +109,7 @@ export class EmployeeDashboardController {
   }
 
   @Post("leaves")
-  async requestLeave(@CurrentUser() u: JwtPayload, @Body() body: { type: string; startDate: string; endDate: string; reason?: string }) {
+  async requestLeave(@CurrentUser() u: JwtPayload, @Body() body: RequestLeaveDto) {
     const emp = await this.getEmployeeId(u);
     const start = new Date(body.startDate);
     const end = new Date(body.endDate);
@@ -140,7 +143,7 @@ export class EmployeeDashboardController {
   }
 
   @Post("clock-in")
-  async clockIn(@CurrentUser() u: JwtPayload, @Body() body: { latitude?: number; longitude?: number }) {
+  async clockIn(@CurrentUser() u: JwtPayload, @Body() body: ClockInDto) {
     const emp = await this.getEmployeeId(u);
     return this.timeEntries.clockIn(u.companyId, emp.id, {
       latitude: body.latitude,
@@ -150,7 +153,7 @@ export class EmployeeDashboardController {
   }
 
   @Post("clock-out")
-  async clockOut(@CurrentUser() u: JwtPayload, @Body() body: { breakMinutes?: number; latitude?: number; longitude?: number }) {
+  async clockOut(@CurrentUser() u: JwtPayload, @Body() body: ClockOutDto) {
     const emp = await this.getEmployeeId(u);
     return this.timeEntries.clockOut(u.companyId, emp.id, {
       breakMinutes: body.breakMinutes,

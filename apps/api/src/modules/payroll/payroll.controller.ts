@@ -6,6 +6,9 @@ import { Response } from "express";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { PayrollService } from "./payroll.service";
 import { ForbiddenException } from "@nestjs/common";
+import { GeneratePayrollDto } from "./dto/generate-payroll.dto";
+import { UpdatePayrollDto } from "./dto/update-payroll.dto";
+import { MarkPaidDto } from "./dto/mark-paid.dto";
 
 function requireAdminOrOwner(role: string) {
   if (role !== "OWNER" && role !== "ADMIN" && role !== "ACCOUNTANT" && role !== "SUPER_ADMIN") {
@@ -93,7 +96,7 @@ export class PayrollController {
   @HttpCode(201)
   generate(
     @Req() req: any,
-    @Body() dto: { year?: number; month?: number },
+    @Body() dto: GeneratePayrollDto,
   ) {
     requireAdminOrOwner(req.user.role);
     const now = new Date();
@@ -114,13 +117,7 @@ export class PayrollController {
   update(
     @Req() req: any,
     @Param("id") id: string,
-    @Body() dto: {
-      overtimePay?: number;
-      bonuses?: number;
-      otherDeductions?: number;
-      irpfRate?: number;
-      notes?: string;
-    },
+    @Body() dto: UpdatePayrollDto,
   ) {
     requireAdminOrOwner(req.user.role);
     return this.service.update(req.user.companyId, id, dto);
@@ -138,7 +135,7 @@ export class PayrollController {
   markPaid(
     @Req() req: any,
     @Param("id") id: string,
-    @Body() dto: { paymentDate?: string },
+    @Body() dto: MarkPaidDto,
   ) {
     requireAdminOrOwner(req.user.role);
     return this.service.markPaid(req.user.companyId, id, dto.paymentDate);

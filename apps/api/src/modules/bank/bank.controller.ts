@@ -7,6 +7,7 @@ import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
 import { BankService } from "./bank.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
+import { CreateBankAccountDto } from "./dto/create-bank-account.dto";
 import type { JwtPayload } from "@saas/types";
 
 @ApiTags("Bank")
@@ -22,7 +23,7 @@ export class BankController {
   }
 
   @Post("accounts")
-  createAccount(@CurrentUser() u: JwtPayload, @Body() body: { name: string; iban?: string; bic?: string }) {
+  createAccount(@CurrentUser() u: JwtPayload, @Body() body: CreateBankAccountDto) {
     return this.bankService.createAccount(u.companyId, body);
   }
 

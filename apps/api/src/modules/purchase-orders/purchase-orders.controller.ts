@@ -3,6 +3,7 @@ import {
 } from "@nestjs/common";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { PurchaseOrdersService } from "./purchase-orders.service";
+import { ReceiveItemsDto } from "./dto/receive-items.dto";
 
 @Controller("purchase-orders")
 @UseGuards(JwtAuthGuard)
@@ -51,7 +52,7 @@ export class PurchaseOrdersController {
   receive(
     @Req() req: any,
     @Param("id") id: string,
-    @Body() dto: { items: { itemId: string; receivedQty: number }[] },
+    @Body() dto: ReceiveItemsDto,
   ) {
     return this.service.receiveItems(req.user.companyId, id, dto.items);
   }

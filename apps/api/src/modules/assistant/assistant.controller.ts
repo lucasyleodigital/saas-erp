@@ -3,6 +3,7 @@ import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
 import { AssistantService } from "./assistant.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
+import { ChatDto } from "./dto/chat.dto";
 import type { JwtPayload } from "@saas/types";
 
 @ApiTags("Assistant")
@@ -15,7 +16,7 @@ export class AssistantController {
   @Post("chat")
   chat(
     @CurrentUser() u: JwtPayload,
-    @Body() body: { message: string },
+    @Body() body: ChatDto,
   ) {
     return this.assistantService.chat(u.companyId, body.message);
   }

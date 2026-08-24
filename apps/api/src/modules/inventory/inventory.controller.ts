@@ -8,6 +8,8 @@ import { AddMovementDto } from "./dto/add-movement.dto";
 import { TransferStockDto } from "./dto/transfer-stock.dto";
 import { CreateWarehouseDto } from "./dto/create-warehouse.dto";
 import { UpdateWarehouseDto } from "./dto/update-warehouse.dto";
+import { SetMinStockDto } from "./dto/set-min-stock.dto";
+import { PhysicalInventoryDto } from "./dto/physical-inventory.dto";
 import type { JwtPayload } from "@saas/types";
 
 @UseGuards(JwtAuthGuard)
@@ -49,7 +51,7 @@ export class InventoryController {
   setMinStock(
     @CurrentUser() user: JwtPayload,
     @Param("productId") productId: string,
-    @Body() body: { minStock: number | null },
+    @Body() body: SetMinStockDto,
   ) {
     return this.service.setMinStock(user.companyId, productId, body.minStock);
   }
@@ -74,7 +76,7 @@ export class InventoryController {
 
   @Post("physical")
   @HttpCode(200)
-  physicalInventory(@CurrentUser() user: JwtPayload, @Body() body: { items: any[] }) {
+  physicalInventory(@CurrentUser() user: JwtPayload, @Body() body: PhysicalInventoryDto) {
     return this.service.physicalInventory(user.companyId, body.items);
   }
 

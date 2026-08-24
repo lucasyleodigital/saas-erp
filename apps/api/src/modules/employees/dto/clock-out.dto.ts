@@ -1,0 +1,25 @@
+import { IsNumber, IsOptional, Min, Max } from "class-validator";
+import { Type } from "class-transformer";
+
+export class ClockOutDto {
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(1440) // max minutes in a day
+  @Type(() => Number)
+  breakMinutes?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(-90)
+  @Max(90)
+  @Type(() => Number)
+  latitude?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(-180)
+  @Max(180)
+  @Type(() => Number)
+  longitude?: number;
+}

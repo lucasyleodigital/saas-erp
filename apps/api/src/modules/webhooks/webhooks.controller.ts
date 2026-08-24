@@ -3,6 +3,7 @@ import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
 import { WebhooksService } from "./webhooks.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
+import { SaveEndpointsDto } from "./dto/save-endpoints.dto";
 import type { JwtPayload } from "@saas/types";
 
 @ApiTags("Webhooks")
@@ -18,7 +19,7 @@ export class WebhooksController {
   }
 
   @Put()
-  saveEndpoints(@CurrentUser() u: JwtPayload, @Body() body: { webhooks: Array<{ url: string; events: string[]; active: boolean }> }) {
+  saveEndpoints(@CurrentUser() u: JwtPayload, @Body() body: SaveEndpointsDto) {
     return this.svc.saveEndpoints(u.companyId, body.webhooks);
   }
 

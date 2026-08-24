@@ -15,6 +15,8 @@ import { CompaniesService } from "./companies.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
 import { UpdateCompanyDto } from "./dto/update-company.dto";
+import { InviteMemberDto } from "./dto/invite-member.dto";
+import { UpdateMemberRoleDto } from "./dto/update-member-role.dto";
 import type { JwtPayload } from "@saas/types";
 
 function requireAdminOrOwner(role: string) {
@@ -53,7 +55,7 @@ export class CompaniesController {
   }
 
   @Post("invite")
-  inviteMember(@CurrentUser() user: JwtPayload, @Body() body: { email: string; role: string }) {
+  inviteMember(@CurrentUser() user: JwtPayload, @Body() body: InviteMemberDto) {
     requireAdminOrOwner(user.role);
     return this.companiesService.inviteMember(user.companyId, user.sub, body.email, body.role);
   }
@@ -62,7 +64,7 @@ export class CompaniesController {
   updateRole(
     @CurrentUser() user: JwtPayload,
     @Param("id") id: string,
-    @Body() body: { role: string },
+    @Body() body: UpdateMemberRoleDto,
   ) {
     requireAdminOrOwner(user.role);
     return this.companiesService.updateMemberRole(user.companyId, id, body.role, user.role);

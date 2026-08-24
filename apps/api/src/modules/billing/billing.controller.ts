@@ -12,6 +12,7 @@ import { Request } from "express";
 import { BillingService } from "./billing.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
+import { CheckoutDto } from "./dto/checkout.dto";
 import type { JwtPayload } from "@saas/types";
 
 @ApiTags("Billing")
@@ -24,12 +25,7 @@ export class BillingController {
   @UseGuards(JwtAuthGuard)
   checkout(
     @CurrentUser() user: JwtPayload,
-    @Body()
-    body: {
-      plan: "STARTER" | "PRO" | "ENTERPRISE";
-      successUrl: string;
-      cancelUrl: string;
-    }
+    @Body() body: CheckoutDto
   ) {
     return this.billingService.createCheckoutSession(
       user.companyId,

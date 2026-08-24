@@ -66,6 +66,24 @@ class EnvironmentVariables {
   @IsString()
   @IsOptional()
   AEAT_ENV?: string = "test";
+
+  // Used by fiscal.service.ts's AI-powered expense/receipt scanner (analyzeExpense).
+  // All optional — the feature degrades gracefully when unset.
+  @IsString()
+  @IsOptional()
+  SUPABASE_URL?: string;
+
+  @IsString()
+  @IsOptional()
+  SUPABASE_SERVICE_KEY?: string;
+
+  @IsString()
+  @IsOptional()
+  CLAUDE_API_KEY?: string;
+
+  @IsString()
+  @IsOptional()
+  NVIDIA_API_KEY?: string;
 }
 
 export function validateEnv(config: Record<string, unknown>) {

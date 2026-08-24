@@ -3,6 +3,9 @@ import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
 import { TimeEntriesService } from "./time-entries.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
+import { TimeEntryClockInDto } from "./dto/time-entry-clock-in.dto";
+import { TimeEntryClockOutDto } from "./dto/time-entry-clock-out.dto";
+import { ClockByQrDto } from "./dto/clock-by-qr.dto";
 import type { JwtPayload } from "@saas/types";
 
 @ApiTags("Time Entries")
@@ -23,12 +26,12 @@ export class TimeEntriesController {
   }
 
   @Post("clock-in")
-  clockIn(@CurrentUser() u: JwtPayload, @Body() body: { employeeId: string; projectId?: string; latitude?: number; longitude?: number; method?: string }) {
+  clockIn(@CurrentUser() u: JwtPayload, @Body() body: TimeEntryClockInDto) {
     return this.svc.clockIn(u.companyId, body.employeeId, body);
   }
 
   @Post("clock-out")
-  clockOut(@CurrentUser() u: JwtPayload, @Body() body: { employeeId: string; breakMinutes?: number; latitude?: number; longitude?: number }) {
+  clockOut(@CurrentUser() u: JwtPayload, @Body() body: TimeEntryClockOutDto) {
     return this.svc.clockOut(u.companyId, body.employeeId, body);
   }
 
@@ -63,7 +66,7 @@ export class TimeEntriesController {
   }
 
   @Post("clock-qr")
-  clockByQr(@Body() body: { token: string; employeeId: string; action: "in" | "out"; latitude?: number; longitude?: number }) {
+  clockByQr(@Body() body: ClockByQrDto) {
     return this.svc.clockByQr(body);
   }
 

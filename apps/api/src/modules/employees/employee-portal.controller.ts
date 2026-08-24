@@ -2,6 +2,8 @@ import { Controller, Get, Post, Param, Body, NotFoundException } from "@nestjs/c
 import { ApiTags } from "@nestjs/swagger";
 import { PrismaService } from "../../database/prisma.service";
 import { TimeEntriesService } from "./time-entries.service";
+import { ClockInDto } from "./dto/clock-in.dto";
+import { ClockOutDto } from "./dto/clock-out.dto";
 
 @ApiTags("Employee Portal")
 @Controller("employee-portal")
@@ -77,7 +79,7 @@ export class EmployeePortalController {
   }
 
   @Post(":token/clock-in")
-  async clockIn(@Param("token") token: string, @Body() body: { latitude?: number; longitude?: number }) {
+  async clockIn(@Param("token") token: string, @Body() body: ClockInDto) {
     const employee = await this.findEmployee(token);
     return this.timeEntries.clockIn(employee.companyId, employee.id, {
       latitude: body.latitude,
@@ -87,7 +89,7 @@ export class EmployeePortalController {
   }
 
   @Post(":token/clock-out")
-  async clockOut(@Param("token") token: string, @Body() body: { breakMinutes?: number; latitude?: number; longitude?: number }) {
+  async clockOut(@Param("token") token: string, @Body() body: ClockOutDto) {
     const employee = await this.findEmployee(token);
     return this.timeEntries.clockOut(employee.companyId, employee.id, {
       breakMinutes: body.breakMinutes,
