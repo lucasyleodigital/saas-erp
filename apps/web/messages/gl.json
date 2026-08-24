@@ -2158,7 +2158,7 @@
   "marketing": {
     "seo": {
       "title": "YouWhole — ERP para autónomos e pemes españolas",
-      "description": "ERP creado por autónomos para autónomos e pemes. Facturación con VeriFactu, IRPF automático, Modelo 130/303, CRM, contabilidade e nóminas. 14 días gratis, sen tarxeta."
+      "description": "ERP creado por autonomos para autonomos e pemes. VeriFactu, IRPF automatico, Modelo 130/303, CRM e contabilidade. 14 dias gratis."
     },
     "nav": {
       "features": "Funcionalidades",
@@ -2588,7 +2588,7 @@
     "erpAutonomos": {
       "seo": {
         "title": "ERP para Autónomos en España — YouWhole",
-        "description": "O ERP deseñado por autónomos para autónomos. Facturación con VeriFactu, IRPF automático, Modelo 130/303, contabilidade PGC e CRM. Sen permanencia. Desde 29 EUR/mes.",
+        "description": "O ERP deseñado por autonomos para autonomos. VeriFactu, IRPF automatico, Modelo 130/303 e contabilidade PGC. Desde 29 EUR/mes.",
         "ogTitle": "ERP para Autónomos en España — YouWhole",
         "ogDescription": "Deseñado por autónomos para autónomos. VeriFactu, IRPF, Modelo 130/303 e CRM nunha soa plataforma."
       },
@@ -2702,7 +2702,7 @@
     "facturacionPymes": {
       "seo": {
         "title": "Software de Facturación para Pemes — YouWhole",
-        "description": "Software de facturación para pemes españolas con VeriFactu certificado, contabilidade PGC, nóminas, CRM e xestión de proxectos. Todo en un. Desde 29 EUR/mes sen permanencia.",
+        "description": "Software de facturacion para pemes con VeriFactu, contabilidade PGC, nominas e CRM. Todo en un. Desde 29 EUR/mes sen permanencia.",
         "ogTitle": "Software de Facturación para Pemes — YouWhole",
         "ogDescription": "Todo o que precisa a túa peme: facturación VeriFactu, nóminas, CRM, contabilidade PGC e máis. Desde 29 EUR/mes."
       },
@@ -2780,7 +2780,7 @@
     "verifactu": {
       "seo": {
         "title": "Software VeriFactu Certificado AEAT — YouWhole",
-        "description": "YouWhole é un software de facturación certificado VeriFactu pola Axencia Tributaria. Cumpre coa obriga legal desde o primeiro día. Incluído en todos os plans, mesmo o gratuíto.",
+        "description": "Software certificado VeriFactu pola AEAT. Cumpre a obriga legal desde o primeiro dia, incluido en todos os plans, mesmo o gratuito.",
         "ogTitle": "Software VeriFactu Certificado AEAT — YouWhole",
         "ogDescription": "Cumpre coa obriga VeriFactu desde o primeiro día. Incluído en todos os plans de YouWhole."
       },
@@ -2846,7 +2846,7 @@
     "holded": {
       "seo": {
         "title": "Alternativa a Holded para Autónomos e Pemes — YouWhole",
-        "description": "Buscas unha alternativa a Holded máis completa e asequible? YouWhole inclúe VeriFactu certificado, IRPF automático, Modelo 130/303 e soporte en galego. Desde 29 EUR/mes.",
+        "description": "Alternativa a Holded mais completa e asequible. VeriFactu certificado, IRPF automatico e Modelo 130/303 incluidos. Desde 29 EUR/mes.",
         "ogTitle": "Alternativa a Holded — YouWhole",
         "ogDescription": "Máis completo que Holded para o mercado español. VeriFactu, IRPF, Modelo 130/303 e soporte nativo en galego e español."
       },
@@ -2953,7 +2953,7 @@
     "sage": {
       "seo": {
         "title": "Alternativa a Sage para Autónomos e Pemes — YouWhole",
-        "description": "Sage é demasiado caro ou complexo para o teu negocio? YouWhole é a alternativa moderna: VeriFactu certificado, IRPF automático, sen instalación e desde 29 EUR/mes.",
+        "description": "Alternativa moderna a Sage: VeriFactu certificado, IRPF automatico, sen instalacion. Desde 29 EUR/mes, sen permanencia.",
         "ogTitle": "Alternativa a Sage para Autónomos — YouWhole",
         "ogDescription": "Máis sinxelo e asequible que Sage. VeriFactu incluído, sen instalación, desde 29 EUR/mes."
       },
@@ -3095,7 +3095,7 @@
     "modelo130": {
       "seo": {
         "title": "Modelo 130 Online para Autónomos — YouWhole",
-        "description": "Calcula e prepara o Modelo 130 de forma automática con YouWhole. Suma ingresos, gastos e retencións do trimestre sen erros. Gratis para autónomos.",
+        "description": "Calcula e prepara o Modelo 130 automaticamente con YouWhole. Suma ingresos, gastos e retencions do trimestre sen erros. Gratis.",
         "ogTitle": "Modelo 130 Online para Autónomos — YouWhole",
         "ogDescription": "Calcula o Modelo 130 automaticamente. Sen erros, sen cálculos manuais. Incluído en todos os plans."
       },
@@ -3188,7 +3188,7 @@
     "rrhh": {
       "seo": {
         "title": "Software de Recursos Humanos para Pemes — YouWhole",
-        "description": "Xestiona empregados, nóminas, contratos, vacacións e control horario nunha soa plataforma. Software RRHH para pemes español, sen complicacións. Desde 29 EUR/mes.",
+        "description": "Xestiona empregados, nominas, contratos, vacacions e control horario nunha plataforma. Software RRHH para pemes. Desde 29 EUR/mes.",
         "ogTitle": "Software RRHH para Pemes — YouWhole",
         "ogDescription": "Nóminas, contratos, vacacións e control horario integrados coa túa facturación. Todo en un."
       },
@@ -3256,7 +3256,7 @@
     "controlHorario": {
       "seo": {
         "title": "Software de Control Horario para Empresas — YouWhole",
-        "description": "Control horario obrigatorio para empresas españolas. Fichaxe por GPS, QR ou web. Exportación para inspección de traballo. Integrado con nóminas e proxectos. Desde 29 EUR/mes.",
+        "description": "Control horario obrigatorio para empresas espanolas. Fichaxe por GPS, QR ou web. Integrado con nominas e proxectos. Desde 29 EUR/mes.",
         "ogTitle": "Software Control Horario Empresas — YouWhole",
         "ogDescription": "Fichaxe GPS, QR e web. Cumpre o RD 8/2019 sen complicacións. Integrado con nóminas e proxectos."
       },
@@ -3336,7 +3336,7 @@
     "almacen": {
       "seo": {
         "title": "Software de Almacén e Inventario para Pemes — YouWhole",
-        "description": "Controla o teu stock en tempo real, xestiona provedores e xera pedidos automáticos. Software de almacén e inventario integrado con facturación. Desde 29 EUR/mes.",
+        "description": "Controla o teu stock en tempo real, xestiona provedores e xera pedidos automaticos. Integrado con facturacion. Desde 29 EUR/mes.",
         "ogTitle": "Software Almacén e Inventario Pemes — YouWhole",
         "ogDescription": "Stock en tempo real, pedidos automáticos e xestión de provedores integrados coa túa facturación."
       },
@@ -3408,7 +3408,7 @@
     "crm": {
       "seo": {
         "title": "Software CRM para Pemes España — YouWhole",
-        "description": "CRM integrado con facturación para pemes españolas. Xestiona clientes, leads, pipeline de vendas e orzamentos nunha soa plataforma. Sen subscricións extra. Desde 29 EUR/mes.",
+        "description": "CRM integrado con facturacion para pemes. Clientes, leads, pipeline de vendas e orzamentos nunha plataforma. Desde 29 EUR/mes.",
         "ogTitle": "Software CRM para Pemes — YouWhole",
         "ogDescription": "Xestiona clientes, leads e vendas integrado coa túa facturación. Sen ferramentas externas."
       },
@@ -3480,7 +3480,7 @@
     "contabilidad": {
       "seo": {
         "title": "Software de Contabilidade para Pemes España — YouWhole",
-        "description": "Contabilidade automática segundo o PGC español. Asentos automáticos, balance, conta de perdas e ganancias, e IVE integrado con facturación. Para pemes e autónomos. Desde 29 EUR/mes.",
+        "description": "Contabilidade automatica segundo o PGC espanol. Asentos automaticos, balance e perdas e ganancias integrados con facturacion.",
         "ogTitle": "Software Contabilidade Pemes — YouWhole",
         "ogDescription": "Asentos automáticos segundo o PGC español. Integrado con facturación VeriFactu. Sen coñecementos contables."
       },
@@ -3585,7 +3585,7 @@
     "nominas": {
       "seo": {
         "title": "Software de Nóminas para Pemes España — YouWhole",
-        "description": "Xera nóminas automáticas con IRPF e Seguridade Social calculados. Software de nóminas para pemes español integrado con control horario e contabilidade. Desde 29 EUR/mes.",
+        "description": "Xera nominas automaticas con IRPF e Seguridade Social calculados. Integrado con control horario e contabilidade. Desde 29 EUR/mes.",
         "ogTitle": "Software Nóminas Pemes — YouWhole",
         "ogDescription": "Nóminas automáticas con IRPF e SS calculados. Integrado con control horario e contabilidade."
       },

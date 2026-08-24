@@ -2243,7 +2243,7 @@
   "marketing": {
     "seo": {
       "title": "YouWhole — Espainiako autonomo eta ETEentzako ERPa",
-      "description": "Autonomoek autonomoentzat sortutako ERPa. VeriFactu fakturazioa, IRPF automatikoa, 130/303 eredua, CRM, kontabilitatea eta nominak. 14 egun doan, txartelik gabe."
+      "description": "Autonomoek autonomoentzat sortutako ERPa. VeriFactu, IRPF automatikoa, 130/303 eredua, CRM eta kontabilitatea. 14 egun doan, txartelik gabe."
     },
     "nav": {
       "features": "Funtzionalitateak",
@@ -2673,7 +2673,7 @@
     "erpAutonomos": {
       "seo": {
         "title": "Espainiako Autonomoentzako ERPa — YouWhole",
-        "description": "Autonomoek autonomoentzat diseinatutako ERPa. VeriFactu fakturazioa, IRPF automatikoa, 130/303 eredua, PGC kontabilitatea eta CRM. Iraunkortasunik gabe. 29 EUR/hilean hasita.",
+        "description": "Autonomoek autonomoentzat diseinatutako ERPa. VeriFactu, IRPF automatikoa, 130/303 eredua eta PGC kontabilitatea. 29 EUR/hilean hasita.",
         "ogTitle": "Espainiako Autonomoentzako ERPa — YouWhole",
         "ogDescription": "Autonomoek autonomoentzat diseinatua. VeriFactu, IRPF, 130/303 eredua eta CRM plataforma bakarrean."
       },
@@ -2787,7 +2787,7 @@
     "facturacionPymes": {
       "seo": {
         "title": "ETEentzako Fakturazio Softwarea — YouWhole",
-        "description": "Espainiako ETEentzako fakturazio-softwarea, VeriFactu ziurtatuarekin, PGC kontabilitatearekin, nominekin, CRMarekin eta proiektu-kudeaketarekin. Dena batean. 29 EUR/hilean hasita, iraunkortasunik gabe.",
+        "description": "ETEentzako fakturazio softwarea VeriFactu, PGC kontabilitatea, nominak eta CRM-arekin. Dena batean. 29 EUR/hilean hasita.",
         "ogTitle": "ETEentzako Fakturazio Softwarea — YouWhole",
         "ogDescription": "Zure ETEak behar duen guztia: VeriFactu fakturazioa, nominak, CRM, PGC kontabilitatea eta gehiago. 29 EUR/hilean hasita."
       },
@@ -2865,7 +2865,7 @@
     "verifactu": {
       "seo": {
         "title": "AEAT Ziurtatutako VeriFactu Softwarea — YouWhole",
-        "description": "YouWhole Zerga Agentziak VeriFactu ziurtatutako fakturazio-softwarea da. Bete lehen egunetik betebehar legala. Plan guztietan barne, doakoa barne.",
+        "description": "AEATek ziurtatutako VeriFactu softwarea. Bete betebehar legala lehen egunetik, plan guztietan barne, doakoa barne.",
         "ogTitle": "AEAT Ziurtatutako VeriFactu Softwarea — YouWhole",
         "ogDescription": "Bete VeriFactu betebeharra lehen egunetik. YouWholeren plan guztietan barne."
       },
@@ -2931,7 +2931,7 @@
     "holded": {
       "seo": {
         "title": "Holdedren Alternatiba Autonomo eta ETEentzat — YouWhole",
-        "description": "Holdedren alternatiba osatuago eta merkeago bat bilatzen? YouWholek AEAT ziurtatutako VeriFactu, IRPF automatikoa, 130/303 eredua eta euskarazko laguntza ditu. 29 EUR/hilean hasita.",
+        "description": "Holdedren alternatiba osatuago eta merkeagoa. VeriFactu ziurtatua, IRPF automatikoa eta 130/303 eredua barne. 29 EUR/hilean hasita.",
         "ogTitle": "Holdedren Alternatiba — YouWhole",
         "ogDescription": "Holded baino osatuagoa Espainiako merkaturako. VeriFactu, IRPF, 130/303 eredua eta euskara/gaztelaniazko laguntza jatorrizkoa."
       },
@@ -3038,7 +3038,7 @@
     "sage": {
       "seo": {
         "title": "Sageren Alternatiba Autonomo eta ETEentzat — YouWhole",
-        "description": "Sage garestiegia edo konplexuegia al da zure negoziorako? YouWhole alternatiba modernoa da: VeriFactu ziurtatua, IRPF automatikoa, instalaziorik gabe eta 29 EUR/hilean hasita.",
+        "description": "Sageren alternatiba modernoa: VeriFactu ziurtatua, IRPF automatikoa, instalaziorik gabe. 29 EUR/hilean hasita, iraunkortasunik gabe.",
         "ogTitle": "Sageren Alternatiba Autonomoentzat — YouWhole",
         "ogDescription": "Sage baino errazagoa eta merkeagoa. VeriFactu barne, instalaziorik gabe, 29 EUR/hilean hasita."
       },
@@ -3180,7 +3180,7 @@
     "modelo130": {
       "seo": {
         "title": "130 Eredua Online Autonomoentzat — YouWhole",
-        "description": "Kalkulatu eta prestatu 130 eredua automatikoki YouWholerekin. Batu hiruhileko sarrerak, gastuak eta atxikipenak errorerik gabe. Doan autonomoentzat.",
+        "description": "Kalkulatu eta prestatu 130 eredua automatikoki YouWholerekin. Batu hiruhileko sarrerak eta gastuak errorerik gabe. Doan.",
         "ogTitle": "130 Eredua Online Autonomoentzat — YouWhole",
         "ogDescription": "Kalkulatu 130 eredua automatikoki. Errorerik gabe, eskuzko kalkulurik gabe. Plan guztietan barne."
       },
@@ -3273,7 +3273,7 @@
     "rrhh": {
       "seo": {
         "title": "ETEentzako Giza Baliabideen Softwarea — YouWhole",
-        "description": "Kudeatu langileak, nominak, kontratuak, oporrak eta ordutegi-kontrola plataforma bakarrean. Espainiako ETEentzako giza baliabideen softwarea, konplikaziorik gabe. 29 EUR/hilean hasita.",
+        "description": "Kudeatu langileak, nominak, kontratuak, oporrak eta ordutegi-kontrola plataforma bakarrean. ETEentzako RRHH softwarea. 29 EUR/hilean.",
         "ogTitle": "ETEentzako Giza Baliabideen Softwarea — YouWhole",
         "ogDescription": "Nominak, kontratuak, oporrak eta ordutegi-kontrola zure fakturazioarekin integratuta. Dena batean."
       },
@@ -3341,7 +3341,7 @@
     "controlHorario": {
       "seo": {
         "title": "Enpresentzako Ordutegi-kontrol Softwarea — YouWhole",
-        "description": "Espainiako enpresentzako ordutegi-kontrol nahitaezkoa. GPS, QR edo web bidezko fitxaketa. Lan Ikuskaritzarako esportazioa. Nomina eta proiektuekin integratua. 29 EUR/hilean hasita.",
+        "description": "Espainiako enpresentzako ordutegi-kontrol nahitaezkoa. GPS, QR edo web fitxaketa. Nominekin integratua. 29 EUR/hilean hasita.",
         "ogTitle": "Enpresentzako Ordutegi-kontrol Softwarea — YouWhole",
         "ogDescription": "GPS, QR eta web bidezko fitxaketa. Bete 8/2019 EDa konplikaziorik gabe. Nomina eta proiektuekin integratua."
       },
@@ -3421,7 +3421,7 @@
     "almacen": {
       "seo": {
         "title": "ETEentzako Biltegi eta Inbentario Softwarea — YouWhole",
-        "description": "Kontrolatu zure stocka denbora errealean, kudeatu hornitzaileak eta sortu eskaera automatikoak. Fakturazioarekin integratutako biltegi eta inbentario softwarea. 29 EUR/hilean hasita.",
+        "description": "Kontrolatu zure stocka denbora errealean, kudeatu hornitzaileak eta sortu eskaera automatikoak. Fakturazioarekin integratua.",
         "ogTitle": "ETEentzako Biltegi eta Inbentario Softwarea — YouWhole",
         "ogDescription": "Denbora errealeko stocka, eskaera automatikoak eta hornitzaile-kudeaketa zure fakturazioarekin integratuta."
       },
@@ -3493,7 +3493,7 @@
     "crm": {
       "seo": {
         "title": "ETEentzako CRM Softwarea Espainian — YouWhole",
-        "description": "Espainiako ETEentzako fakturazioarekin integratutako CRMa. Kudeatu bezeroak, leadak, salmenta-pipelinea eta aurrekontuak plataforma bakarrean. Aparteko harpidetzarik gabe. 29 EUR/hilean hasita.",
+        "description": "Fakturazioarekin integratutako CRMa ETEentzat. Bezeroak, leadak, salmenta-pipelinea eta aurrekontuak. 29 EUR/hilean hasita.",
         "ogTitle": "ETEentzako CRM Softwarea — YouWhole",
         "ogDescription": "Kudeatu bezeroak, leadak eta salmentak zure fakturazioarekin integratuta. Kanpoko tresnarik gabe."
       },
@@ -3565,7 +3565,7 @@
     "contabilidad": {
       "seo": {
         "title": "ETEentzako Kontabilitate Softwarea Espainian — YouWhole",
-        "description": "Kontabilitate automatikoa Espainiako PGCaren arabera. Asiento automatikoak, balantzea, galera eta irabazien kontua, eta BEZa fakturazioarekin integratuta. ETE eta autonomoentzat. 29 EUR/hilean hasita.",
+        "description": "Kontabilitate automatikoa Espainiako PGCaren arabera. Asiento automatikoak, balantzea eta fakturazioarekin integratua.",
         "ogTitle": "ETEentzako Kontabilitate Softwarea — YouWhole",
         "ogDescription": "Asiento automatikoak Espainiako PGCaren arabera. VeriFactu fakturazioarekin integratua. Kontabilitate-ezagutzarik gabe."
       },
@@ -3670,7 +3670,7 @@
     "nominas": {
       "seo": {
         "title": "ETEentzako Nomina Softwarea Espainian — YouWhole",
-        "description": "Sortu nomina automatikoak IRPF eta Gizarte Segurantza kalkulatuekin. Espainiako ETEentzako nomina-softwarea, ordutegi-kontrola eta kontabilitatearekin integratua. 29 EUR/hilean hasita.",
+        "description": "Sortu nomina automatikoak IRPF eta Gizarte Segurantza kalkulatuekin. Ordutegi-kontrolarekin integratua. 29 EUR/hilean hasita.",
         "ogTitle": "ETEentzako Nomina Softwarea — YouWhole",
         "ogDescription": "Nomina automatikoak IRPF eta GS kalkulatuekin. Ordutegi-kontrola eta kontabilitatearekin integratua."
       },

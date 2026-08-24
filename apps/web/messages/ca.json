@@ -2297,7 +2297,7 @@
   "marketing": {
     "seo": {
       "title": "YouWhole — ERP per a autònoms i pimes espanyoles",
-      "description": "ERP creat per autònoms per a autònoms i pimes. Facturació amb VeriFactu, IRPF automàtic, Model 130/303, CRM, comptabilitat i nòmines. 14 dies gratis, sense targeta."
+      "description": "ERP creat per autonoms per a autonoms i pimes. VeriFactu, IRPF automatic, Model 130/303, CRM i comptabilitat. 14 dies gratis, sense targeta."
     },
     "nav": {
       "features": "Funcionalitats",
@@ -2727,7 +2727,7 @@
     "erpAutonomos": {
       "seo": {
         "title": "ERP per a Autònoms a Espanya — YouWhole",
-        "description": "L'ERP dissenyat per autònoms per a autònoms. Facturació amb VeriFactu, IRPF automàtic, Model 130/303, comptabilitat PGC i CRM. Sense permanència. Des de 29 EUR/mes.",
+        "description": "L'ERP dissenyat per autonoms per a autonoms. VeriFactu, IRPF automatic, Model 130/303 i comptabilitat PGC. Sense permanencia. 29 EUR/mes.",
         "ogTitle": "ERP per a Autònoms a Espanya — YouWhole",
         "ogDescription": "Dissenyat per autònoms per a autònoms. VeriFactu, IRPF, Model 130/303 i CRM en una sola plataforma."
       },
@@ -2841,7 +2841,7 @@
     "facturacionPymes": {
       "seo": {
         "title": "Programari de Facturació per a Pimes — YouWhole",
-        "description": "Programari de facturació per a pimes espanyoles amb VeriFactu certificat, comptabilitat PGC, nòmines, CRM i gestió de projectes. Tot en un. Des de 29 EUR/mes sense permanència.",
+        "description": "Programari de facturacio per a pimes amb VeriFactu, comptabilitat PGC, nomines i CRM. Tot en un. Des de 29 EUR/mes sense permanencia.",
         "ogTitle": "Programari de Facturació per a Pimes — YouWhole",
         "ogDescription": "Tot el que necessita la teva pime: facturació VeriFactu, nòmines, CRM, comptabilitat PGC i més. Des de 29 EUR/mes."
       },
@@ -2919,7 +2919,7 @@
     "verifactu": {
       "seo": {
         "title": "Programari VeriFactu Certificat AEAT — YouWhole",
-        "description": "YouWhole és un programari de facturació certificat VeriFactu per l'Agència Tributària. Compleix amb l'obligació legal des del primer dia. Inclòs en tots els plans, fins i tot el gratuït.",
+        "description": "Programari certificat VeriFactu per l'AEAT. Compleix l'obligacio legal des del primer dia, inclos en tots els plans, fins i tot el gratuit.",
         "ogTitle": "Programari VeriFactu Certificat AEAT — YouWhole",
         "ogDescription": "Compleix amb l'obligació VeriFactu des del primer dia. Inclòs en tots els plans de YouWhole."
       },
@@ -2985,7 +2985,7 @@
     "holded": {
       "seo": {
         "title": "Alternativa a Holded per a Autònoms i Pimes — YouWhole",
-        "description": "Busques una alternativa a Holded més completa i assequible? YouWhole inclou VeriFactu certificat, IRPF automàtic, Model 130/303 i suport en català. Des de 29 EUR/mes.",
+        "description": "Alternativa a Holded mes completa i assequible. VeriFactu certificat, IRPF automatic i Model 130/303 inclosos. Des de 29 EUR/mes.",
         "ogTitle": "Alternativa a Holded — YouWhole",
         "ogDescription": "Més complet que Holded per al mercat espanyol. VeriFactu, IRPF, Model 130/303 i suport natiu en català i castellà."
       },
@@ -3092,7 +3092,7 @@
     "sage": {
       "seo": {
         "title": "Alternativa a Sage per a Autònoms i Pimes — YouWhole",
-        "description": "Sage és massa car o complex per al teu negoci? YouWhole és l'alternativa moderna: VeriFactu certificat, IRPF automàtic, sense instal·lació i des de 29 EUR/mes.",
+        "description": "Alternativa moderna a Sage: VeriFactu certificat, IRPF automatic, sense instal·lacio. Des de 29 EUR/mes, sense permanencia.",
         "ogTitle": "Alternativa a Sage per a Autònoms — YouWhole",
         "ogDescription": "Més senzill i assequible que Sage. VeriFactu inclòs, sense instal·lació, des de 29 EUR/mes."
       },
@@ -3234,7 +3234,7 @@
     "modelo130": {
       "seo": {
         "title": "Model 130 Online per a Autònoms — YouWhole",
-        "description": "Calcula i prepara el Model 130 de forma automàtica amb YouWhole. Suma ingressos, despeses i retencions del trimestre sense errors. Gratis per a autònoms.",
+        "description": "Calcula i prepara el Model 130 automaticament amb YouWhole. Suma ingressos, despeses i retencions del trimestre sense errors. Gratis.",
         "ogTitle": "Model 130 Online per a Autònoms — YouWhole",
         "ogDescription": "Calcula el Model 130 automàticament. Sense errors, sense càlculs manuals. Inclòs en tots els plans."
       },
@@ -3327,7 +3327,7 @@
     "rrhh": {
       "seo": {
         "title": "Programari de Recursos Humans per a Pimes — YouWhole",
-        "description": "Gestiona empleats, nòmines, contractes, vacances i control horari en una sola plataforma. Programari RRHH per a pimes espanyoles, sense complicacions. Des de 29 EUR/mes.",
+        "description": "Gestiona empleats, nomines, contractes, vacances i control horari en una plataforma. Programari RRHH per a pimes. Des de 29 EUR/mes.",
         "ogTitle": "Programari RRHH per a Pimes — YouWhole",
         "ogDescription": "Nòmines, contractes, vacances i control horari integrats amb la teva facturació. Tot en un."
       },
@@ -3395,7 +3395,7 @@
     "controlHorario": {
       "seo": {
         "title": "Programari de Control Horari per a Empreses — YouWhole",
-        "description": "Control horari obligatori per a empreses espanyoles. Fitxatge per GPS, QR o web. Exportació per a inspecció de treball. Integrat amb nòmines i projectes. Des de 29 EUR/mes.",
+        "description": "Control horari obligatori per a empreses espanyoles. Fitxatge per GPS, QR o web. Integrat amb nomines i projectes. Des de 29 EUR/mes.",
         "ogTitle": "Programari Control Horari Empreses — YouWhole",
         "ogDescription": "Fitxatge GPS, QR i web. Compleix el RD 8/2019 sense complicacions. Integrat amb nòmines i projectes."
       },
@@ -3475,7 +3475,7 @@
     "almacen": {
       "seo": {
         "title": "Programari de Magatzem i Inventari per a Pimes — YouWhole",
-        "description": "Controla el teu estoc en temps real, gestiona proveïdors i genera comandes automàtiques. Programari de magatzem i inventari integrat amb facturació. Des de 29 EUR/mes.",
+        "description": "Controla el teu estoc en temps real, gestiona proveidors i genera comandes automatiques. Integrat amb facturacio. Des de 29 EUR/mes.",
         "ogTitle": "Programari Magatzem i Inventari Pimes — YouWhole",
         "ogDescription": "Estoc en temps real, comandes automàtiques i gestió de proveïdors integrats amb la teva facturació."
       },
@@ -3547,7 +3547,7 @@
     "crm": {
       "seo": {
         "title": "Programari CRM per a Pimes Espanya — YouWhole",
-        "description": "CRM integrat amb facturació per a pimes espanyoles. Gestiona clients, leads, pipeline de vendes i pressupostos en una sola plataforma. Sense subscripcions extra. Des de 29 EUR/mes.",
+        "description": "CRM integrat amb facturacio per a pimes. Clients, leads, pipeline de vendes i pressupostos en una plataforma. Des de 29 EUR/mes.",
         "ogTitle": "Programari CRM per a Pimes — YouWhole",
         "ogDescription": "Gestiona clients, leads i vendes integrat amb la teva facturació. Sense eines externes."
       },
@@ -3619,7 +3619,7 @@
     "contabilidad": {
       "seo": {
         "title": "Programari de Comptabilitat per a Pimes Espanya — YouWhole",
-        "description": "Comptabilitat automàtica segons el PGC espanyol. Assentaments automàtics, balanç, compte de pèrdues i guanys, i IVA integrat amb facturació. Per a pimes i autònoms. Des de 29 EUR/mes.",
+        "description": "Comptabilitat automatica segons el PGC espanyol. Assentaments automatics, balanc i perdues i guanys integrats amb facturacio.",
         "ogTitle": "Programari Comptabilitat Pimes — YouWhole",
         "ogDescription": "Assentaments automàtics segons el PGC espanyol. Integrat amb facturació VeriFactu. Sense coneixements comptables."
       },
@@ -3724,7 +3724,7 @@
     "nominas": {
       "seo": {
         "title": "Programari de Nòmines per a Pimes Espanya — YouWhole",
-        "description": "Genera nòmines automàtiques amb IRPF i Seguretat Social calculats. Programari de nòmines per a pimes espanyoles integrat amb control horari i comptabilitat. Des de 29 EUR/mes.",
+        "description": "Genera nomines automatiques amb IRPF i Seguretat Social calculats. Integrat amb control horari i comptabilitat. Des de 29 EUR/mes.",
         "ogTitle": "Programari Nòmines Pimes — YouWhole",
         "ogDescription": "Nòmines automàtiques amb IRPF i SS calculats. Integrat amb control horari i comptabilitat."
       },

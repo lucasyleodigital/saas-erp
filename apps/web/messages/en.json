@@ -2298,7 +2298,7 @@
   "marketing": {
     "seo": {
       "title": "YouWhole — All-in-one ERP for Spanish freelancers and SMEs",
-      "description": "The ERP built by freelancers for freelancers and SMEs. VeriFactu invoicing, automatic withholding tax, tax forms 130/303, CRM, accounting and payroll. 14-day free trial, no card required."
+      "description": "The ERP built by freelancers for freelancers. VeriFactu, automatic withholding tax, tax forms 130/303, CRM and accounting. Free 14-day trial."
     },
     "nav": {
       "features": "Features",
@@ -2728,7 +2728,7 @@
     "erpAutonomos": {
       "seo": {
         "title": "ERP for Freelancers in Spain — YouWhole",
-        "description": "The ERP built by freelancers for freelancers. VeriFactu invoicing, automatic withholding tax, tax forms 130/303, Spanish GAAP accounting and CRM. No lock-in. From €29/month.",
+        "description": "The ERP built by freelancers for freelancers. VeriFactu, automatic withholding tax, tax forms 130/303, Spanish GAAP accounting. From 29 EUR/mo.",
         "ogTitle": "ERP for Freelancers in Spain — YouWhole",
         "ogDescription": "Built by freelancers, for freelancers. VeriFactu, withholding tax, tax forms 130/303 and CRM in a single platform."
       },
@@ -2842,7 +2842,7 @@
     "facturacionPymes": {
       "seo": {
         "title": "Invoicing Software for SMEs — YouWhole",
-        "description": "Invoicing software for Spanish SMEs with certified VeriFactu, Spanish GAAP accounting, payroll, CRM, and project management. All in one. From €29/month, no lock-in.",
+        "description": "Invoicing software for SMEs with certified VeriFactu, Spanish GAAP accounting, payroll and CRM. All in one. From 29 EUR/month, no lock-in.",
         "ogTitle": "Invoicing Software for SMEs — YouWhole",
         "ogDescription": "Everything your SME needs: VeriFactu invoicing, payroll, CRM, Spanish GAAP accounting, and more. From €29/month."
       },
@@ -2920,7 +2920,7 @@
     "verifactu": {
       "seo": {
         "title": "AEAT-Certified VeriFactu Software — YouWhole",
-        "description": "YouWhole is invoicing software certified for VeriFactu by the Spanish Tax Agency. Meets the legal requirement from day one. Included in every plan, even the free one.",
+        "description": "Invoicing software certified for VeriFactu by the Spanish Tax Agency. Meets the legal requirement from day one, included in every plan.",
         "ogTitle": "AEAT-Certified VeriFactu Software — YouWhole",
         "ogDescription": "Meets the VeriFactu requirement from day one. Included in every YouWhole plan."
       },
@@ -2986,7 +2986,7 @@
     "holded": {
       "seo": {
         "title": "Holded Alternative for Freelancers and SMEs — YouWhole",
-        "description": "Looking for a more complete, more affordable alternative to Holded? YouWhole includes certified VeriFactu, automatic withholding tax, tax forms 130/303, and support in English. From €29/month.",
+        "description": "A more complete, more affordable alternative to Holded. Certified VeriFactu, automatic withholding tax and tax forms 130/303. From 29 EUR/mo.",
         "ogTitle": "Holded Alternative — YouWhole",
         "ogDescription": "More complete than Holded for the Spanish market. VeriFactu, withholding tax, tax forms 130/303, and native support in English and Spanish."
       },
@@ -3093,7 +3093,7 @@
     "sage": {
       "seo": {
         "title": "Sage Alternative for Freelancers and SMEs — YouWhole",
-        "description": "Is Sage too expensive or too complex for your business? YouWhole is the modern alternative: certified VeriFactu, automatic withholding tax, no installation, from €29/month.",
+        "description": "A modern alternative to Sage: certified VeriFactu, automatic withholding tax, no installation. From 29 EUR/month, no lock-in.",
         "ogTitle": "Sage Alternative for Freelancers — YouWhole",
         "ogDescription": "Simpler and more affordable than Sage. VeriFactu included, no installation, from €29/month."
       },
@@ -3235,7 +3235,7 @@
     "modelo130": {
       "seo": {
         "title": "Tax Form 130 Online for Freelancers — YouWhole",
-        "description": "Calculate and prepare tax form 130 automatically with YouWhole. Adds up quarterly income, expenses, and withholdings with zero errors. Free for freelancers.",
+        "description": "Calculate and prepare tax form 130 automatically with YouWhole. Adds up quarterly income, expenses and withholdings, zero errors. Free.",
         "ogTitle": "Tax Form 130 Online for Freelancers — YouWhole",
         "ogDescription": "Calculate tax form 130 automatically. No errors, no manual math. Included in every plan."
       },
@@ -3328,7 +3328,7 @@
     "rrhh": {
       "seo": {
         "title": "HR Software for SMEs — YouWhole",
-        "description": "Manage employees, payroll, contracts, vacation, and time tracking in one platform. Spanish SME HR software, no complications. From €29/month.",
+        "description": "Manage employees, payroll, contracts, vacation and time tracking in one platform. HR software for SMEs. From 29 EUR/month.",
         "ogTitle": "HR Software for SMEs — YouWhole",
         "ogDescription": "Payroll, contracts, vacation, and time tracking integrated with your invoicing. All in one."
       },
@@ -3396,7 +3396,7 @@
     "controlHorario": {
       "seo": {
         "title": "Time Tracking Software for Businesses — YouWhole",
-        "description": "Mandatory time tracking for Spanish businesses. GPS, QR, or web clock-in. Export for labor inspections. Integrated with payroll and projects. From €29/month.",
+        "description": "Mandatory time tracking for Spanish businesses. GPS, QR or web clock-in. Integrated with payroll and projects. From 29 EUR/month.",
         "ogTitle": "Time Tracking Software for Businesses — YouWhole",
         "ogDescription": "GPS, QR, and web clock-in. Meets RD 8/2019 with no complications. Integrated with payroll and projects."
       },
@@ -3476,7 +3476,7 @@
     "almacen": {
       "seo": {
         "title": "Warehouse & Inventory Software for SMEs — YouWhole",
-        "description": "Track your stock in real time, manage suppliers, and generate automatic orders. Warehouse and inventory software integrated with invoicing. From €29/month.",
+        "description": "Track your stock in real time, manage suppliers and generate automatic orders. Integrated with invoicing. From 29 EUR/month.",
         "ogTitle": "Warehouse & Inventory Software for SMEs — YouWhole",
         "ogDescription": "Real-time stock, automatic orders, and supplier management integrated with your invoicing."
       },
@@ -3548,7 +3548,7 @@
     "crm": {
       "seo": {
         "title": "CRM Software for SMEs in Spain — YouWhole",
-        "description": "CRM integrated with invoicing for Spanish SMEs. Manage clients, leads, sales pipeline, and quotes in one platform. No extra subscriptions. From €29/month.",
+        "description": "CRM integrated with invoicing for SMEs. Clients, leads, sales pipeline and quotes in one platform. From 29 EUR/month.",
         "ogTitle": "CRM Software for SMEs — YouWhole",
         "ogDescription": "Manage clients, leads, and sales integrated with your invoicing. No external tools."
       },
@@ -3620,7 +3620,7 @@
     "contabilidad": {
       "seo": {
         "title": "Accounting Software for SMEs in Spain — YouWhole",
-        "description": "Automatic accounting under Spanish GAAP. Automatic entries, balance sheet, profit & loss statement, and VAT integrated with invoicing. For SMEs and freelancers. From €29/month.",
+        "description": "Automatic accounting under Spanish GAAP. Automatic entries, balance sheet and profit & loss integrated with invoicing.",
         "ogTitle": "Accounting Software for SMEs — YouWhole",
         "ogDescription": "Automatic entries under Spanish GAAP. Integrated with VeriFactu invoicing. No accounting knowledge required."
       },
@@ -3725,7 +3725,7 @@
     "nominas": {
       "seo": {
         "title": "Payroll Software for SMEs in Spain — YouWhole",
-        "description": "Generate automatic payroll with withholding tax and Social Security calculated. Spanish SME payroll software integrated with time tracking and accounting. From €29/month.",
+        "description": "Generate automatic payroll with withholding tax and Social Security calculated. Integrated with time tracking. From 29 EUR/month.",
         "ogTitle": "Payroll Software for SMEs — YouWhole",
         "ogDescription": "Automatic payroll with withholding tax and Social Security calculated. Integrated with time tracking and accounting."
       },
