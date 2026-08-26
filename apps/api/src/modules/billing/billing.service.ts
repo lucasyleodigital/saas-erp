@@ -100,7 +100,7 @@ export class BillingService {
     return { url: session.url };
   }
 
-  async createPortalSession(companyId: string, returnUrl: string) {
+  async createPortalSession(companyId: string, returnUrl: string, cancelSubscription?: boolean) {
     this.assertOwnOrigin(returnUrl);
 
     const company = await this.prisma.company.findUniqueOrThrow({
@@ -111,9 +111,17 @@ export class BillingService {
       throw new BadRequestException("Esta empresa no tiene una suscripción activa");
     }
 
+    // Deep-links straight into Stripe's cancellation flow instead of the
+    // portal's generic landing page, so "cancel" stays one click away.
+    const flowData: Stripe.BillingPortal.SessionCreateParams.FlowData | undefined =
+      cancelSubscription && company.stripeSubId
+        ? { type: "subscription_cancel", subscription_cancel: { subscription: company.stripeSubId } }
+        : undefined;
+
     const session = await this.stripeClient.billingPortal.sessions.create({
       customer: company.stripeCustomerId,
       return_url: returnUrl,
+      ...(flowData ? { flow_data: flowData } : {}),
     });
 
     return { url: session.url };

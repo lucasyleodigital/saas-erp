@@ -2243,7 +2243,7 @@
   "marketing": {
     "seo": {
       "title": "YouWhole — Espainiako autonomo eta ETEentzako ERPa",
-      "description": "Autonomoek autonomoentzat sortutako ERPa. VeriFactu, IRPF automatikoa, 130/303 eredua, CRM eta kontabilitatea. 14 egun doan, txartelik gabe."
+      "description": "Autonomoek autonomoentzat sortutako ERPa. VeriFactu, IRPF automatikoa, 130/303 eredua, CRM eta kontabilitatea. Doan betiko, txartelik gabe."
     },
     "nav": {
       "features": "Funtzionalitateak",
@@ -2263,7 +2263,7 @@
       "ctaSecondary": "Ikusi funtzionalitateak",
       "trust": {
         "verifactu": "VeriFactu AEAT",
-        "trial": "14 egun doan",
+        "trial": "Doan betiko",
         "noLockIn": "Iraunkortasunik gabe",
         "support": "Euskarazko laguntza"
       },
@@ -2292,8 +2292,8 @@
       "modules": "Modulu integratuak",
       "languages": "Espainiako hizkuntza ofizialak",
       "uptime": "Bermatutako erabilgarritasuna",
-      "trial": "Doako proba txartelik gabe",
-      "daysSuffix": " egun"
+      "freeLabel": "doan hilero, betiko",
+      "freeSuffix": " faktura"
     },
     "features": {
       "badge": "15 modulu barne",
@@ -2506,8 +2506,8 @@
           "a": "VeriFactu Espainiako Zerga Agentziaren fakturen egiaztapen-sistema da. 2025etik aurrera, fakturazio-software bat erabiltzen duen enpresa orok VeriFactu ziurtatutako sistemak erabili behar ditu. YouWholek jatorriz dakar — ez duzu ezer gehigarririk egin behar legea betetzeko."
         },
         "q2": {
-          "q": "Zer gertatzen da 14 eguneko doako epea amaitzen denean?",
-          "a": "Ordainketa-metodorik sartzen ez baduzu, zure kontua automatikoki Doako planera pasatzen da (5 bezero eta 10 faktura hilean gehienez). Ez zaizu ezer kobratzen ezta zure kontua ezeztatzen ere. Zuk erabakitzen duzu noiz eta upgrade egin nahi duzun."
+          "q": "Kreditu-txartela behar dut hasteko?",
+          "a": "Ez. Izena eman eta YouWhole doan erabiltzen duzu lehen egunetik Doako planean (5 bezero eta 10 faktura hilean gehienez), ordainketa-metodorik sartu gabe. Ez zaizu ezer kobratzen ezta zure kontua ezeztatzen ere. Zuk erabakitzen duzu noiz, eta nahi baduzu, ordaindutako plan batera igotzea."
         },
         "q3": {
           "q": "Beste programa batetik edo Exceletik nire datuak inportatu ditzaket?",
@@ -2605,7 +2605,15 @@
       "mostPopular": "Ohikoena",
       "current": "Egungoa",
       "currentPlan": "Egungo plana",
-      "redirecting": "Bideratzen..."
+      "redirecting": "Bideratzen...",
+      "renewalNotice": "Hileroko berritze automatikoa · Utzi noiznahi",
+      "confirm": {
+        "title": "Berretsi zure harpidetza",
+        "body1": "Gaur {price}€ kobratuko zaizu, eta gero hilero automatikoki, utzi arte.",
+        "body2": "Noiznahi utzi dezakezu Planak eta fakturazioa atalean, iraunkortasunik gabe.",
+        "cancel": "Utzi",
+        "continue": "Jarraitu ordainketara"
+      }
     },
     "pricingSection": {
       "badge": "Letra txikirik gabe",
@@ -2616,7 +2624,7 @@
     "finalCta": {
       "titleLine1": "Prest zaude zure enpresa",
       "titleHighlight": "hurrengo mailara eramateko?",
-      "subtitle": "Elkartu YouWholerekin dagoeneko beren negozioa kudeatzen duten enpresekin. 14 egun doan, kreditu-txartelik gabe.",
+      "subtitle": "Elkartu YouWholerekin dagoeneko beren negozioa kudeatzen duten enpresekin. Doan betiko, kreditu-txartelik gabe.",
       "ctaPrimary": "Sortu doako kontua",
       "ctaSecondary": "Kontua daukat jada"
     },
@@ -2681,7 +2689,7 @@
       "h1Line1": "Espainiako autonomoek",
       "h1Highlight": "behar zuten ERPa",
       "subtitle": "VeriFactu fakturazioa, IRPF automatikoa, 130/303 eredua, PGC kontabilitatea eta CRM. Benetako autonomo batek lan egiten duen moduan pentsatutako plataforma bakarra.",
-      "ctaPrimary": "Hasi doan — 14 egun txartelik gabe",
+      "ctaPrimary": "Hasi doan — txartelik gabe",
       "ctaSecondary": "Eskatu demo bat",
       "trustLine": "Iraunkortasunik gabe · Utzi nahi duzunean · Euskarazko laguntza",
       "features": {
@@ -2779,7 +2787,7 @@
         "subtitle": "Letra txikirik gabe. Hasi doan eta eskalatu behar duzunean."
       },
       "finalCta": {
-        "title": "Probatu doan 14 egunez",
+        "title": "Probatu doan, betiko",
         "subtitle": "Kreditu-txartelik gabe. Iraunkortasunik gabe. Letra txikirik gabe.",
         "cta": "Sortu nire doako kontua"
       }
@@ -2795,7 +2803,7 @@
       "h1Line1": "Fakturak baino gehiago den",
       "h1Highlight": "ETEentzako fakturazio softwarea",
       "subtitle": "YouWholek zure ETEak behar duen guztia biltzen du plataforma bakarrean: VeriFactu fakturazioa, kontabilitatea, nominak, CRMa, inbentarioa eta proiektuak. Integraziorik gabe. Ezustekorik gabe.",
-      "ctaPrimary": "Probatu doan 14 egunez",
+      "ctaPrimary": "Probatu doan",
       "ctaSecondary": "Eskatu demo bat nire ETErako",
       "trustLine": "Iraunkortasunik gabe · Euskarazko laguntza · Migrazio lagundua",
       "modules": {
@@ -2858,7 +2866,7 @@
       },
       "finalCta": {
         "title": "Zure ETEa hurrengo mailarako prest?",
-        "subtitle": "14 egun doan. Txartelik gabe. Taldeak migrazioan laguntzen dizu.",
+        "subtitle": "Doan betiko. Txartelik gabe. Taldeak migrazioan laguntzen dizu.",
         "cta": "Hasi doan orain"
       }
     },
@@ -2941,7 +2949,7 @@
       "subtitle": "YouWholek AEAT ziurtatutako VeriFactu, IRPF automatikoa eta 130/303 eredua ditu jatorrizko. Modulu gehigarririk gabe. Fakturan ezustekorik gabe.",
       "ctaPrimary": "Probatu YouWhole doan",
       "ctaSecondary": "Hitz egin taldearekin",
-      "trustLine": "14 egun doan · Txartelik gabe · Holdedetik migrazio lagundua",
+      "trustLine": "Doan betiko · Txartelik gabe · Holdedetik migrazio lagundua",
       "comparison": {
         "title": "YouWhole vs Holded",
         "subtitle": "Espainiako autonomo eta ETEentzako ezaugarrien konparaketa",
@@ -3048,7 +3056,7 @@
       "subtitle": "YouWhole %100 hodeian dago, AEAT ziurtatutako VeriFactu du eta Sage baino gutxiago kostatzen da. Instalaziorik gabe, bertsio zaharkiturik gabe, ezustekorik gabe.",
       "ctaPrimary": "Probatu YouWhole doan",
       "ctaSecondary": "Hitz egin taldearekin",
-      "trustLine": "14 egun doan · Txartelik gabe · Sagetik migrazio lagundua",
+      "trustLine": "Doan betiko · Txartelik gabe · Sagetik migrazio lagundua",
       "reasons": {
         "title": "Zergatik uzten dute autonomoek Sage?",
         "subtitle": "Sagek hamarkadak daramatza merkatuan, baina beste garai baterako diseinatua izan zen. Hauek dira kexa ohikoenak.",
@@ -3281,7 +3289,7 @@
       "h1Line1": "Konplikaziorik nahi ez duten",
       "h1Highlight": "ETEentzako giza baliabideen softwarea",
       "subtitle": "Nominak, kontratuak, ordutegi-kontrola, oporrak eta langile ataria zure fakturazioarekin integratuta. Dena YouWholen, beste giza baliabide programa bat behar izan gabe.",
-      "ctaPrimary": "Probatu doan 14 egunez",
+      "ctaPrimary": "Probatu doan",
       "ctaSecondary": "Eskatu demo bat",
       "trustLine": "Iraunkortasunik gabe · Euskarazko laguntza · Espainiako lan-araudia betetzen du",
       "features": {
@@ -3334,7 +3342,7 @@
       },
       "finalCta": {
         "title": "Giza baliabideak kontrolpean lehen egunetik",
-        "subtitle": "14 egun doan. Txartelik gabe. Giza baliabideen modulua plan guztietan barne.",
+        "subtitle": "Doan betiko. Txartelik gabe. Giza baliabideen modulua plan guztietan barne.",
         "cta": "Hasi doan orain"
       }
     },
@@ -3349,7 +3357,7 @@
       "h1Line1": "Espainiako legea betetzen duen",
       "h1Highlight": "ordutegi-kontrol digitala",
       "subtitle": "8/2019 EDk zure langile guztien lanaldia erregistratzera behartzen du. YouWholek automatikoki egiten du GPS, QR edo web bidez — nomina eta proiektuekin integratuta.",
-      "ctaPrimary": "Probatu doan 14 egunez",
+      "ctaPrimary": "Probatu doan",
       "ctaSecondary": "Ikusi demoa",
       "trustLine": "Iraunkortasunik gabe · 8/2019 EDa betetzen du · Nominarekin integratua",
       "checkinMethods": {
@@ -3414,7 +3422,7 @@
       },
       "finalCta": {
         "title": "Bete ordutegi-kontrol legea gaur",
-        "subtitle": "14 egun doan. Txartelik gabe. Lehen egunetik aktibatua.",
+        "subtitle": "Doan betiko. Txartelik gabe. Lehen egunetik aktibatua.",
         "cta": "Sortu doako kontua"
       }
     },
@@ -3429,7 +3437,7 @@
       "h1Line1": "Bere kabuz eguneratzen den",
       "h1Highlight": "biltegi eta inbentario softwarea",
       "subtitle": "Kontrolatu zure stocka denbora errealean, kudeatu hornitzaileak eta sortu eskaera automatikoak. Dena zure fakturazioarekin integratuta, kontrola inoiz galdu ez dezazun.",
-      "ctaPrimary": "Probatu doan 14 egunez",
+      "ctaPrimary": "Probatu doan",
       "ctaSecondary": "Eskatu demo bat",
       "trustLine": "Iraunkortasunik gabe · Euskarazko laguntza · Salmenta eta erosketekin integratua",
       "features": {
@@ -3486,7 +3494,7 @@
       },
       "finalCta": {
         "title": "Zure biltegia kontrolpean gaurtik",
-        "subtitle": "14 egun doan. Txartelik gabe. Stocka zure fakturazioarekin integratuta lehen egunetik.",
+        "subtitle": "Doan betiko. Txartelik gabe. Stocka zure fakturazioarekin integratuta lehen egunetik.",
         "cta": "Hasi doan orain"
       }
     },
@@ -3501,7 +3509,7 @@
       "h1Line1": "Beste tresna baten alde",
       "h1Highlight": "ordaindu nahi ez duten ETEentzako CRMa",
       "subtitle": "YouWholek zure fakturazioarekin integratutako CRM osoa dakar. Kudeatu bezeroak, leadak eta salmenta-pipelinea plataformatik atera gabe — ezta aparteko harpidetzarik ordaindu gabe ere.",
-      "ctaPrimary": "Probatu doan 14 egunez",
+      "ctaPrimary": "Probatu doan",
       "ctaSecondary": "Eskatu demo bat",
       "trustLine": "Iraunkortasunik gabe · CRMa plan guztietan barne · Euskarazko laguntza",
       "features": {
@@ -3558,7 +3566,7 @@
       },
       "finalCta": {
         "title": "Hasi gehiago saltzen, gaurtik",
-        "subtitle": "CRMa plan guztietan barne. 14 egun doan txartelik gabe.",
+        "subtitle": "CRMa plan guztietan barne. Doan betiko, txartelik gabe.",
         "cta": "Sortu doako kontua"
       }
     },
@@ -3573,7 +3581,7 @@
       "h1Line1": "Bere kabuz eramaten den",
       "h1Highlight": "ETEentzako kontabilitate softwarea",
       "subtitle": "YouWholek kontabilitate-asientoak automatikoki sortzen ditu Espainiako Kontu Plan Orokorraren arabera. Zuk fakturak igorri — kontabilitatea bakarrik egiten da, errorerik gabe, aurretiko ezagutzarik gabe.",
-      "ctaPrimary": "Probatu doan 14 egunez",
+      "ctaPrimary": "Probatu doan",
       "ctaSecondary": "Eskatu demo bat",
       "trustLine": "Iraunkortasunik gabe · Espainiako PGCa · Zure aholkularirentzako sarbidea",
       "automatic": {
@@ -3663,7 +3671,7 @@
       },
       "finalCta": {
         "title": "Zure ETEaren kontabilitatea, pilotu automatikoan",
-        "subtitle": "14 egun doan. Txartelik gabe. Kontabilitate-ezagutzarik behar ez da.",
+        "subtitle": "Doan betiko. Txartelik gabe. Kontabilitate-ezagutzarik behar ez da.",
         "cta": "Hasi doan orain"
       }
     },
@@ -3678,7 +3686,7 @@
       "h1Line1": "Kalkulu-errorerik gabeko",
       "h1Highlight": "ETEentzako nomina softwarea",
       "subtitle": "YouWholek automatikoki kalkulatzen ditu langile bakoitzaren IRPFa eta Gizarte Segurantza. Sortu nominak segundotan, ordutegi-kontrola eta kontabilitatearekin integratuta.",
-      "ctaPrimary": "Probatu doan 14 egunez",
+      "ctaPrimary": "Probatu doan",
       "ctaSecondary": "Eskatu demo bat",
       "trustLine": "Iraunkortasunik gabe · IRPF eta GS automatikoak · Euskarazko laguntza",
       "features": {
@@ -3734,7 +3742,7 @@
       },
       "finalCta": {
         "title": "Nominak minutu gutxitan hilero prest",
-        "subtitle": "14 egun doan. Txartelik gabe. IRPF eta GS automatikoki kalkulatuak.",
+        "subtitle": "Doan betiko. Txartelik gabe. IRPF eta GS automatikoki kalkulatuak.",
         "cta": "Hasi doan orain"
       }
     }

@@ -41,6 +41,7 @@ export function PricingCards({ currentPlan = "FREE", onUpgrade }: PricingCardsPr
   const [loading, setLoading] = useState<string | null>(null);
   const [showContract, setShowContract] = useState(false);
   const [contractAccepted, setContractAccepted] = useState(false);
+  const [confirmPlan, setConfirmPlan] = useState<string | null>(null);
 
   const PLANS: Plan[] = PLAN_KEYS.map((tKey) => ({
     key: tKey.toUpperCase(),
@@ -78,7 +79,9 @@ export function PricingCards({ currentPlan = "FREE", onUpgrade }: PricingCardsPr
       setShowContract(true);
       return;
     }
-    await goToStripe(planKey);
+    // Surface the auto-renewal terms on our own screen before redirecting
+    // to Stripe's payment page, instead of only relying on Stripe's copy.
+    setConfirmPlan(planKey);
   }
 
   return (
@@ -151,11 +154,50 @@ export function PricingCards({ currentPlan = "FREE", onUpgrade }: PricingCardsPr
                   ? t("currentPlan")
                   : plan.cta}
               </Button>
+              {plan.price > 0 && (
+                <p className="text-[11px] text-muted-foreground text-center -mt-1">
+                  {t("renewalNotice")}
+                </p>
+              )}
             </CardContent>
           </Card>
         );
       })}
     </div>
+
+    {/* Renewal disclosure — shown before redirecting Starter/Pro to Stripe */}
+    <Dialog open={!!confirmPlan} onOpenChange={(o) => { if (!o) setConfirmPlan(null); }}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>{t("confirm.title")}</DialogTitle>
+          <DialogDescription>
+            {PLANS.find((p) => p.key === confirmPlan)?.label} — {PLANS.find((p) => p.key === confirmPlan)?.price}€{t("perMonth")}
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="text-sm text-muted-foreground space-y-2">
+          <p>{t("confirm.body1", { price: PLANS.find((p) => p.key === confirmPlan)?.price ?? 0 })}</p>
+          <p>{t("confirm.body2")}</p>
+        </div>
+
+        <div className="flex gap-3 pt-2">
+          <Button variant="outline" className="flex-1" onClick={() => setConfirmPlan(null)}>
+            {t("confirm.cancel")}
+          </Button>
+          <Button
+            className="flex-1"
+            disabled={loading === confirmPlan}
+            onClick={() => {
+              const plan = confirmPlan!;
+              setConfirmPlan(null);
+              goToStripe(plan);
+            }}
+          >
+            {loading === confirmPlan ? t("redirecting") : `${t("confirm.continue")} →`}
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
 
     {/* Enterprise contract modal */}
     <Dialog open={showContract} onOpenChange={(o) => { setShowContract(o); if (!o) setContractAccepted(false); }}>

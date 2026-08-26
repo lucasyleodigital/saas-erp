@@ -4,7 +4,7 @@ import { MarketingHomeContent } from "@/components/marketing/marketing-home";
 export const metadata: Metadata = {
   title: "YouWhole — ERP para autonomos y pymes españolas",
   description:
-    "ERP creado por autonomos para autonomos y pymes. VeriFactu, IRPF automatico, Modelo 130/303, CRM y contabilidad. 14 dias gratis, sin tarjeta.",
+    "ERP creado por autonomos para autonomos y pymes. VeriFactu, IRPF automatico, Modelo 130/303, CRM y contabilidad. Plan gratis para siempre, sin tarjeta.",
   robots: { index: true, follow: true },
   alternates: {
     canonical: "https://youwhole.com",
@@ -133,10 +133,10 @@ const JSONLD_FAQ = {
     },
     {
       "@type": "Question",
-      name: "¿Qué pasa cuando termina el período de prueba de 14 días?",
+      name: "¿Necesito tarjeta de crédito para empezar?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Si no introduces ningún método de pago, tu cuenta pasa automáticamente al plan Gratuito (hasta 5 clientes y 10 facturas al mes). No se te cobra nada ni se cancela tu cuenta. Tú decides cuándo y si quieres hacer upgrade.",
+        text: "No. Te registras y usas YouWhole gratis desde el primer día en el plan Gratuito (hasta 5 clientes y 10 facturas al mes), sin introducir ningún método de pago. No se te cobra nada ni se cancela tu cuenta. Tú decides cuándo, y si quieres, hacer upgrade a un plan de pago.",
       },
     },
     {

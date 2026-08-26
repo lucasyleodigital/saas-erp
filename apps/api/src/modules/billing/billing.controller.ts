@@ -13,6 +13,7 @@ import { BillingService } from "./billing.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
 import { CheckoutDto } from "./dto/checkout.dto";
+import { PortalDto } from "./dto/portal.dto";
 import type { JwtPayload } from "@saas/types";
 
 @ApiTags("Billing")
@@ -40,9 +41,13 @@ export class BillingController {
   @UseGuards(JwtAuthGuard)
   portal(
     @CurrentUser() user: JwtPayload,
-    @Body("returnUrl") returnUrl: string
+    @Body() body: PortalDto
   ) {
-    return this.billingService.createPortalSession(user.companyId, returnUrl);
+    return this.billingService.createPortalSession(
+      user.companyId,
+      body.returnUrl,
+      body.cancelSubscription
+    );
   }
 
   // Stripe sends raw body — must NOT be guarded or transformed

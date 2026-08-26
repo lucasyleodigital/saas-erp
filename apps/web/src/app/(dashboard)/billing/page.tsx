@@ -1,17 +1,24 @@
 "use client";
 
+import { useState } from "react";
 import { PricingCards } from "@/components/billing/pricing-cards";
 import { useMyCompany } from "@/hooks/use-company";
 import { useCustomerPortal } from "@/hooks/use-billing";
 import { Button } from "@/components/ui/button";
-import { CreditCard, ExternalLink, Loader2 } from "lucide-react";
+import { CreditCard, ExternalLink, Loader2, XCircle } from "lucide-react";
 
 export default function BillingPage() {
   const { data: company, isLoading } = useMyCompany();
   const portal = useCustomerPortal();
+  const [action, setAction] = useState<"manage" | "cancel" | null>(null);
 
   const currentPlan: string = company?.plan ?? "FREE";
   const hasPaidPlan = currentPlan !== "FREE";
+
+  function openPortal(cancelSubscription: boolean) {
+    setAction(cancelSubscription ? "cancel" : "manage");
+    portal.mutate({ cancelSubscription });
+  }
 
   return (
     <div className="space-y-8">
@@ -29,24 +36,40 @@ export default function BillingPage() {
             <div>
               <p className="font-medium text-sm">Suscripción activa — Plan {currentPlan.charAt(0) + currentPlan.slice(1).toLowerCase()}</p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                Gestiona tu método de pago, descarga facturas o cancela desde el portal de facturación.
+                Se renueva automáticamente cada mes. Gestiona tu método de pago, descarga facturas o cancela cuando quieras, sin permanencia.
               </p>
             </div>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            className="shrink-0 gap-2"
-            disabled={portal.isPending}
-            onClick={() => portal.mutate()}
-          >
-            {portal.isPending ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <ExternalLink className="h-4 w-4" />
-            )}
-            Gestionar suscripción
-          </Button>
+          <div className="flex gap-2 shrink-0">
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2"
+              disabled={portal.isPending}
+              onClick={() => openPortal(false)}
+            >
+              {portal.isPending && action === "manage" ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <ExternalLink className="h-4 w-4" />
+              )}
+              Gestionar suscripción
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-2 text-destructive hover:text-destructive hover:bg-destructive/10"
+              disabled={portal.isPending}
+              onClick={() => openPortal(true)}
+            >
+              {portal.isPending && action === "cancel" ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <XCircle className="h-4 w-4" />
+              )}
+              Cancelar suscripción
+            </Button>
+          </div>
         </div>
       )}
 

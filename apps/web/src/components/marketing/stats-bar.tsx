@@ -59,7 +59,7 @@ export function StatsBar() {
     { value: 15, suffix: "+", label: t("modules") },
     { value: 5, suffix: "", label: t("languages") },
     { value: 99.9, suffix: "%", label: t("uptime") },
-    { value: 14, suffix: t("daysSuffix"), label: t("trial") },
+    { value: 10, suffix: t("freeSuffix"), label: t("freeLabel") },
   ];
 
   return (

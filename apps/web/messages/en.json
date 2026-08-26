@@ -2298,7 +2298,7 @@
   "marketing": {
     "seo": {
       "title": "YouWhole — All-in-one ERP for Spanish freelancers and SMEs",
-      "description": "The ERP built by freelancers for freelancers. VeriFactu, automatic withholding tax, tax forms 130/303, CRM and accounting. Free 14-day trial."
+      "description": "The ERP built by freelancers for freelancers. VeriFactu, automatic withholding tax, tax forms 130/303, CRM and accounting. Free forever."
     },
     "nav": {
       "features": "Features",
@@ -2318,7 +2318,7 @@
       "ctaSecondary": "See features",
       "trust": {
         "verifactu": "VeriFactu AEAT",
-        "trial": "14-day free trial",
+        "trial": "Free forever",
         "noLockIn": "No lock-in contract",
         "support": "Support in English"
       },
@@ -2347,8 +2347,8 @@
       "modules": "Integrated modules",
       "languages": "Official languages of Spain",
       "uptime": "Guaranteed uptime",
-      "trial": "Free trial, no card required",
-      "daysSuffix": " days"
+      "freeLabel": "free every month, forever",
+      "freeSuffix": " invoices"
     },
     "features": {
       "badge": "15 modules included",
@@ -2561,8 +2561,8 @@
           "a": "VeriFactu is the Spanish Tax Agency's invoice verification system. Since 2025, any business using invoicing software is required to use VeriFactu-certified systems. YouWhole includes it by default — there's nothing extra you need to do to comply with the law."
         },
         "q2": {
-          "q": "What happens when the 14-day trial ends?",
-          "a": "If you don't add a payment method, your account automatically moves to the Free plan (up to 5 clients and 10 invoices per month). You won't be charged and your account won't be cancelled. You decide when — and whether — to upgrade."
+          "q": "Do I need a credit card to start?",
+          "a": "No. You sign up and use YouWhole for free from day one on the Free plan (up to 5 clients and 10 invoices per month), without adding a payment method. You won't be charged and your account won't be cancelled. You decide when — and whether — to upgrade to a paid plan."
         },
         "q3": {
           "q": "Can I import my data from another program or from Excel?",
@@ -2660,7 +2660,15 @@
       "mostPopular": "Most popular",
       "current": "Current",
       "currentPlan": "Current plan",
-      "redirecting": "Redirecting..."
+      "redirecting": "Redirecting...",
+      "renewalNotice": "Automatic monthly renewal · Cancel anytime",
+      "confirm": {
+        "title": "Confirm your subscription",
+        "body1": "You'll be charged {price}€ today and automatically every month after that, until you cancel.",
+        "body2": "You can cancel anytime from Plans & Billing, with no lock-in.",
+        "cancel": "Cancel",
+        "continue": "Continue to payment"
+      }
     },
     "pricingSection": {
       "badge": "No fine print",
@@ -2671,7 +2679,7 @@
     "finalCta": {
       "titleLine1": "Ready to take your business",
       "titleHighlight": "to the next level?",
-      "subtitle": "Join the businesses already running their operations on YouWhole. 14-day free trial, no credit card required.",
+      "subtitle": "Join the businesses already running their operations on YouWhole. Free forever, no credit card required.",
       "ctaPrimary": "Create a free account",
       "ctaSecondary": "I already have an account"
     },
@@ -2736,7 +2744,7 @@
       "h1Line1": "The ERP that Spanish freelancers",
       "h1Highlight": "actually needed",
       "subtitle": "VeriFactu invoicing, automatic withholding tax, tax forms 130/303, Spanish GAAP accounting and CRM. One platform built around how freelancers really work.",
-      "ctaPrimary": "Start for free — 14 days, no card",
+      "ctaPrimary": "Start for free — no card required",
       "ctaSecondary": "Request a demo",
       "trustLine": "No lock-in contract · Cancel anytime · Support in English",
       "features": {
@@ -2834,7 +2842,7 @@
         "subtitle": "No fine print. Start free and scale up whenever you need to."
       },
       "finalCta": {
-        "title": "Try it free for 14 days",
+        "title": "Try it free, forever",
         "subtitle": "No credit card. No lock-in. No fine print.",
         "cta": "Create my free account"
       }
@@ -2850,7 +2858,7 @@
       "h1Line1": "Invoicing software for SMEs",
       "h1Highlight": "that goes far beyond invoices",
       "subtitle": "YouWhole brings everything your SME needs together in one platform: VeriFactu invoicing, accounting, payroll, CRM, inventory, and projects. No integrations. No surprises.",
-      "ctaPrimary": "Try free for 14 days",
+      "ctaPrimary": "Try it for free",
       "ctaSecondary": "Request a demo for my SME",
       "trustLine": "No lock-in · Support in English · Assisted migration",
       "modules": {
@@ -2913,7 +2921,7 @@
       },
       "finalCta": {
         "title": "Is your SME ready for the next level?",
-        "subtitle": "14-day free trial. No card. Our team helps with migration.",
+        "subtitle": "Free forever. No card. Our team helps with migration.",
         "cta": "Start for free now"
       }
     },
@@ -2996,7 +3004,7 @@
       "subtitle": "YouWhole includes certified VeriFactu, automatic withholding tax, and tax forms 130/303 out of the box. No extra modules. No surprises on the invoice.",
       "ctaPrimary": "Try YouWhole for free",
       "ctaSecondary": "Talk to the team",
-      "trustLine": "14-day free trial · No card · Assisted migration from Holded",
+      "trustLine": "Free forever · No card · Assisted migration from Holded",
       "comparison": {
         "title": "YouWhole vs Holded",
         "subtitle": "A feature comparison for Spanish freelancers and SMEs",
@@ -3103,7 +3111,7 @@
       "subtitle": "YouWhole is 100% cloud-based, includes certified VeriFactu, and costs less than Sage. No installs, no outdated versions, no surprises.",
       "ctaPrimary": "Try YouWhole for free",
       "ctaSecondary": "Talk to the team",
-      "trustLine": "14-day free trial · No card · Assisted migration from Sage",
+      "trustLine": "Free forever · No card · Assisted migration from Sage",
       "reasons": {
         "title": "Why are freelancers leaving Sage?",
         "subtitle": "Sage has been around for decades, but it was built for a different era. Here are the most common complaints.",
@@ -3336,7 +3344,7 @@
       "h1Line1": "HR software",
       "h1Highlight": "for SMEs that don't want complications",
       "subtitle": "Payroll, contracts, time tracking, vacation, and an employee portal integrated with your invoicing. Everything in YouWhole — no need for a separate HR tool.",
-      "ctaPrimary": "Try free for 14 days",
+      "ctaPrimary": "Try it for free",
       "ctaSecondary": "Request a demo",
       "trustLine": "No lock-in · Support in English · Meets Spanish labor regulations",
       "features": {
@@ -3389,7 +3397,7 @@
       },
       "finalCta": {
         "title": "HR under control from day one",
-        "subtitle": "14-day free trial. No card. The HR module is included in every plan.",
+        "subtitle": "Free forever. No card. The HR module is included in every plan.",
         "cta": "Start for free now"
       }
     },
@@ -3404,7 +3412,7 @@
       "h1Line1": "Digital time tracking",
       "h1Highlight": "that meets Spanish law",
       "subtitle": "RD 8/2019 requires you to log every employee's working hours. YouWhole does it automatically with GPS, QR, or web — integrated with payroll and projects.",
-      "ctaPrimary": "Try free for 14 days",
+      "ctaPrimary": "Try it for free",
       "ctaSecondary": "See a demo",
       "trustLine": "No lock-in · Meets RD 8/2019 · Integrated with payroll",
       "checkinMethods": {
@@ -3469,7 +3477,7 @@
       },
       "finalCta": {
         "title": "Meet the time-tracking law today",
-        "subtitle": "14-day free trial. No card. Active from day one.",
+        "subtitle": "Free forever. No card. Active from day one.",
         "cta": "Create a free account"
       }
     },
@@ -3484,7 +3492,7 @@
       "h1Line1": "Warehouse and inventory software",
       "h1Highlight": "that updates itself",
       "subtitle": "Track your stock in real time, manage suppliers, and generate automatic orders. All integrated with your invoicing so you never lose control.",
-      "ctaPrimary": "Try free for 14 days",
+      "ctaPrimary": "Try it for free",
       "ctaSecondary": "Request a demo",
       "trustLine": "No lock-in · Support in English · Integrated with sales and purchasing",
       "features": {
@@ -3541,7 +3549,7 @@
       },
       "finalCta": {
         "title": "Your warehouse under control starting today",
-        "subtitle": "14-day free trial. No card. Stock integrated with your invoicing from day one.",
+        "subtitle": "Free forever. No card. Stock integrated with your invoicing from day one.",
         "cta": "Start for free now"
       }
     },
@@ -3556,7 +3564,7 @@
       "h1Line1": "CRM for SMEs that don't want",
       "h1Highlight": "to pay for another tool",
       "subtitle": "YouWhole includes a complete CRM integrated with your invoicing. Manage clients, leads, and your sales pipeline without leaving the platform — or paying an extra subscription.",
-      "ctaPrimary": "Try free for 14 days",
+      "ctaPrimary": "Try it for free",
       "ctaSecondary": "Request a demo",
       "trustLine": "No lock-in · CRM included in every plan · Support in English",
       "features": {
@@ -3613,7 +3621,7 @@
       },
       "finalCta": {
         "title": "Start selling more, from today",
-        "subtitle": "CRM included in every plan. 14-day free trial, no card.",
+        "subtitle": "CRM included in every plan. Free forever, no card.",
         "cta": "Create a free account"
       }
     },
@@ -3628,7 +3636,7 @@
       "h1Line1": "Accounting software for SMEs",
       "h1Highlight": "that keeps itself",
       "subtitle": "YouWhole automatically generates accounting entries under the official Spanish chart of accounts. You issue invoices — the accounting handles itself, with zero errors and no prior knowledge required.",
-      "ctaPrimary": "Try free for 14 days",
+      "ctaPrimary": "Try it for free",
       "ctaSecondary": "Request a demo",
       "trustLine": "No lock-in · Spanish GAAP · Access for your advisor",
       "automatic": {
@@ -3718,7 +3726,7 @@
       },
       "finalCta": {
         "title": "Your SME's accounting, on autopilot",
-        "subtitle": "14-day free trial. No card. No accounting knowledge required.",
+        "subtitle": "Free forever. No card. No accounting knowledge required.",
         "cta": "Start for free now"
       }
     },
@@ -3733,7 +3741,7 @@
       "h1Line1": "Payroll software for SMEs",
       "h1Highlight": "with zero calculation errors",
       "subtitle": "YouWhole automatically calculates each employee's withholding tax and Social Security contributions. Generate payroll in seconds, integrated with time tracking and accounting.",
-      "ctaPrimary": "Try free for 14 days",
+      "ctaPrimary": "Try it for free",
       "ctaSecondary": "Request a demo",
       "trustLine": "No lock-in · Automatic tax and Social Security · Support in English",
       "features": {
@@ -3789,7 +3797,7 @@
       },
       "finalCta": {
         "title": "Payroll ready in minutes every month",
-        "subtitle": "14-day free trial. No card. Withholding tax and Social Security calculated automatically.",
+        "subtitle": "Free forever. No card. Withholding tax and Social Security calculated automatically.",
         "cta": "Start for free now"
       }
     }

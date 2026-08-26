@@ -24,9 +24,10 @@ export function useCheckout() {
 
 export function useCustomerPortal() {
   return useMutation({
-    mutationFn: async () => {
+    mutationFn: async (opts?: { cancelSubscription?: boolean }) => {
       const { data } = await api.post("/billing/portal", {
         returnUrl: window.location.href,
+        cancelSubscription: opts?.cancelSubscription ?? false,
       });
       return data;
     },

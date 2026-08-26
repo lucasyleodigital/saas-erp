@@ -2297,7 +2297,7 @@
   "marketing": {
     "seo": {
       "title": "YouWhole — ERP per a autònoms i pimes espanyoles",
-      "description": "ERP creat per autonoms per a autonoms i pimes. VeriFactu, IRPF automatic, Model 130/303, CRM i comptabilitat. 14 dies gratis, sense targeta."
+      "description": "ERP creat per autonoms per a autonoms i pimes. VeriFactu, IRPF automatic, Model 130/303, CRM i comptabilitat. Gratis per sempre, sense targeta."
     },
     "nav": {
       "features": "Funcionalitats",
@@ -2317,7 +2317,7 @@
       "ctaSecondary": "Veure funcionalitats",
       "trust": {
         "verifactu": "VeriFactu AEAT",
-        "trial": "14 dies gratis",
+        "trial": "Gratis per sempre",
         "noLockIn": "Sense permanència",
         "support": "Suport en català"
       },
@@ -2346,8 +2346,8 @@
       "modules": "Mòduls integrats",
       "languages": "Idiomes oficials d'Espanya",
       "uptime": "Disponibilitat garantida",
-      "trial": "Prova gratis sense targeta",
-      "daysSuffix": " dies"
+      "freeLabel": "gratis cada mes, per sempre",
+      "freeSuffix": " factures"
     },
     "features": {
       "badge": "15 mòduls inclosos",
@@ -2560,8 +2560,8 @@
           "a": "VeriFactu és el sistema de verificació de factures de l'Agència Tributària espanyola. Des de 2025, tota empresa que utilitzi un programari de facturació està obligada a fer servir sistemes certificats VeriFactu. YouWhole l'inclou de sèrie — no cal fer res extra per complir la llei."
         },
         "q2": {
-          "q": "Què passa quan acaba el període de prova de 14 dies?",
-          "a": "Si no introdueixes cap mètode de pagament, el teu compte passa automàticament al pla Gratuït (fins a 5 clients i 10 factures al mes). No se't cobra res ni es cancel·la el teu compte. Tu decideixes quan i si vols fer upgrade."
+          "q": "Necessito targeta de crèdit per començar?",
+          "a": "No. Et registres i uses YouWhole gratis des del primer dia al pla Gratuït (fins a 5 clients i 10 factures al mes), sense introduir cap mètode de pagament. No se't cobra res ni es cancel·la el teu compte. Tu decideixes quan, i si vols, fer upgrade a un pla de pagament."
         },
         "q3": {
           "q": "Puc importar les meves dades des d'un altre programa o Excel?",
@@ -2659,7 +2659,15 @@
       "mostPopular": "Més popular",
       "current": "Actual",
       "currentPlan": "Pla actual",
-      "redirecting": "Redirigint..."
+      "redirecting": "Redirigint...",
+      "renewalNotice": "Renovació automàtica mensual · Cancel·la quan vulguis",
+      "confirm": {
+        "title": "Confirma la teva subscripció",
+        "body1": "Se't cobrarà {price}€ avui i després cada mes de forma automàtica fins que cancel·lis.",
+        "body2": "Pots cancel·lar quan vulguis des de Plans i facturació, sense permanència ni penalització.",
+        "cancel": "Cancel·la",
+        "continue": "Continua al pagament"
+      }
     },
     "pricingSection": {
       "badge": "Sense lletra petita",
@@ -2670,7 +2678,7 @@
     "finalCta": {
       "titleLine1": "Preparat per portar la teva empresa",
       "titleHighlight": "al següent nivell?",
-      "subtitle": "Uneix-te a les empreses que ja gestionen el seu negoci amb YouWhole. 14 dies gratis, sense targeta de crèdit.",
+      "subtitle": "Uneix-te a les empreses que ja gestionen el seu negoci amb YouWhole. Gratis per sempre, sense targeta de crèdit.",
       "ctaPrimary": "Crear compte gratis",
       "ctaSecondary": "Ja tinc compte"
     },
@@ -2735,7 +2743,7 @@
       "h1Line1": "L'ERP que els autònoms espanyols",
       "h1Highlight": "necessitaven",
       "subtitle": "Facturació amb VeriFactu, IRPF automàtic, Model 130/303, comptabilitat PGC i CRM. Tot en una plataforma pensada per a com treballa un autònom de veritat.",
-      "ctaPrimary": "Comença gratis — 14 dies sense targeta",
+      "ctaPrimary": "Comença gratis — sense targeta",
       "ctaSecondary": "Sol·licitar demo",
       "trustLine": "Sense permanència · Cancel·la quan vulguis · Suport en català",
       "features": {
@@ -2833,7 +2841,7 @@
         "subtitle": "Sense lletra petita. Comença gratis i escala quan ho necessitis."
       },
       "finalCta": {
-        "title": "Prova'l gratis durant 14 dies",
+        "title": "Prova'l gratis, per sempre",
         "subtitle": "Sense targeta de crèdit. Sense permanència. Sense lletra petita.",
         "cta": "Crear el meu compte gratis"
       }
@@ -2849,7 +2857,7 @@
       "h1Line1": "Programari de facturació per a pimes",
       "h1Highlight": "que va més enllà de les factures",
       "subtitle": "YouWhole reuneix en una sola plataforma tot el que necessita la teva pime: facturació VeriFactu, comptabilitat, nòmines, CRM, inventari i projectes. Sense integracions. Sense sorpreses.",
-      "ctaPrimary": "Provar gratis 14 dies",
+      "ctaPrimary": "Provar gratis",
       "ctaSecondary": "Sol·licitar demo per a la meva pime",
       "trustLine": "Sense permanència · Suport en català · Migració assistida",
       "modules": {
@@ -2912,7 +2920,7 @@
       },
       "finalCta": {
         "title": "La teva pime preparada per al següent nivell?",
-        "subtitle": "14 dies gratis. Sense targeta. L'equip t'ajuda amb la migració.",
+        "subtitle": "Gratis per sempre. Sense targeta. L'equip t'ajuda amb la migració.",
         "cta": "Començar gratis ara"
       }
     },
@@ -2995,7 +3003,7 @@
       "subtitle": "YouWhole inclou VeriFactu certificat, IRPF automàtic i Model 130/303 de sèrie. Sense mòduls extra. Sense sorpreses a la factura.",
       "ctaPrimary": "Provar YouWhole gratis",
       "ctaSecondary": "Parlar amb l'equip",
-      "trustLine": "14 dies gratis · Sense targeta · Migració assistida des de Holded",
+      "trustLine": "Gratis per sempre · Sense targeta · Migració assistida des de Holded",
       "comparison": {
         "title": "YouWhole vs Holded",
         "subtitle": "Comparativa de característiques per a autònoms i pimes espanyoles",
@@ -3102,7 +3110,7 @@
       "subtitle": "YouWhole és 100% al núvol, inclou VeriFactu certificat i costa menys que Sage. Sense instal·lacions, sense versions desactualitzades, sense sorpreses.",
       "ctaPrimary": "Provar YouWhole gratis",
       "ctaSecondary": "Parlar amb l'equip",
-      "trustLine": "14 dies gratis · Sense targeta · Migració assistida des de Sage",
+      "trustLine": "Gratis per sempre · Sense targeta · Migració assistida des de Sage",
       "reasons": {
         "title": "Per què els autònoms abandonen Sage?",
         "subtitle": "Sage porta dècades al mercat, però va ser dissenyat per a una altra època. Aquestes són les queixes més habituals.",
@@ -3335,7 +3343,7 @@
       "h1Line1": "Programari de recursos humans",
       "h1Highlight": "per a pimes que no volen complicacions",
       "subtitle": "Nòmines, contractes, control horari, vacances i portal de l'empleat integrats amb la teva facturació. Tot a YouWhole, sense necessitat d'un altre programa de RRHH.",
-      "ctaPrimary": "Provar gratis 14 dies",
+      "ctaPrimary": "Provar gratis",
       "ctaSecondary": "Sol·licitar demo",
       "trustLine": "Sense permanència · Suport en català · Compleix la normativa laboral espanyola",
       "features": {
@@ -3388,7 +3396,7 @@
       },
       "finalCta": {
         "title": "RRHH sota control des del primer dia",
-        "subtitle": "14 dies gratis. Sense targeta. El mòdul RRHH inclòs en tots els plans.",
+        "subtitle": "Gratis per sempre. Sense targeta. El mòdul RRHH inclòs en tots els plans.",
         "cta": "Començar gratis ara"
       }
     },
@@ -3403,7 +3411,7 @@
       "h1Line1": "Control horari digital",
       "h1Highlight": "que compleix la llei espanyola",
       "subtitle": "El RD 8/2019 obliga a registrar la jornada de tots els teus empleats. YouWhole ho fa automàticament amb GPS, QR o web — integrat amb nòmines i projectes.",
-      "ctaPrimary": "Provar gratis 14 dies",
+      "ctaPrimary": "Provar gratis",
       "ctaSecondary": "Veure demo",
       "trustLine": "Sense permanència · Compleix RD 8/2019 · Integrat amb nòmines",
       "checkinMethods": {
@@ -3468,7 +3476,7 @@
       },
       "finalCta": {
         "title": "Compleix la llei de control horari avui",
-        "subtitle": "14 dies gratis. Sense targeta. Activat des del primer dia.",
+        "subtitle": "Gratis per sempre. Sense targeta. Activat des del primer dia.",
         "cta": "Crear compte gratis"
       }
     },
@@ -3483,7 +3491,7 @@
       "h1Line1": "Programari de magatzem i inventari",
       "h1Highlight": "que s'actualitza sol",
       "subtitle": "Controla el teu estoc en temps real, gestiona proveïdors i genera comandes automàtiques. Tot integrat amb la teva facturació perquè mai perdis el control.",
-      "ctaPrimary": "Provar gratis 14 dies",
+      "ctaPrimary": "Provar gratis",
       "ctaSecondary": "Sol·licitar demo",
       "trustLine": "Sense permanència · Suport en català · Integrat amb vendes i compres",
       "features": {
@@ -3540,7 +3548,7 @@
       },
       "finalCta": {
         "title": "El teu magatzem sota control des d'avui",
-        "subtitle": "14 dies gratis. Sense targeta. Estoc integrat amb la teva facturació des del primer dia.",
+        "subtitle": "Gratis per sempre. Sense targeta. Estoc integrat amb la teva facturació des del primer dia.",
         "cta": "Començar gratis ara"
       }
     },
@@ -3555,7 +3563,7 @@
       "h1Line1": "CRM per a pimes que no volen",
       "h1Highlight": "pagar per una altra eina",
       "subtitle": "YouWhole inclou un CRM complet integrat amb la teva facturació. Gestiona clients, leads i pipeline de vendes sense sortir de la plataforma — ni pagar una subscripció extra.",
-      "ctaPrimary": "Provar gratis 14 dies",
+      "ctaPrimary": "Provar gratis",
       "ctaSecondary": "Sol·licitar demo",
       "trustLine": "Sense permanència · CRM inclòs en tots els plans · Suport en català",
       "features": {
@@ -3612,7 +3620,7 @@
       },
       "finalCta": {
         "title": "Comença a vendre més, des d'avui",
-        "subtitle": "CRM inclòs en tots els plans. 14 dies gratis sense targeta.",
+        "subtitle": "CRM inclòs en tots els plans. Gratis per sempre, sense targeta.",
         "cta": "Crear compte gratis"
       }
     },
@@ -3627,7 +3635,7 @@
       "h1Line1": "Programari de comptabilitat per a pimes",
       "h1Highlight": "que es porta sola",
       "subtitle": "YouWhole genera els assentaments comptables automàticament segons el Pla General Comptable espanyol. Tu emets factures — la comptabilitat es fa sola, sense errors, sense coneixements previs.",
-      "ctaPrimary": "Provar gratis 14 dies",
+      "ctaPrimary": "Provar gratis",
       "ctaSecondary": "Sol·licitar demo",
       "trustLine": "Sense permanència · PGC espanyol · Accés per al teu assessor",
       "automatic": {
@@ -3717,7 +3725,7 @@
       },
       "finalCta": {
         "title": "La comptabilitat de la teva pime, en pilot automàtic",
-        "subtitle": "14 dies gratis. Sense targeta. Sense coneixements comptables necessaris.",
+        "subtitle": "Gratis per sempre. Sense targeta. Sense coneixements comptables necessaris.",
         "cta": "Començar gratis ara"
       }
     },
@@ -3732,7 +3740,7 @@
       "h1Line1": "Programari de nòmines per a pimes",
       "h1Highlight": "sense errors de càlcul",
       "subtitle": "YouWhole calcula automàticament l'IRPF i la Seguretat Social de cada empleat. Genera nòmines en segons, integrades amb el control horari i la comptabilitat.",
-      "ctaPrimary": "Provar gratis 14 dies",
+      "ctaPrimary": "Provar gratis",
       "ctaSecondary": "Sol·licitar demo",
       "trustLine": "Sense permanència · IRPF i SS automàtics · Suport en català",
       "features": {
@@ -3788,7 +3796,7 @@
       },
       "finalCta": {
         "title": "Nòmines llestes en minuts cada mes",
-        "subtitle": "14 dies gratis. Sense targeta. IRPF i SS calculats automàticament.",
+        "subtitle": "Gratis per sempre. Sense targeta. IRPF i SS calculats automàticament.",
         "cta": "Començar gratis ara"
       }
     }

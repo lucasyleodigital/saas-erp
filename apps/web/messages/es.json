@@ -2298,7 +2298,7 @@
   "marketing": {
     "seo": {
       "title": "YouWhole — ERP para autónomos y pymes españolas",
-      "description": "ERP creado por autonomos para autonomos y pymes. VeriFactu, IRPF automatico, Modelo 130/303, CRM y contabilidad. 14 dias gratis, sin tarjeta."
+      "description": "ERP creado por autonomos para autonomos y pymes. VeriFactu, IRPF automatico, Modelo 130/303, CRM y contabilidad. Gratis para siempre, sin tarjeta."
     },
     "nav": {
       "features": "Funcionalidades",
@@ -2318,7 +2318,7 @@
       "ctaSecondary": "Ver funcionalidades",
       "trust": {
         "verifactu": "VeriFactu AEAT",
-        "trial": "14 días gratis",
+        "trial": "Gratis para siempre",
         "noLockIn": "Sin permanencia",
         "support": "Soporte en español"
       },
@@ -2347,8 +2347,8 @@
       "modules": "Módulos integrados",
       "languages": "Idiomas oficiales de España",
       "uptime": "Disponibilidad garantizada",
-      "trial": "Prueba gratis sin tarjeta",
-      "daysSuffix": " días"
+      "freeLabel": "gratis cada mes, para siempre",
+      "freeSuffix": " facturas"
     },
     "features": {
       "badge": "15 módulos incluidos",
@@ -2561,8 +2561,8 @@
           "a": "VeriFactu es el sistema de verificación de facturas de la Agencia Tributaria española. Desde 2025, toda empresa que use un software de facturación está obligada a usar sistemas certificados VeriFactu. YouWhole lo incluye de serie — no necesitas hacer nada extra para cumplir la ley."
         },
         "q2": {
-          "q": "¿Qué pasa cuando termina el período de prueba de 14 días?",
-          "a": "Si no introduces ningún método de pago, tu cuenta pasa automáticamente al plan Gratuito (hasta 5 clientes y 10 facturas al mes). No se te cobra nada ni se cancela tu cuenta. Tú decides cuándo y si quieres hacer upgrade."
+          "q": "¿Necesito tarjeta de crédito para empezar?",
+          "a": "No. Te registras y usas YouWhole gratis desde el primer día en el plan Gratuito (hasta 5 clientes y 10 facturas al mes), sin introducir ningún método de pago. No se te cobra nada ni se cancela tu cuenta. Tú decides cuándo, y si quieres, hacer upgrade a un plan de pago."
         },
         "q3": {
           "q": "¿Puedo importar mis datos desde otro programa o Excel?",
@@ -2660,7 +2660,15 @@
       "mostPopular": "Más popular",
       "current": "Actual",
       "currentPlan": "Plan actual",
-      "redirecting": "Redirigiendo..."
+      "redirecting": "Redirigiendo...",
+      "renewalNotice": "Renovación automática mensual · Cancela cuando quieras",
+      "confirm": {
+        "title": "Confirma tu suscripción",
+        "body1": "Se te cobrará {price}€ hoy y después cada mes de forma automática hasta que canceles.",
+        "body2": "Puedes cancelar cuando quieras desde Planes y facturación, sin permanencia ni penalización.",
+        "cancel": "Cancelar",
+        "continue": "Continuar al pago"
+      }
     },
     "pricingSection": {
       "badge": "Sin letra pequeña",
@@ -2671,7 +2679,7 @@
     "finalCta": {
       "titleLine1": "¿Listo para llevar tu empresa",
       "titleHighlight": "al siguiente nivel?",
-      "subtitle": "Únete a las empresas que ya gestionan su negocio con YouWhole. 14 días gratis, sin tarjeta de crédito.",
+      "subtitle": "Únete a las empresas que ya gestionan su negocio con YouWhole. Gratis para siempre, sin tarjeta de crédito.",
       "ctaPrimary": "Crear cuenta gratis",
       "ctaSecondary": "Ya tengo cuenta"
     },
@@ -2736,7 +2744,7 @@
       "h1Line1": "El ERP que los autónomos españoles",
       "h1Highlight": "necesitaban",
       "subtitle": "Facturación con VeriFactu, IRPF automático, Modelo 130/303, contabilidad PGC y CRM. Todo en una plataforma pensada para cómo trabaja un autónomo de verdad.",
-      "ctaPrimary": "Empieza gratis — 14 días sin tarjeta",
+      "ctaPrimary": "Empieza gratis — sin tarjeta",
       "ctaSecondary": "Solicitar demo",
       "trustLine": "Sin permanencia · Cancela cuando quieras · Soporte en español",
       "features": {
@@ -2834,7 +2842,7 @@
         "subtitle": "Sin letra pequeña. Empieza gratis y escala cuando lo necesites."
       },
       "finalCta": {
-        "title": "Pruébalo gratis durante 14 días",
+        "title": "Pruébalo gratis, para siempre",
         "subtitle": "Sin tarjeta de crédito. Sin permanencia. Sin letra pequeña.",
         "cta": "Crear mi cuenta gratis"
       }
@@ -2850,7 +2858,7 @@
       "h1Line1": "Software de facturación para pymes",
       "h1Highlight": "que va más allá de las facturas",
       "subtitle": "YouWhole reúne en una sola plataforma todo lo que necesita tu pyme: facturación VeriFactu, contabilidad, nóminas, CRM, inventario y proyectos. Sin integraciones. Sin sorpresas.",
-      "ctaPrimary": "Probar gratis 14 días",
+      "ctaPrimary": "Probar gratis",
       "ctaSecondary": "Solicitar demo para mi pyme",
       "trustLine": "Sin permanencia · Soporte en español · Migración asistida",
       "modules": {
@@ -2913,7 +2921,7 @@
       },
       "finalCta": {
         "title": "¿Tu pyme lista para el siguiente nivel?",
-        "subtitle": "14 días gratis. Sin tarjeta. El equipo te ayuda con la migración.",
+        "subtitle": "Gratis para siempre. Sin tarjeta. El equipo te ayuda con la migración.",
         "cta": "Empezar gratis ahora"
       }
     },
@@ -2996,7 +3004,7 @@
       "subtitle": "YouWhole incluye VeriFactu certificado, IRPF automático y Modelo 130/303 de serie. Sin módulos extra. Sin sorpresas en la factura.",
       "ctaPrimary": "Probar YouWhole gratis",
       "ctaSecondary": "Hablar con el equipo",
-      "trustLine": "14 días gratis · Sin tarjeta · Migración asistida desde Holded",
+      "trustLine": "Gratis para siempre · Sin tarjeta · Migración asistida desde Holded",
       "comparison": {
         "title": "YouWhole vs Holded",
         "subtitle": "Comparativa de características para autónomos y pymes españolas",
@@ -3103,7 +3111,7 @@
       "subtitle": "YouWhole es 100% en la nube, incluye VeriFactu certificado y cuesta menos que Sage. Sin instalaciones, sin versiones desactualizadas, sin sorpresas.",
       "ctaPrimary": "Probar YouWhole gratis",
       "ctaSecondary": "Hablar con el equipo",
-      "trustLine": "14 días gratis · Sin tarjeta · Migración asistida desde Sage",
+      "trustLine": "Gratis para siempre · Sin tarjeta · Migración asistida desde Sage",
       "reasons": {
         "title": "¿Por qué los autónomos abandonan Sage?",
         "subtitle": "Sage lleva décadas en el mercado, pero fue diseñado para otra época. Estas son las quejas más habituales.",
@@ -3336,7 +3344,7 @@
       "h1Line1": "Software de recursos humanos",
       "h1Highlight": "para pymes que no quieren complicaciones",
       "subtitle": "Nóminas, contratos, control horario, vacaciones y portal del empleado integrados con tu facturación. Todo en YouWhole, sin necesidad de otro programa de RRHH.",
-      "ctaPrimary": "Probar gratis 14 días",
+      "ctaPrimary": "Probar gratis",
       "ctaSecondary": "Solicitar demo",
       "trustLine": "Sin permanencia · Soporte en español · Cumple normativa laboral española",
       "features": {
@@ -3389,7 +3397,7 @@
       },
       "finalCta": {
         "title": "RRHH bajo control desde el primer día",
-        "subtitle": "14 días gratis. Sin tarjeta. El módulo RRHH incluido en todos los planes.",
+        "subtitle": "Gratis para siempre. Sin tarjeta. El módulo RRHH incluido en todos los planes.",
         "cta": "Empezar gratis ahora"
       }
     },
@@ -3404,7 +3412,7 @@
       "h1Line1": "Control horario digital",
       "h1Highlight": "que cumple la ley española",
       "subtitle": "El RD 8/2019 obliga a registrar la jornada de todos tus empleados. YouWhole lo hace automáticamente con GPS, QR o web — integrado con nóminas y proyectos.",
-      "ctaPrimary": "Probar gratis 14 días",
+      "ctaPrimary": "Probar gratis",
       "ctaSecondary": "Ver demo",
       "trustLine": "Sin permanencia · Cumple RD 8/2019 · Integrado con nóminas",
       "checkinMethods": {
@@ -3469,7 +3477,7 @@
       },
       "finalCta": {
         "title": "Cumple la ley de control horario hoy",
-        "subtitle": "14 días gratis. Sin tarjeta. Activado desde el primer día.",
+        "subtitle": "Gratis para siempre. Sin tarjeta. Activado desde el primer día.",
         "cta": "Crear cuenta gratis"
       }
     },
@@ -3484,7 +3492,7 @@
       "h1Line1": "Software de almacén e inventario",
       "h1Highlight": "que se actualiza solo",
       "subtitle": "Controla tu stock en tiempo real, gestiona proveedores y genera pedidos automáticos. Todo integrado con tu facturación para que nunca pierdas el control.",
-      "ctaPrimary": "Probar gratis 14 días",
+      "ctaPrimary": "Probar gratis",
       "ctaSecondary": "Solicitar demo",
       "trustLine": "Sin permanencia · Soporte en español · Integrado con ventas y compras",
       "features": {
@@ -3541,7 +3549,7 @@
       },
       "finalCta": {
         "title": "Tu almacén bajo control desde hoy",
-        "subtitle": "14 días gratis. Sin tarjeta. Stock integrado con tu facturación desde el primer día.",
+        "subtitle": "Gratis para siempre. Sin tarjeta. Stock integrado con tu facturación desde el primer día.",
         "cta": "Empezar gratis ahora"
       }
     },
@@ -3556,7 +3564,7 @@
       "h1Line1": "CRM para pymes que no quieren",
       "h1Highlight": "pagar por otra herramienta",
       "subtitle": "YouWhole incluye un CRM completo integrado con tu facturación. Gestiona clientes, leads y pipeline de ventas sin salir de la plataforma — ni pagar una suscripción extra.",
-      "ctaPrimary": "Probar gratis 14 días",
+      "ctaPrimary": "Probar gratis",
       "ctaSecondary": "Solicitar demo",
       "trustLine": "Sin permanencia · CRM incluido en todos los planes · Soporte en español",
       "features": {
@@ -3613,7 +3621,7 @@
       },
       "finalCta": {
         "title": "Empieza a vender más, desde hoy",
-        "subtitle": "CRM incluido en todos los planes. 14 días gratis sin tarjeta.",
+        "subtitle": "CRM incluido en todos los planes. Gratis para siempre, sin tarjeta.",
         "cta": "Crear cuenta gratis"
       }
     },
@@ -3628,7 +3636,7 @@
       "h1Line1": "Software de contabilidad para pymes",
       "h1Highlight": "que se lleva sola",
       "subtitle": "YouWhole genera los asientos contables automáticamente según el Plan General Contable español. Tú emites facturas — la contabilidad se hace sola, sin errores, sin conocimientos previos.",
-      "ctaPrimary": "Probar gratis 14 días",
+      "ctaPrimary": "Probar gratis",
       "ctaSecondary": "Solicitar demo",
       "trustLine": "Sin permanencia · PGC español · Acceso para tu asesor",
       "automatic": {
@@ -3718,7 +3726,7 @@
       },
       "finalCta": {
         "title": "La contabilidad de tu pyme, en piloto automático",
-        "subtitle": "14 días gratis. Sin tarjeta. Sin conocimientos contables necesarios.",
+        "subtitle": "Gratis para siempre. Sin tarjeta. Sin conocimientos contables necesarios.",
         "cta": "Empezar gratis ahora"
       }
     },
@@ -3733,7 +3741,7 @@
       "h1Line1": "Software de nóminas para pymes",
       "h1Highlight": "sin errores de cálculo",
       "subtitle": "YouWhole calcula automáticamente el IRPF y la Seguridad Social de cada empleado. Genera nóminas en segundos, integradas con el control horario y la contabilidad.",
-      "ctaPrimary": "Probar gratis 14 días",
+      "ctaPrimary": "Probar gratis",
       "ctaSecondary": "Solicitar demo",
       "trustLine": "Sin permanencia · IRPF y SS automáticos · Soporte en español",
       "features": {
@@ -3789,7 +3797,7 @@
       },
       "finalCta": {
         "title": "Nóminas listas en minutos cada mes",
-        "subtitle": "14 días gratis. Sin tarjeta. IRPF y SS calculados automáticamente.",
+        "subtitle": "Gratis para siempre. Sin tarjeta. IRPF y SS calculados automáticamente.",
         "cta": "Empezar gratis ahora"
       }
     }

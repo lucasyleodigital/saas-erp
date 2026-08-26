@@ -19,7 +19,7 @@ const QA: { q: string; a: string; keywords: string[] }[] = [
   },
   {
     q: "Cuanto cuesta YouWhole?",
-    a: "Tenemos 4 planes:\n- Gratuito: 0 EUR/mes (5 clientes, 10 facturas)\n- Starter: 29 EUR/mes (3 usuarios, ilimitado)\n- Pro: 79 EUR/mes (10 usuarios, soporte prioritario)\n- Enterprise: personalizado (usuarios ilimitados)\n\nTodos incluyen 14 dias de prueba gratis del plan Pro, sin tarjeta.",
+    a: "Tenemos 4 planes:\n- Gratuito: 0 EUR/mes para siempre (5 clientes, 10 facturas)\n- Starter: 29 EUR/mes (3 usuarios, ilimitado)\n- Pro: 79 EUR/mes (10 usuarios, soporte prioritario)\n- Enterprise: personalizado (usuarios ilimitados)\n\nPuedes empezar gratis sin tarjeta y hacer upgrade cuando quieras.",
     keywords: ["precio", "cuesta", "plan", "tarifa", "pagar", "suscripcion", "starter", "pro", "enterprise"],
   },
   {

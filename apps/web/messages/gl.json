@@ -2158,7 +2158,7 @@
   "marketing": {
     "seo": {
       "title": "YouWhole — ERP para autónomos e pemes españolas",
-      "description": "ERP creado por autonomos para autonomos e pemes. VeriFactu, IRPF automatico, Modelo 130/303, CRM e contabilidade. 14 dias gratis."
+      "description": "ERP creado por autonomos para autonomos e pemes. VeriFactu, IRPF automatico, Modelo 130/303, CRM e contabilidade. Gratis para sempre."
     },
     "nav": {
       "features": "Funcionalidades",
@@ -2178,7 +2178,7 @@
       "ctaSecondary": "Ver funcionalidades",
       "trust": {
         "verifactu": "VeriFactu AEAT",
-        "trial": "14 días gratis",
+        "trial": "Gratis para sempre",
         "noLockIn": "Sen permanencia",
         "support": "Soporte en galego"
       },
@@ -2207,8 +2207,8 @@
       "modules": "Módulos integrados",
       "languages": "Idiomas oficiais de España",
       "uptime": "Dispoñibilidade garantida",
-      "trial": "Proba gratis sen tarxeta",
-      "daysSuffix": " días"
+      "freeLabel": "gratis cada mes, para sempre",
+      "freeSuffix": " facturas"
     },
     "features": {
       "badge": "15 módulos incluídos",
@@ -2421,8 +2421,8 @@
           "a": "VeriFactu é o sistema de verificación de facturas da Axencia Tributaria española. Desde 2025, toda empresa que use un software de facturación está obrigada a usar sistemas certificados VeriFactu. YouWhole inclúeo de serie — non necesitas facer nada extra para cumprir a lei."
         },
         "q2": {
-          "q": "Que ocorre cando remata o período de proba de 14 días?",
-          "a": "Se non introduces ningún método de pagamento, a túa conta pasa automaticamente ao plan Gratuíto (ata 5 clientes e 10 facturas ao mes). Non se che cobra nada nin se cancela a túa conta. Ti decides cando e se queres facer upgrade."
+          "q": "Necesito tarxeta de crédito para empezar?",
+          "a": "Non. Rexístraste e usas YouWhole gratis desde o primeiro día no plan Gratuíto (ata 5 clientes e 10 facturas ao mes), sen introducir ningún método de pagamento. Non se che cobra nada nin se cancela a túa conta. Ti decides cando, e se queres, facer upgrade a un plan de pagamento."
         },
         "q3": {
           "q": "Podo importar os meus datos desde outro programa ou Excel?",
@@ -2520,7 +2520,15 @@
       "mostPopular": "Máis popular",
       "current": "Actual",
       "currentPlan": "Plan actual",
-      "redirecting": "Redirixindo..."
+      "redirecting": "Redirixindo...",
+      "renewalNotice": "Renovación automática mensual · Cancela cando queiras",
+      "confirm": {
+        "title": "Confirma a túa subscrición",
+        "body1": "Cobraráseche {price}€ hoxe e despois cada mes automaticamente ata que canceles.",
+        "body2": "Podes cancelar cando queiras desde Plans e facturación, sen permanencia.",
+        "cancel": "Cancelar",
+        "continue": "Continuar ao pagamento"
+      }
     },
     "pricingSection": {
       "badge": "Sen letra pequena",
@@ -2531,7 +2539,7 @@
     "finalCta": {
       "titleLine1": "Listo para levar a túa empresa",
       "titleHighlight": "ao seguinte nivel?",
-      "subtitle": "Únete ás empresas que xa xestionan o seu negocio con YouWhole. 14 días gratis, sen tarxeta de crédito.",
+      "subtitle": "Únete ás empresas que xa xestionan o seu negocio con YouWhole. Gratis para sempre, sen tarxeta de crédito.",
       "ctaPrimary": "Crear conta gratis",
       "ctaSecondary": "Xa teño conta"
     },
@@ -2596,7 +2604,7 @@
       "h1Line1": "O ERP que os autónomos españois",
       "h1Highlight": "necesitaban",
       "subtitle": "Facturación con VeriFactu, IRPF automático, Modelo 130/303, contabilidade PGC e CRM. Todo nunha plataforma pensada para como traballa un autónomo de verdade.",
-      "ctaPrimary": "Comeza gratis — 14 días sen tarxeta",
+      "ctaPrimary": "Comeza gratis — sen tarxeta",
       "ctaSecondary": "Solicitar demo",
       "trustLine": "Sen permanencia · Cancela cando queiras · Soporte en galego",
       "features": {
@@ -2694,7 +2702,7 @@
         "subtitle": "Sen letra pequena. Comeza gratis e escala cando o necesites."
       },
       "finalCta": {
-        "title": "Próbao gratis durante 14 días",
+        "title": "Próbao gratis, para sempre",
         "subtitle": "Sen tarxeta de crédito. Sen permanencia. Sen letra pequena.",
         "cta": "Crear a miña conta gratis"
       }
@@ -2710,7 +2718,7 @@
       "h1Line1": "Software de facturación para pemes",
       "h1Highlight": "que vai máis alá das facturas",
       "subtitle": "YouWhole reúne nunha soa plataforma todo o que precisa a túa peme: facturación VeriFactu, contabilidade, nóminas, CRM, inventario e proxectos. Sen integracións. Sen sorpresas.",
-      "ctaPrimary": "Probar gratis 14 días",
+      "ctaPrimary": "Probar gratis",
       "ctaSecondary": "Solicitar demo para a miña peme",
       "trustLine": "Sen permanencia · Soporte en galego · Migración asistida",
       "modules": {
@@ -2773,7 +2781,7 @@
       },
       "finalCta": {
         "title": "A túa peme lista para o seguinte nivel?",
-        "subtitle": "14 días gratis. Sen tarxeta. O equipo axúdache coa migración.",
+        "subtitle": "Gratis para sempre. Sen tarxeta. O equipo axúdache coa migración.",
         "cta": "Comezar gratis agora"
       }
     },
@@ -2856,7 +2864,7 @@
       "subtitle": "YouWhole inclúe VeriFactu certificado, IRPF automático e Modelo 130/303 de serie. Sen módulos extra. Sen sorpresas na factura.",
       "ctaPrimary": "Probar YouWhole gratis",
       "ctaSecondary": "Falar co equipo",
-      "trustLine": "14 días gratis · Sen tarxeta · Migración asistida desde Holded",
+      "trustLine": "Gratis para sempre · Sen tarxeta · Migración asistida desde Holded",
       "comparison": {
         "title": "YouWhole vs Holded",
         "subtitle": "Comparativa de características para autónomos e pemes españolas",
@@ -2963,7 +2971,7 @@
       "subtitle": "YouWhole é 100% na nube, inclúe VeriFactu certificado e custa menos que Sage. Sen instalacións, sen versións desactualizadas, sen sorpresas.",
       "ctaPrimary": "Probar YouWhole gratis",
       "ctaSecondary": "Falar co equipo",
-      "trustLine": "14 días gratis · Sen tarxeta · Migración asistida desde Sage",
+      "trustLine": "Gratis para sempre · Sen tarxeta · Migración asistida desde Sage",
       "reasons": {
         "title": "Por que os autónomos abandonan Sage?",
         "subtitle": "Sage leva décadas no mercado, pero foi deseñado para outra época. Estas son as queixas máis habituais.",
@@ -3196,7 +3204,7 @@
       "h1Line1": "Software de recursos humanos",
       "h1Highlight": "para pemes que non queren complicacións",
       "subtitle": "Nóminas, contratos, control horario, vacacións e portal do empregado integrados coa túa facturación. Todo en YouWhole, sen necesidade doutro programa de RRHH.",
-      "ctaPrimary": "Probar gratis 14 días",
+      "ctaPrimary": "Probar gratis",
       "ctaSecondary": "Solicitar demo",
       "trustLine": "Sen permanencia · Soporte en galego · Cumpre a normativa laboral española",
       "features": {
@@ -3249,7 +3257,7 @@
       },
       "finalCta": {
         "title": "RRHH baixo control desde o primeiro día",
-        "subtitle": "14 días gratis. Sen tarxeta. O módulo RRHH incluído en todos os plans.",
+        "subtitle": "Gratis para sempre. Sen tarxeta. O módulo RRHH incluído en todos os plans.",
         "cta": "Comezar gratis agora"
       }
     },
@@ -3264,7 +3272,7 @@
       "h1Line1": "Control horario dixital",
       "h1Highlight": "que cumpre a lei española",
       "subtitle": "O RD 8/2019 obriga a rexistrar a xornada de todos os teus empregados. YouWhole faino automaticamente con GPS, QR ou web — integrado con nóminas e proxectos.",
-      "ctaPrimary": "Probar gratis 14 días",
+      "ctaPrimary": "Probar gratis",
       "ctaSecondary": "Ver demo",
       "trustLine": "Sen permanencia · Cumpre RD 8/2019 · Integrado con nóminas",
       "checkinMethods": {
@@ -3329,7 +3337,7 @@
       },
       "finalCta": {
         "title": "Cumpre a lei de control horario hoxe",
-        "subtitle": "14 días gratis. Sen tarxeta. Activado desde o primeiro día.",
+        "subtitle": "Gratis para sempre. Sen tarxeta. Activado desde o primeiro día.",
         "cta": "Crear conta gratis"
       }
     },
@@ -3344,7 +3352,7 @@
       "h1Line1": "Software de almacén e inventario",
       "h1Highlight": "que se actualiza só",
       "subtitle": "Controla o teu stock en tempo real, xestiona provedores e xera pedidos automáticos. Todo integrado coa túa facturación para que nunca perdas o control.",
-      "ctaPrimary": "Probar gratis 14 días",
+      "ctaPrimary": "Probar gratis",
       "ctaSecondary": "Solicitar demo",
       "trustLine": "Sen permanencia · Soporte en galego · Integrado con vendas e compras",
       "features": {
@@ -3401,7 +3409,7 @@
       },
       "finalCta": {
         "title": "O teu almacén baixo control desde hoxe",
-        "subtitle": "14 días gratis. Sen tarxeta. Stock integrado coa túa facturación desde o primeiro día.",
+        "subtitle": "Gratis para sempre. Sen tarxeta. Stock integrado coa túa facturación desde o primeiro día.",
         "cta": "Comezar gratis agora"
       }
     },
@@ -3416,7 +3424,7 @@
       "h1Line1": "CRM para pemes que non queren",
       "h1Highlight": "pagar por outra ferramenta",
       "subtitle": "YouWhole inclúe un CRM completo integrado coa túa facturación. Xestiona clientes, leads e pipeline de vendas sen saír da plataforma — nin pagar unha subscrición extra.",
-      "ctaPrimary": "Probar gratis 14 días",
+      "ctaPrimary": "Probar gratis",
       "ctaSecondary": "Solicitar demo",
       "trustLine": "Sen permanencia · CRM incluído en todos os plans · Soporte en galego",
       "features": {
@@ -3473,7 +3481,7 @@
       },
       "finalCta": {
         "title": "Comeza a vender máis, desde hoxe",
-        "subtitle": "CRM incluído en todos os plans. 14 días gratis sen tarxeta.",
+        "subtitle": "CRM incluído en todos os plans. Gratis para sempre, sen tarxeta.",
         "cta": "Crear conta gratis"
       }
     },
@@ -3488,7 +3496,7 @@
       "h1Line1": "Software de contabilidade para pemes",
       "h1Highlight": "que se leva soa",
       "subtitle": "YouWhole xera os asentos contables automaticamente segundo o Plan Xeral Contable español. Ti emites facturas — a contabilidade faise soa, sen erros, sen coñecementos previos.",
-      "ctaPrimary": "Probar gratis 14 días",
+      "ctaPrimary": "Probar gratis",
       "ctaSecondary": "Solicitar demo",
       "trustLine": "Sen permanencia · PGC español · Acceso para o teu asesor",
       "automatic": {
@@ -3578,7 +3586,7 @@
       },
       "finalCta": {
         "title": "A contabilidade da túa peme, en piloto automático",
-        "subtitle": "14 días gratis. Sen tarxeta. Sen coñecementos contables necesarios.",
+        "subtitle": "Gratis para sempre. Sen tarxeta. Sen coñecementos contables necesarios.",
         "cta": "Comezar gratis agora"
       }
     },
@@ -3593,7 +3601,7 @@
       "h1Line1": "Software de nóminas para pemes",
       "h1Highlight": "sen erros de cálculo",
       "subtitle": "YouWhole calcula automaticamente o IRPF e a Seguridade Social de cada empregado. Xera nóminas en segundos, integradas co control horario e a contabilidade.",
-      "ctaPrimary": "Probar gratis 14 días",
+      "ctaPrimary": "Probar gratis",
       "ctaSecondary": "Solicitar demo",
       "trustLine": "Sen permanencia · IRPF e SS automáticos · Soporte en galego",
       "features": {
@@ -3649,7 +3657,7 @@
       },
       "finalCta": {
         "title": "Nóminas listas en minutos cada mes",
-        "subtitle": "14 días gratis. Sen tarxeta. IRPF e SS calculados automaticamente.",
+        "subtitle": "Gratis para sempre. Sen tarxeta. IRPF e SS calculados automaticamente.",
         "cta": "Comezar gratis agora"
       }
     }

@@ -86,6 +86,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
       group: t("groupMain"),
       items: [
         { href: "/dashboard", label: t("dashboard"), icon: LayoutDashboard },
+        { href: "/billing",   label: t("billing"),   icon: CreditCard },
       ],
     },
     {
@@ -128,7 +129,6 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
       items: [
         { href: "/importacion",     label: t("import"),        icon: UploadCloud },
         { href: "/empresa",         label: t("company"),       icon: Building2 },
-        { href: "/billing",         label: t("billing"),       icon: CreditCard },
         { href: "/automatizaciones",label: t("automations"),   icon: Zap },
         { href: "/webhooks",        label: t("webhooks"),         icon: Webhook },
         { href: "/auditoria",       label: t("audit"),        icon: Shield },
