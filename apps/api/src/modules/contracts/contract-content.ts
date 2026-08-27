@@ -108,9 +108,7 @@ export function renderContractHtml(doc: ContractDocument): string {
 
   return `
     <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:640px;margin:0 auto;padding:40px 32px;color:#111827;">
-      <div style="background:#0d9488;width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;">
-        <span style="color:white;font-weight:700;font-size:20px;">Y</span>
-      </div>
+      <img src="https://youwhole.com/logo.png" alt="YouWhole" width="140" style="display:block;margin-bottom:24px;max-height:40px;object-fit:contain;" />
       <h1 style="font-size:22px;font-weight:700;margin:0 0 4px;">Contrato de Servicios YouWhole</h1>
       <p style="color:#6b7280;margin:0 0 28px;">Plan <strong style="color:#0d9488;">${doc.planLabel}</strong> · Aceptado el ${doc.dateStr} · Versión ${doc.version}</p>
 
