@@ -213,7 +213,7 @@ export function PricingCards({ currentPlan = "FREE", onUpgrade }: PricingCardsPr
           <p className="font-semibold text-foreground">CONTRATO DE PRESTACIÓN DE SERVICIOS — YOUWHOLE ENTERPRISE</p>
 
           <p><strong>1. PARTES</strong><br />
-          De una parte, <strong>Lucas y Leo Digital S.L.</strong> (en adelante, «YouWhole» o «Prestador»), titular de la plataforma YouWhole accesible en youwhole.com.<br />
+          De una parte, <strong>Alex Lucas Torrubia</strong> (NIF 41003566V), titular de la plataforma YouWhole bajo el nombre comercial «Lucas y Leo Digital», accesible en youwhole.com (en adelante, «YouWhole» o «Prestador»).<br />
           De otra parte, la empresa suscriptora identificada durante el proceso de registro (en adelante, «Cliente»).</p>
 
           <p><strong>2. OBJETO</strong><br />
@@ -233,7 +233,7 @@ export function PricingCards({ currentPlan = "FREE", onUpgrade }: PricingCardsPr
           YouWhole actúa como Encargado del Tratamiento de los datos que el Cliente introduce en la plataforma. El Cliente es el Responsable del Tratamiento. Los datos se almacenan en servidores dentro de la Unión Europea. YouWhole no cederá datos a terceros salvo obligación legal. Para más información, consulta nuestra Política de Privacidad en youwhole.com/privacidad.</p>
 
           <p><strong>7. PROPIEDAD INTELECTUAL</strong><br />
-          La plataforma YouWhole y todos sus componentes son propiedad exclusiva de Lucas y Leo Digital S.L. El Cliente recibe una licencia de uso no exclusiva e intransferible durante la vigencia del contrato. Los datos introducidos por el Cliente son de su exclusiva propiedad.</p>
+          La plataforma YouWhole y todos sus componentes son propiedad exclusiva de Alex Lucas Torrubia. El Cliente recibe una licencia de uso no exclusiva e intransferible durante la vigencia del contrato. Los datos introducidos por el Cliente son de su exclusiva propiedad.</p>
 
           <p><strong>8. LIMITACIÓN DE RESPONSABILIDAD</strong><br />
           La responsabilidad máxima de YouWhole frente al Cliente no superará el importe de las cuotas abonadas en los últimos 3 meses. YouWhole no responde de daños indirectos, lucro cesante ni pérdida de datos por uso indebido de la plataforma.</p>
@@ -241,7 +241,7 @@ export function PricingCards({ currentPlan = "FREE", onUpgrade }: PricingCardsPr
           <p><strong>9. LEY APLICABLE Y JURISDICCIÓN</strong><br />
           Este contrato se rige por la legislación española. Para cualquier controversia, las partes se someten a los Juzgados y Tribunales de Barcelona, con renuncia expresa a cualquier otro fuero.</p>
 
-          <p className="text-xs">Versión 1.0 — Junio 2026 · YouWhole es una marca de Lucas y Leo Digital S.L.</p>
+          <p className="text-xs">Versión 1.1 — Agosto 2026 · YouWhole es una marca comercial de Alex Lucas Torrubia.</p>
         </div>
 
         <label className="flex items-start gap-3 cursor-pointer select-none">

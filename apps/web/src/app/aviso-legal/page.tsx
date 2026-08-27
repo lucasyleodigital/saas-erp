@@ -27,7 +27,7 @@ export default function AvisoLegalPage() {
             </p>
             <ul className="list-none mt-3 space-y-1">
               <li><strong className="text-foreground">Denominación social:</strong> Alex Lucas Torrubia</li>
-              <li><strong className="text-foreground">CIF:</strong> 41003566V</li>
+              <li><strong className="text-foreground">NIF:</strong> 41003566V</li>
               <li><strong className="text-foreground">Domicilio social:</strong> Carrer del Progrés, 27, buzón 28, 08850 Gavà (Barcelona)</li>
               <li><strong className="text-foreground">Email:</strong> legal@youwhole.com</li>
               <li><strong className="text-foreground">Sitio web:</strong> youwhole.com</li>

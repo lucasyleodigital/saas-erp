@@ -263,7 +263,7 @@ export class EmailService {
       </div>
 
       <div style="font-size:13px;color:#374151;line-height:1.8;space-y:12px;">
-        <p><strong>1. PARTES</strong><br/>Lucas y Leo Digital S.L. («YouWhole») y <strong>${companyName}</strong> (CIF: ${cif ?? "—"}) («Cliente»).</p>
+        <p><strong>1. PARTES</strong><br/>Alex Lucas Torrubia (NIF 41003566V), titular de YouWhole («YouWhole») y <strong>${companyName}</strong> (CIF: ${cif ?? "—"}) («Cliente»).</p>
         <p><strong>2. OBJETO</strong><br/>Acceso a la plataforma SaaS YouWhole en modalidad ${plan}, incluyendo todos los módulos descritos en youwhole.com.</p>
         <p><strong>3. PRECIO Y FACTURACIÓN</strong><br/>${price}€/mes (IVA incluido), con cargo automático mensual a la tarjeta facilitada.</p>
         ${plan === "ENTERPRISE" ? `<p><strong>4. SLA</strong><br/>Disponibilidad garantizada del 99,5% mensual. Soporte prioritario L–V 9:00–19:00 con respuesta en 4 h laborables.</p>` : ""}
@@ -276,7 +276,7 @@ export class EmailService {
       <p style="font-size:12px;color:#9ca3af;margin:0;">
         Este documento confirma la aceptación del contrato de servicios de YouWhole.<br/>
         Para gestionar tu suscripción accede a <a href="https://youwhole.com/dashboard" style="color:#0d9488;">youwhole.com/dashboard</a>.<br/>
-        Contacto: ventas@youwhole.com · YouWhole es una marca de Lucas y Leo Digital S.L.
+        Contacto: ventas@youwhole.com · YouWhole es una marca comercial de Alex Lucas Torrubia.
       </p>
     </div>`;
 

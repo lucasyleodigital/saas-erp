@@ -24,7 +24,7 @@ export default function PrivacidadPage() {
             <h2 className="text-base font-semibold text-foreground mb-3">1. Responsable del tratamiento</h2>
             <p>
               <strong className="text-foreground">Alex Lucas Torrubia</strong> (en adelante, «YouWhole» o «Responsable»)<br />
-              CIF: <strong className="text-foreground">41003566V</strong><br />
+              NIF: <strong className="text-foreground">41003566V</strong><br />
               Domicilio fiscal: <strong className="text-foreground">Carrer del Progrés, 27, buzón 28, 08850 Gavà (Barcelona)</strong><br />
               Email de contacto: <strong className="text-foreground">legal@youwhole.com</strong>
             </p>
