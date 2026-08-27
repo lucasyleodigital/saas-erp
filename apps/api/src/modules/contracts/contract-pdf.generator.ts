@@ -48,6 +48,17 @@ export async function generateContractPdf(doc: ContractDocument): Promise<Buffer
 
     pdf.moveDown(0.5);
     pdf
+      .fontSize(9)
+      .fillColor("#0d9488")
+      .text(
+        "Este documento es un resumen de las condiciones de tu suscripción. El contrato completo " +
+          "-- incluyendo limitacion de responsabilidad, uso aceptable, derecho de desistimiento y el " +
+          "detalle completo de proteccion de datos (RGPD Art. 28) -- esta en youwhole.com/terminos, " +
+          "que aceptaste expresamente al registrarte.",
+        { align: "justify" }
+      );
+    pdf.moveDown(0.8);
+    pdf
       .fontSize(8)
       .fillColor("#9ca3af")
       .text(

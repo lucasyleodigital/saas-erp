@@ -130,6 +130,14 @@ export function renderContractHtml(doc: ContractDocument): string {
         ${clausesHtml}
       </div>
 
+      <div style="background:#f0fdf9;border-left:4px solid #0d9488;padding:14px 18px;border-radius:0 8px 8px 0;margin:24px 0;font-size:12px;color:#374151;line-height:1.6;">
+        Este documento es un resumen de las condiciones de tu suscripción. El contrato completo —
+        incluyendo limitación de responsabilidad, uso aceptable, derecho de desistimiento y el detalle
+        completo de protección de datos (RGPD Art. 28) — está en
+        <a href="https://youwhole.com/terminos" style="color:#0d9488;">youwhole.com/terminos</a>,
+        que aceptaste expresamente al registrarte.
+      </div>
+
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:28px 0;"/>
       <p style="font-size:12px;color:#9ca3af;margin:0;">
         Este documento confirma la aceptación del contrato de servicios de YouWhole.<br/>
