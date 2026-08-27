@@ -88,6 +88,7 @@ export default function PrivacidadPage() {
               <li><strong className="text-foreground">Supabase / PostgreSQL</strong> — base de datos alojada en la UE.</li>
               <li><strong className="text-foreground">Vercel / Railway</strong> — infraestructura de alojamiento.</li>
               <li><strong className="text-foreground">Resend</strong> — servicio de envío de emails transaccionales.</li>
+              <li><strong className="text-foreground">OpenRouter, Google (Gemini), NVIDIA, Anthropic (Claude) y Mistral AI</strong> — procesamiento de imágenes mediante inteligencia artificial cuando usas la función opcional «Escanear documento con IA» para extraer datos de tickets y facturas; solo se envía el documento que subes voluntariamente para ese fin.</li>
               <li><strong className="text-foreground">Administraciones públicas</strong> — cuando lo exija la normativa.</li>
             </ul>
             <p className="mt-2">No cedemos datos a terceros con fines publicitarios.</p>
