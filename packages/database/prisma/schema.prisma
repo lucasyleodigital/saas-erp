@@ -265,6 +265,7 @@ model Company {
   fiscalPeriods   FiscalPeriod[]
   calendarEntries CalendarEntry[]
   meetings        Meeting[]
+  contractAcceptances ContractAcceptance[]
 
   @@map("companies")
 }
@@ -296,8 +297,26 @@ model User {
   refreshTokens  RefreshToken[]
   auditLogs      AuditLog[]
   activities     Activity[]
+  contractAcceptances ContractAcceptance[]
 
   @@map("users")
+}
+
+model ContractAcceptance {
+  id          String   @id @default(uuid())
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  plan        PlanType
+  version     String
+  price       Decimal  @db.Decimal(10, 2)
+  contentHtml String   @db.Text
+  ipAddress   String?
+  acceptedAt  DateTime @default(now())
+
+  @@index([companyId])
+  @@map("contract_acceptances")
 }
 
 model UserCompany {

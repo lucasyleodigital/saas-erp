@@ -8,6 +8,7 @@ import { JwtStrategy } from "./strategies/jwt.strategy";
 import { LocalStrategy } from "./strategies/local.strategy";
 import { GoogleStrategy } from "./strategies/google.strategy";
 import { CompaniesModule } from "../companies/companies.module";
+import { ContractsModule } from "../contracts/contracts.module";
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { CompaniesModule } from "../companies/companies.module";
       }),
     }),
     forwardRef(() => CompaniesModule),
+    ContractsModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, LocalStrategy, GoogleStrategy],

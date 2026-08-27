@@ -27,6 +27,7 @@ export async function registerAction(payload: {
   firstName: string;
   lastName: string;
   companyName: string;
+  acceptTerms: boolean;
 }) {
   const { data } = await api.post<{ accessToken: string }>("/auth/register", payload);
   localStorage.setItem("access_token", data.accessToken);

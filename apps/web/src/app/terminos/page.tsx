@@ -154,7 +154,27 @@ export default function TerminosPage() {
           </section>
 
           <section>
-            <h2 className="text-base font-semibold text-foreground mb-3">11. Limitacion de responsabilidad</h2>
+            <h2 className="text-base font-semibold text-foreground mb-3">11. Verificación de datos y exención de responsabilidad</h2>
+            <p>
+              YouWhole automatiza cálculos y genera documentos (facturas VeriFactu, resúmenes de IRPF, Modelo 130/303/347, nóminas,
+              datos extraídos de tickets y facturas mediante inteligencia artificial, y cualquier otro dato o documento producido
+              por la plataforma) a partir de la información que el Cliente introduce o sube.
+            </p>
+            <p className="mt-2">
+              El Cliente es el único responsable de revisar y verificar la exactitud de estos datos antes de presentarlos, remitirlos
+              o comunicarlos a la Agencia Tributaria, la Seguridad Social o cualquier otra administración, entidad o tercero. YouWhole
+              no valida el contenido introducido por el Cliente ni garantiza que los cálculos, extracciones automáticas o documentos
+              generados estén libres de errores.
+            </p>
+            <p className="mt-2">
+              YouWhole no asume responsabilidad alguna por sanciones, recargos, intereses, perjuicios o cualquier otra consecuencia
+              derivada de la presentación de datos, documentos o declaraciones que el Cliente no haya revisado y verificado
+              previamente, ni por errores derivados de datos incorrectos, incompletos o inexactos introducidos por el propio Cliente.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-base font-semibold text-foreground mb-3">12. Limitacion de responsabilidad</h2>
             <p>
               La responsabilidad máxima de YouWhole frente al Cliente no superará el importe de las cuotas abonadas en los últimos 3 meses.
               YouWhole no responde de daños indirectos, lucro cesante, pérdida de datos por uso indebido ni interrupciones ajenas a su control.
@@ -162,7 +182,7 @@ export default function TerminosPage() {
           </section>
 
           <section>
-            <h2 className="text-base font-semibold text-foreground mb-3">12. Modificaciones del servicio</h2>
+            <h2 className="text-base font-semibold text-foreground mb-3">13. Modificaciones del servicio</h2>
             <p>
               YouWhole puede modificar o discontinuar funcionalidades con un preaviso de 30 días.
               Los cambios sustanciales en el precio o condiciones se comunicarán por email con 30 días de antelación,
@@ -171,7 +191,7 @@ export default function TerminosPage() {
           </section>
 
           <section>
-            <h2 className="text-base font-semibold text-foreground mb-3">13. Ley aplicable y jurisdiccion</h2>
+            <h2 className="text-base font-semibold text-foreground mb-3">14. Ley aplicable y jurisdiccion</h2>
             <p>
               Estos Términos se rigen por la legislación española. Para cualquier controversia, las partes se someten a los
               Juzgados y Tribunales de <strong className="text-foreground">Barcelona</strong>,
@@ -180,7 +200,7 @@ export default function TerminosPage() {
           </section>
 
           <section>
-            <h2 className="text-base font-semibold text-foreground mb-3">14. Contacto</h2>
+            <h2 className="text-base font-semibold text-foreground mb-3">15. Contacto</h2>
             <p>
               Para cualquier consulta sobre estos Términos: <strong className="text-foreground">legal@youwhole.com</strong>
             </p>

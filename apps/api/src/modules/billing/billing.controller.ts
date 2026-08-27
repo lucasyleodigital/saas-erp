@@ -30,6 +30,7 @@ export class BillingController {
   ) {
     return this.billingService.createCheckoutSession(
       user.companyId,
+      user.sub,
       body.plan,
       body.successUrl,
       body.cancelUrl

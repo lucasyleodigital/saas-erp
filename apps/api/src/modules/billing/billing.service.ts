@@ -2,7 +2,8 @@ import { Injectable, BadRequestException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import Stripe from "stripe";
 import { PrismaService } from "../../database/prisma.service";
-import { EmailService } from "../email/email.service";
+import { ContractsService } from "../contracts/contracts.service";
+import type { ContractPlan } from "../contracts/contract-content";
 
 // These must be replaced with real Stripe price IDs from the Stripe dashboard
 const PRICE_IDS: Record<string, string> = {
@@ -18,7 +19,7 @@ export class BillingService {
   constructor(
     private config: ConfigService,
     private prisma: PrismaService,
-    private email: EmailService
+    private contracts: ContractsService
   ) {
     const stripeKey = this.config.get<string>("STRIPE_SECRET_KEY");
     if (stripeKey && stripeKey.startsWith("sk_")) {
@@ -59,6 +60,7 @@ export class BillingService {
 
   async createCheckoutSession(
     companyId: string,
+    userId: string,
     plan: "STARTER" | "PRO" | "ENTERPRISE",
     successUrl: string,
     cancelUrl: string
@@ -94,7 +96,7 @@ export class BillingService {
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: successUrl,
       cancel_url: cancelUrl,
-      metadata: { companyId, plan },
+      metadata: { companyId, userId, plan },
     });
 
     return { url: session.url };
@@ -199,7 +201,7 @@ export class BillingService {
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
-        const { companyId, plan, invoiceId, type } = session.metadata ?? {};
+        const { companyId, userId, plan, invoiceId, type } = session.metadata ?? {};
 
         if (type === "invoice_payment" && invoiceId && companyId) {
           const inv = await this.prisma.invoice.findFirst({ where: { id: invoiceId, companyId } });
@@ -229,14 +231,27 @@ export class BillingService {
             },
           });
           const priceByPlan: Record<string, number> = { STARTER: 29, PRO: 79, ENTERPRISE: 199 };
-          await this.email.sendContractEmail({
-            clientEmail: company.email,
-            companyName: company.name,
-            cif: company.cif,
-            plan,
-            price: priceByPlan[plan] ?? 0,
-            acceptedAt: new Date(),
-          });
+
+          // Older checkout sessions (created before userId was added to
+          // metadata) fall back to the company's OWNER as the signer.
+          let acceptingUserId: string | undefined = userId;
+          if (!acceptingUserId) {
+            const owner = await this.prisma.userCompany.findFirst({
+              where: { companyId, role: "OWNER" },
+              select: { userId: true },
+            });
+            acceptingUserId = owner?.userId;
+          }
+
+          if (acceptingUserId) {
+            await this.contracts.recordAcceptance({
+              companyId,
+              userId: acceptingUserId,
+              plan: plan as ContractPlan,
+              price: priceByPlan[plan] ?? 0,
+              ipAddress: null,
+            });
+          }
         }
         break;
       }

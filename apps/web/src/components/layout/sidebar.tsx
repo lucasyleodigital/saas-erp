@@ -41,6 +41,7 @@ import {
   HardDrive,
   ScanLine,
   Receipt,
+  FileSignature,
 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -87,6 +88,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
       items: [
         { href: "/dashboard", label: t("dashboard"), icon: LayoutDashboard },
         { href: "/billing",   label: t("billing"),   icon: CreditCard },
+        { href: "/contratos", label: t("contracts"), icon: FileSignature },
       ],
     },
     {

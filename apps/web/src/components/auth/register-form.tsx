@@ -143,7 +143,9 @@ export function RegisterForm() {
             <a href="/privacidad" target="_blank" className="text-primary underline hover:text-primary/80">
               Politica de Privacidad
             </a>
-            , incluyendo el contrato de encargado de tratamiento (RGPD Art. 28).
+            , incluyendo el contrato de encargado de tratamiento (RGPD Art. 28) y la cláusula de
+            verificación de datos: soy responsable de revisar lo que la plataforma genera antes de
+            enviarlo a Hacienda o a terceros.
           </span>
         </label>
         {errors.acceptTerms && (

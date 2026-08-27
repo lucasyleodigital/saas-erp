@@ -17,6 +17,11 @@ async function bootstrap() {
     rawBody: true, // Required for Stripe webhook signature verification
   });
 
+  // Trust Railway's reverse proxy so req.ip resolves the real client IP
+  // (used as evidence when recording contract acceptances) instead of the
+  // proxy's internal address.
+  app.getHttpAdapter().getInstance().set("trust proxy", 1);
+
   const configService = app.get(ConfigService);
   const port = configService.get<number>("PORT", 3001);
   const clientUrl = configService.get<string>("CLIENT_URL", "http://localhost:3000");

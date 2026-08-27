@@ -10,6 +10,7 @@ import * as bcrypt from "bcryptjs";
 import * as speakeasy from "speakeasy";
 import { PrismaService } from "../../database/prisma.service";
 import { EmailService } from "../email/email.service";
+import { ContractsService } from "../contracts/contracts.service";
 import { RegisterDto } from "./dto/register.dto";
 import type { JwtPayload, AuthTokens } from "@saas/types";
 
@@ -19,10 +20,15 @@ export class AuthService {
     private prisma: PrismaService,
     private jwt: JwtService,
     private config: ConfigService,
-    private email: EmailService
+    private email: EmailService,
+    private contracts: ContractsService
   ) {}
 
-  async register(dto: RegisterDto) {
+  async register(dto: RegisterDto, ipAddress: string | null) {
+    if (!dto.acceptTerms) {
+      throw new BadRequestException("Debes aceptar los Términos y Condiciones para registrarte");
+    }
+
     const exists = await this.prisma.user.findUnique({
       where: { email: dto.email },
     });
@@ -67,6 +73,17 @@ export class AuthService {
         },
       },
     }).catch(() => {});
+
+    // Contract acceptance is the legal record of signup — awaited, not
+    // fire-and-forget, so a failure here surfaces instead of silently
+    // leaving a customer without a stored/emailed contract.
+    await this.contracts.recordAcceptance({
+      companyId: company.id,
+      userId: user.id,
+      plan: "FREE",
+      price: 0,
+      ipAddress,
+    });
 
     const tokens = await this.generateTokens(user.id, user.email, company.id, "OWNER");
 
