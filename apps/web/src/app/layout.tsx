@@ -58,17 +58,6 @@ export const metadata: Metadata = {
   category: "Business Software",
   manifest: "/manifest.json",
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
-  alternates: {
-    canonical: APP_URL,
-    languages: {
-      "es": APP_URL,
-      "ca": `${APP_URL}/ca`,
-      "eu": `${APP_URL}/eu`,
-      "gl": `${APP_URL}/gl`,
-      "en": `${APP_URL}/en`,
-      "x-default": APP_URL,
-    },
-  },
   icons: {
     icon: "/logo-icon.png",
     apple: "/logo-icon.png",
