@@ -22,6 +22,16 @@ export function useCreateDeal() {
   });
 }
 
+export function useAddDealNote() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, text }: { id: string; text: string }) =>
+      api.post(`/deals/${id}/notes`, { text }).then((r) => r.data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["deals"] }),
+    onError: () => toast.error("Error al añadir la nota"),
+  });
+}
+
 export function useMoveDealStage() {
   const qc = useQueryClient();
   return useMutation({
