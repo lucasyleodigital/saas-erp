@@ -55,6 +55,11 @@ export class DealsController {
     return this.dealsService.update(user.companyId, id, body);
   }
 
+  @Post(":id/notes")
+  addNote(@CurrentUser() user: JwtPayload, @Param("id") id: string, @Body("text") text: string) {
+    return this.dealsService.addNote(user.companyId, user.sub, id, text);
+  }
+
   @Delete(":id")
   remove(@CurrentUser() user: JwtPayload, @Param("id") id: string) {
     return this.dealsService.remove(user.companyId, id);
