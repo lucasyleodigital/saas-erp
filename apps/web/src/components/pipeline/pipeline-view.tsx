@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { usePipeline, useMoveDealStage, useCreateDeal, useCreatePipeline, useDeleteDeal, useRenamePipeline, useDeletePipeline } from "@/hooks/use-deals";
+import { usePipeline, useMoveDealStage, useCreateDeal, useCreatePipeline, useDeleteDeal, useRenamePipeline, useDeletePipeline, useAddDealNote } from "@/hooks/use-deals";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -262,58 +262,76 @@ function DealCard({ deal, onDelete, onNotes }: { deal: any; onDelete: () => void
 }
 
 function NotesDialog({ deal, onClose }: { deal: any | null; onClose: () => void }) {
-  const qc = useQueryClient();
-  const [notes, setNotes] = useState("");
-  const [saving, setSaving] = useState(false);
-
-  // Sync notes when deal changes
-  useState(() => { if (deal) setNotes(deal.notes ?? ""); });
+  const addNote = useAddDealNote();
+  const [newNote, setNewNote] = useState("");
 
   if (!deal) return null;
 
-  // Initialize on open
-  if (deal && notes === "" && deal.notes) setNotes(deal.notes);
-
-  async function save() {
-    setSaving(true);
-    try {
-      await api.put(`/deals/${deal.id}`, { notes });
-      qc.invalidateQueries({ queryKey: ["deals"] });
-      toast.success("Notas guardadas");
-      onClose();
-    } catch {
-      toast.error("Error al guardar las notas");
-    } finally {
-      setSaving(false);
-    }
+  async function handleAddNote() {
+    if (!newNote.trim()) return;
+    await addNote.mutateAsync({ id: deal.id, text: newNote.trim() });
+    setNewNote("");
   }
 
   return (
     <Dialog open={!!deal} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md h-[80vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileText className="h-4 w-4 text-primary" />
             {deal.title}
           </DialogTitle>
         </DialogHeader>
-        <div className="space-y-2">
-          <Label>Notas del lead</Label>
-          <textarea
-            className="w-full min-h-[160px] rounded-lg border border-input bg-background px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
-            placeholder="Escribe aquí el seguimiento, conversaciones, próximos pasos..."
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            autoFocus
-          />
+
+        <div className="flex-1 overflow-y-auto space-y-4 pr-2 scrollbar-thin">
+          {/* Mostrar la nota antigua si existe como "Nota inicial heredada" */}
+          {deal.notes && (
+            <div className="bg-muted/30 p-3 rounded-lg border text-sm text-muted-foreground">
+              <p className="text-xs font-semibold mb-1 text-foreground">Nota inicial (heredada)</p>
+              <div className="whitespace-pre-wrap">{deal.notes}</div>
+            </div>
+          )}
+
+          {/* Historial de notas desde Activities */}
+          {deal.activities?.length === 0 && !deal.notes && (
+            <div className="text-center text-sm text-muted-foreground py-8">
+              No hay notas para este lead.
+            </div>
+          )}
+
+          {deal.activities?.map((activity: any) => (
+            <div key={activity.id} className="bg-muted/50 p-3 rounded-lg border border-border/50 text-sm">
+              <div className="flex justify-between items-start mb-1.5">
+                <span className="font-medium text-xs text-foreground">
+                  {activity.user?.firstName} {activity.user?.lastName}
+                </span>
+                <span className="text-[10px] text-muted-foreground">
+                  {new Date(activity.createdAt).toLocaleString("es-ES", {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
+                </span>
+              </div>
+              <div className="whitespace-pre-wrap text-muted-foreground">{activity.description}</div>
+            </div>
+          ))}
         </div>
-        <DialogFooter className="gap-2">
-          <Button variant="outline" onClick={onClose}>Cancelar</Button>
-          <Button onClick={save} disabled={saving}>
-            {saving && <span className="h-3.5 w-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2 inline-block" />}
-            Guardar
-          </Button>
-        </DialogFooter>
+
+        <div className="pt-4 border-t mt-auto space-y-3">
+          <textarea
+            className="w-full h-[100px] rounded-lg border border-input bg-background px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
+            placeholder="Escribe una nueva nota..."
+            value={newNote}
+            onChange={(e) => setNewNote(e.target.value)}
+          />
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={onClose}>Cerrar</Button>
+            <Button onClick={handleAddNote} disabled={addNote.isPending || !newNote.trim()}>
+              {addNote.isPending && <span className="h-3.5 w-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2 inline-block" />}
+              Añadir nota
+            </Button>
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );
