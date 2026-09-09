@@ -25,6 +25,11 @@ export class DealsService {
               where: { companyId },
               include: {
                 client: { select: { id: true, name: true } },
+                activities: {
+                  where: { type: "NOTE" },
+                  orderBy: { createdAt: "desc" },
+                  include: { user: { select: { firstName: true, lastName: true } } },
+                },
               },
               orderBy: { updatedAt: "desc" },
             },
@@ -34,6 +39,21 @@ export class DealsService {
       },
     });
     return pipelines;
+  }
+
+  async addNote(companyId: string, userId: string, id: string, text: string) {
+    const deal = await this.prisma.deal.findFirst({ where: { id, companyId } });
+    if (!deal) throw new NotFoundException("Lead no encontrado");
+    return this.prisma.activity.create({
+      data: {
+        companyId,
+        userId,
+        dealId: id,
+        type: "NOTE",
+        subject: "Nota agregada",
+        description: text,
+      },
+    });
   }
 
   async createPipeline(companyId: string, name: string) {
