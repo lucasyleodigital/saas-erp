@@ -2849,13 +2849,13 @@
     },
     "facturacionPymes": {
       "seo": {
-        "title": "Programari de Facturació per a Pimes — YouWhole",
-        "description": "Programari de facturacio per a pimes amb VeriFactu, comptabilitat PGC, nomines i CRM. Tot en un. Des de 29 EUR/mes sense permanencia.",
-        "ogTitle": "Programari de Facturació per a Pimes — YouWhole",
+        "title": "Software de Facturació per a Pimes — YouWhole",
+        "description": "Software de facturacio per a pimes amb VeriFactu, comptabilitat PGC, nomines i CRM. Tot en un. Des de 29 EUR/mes sense permanencia.",
+        "ogTitle": "Software de Facturació per a Pimes — YouWhole",
         "ogDescription": "Tot el que necessita la teva pime: facturació VeriFactu, nòmines, CRM, comptabilitat PGC i més. Des de 29 EUR/mes."
       },
       "badge": "Tot en un per a pimes",
-      "h1Line1": "Programari de facturació per a pimes",
+      "h1Line1": "Software de facturació per a pimes",
       "h1Highlight": "que va més enllà de les factures",
       "subtitle": "YouWhole reuneix en una sola plataforma tot el que necessita la teva pime: facturació VeriFactu, comptabilitat, nòmines, CRM, inventari i projectes. Sense integracions. Sense sorpreses.",
       "ctaPrimary": "Provar gratis",
