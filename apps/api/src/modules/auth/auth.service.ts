@@ -55,6 +55,20 @@ export class AuthService {
       },
     });
 
+    // Every company needs a default invoice series to ever create an
+    // invoice — there is no endpoint to create one later, so this must
+    // happen at signup. Awaited: a company with no series is unusable.
+    const seriesYear = new Date().getFullYear();
+    await this.prisma.invoiceSeries.create({
+      data: {
+        companyId: company.id,
+        name: `Facturas ${seriesYear}`,
+        prefix: `F-${seriesYear}-`,
+        nextNumber: 1,
+        isDefault: true,
+      },
+    });
+
     // Seed default pipeline for new companies (fire-and-forget, non-blocking)
     this.prisma.pipeline.create({
       data: {

@@ -44,7 +44,7 @@ export function useCreateInvoice() {
       qc.invalidateQueries({ queryKey: invoiceKeys.all });
       toast.success("Factura creada correctamente");
     },
-    onError: () => toast.error("Error al crear la factura"),
+    onError: (err: any) => toast.error(err?.response?.data?.message ?? "Error al crear la factura"),
   });
 }
 
@@ -83,7 +83,7 @@ export function useDuplicateInvoice() {
       qc.invalidateQueries({ queryKey: invoiceKeys.all });
       toast.success("Factura duplicada como borrador");
     },
-    onError: () => toast.error("Error al duplicar la factura"),
+    onError: (err: any) => toast.error(err?.response?.data?.message ?? "Error al duplicar la factura"),
   });
 }
 
@@ -96,7 +96,7 @@ export function useBulkUpdateStatus() {
       qc.invalidateQueries({ queryKey: invoiceKeys.all });
       toast.success(`${data.updated} facturas actualizadas`);
     },
-    onError: () => toast.error("Error al actualizar facturas"),
+    onError: (err: any) => toast.error(err?.response?.data?.message ?? "Error al actualizar facturas"),
   });
 }
 
@@ -142,7 +142,7 @@ export function useDeleteInvoice() {
       qc.invalidateQueries({ queryKey: invoiceKeys.all });
       toast.success("Factura eliminada");
     },
-    onError: () => toast.error("Error al eliminar la factura"),
+    onError: (err: any) => toast.error(err?.response?.data?.message ?? "Error al eliminar la factura"),
   });
 }
 
@@ -165,6 +165,6 @@ export function useRegisterPayment() {
       qc.invalidateQueries({ queryKey: invoiceKeys.all });
       toast.success("Pago registrado");
     },
-    onError: () => toast.error("Error al registrar el pago"),
+    onError: (err: any) => toast.error(err?.response?.data?.message ?? "Error al registrar el pago"),
   });
 }
