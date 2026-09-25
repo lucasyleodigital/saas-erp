@@ -1,7 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PrismaService } from "../../database/prisma.service";
 import { AccountingService } from "../accounting/accounting.service";
+import { CreateExpenseDto } from "./dto/create-expense.dto";
+import { UpdateExpenseDto } from "./dto/update-expense.dto";
 
 export interface QuarterRange {
   year: number;
@@ -344,7 +346,12 @@ export class FiscalService {
     return { data, total };
   }
 
-  async createExpense(companyId: string, data: any) {
+  async createExpense(companyId: string, data: CreateExpenseDto) {
+    const supplierRecord = await this.prisma.supplier.findFirst({
+      where: { id: data.supplierId, companyId },
+    });
+    if (!supplierRecord) throw new NotFoundException("Proveedor no encontrado");
+
     const subtotal = Number(data.subtotal);
     const vatRate = Number(data.vatRate ?? 21);
     const vatAmount = +(subtotal * vatRate / 100).toFixed(2);
@@ -358,8 +365,9 @@ export class FiscalService {
         companyId,
         date: new Date(data.date),
         description: data.description,
-        supplier: data.supplier || null,
-        supplierNif: data.supplierNif || null,
+        supplierId: supplierRecord.id,
+        supplier: supplierRecord.name,
+        supplierNif: supplierRecord.cifNif || null,
         invoiceRef: data.invoiceRef || null,
         subtotal,
         vatRate,
@@ -711,9 +719,23 @@ IMPORTANTE: Solo incluye campos que estén claramente visibles en el documento. 
     return { attachmentUrl, documentType, aiProvider, extracted };
   }
 
-  async updateExpense(companyId: string, id: string, data: any) {
+  async updateExpense(companyId: string, id: string, data: UpdateExpenseDto) {
     const existing = await this.prisma.expense.findFirst({ where: { id, companyId } });
-    if (!existing) throw new Error("Gasto no encontrado");
+    if (!existing) throw new NotFoundException("Gasto no encontrado");
+
+    let supplierFields = {};
+    if (data.supplierId !== undefined) {
+      const supplierRecord = await this.prisma.supplier.findFirst({
+        where: { id: data.supplierId, companyId },
+      });
+      if (!supplierRecord) throw new NotFoundException("Proveedor no encontrado");
+      supplierFields = {
+        supplierId: supplierRecord.id,
+        supplier: supplierRecord.name,
+        supplierNif: supplierRecord.cifNif || null,
+      };
+    }
+
     const subtotal = data.subtotal !== undefined ? Number(data.subtotal) : Number(existing.subtotal);
     const vatRate  = data.vatRate  !== undefined ? Number(data.vatRate)  : Number(existing.vatRate);
     const vatAmount = +(subtotal * vatRate / 100).toFixed(2);
@@ -723,8 +745,7 @@ IMPORTANTE: Solo incluye campos que estén claramente visibles en el documento. 
       data: {
         ...(data.date        && { date:        new Date(data.date) }),
         ...(data.description && { description: data.description }),
-        ...(data.supplier    !== undefined && { supplier:    data.supplier    || null }),
-        ...(data.supplierNif !== undefined && { supplierNif: data.supplierNif || null }),
+        ...supplierFields,
         ...(data.invoiceRef  !== undefined && { invoiceRef:  data.invoiceRef  || null }),
         ...(data.category    && { category: data.category }),
         subtotal, vatRate, vatAmount, total,

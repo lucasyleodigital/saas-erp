@@ -5,6 +5,8 @@ import { FiscalService } from "./fiscal.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
 import type { JwtPayload } from "@saas/types";
+import { CreateExpenseDto } from "./dto/create-expense.dto";
+import { UpdateExpenseDto } from "./dto/update-expense.dto";
 
 @ApiTags("Fiscal")
 @ApiBearerAuth()
@@ -72,7 +74,7 @@ export class FiscalController {
   }
 
   @Post("expenses")
-  createExpense(@CurrentUser() u: JwtPayload, @Body() body: any) {
+  createExpense(@CurrentUser() u: JwtPayload, @Body() body: CreateExpenseDto) {
     return this.fiscal.createExpense(u.companyId, body);
   }
 
@@ -84,7 +86,7 @@ export class FiscalController {
   }
 
   @Patch("expenses/:id")
-  updateExpense(@CurrentUser() u: JwtPayload, @Param("id") id: string, @Body() body: any) {
+  updateExpense(@CurrentUser() u: JwtPayload, @Param("id") id: string, @Body() body: UpdateExpenseDto) {
     return this.fiscal.updateExpense(u.companyId, id, body);
   }
 

@@ -219,16 +219,15 @@ export class PurchaseOrdersService {
           const supplier = (updatedPo as any).supplier;
           const vatRate = (updatedPo as any).items[0]?.taxRate ?? 21;
           this.fiscal.createExpense(companyId, {
-            date:        updatedPo.issueDate,
+            date:        updatedPo.issueDate.toISOString(),
             description: `OC ${updatedPo.number} — ${supplier?.name ?? "Proveedor"}`,
-            supplier:    supplier?.name ?? null,
-            supplierNif: supplier?.cifNif ?? null,
+            supplierId:  supplier?.id,
             invoiceRef:  updatedPo.number,
             subtotal:    Number(updatedPo.subtotal),
             vatRate:     Number(vatRate),
             category:    "OTROS",
             isDeductible: true,
-          }).catch((err: any) => console.error("[FISCAL] Auto-expense from PO failed:", err?.message));
+          } as any).catch((err: any) => console.error("[FISCAL] Auto-expense from PO failed:", err?.message));
         }
       }
     });

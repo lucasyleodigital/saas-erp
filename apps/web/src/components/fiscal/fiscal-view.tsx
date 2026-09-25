@@ -8,12 +8,15 @@ import {
   useUpdateExpense, useAnalyzeExpense,
 } from "@/hooks/use-fiscal";
 import { usePendingPurchaseOrders, useReceiveAllPurchaseOrder } from "@/hooks/use-purchase-orders";
+import { useSuppliers, useCreateSupplier, type Supplier } from "@/hooks/use-suppliers";
+import { SupplierDialog } from "@/components/suppliers/supplier-dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { formatCurrency } from "@/lib/utils";
 import {
   Calculator, CalendarDays, AlertTriangle, CheckCircle2, Clock,
@@ -21,6 +24,7 @@ import {
   TrendingDown, Receipt, ExternalLink, Upload, Paperclip, X as XIcon, Pencil,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 const EXPENSE_CATEGORIES = ["SERVICIOS", "SOFTWARE", "MARKETING", "OFICINA", "TRANSPORTE", "FORMACION", "OTROS"];
 
@@ -85,14 +89,17 @@ function ModeloCard({
 function EditExpenseDialog({ expense, onOpenChange }: { expense: any | null; onOpenChange: (v: boolean) => void }) {
   const update = useUpdateExpense();
   const [form, setForm] = useState<any>({});
+  const { data: suppliersData } = useSuppliers({ limit: 200 });
+  const suppliers = suppliersData?.data ?? [];
+  const createSupplier = useCreateSupplier();
+  const [newSupplierOpen, setNewSupplierOpen] = useState(false);
 
   useEffect(() => {
     if (expense) {
       setForm({
         date: expense.date ? new Date(expense.date).toISOString().split("T")[0] : "",
         description: expense.description ?? "",
-        supplier: expense.supplier ?? "",
-        supplierNif: expense.supplierNif ?? "",
+        supplierId: expense.supplierId ?? "",
         invoiceRef: expense.invoiceRef ?? "",
         subtotal: String(expense.subtotal ?? ""),
         vatRate: String(expense.vatRate ?? "21"),
@@ -104,8 +111,18 @@ function EditExpenseDialog({ expense, onOpenChange }: { expense: any | null; onO
 
   function set(k: string, v: string) { setForm((p: any) => ({ ...p, [k]: v })); }
 
+  async function handleCreateSupplier(dto: Partial<Supplier>) {
+    const created = await createSupplier.mutateAsync(dto);
+    set("supplierId", created.id);
+    setNewSupplierOpen(false);
+  }
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (!form.supplierId) {
+      toast.error("Selecciona un proveedor (o crea uno nuevo) antes de guardar");
+      return;
+    }
     await update.mutateAsync({ id: expense.id, data: form });
     onOpenChange(false);
   }
@@ -130,9 +147,21 @@ function EditExpenseDialog({ expense, onOpenChange }: { expense: any | null; onO
             </div>
           </div>
           <div className="space-y-1"><Label>Descripción</Label><Input value={form.description ?? ""} onChange={(e) => set("description", e.target.value)} required /></div>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1"><Label>Proveedor</Label><Input value={form.supplier ?? ""} onChange={(e) => set("supplier", e.target.value)} /></div>
-            <div className="space-y-1"><Label>NIF proveedor</Label><Input placeholder="B12345678" value={form.supplierNif ?? ""} onChange={(e) => set("supplierNif", e.target.value)} /></div>
+          <div className="space-y-1">
+            <Label>Proveedor</Label>
+            <div className="flex gap-2">
+              <Select value={form.supplierId ?? ""} onValueChange={(v) => set("supplierId", v)}>
+                <SelectTrigger className="flex-1"><SelectValue placeholder="Selecciona un proveedor" /></SelectTrigger>
+                <SelectContent>
+                  {suppliers.map((s) => (
+                    <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button type="button" variant="outline" size="icon" onClick={() => setNewSupplierOpen(true)}>
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1"><Label>Nº factura</Label><Input placeholder="INV-001" value={form.invoiceRef ?? ""} onChange={(e) => set("invoiceRef", e.target.value)} /></div>
@@ -172,12 +201,19 @@ function EditExpenseDialog({ expense, onOpenChange }: { expense: any | null; onO
           )}
           <DialogFooter className="gap-2 pt-1">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-            <Button type="submit" disabled={update.isPending}>
+            <Button type="submit" disabled={update.isPending || !form.supplierId}>
               {update.isPending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}Guardar cambios
             </Button>
           </DialogFooter>
         </form>
       </DialogContent>
+      <SupplierDialog
+        open={newSupplierOpen}
+        onOpenChange={setNewSupplierOpen}
+        supplier={null}
+        onSave={handleCreateSupplier}
+        loading={createSupplier.isPending}
+      />
     </Dialog>
   );
 }
@@ -185,7 +221,7 @@ function EditExpenseDialog({ expense, onOpenChange }: { expense: any | null; onO
 // ── Add Expense Dialog ─────────────────────────────────────────────────────────
 const EMPTY_FORM = {
   date: new Date().toISOString().split("T")[0],
-  description: "", supplier: "", supplierNif: "", invoiceRef: "",
+  description: "", supplierId: "", invoiceRef: "",
   subtotal: "", vatRate: "21", withholdingRate: "", category: "OTROS", attachmentUrl: "",
 };
 
@@ -195,13 +231,24 @@ function AddExpenseDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
   const analyze = useAnalyzeExpense();
   const receiveAll = useReceiveAllPurchaseOrder();
   const { data: pendingPos } = usePendingPurchaseOrders();
+  const { data: suppliersData } = useSuppliers({ limit: 200 });
+  const suppliers = suppliersData?.data ?? [];
+  const createSupplier = useCreateSupplier();
   const fileRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState(EMPTY_FORM);
   const [fileName, setFileName] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [linkedPoId, setLinkedPoId] = useState("");
+  const [newSupplierOpen, setNewSupplierOpen] = useState(false);
+  const [supplierPrefill, setSupplierPrefill] = useState<Partial<Supplier> | undefined>(undefined);
 
   function set(k: string, v: string) { setForm((p) => ({ ...p, [k]: v })); }
+
+  async function handleCreateSupplier(dto: Partial<Supplier>) {
+    const created = await createSupplier.mutateAsync(dto);
+    set("supplierId", created.id);
+    setNewSupplierOpen(false);
+  }
 
   function handlePoLink(poId: string) {
     setLinkedPoId(poId);
@@ -210,7 +257,7 @@ function AddExpenseDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
     if (!po) return;
     setForm((prev) => ({
       ...prev,
-      supplier: po.supplier?.name ?? prev.supplier,
+      supplierId: po.supplierId ?? po.supplier?.id ?? prev.supplierId,
       invoiceRef: po.number,
       subtotal: String(Number(po.subtotal).toFixed(2)),
       description: prev.description || `Factura OC ${po.number}`,
@@ -225,15 +272,31 @@ function AddExpenseDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
       ...p,
       ...(ex.date        && { date:        ex.date }),
       ...(ex.description && { description: ex.description }),
-      ...(ex.supplier    && { supplier:    ex.supplier }),
-      ...(ex.supplierNif && { supplierNif: ex.supplierNif }),
       ...(ex.invoiceRef  && { invoiceRef:  ex.invoiceRef }),
       ...(ex.subtotal    && { subtotal:    String(ex.subtotal) }),
       vatRate: ex.vatRate !== undefined ? String(ex.vatRate) : "0",
       ...(ex.category    && { category:   ex.category }),
       ...(result.attachmentUrl && { attachmentUrl: result.attachmentUrl }),
     }));
-  }, [analyze]);
+
+    // Try to match the AI-extracted supplier against an existing one; if
+    // there's no match, open the "new supplier" dialog pre-filled instead
+    // of silently discarding what the scan found.
+    if (ex.supplier) {
+      const nameNorm = ex.supplier.trim().toLowerCase();
+      const nifNorm = ex.supplierNif?.trim().toLowerCase();
+      const match = suppliers.find((s) =>
+        s.name.trim().toLowerCase() === nameNorm ||
+        (nifNorm && s.cifNif && s.cifNif.trim().toLowerCase() === nifNorm)
+      );
+      if (match) {
+        set("supplierId", match.id);
+      } else {
+        setSupplierPrefill({ name: ex.supplier, cifNif: ex.supplierNif });
+        setNewSupplierOpen(true);
+      }
+    }
+  }, [analyze, suppliers]);
 
   function onDrop(e: React.DragEvent) {
     e.preventDefault(); setDragOver(false);
@@ -243,6 +306,10 @@ function AddExpenseDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (!form.supplierId) {
+      toast.error("Selecciona un proveedor (o crea uno nuevo) antes de guardar");
+      return;
+    }
     await create.mutateAsync(form);
     if (linkedPoId) {
       await receiveAll.mutateAsync(linkedPoId).catch(() => {});
@@ -345,9 +412,26 @@ function AddExpenseDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
             </div>
           </div>
           <div className="space-y-1"><Label>{t("description")}</Label><Input placeholder={t("descPlaceholder")} value={form.description} onChange={(e) => set("description", e.target.value)} required /></div>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1"><Label>{t("supplier")}</Label><Input placeholder={t("supplierPlaceholder")} value={form.supplier} onChange={(e) => set("supplier", e.target.value)} /></div>
-            <div className="space-y-1"><Label>NIF proveedor</Label><Input placeholder="B12345678" value={form.supplierNif} onChange={(e) => set("supplierNif", e.target.value)} /></div>
+          <div className="space-y-1">
+            <Label>{t("supplier")}</Label>
+            <div className="flex gap-2">
+              <Select value={form.supplierId} onValueChange={(v) => set("supplierId", v)}>
+                <SelectTrigger className="flex-1"><SelectValue placeholder={t("supplierPlaceholder")} /></SelectTrigger>
+                <SelectContent>
+                  {suppliers.map((s) => (
+                    <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={() => { setSupplierPrefill(undefined); setNewSupplierOpen(true); }}
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1"><Label>{t("invoiceRef")}</Label><Input placeholder="INV-001" value={form.invoiceRef} onChange={(e) => set("invoiceRef", e.target.value)} /></div>
@@ -387,12 +471,20 @@ function AddExpenseDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
           )}
           <DialogFooter className="gap-2 pt-1">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>{t("cancel")}</Button>
-            <Button type="submit" disabled={create.isPending || isAnalyzing}>
+            <Button type="submit" disabled={create.isPending || isAnalyzing || !form.supplierId}>
               {create.isPending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}{t("save")}
             </Button>
           </DialogFooter>
         </form>
       </DialogContent>
+      <SupplierDialog
+        open={newSupplierOpen}
+        onOpenChange={setNewSupplierOpen}
+        supplier={null}
+        initialValues={supplierPrefill}
+        onSave={handleCreateSupplier}
+        loading={createSupplier.isPending}
+      />
     </Dialog>
   );
 }
