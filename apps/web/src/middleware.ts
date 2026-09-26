@@ -12,12 +12,19 @@ const SATELLITE_PATHS = [
   "/software-crm-pymes", "/software-contabilidad-pymes", "/software-nominas-pymes",
 ];
 
-// Paths that don't require authentication (without locale prefix)
-const PUBLIC_PATHS = [
-  "/", "/login", "/registro", "/recuperar-password", "/auth/callback",
-  "/privacidad", "/aviso-legal", "/terminos", "/cookies", "/ayuda",
-  "/sobre-nosotros", "/contacto",
-  ...SATELLITE_PATHS,
+// Every real page behind the login wall. Only these get redirected to
+// /login when there's no session — anything else (a bad link, a bot
+// probing random paths like /year or /mese) falls through to Next.js's
+// own routing and gets a clean 404 instead of polluting Search Console
+// with thousands of low-value /login?from=<garbage> redirects.
+const PROTECTED_PATH_PREFIXES = [
+  "/dashboard", "/admin", "/albaranes", "/auditoria", "/automatizaciones",
+  "/backup", "/banco", "/billing", "/calendario", "/campos-personalizados",
+  "/clientes", "/compras", "/configuracion", "/contabilidad", "/contratos",
+  "/control-horario", "/empleados", "/empresa", "/facturas", "/fiscal",
+  "/importacion", "/inventario", "/leads", "/nominas", "/notificaciones",
+  "/pedidos", "/pipeline", "/presupuestos", "/productos", "/proveedores",
+  "/proyectos", "/verifactu", "/webhooks",
 ];
 
 export function middleware(request: NextRequest) {
@@ -56,7 +63,9 @@ export function middleware(request: NextRequest) {
     ? localeMatch[1]
     : routing.defaultLocale;
 
-  const isPublicPath = PUBLIC_PATHS.includes(pathWithoutLocale) || pathWithoutLocale.startsWith("/fichar");
+  const isProtectedPath = PROTECTED_PATH_PREFIXES.some(
+    (p) => pathWithoutLocale === p || pathWithoutLocale.startsWith(`${p}/`)
+  );
   const isAuthPath =
     pathWithoutLocale === "/login" || pathWithoutLocale === "/registro";
 
@@ -69,8 +78,11 @@ export function middleware(request: NextRequest) {
     );
   }
 
-  // Unauthenticated user trying to access protected route → go to login
-  if (!session && !isPublicPath) {
+  // Unauthenticated user trying to access a real protected route → go to
+  // login. A path that's neither public nor a known protected route (a
+  // bad link, a bot probing /year, /mese, /whatever) falls through
+  // instead, so it 404s naturally rather than redirecting to login.
+  if (!session && isProtectedPath) {
     const loginUrl = new URL(`/${currentLocale}/login`, request.url);
     loginUrl.searchParams.set("from", pathname);
     return NextResponse.redirect(loginUrl);
