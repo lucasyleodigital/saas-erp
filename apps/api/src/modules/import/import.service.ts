@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 
 export interface ImportError { row: number; field: string; message: string; }
 export interface ImportResult { total: number; inserted: number; skipped: number; errors: ImportError[]; }
@@ -123,7 +123,7 @@ function parseDate(raw: string | Date | undefined): Date | undefined {
 export class ImportService {
   constructor(private prisma: PrismaService) {}
 
-  parseFile(buffer: Buffer, entity?: string): any[] {
+  async parseFile(buffer: Buffer, entity?: string): Promise<any[]> {
     const raw = buffer.toString("utf8").trimStart();
     if (raw.startsWith("[") || raw.startsWith("{")) {
       try {
@@ -158,19 +158,32 @@ export class ImportService {
       } catch { throw new BadRequestException("El JSON no es válido."); }
     }
     try {
-      const wb = XLSX.read(buffer, { type: "buffer", cellDates: true });
-      const ws = wb.Sheets[wb.SheetNames[0]!];
+      const wb = new ExcelJS.Workbook();
+      await wb.xlsx.load(buffer as any);
+      const ws = wb.worksheets[0];
       if (!ws) throw new Error("Hoja vacía");
-      return XLSX.utils.sheet_to_json(ws, { defval: "" }) as any[];
+      const result: Record<string, any>[] = [];
+      const headers: string[] = [];
+      ws.eachRow((row, rowNumber) => {
+        const vals = (row.values as any[]).slice(1);
+        if (rowNumber === 1) {
+          vals.forEach((v) => headers.push(String(v ?? "")));
+        } else {
+          const obj: Record<string, any> = {};
+          headers.forEach((h, i) => { obj[h] = vals[i] ?? ""; });
+          result.push(obj);
+        }
+      });
+      return result;
     } catch { throw new BadRequestException("No se pudo leer el archivo. Usa .xlsx, .csv o .json"); }
   }
 
   // ── Preview: detect columns + suggest mapping ─────────────────────────────
-  previewImport(entity: string, buffer: Buffer): PreviewResult {
+  async previewImport(entity: string, buffer: Buffer): Promise<PreviewResult> {
     const fields = ENTITY_FIELDS[entity];
     if (!fields) throw new BadRequestException("Entidad no válida");
 
-    const rows = this.parseFile(buffer, entity);
+    const rows = await this.parseFile(buffer, entity);
     if (!rows.length) throw new BadRequestException(
       "No se encontraron filas de datos en el archivo. " +
       "Comprueba que el archivo tiene datos y que la primera fila contiene los nombres de columna."
@@ -192,7 +205,7 @@ export class ImportService {
 
   // ── Import clients ────────────────────────────────────────────────────────
   async importClients(companyId: string, buffer: Buffer, mapping: Record<string, string> = {}): Promise<ImportResult> {
-    const rows = this.parseFile(buffer, "clients");
+    const rows = await this.parseFile(buffer, "clients");
     if (!rows.length) return { total: 0, inserted: 0, skipped: 0, errors: [] };
 
     let inserted = 0, skipped = 0;
@@ -235,7 +248,7 @@ export class ImportService {
 
   // ── Import products ───────────────────────────────────────────────────────
   async importProducts(companyId: string, buffer: Buffer, mapping: Record<string, string> = {}): Promise<ImportResult> {
-    const rows = this.parseFile(buffer, "products");
+    const rows = await this.parseFile(buffer, "products");
     if (!rows.length) return { total: 0, inserted: 0, skipped: 0, errors: [] };
 
     let inserted = 0, skipped = 0;
@@ -277,7 +290,7 @@ export class ImportService {
 
   // ── Import invoices ───────────────────────────────────────────────────────
   async importInvoices(companyId: string, buffer: Buffer, mapping: Record<string, string> = {}): Promise<ImportResult> {
-    const rows = this.parseFile(buffer, "invoices");
+    const rows = await this.parseFile(buffer, "invoices");
     if (!rows.length) return { total: 0, inserted: 0, skipped: 0, errors: [] };
 
     let inserted = 0, skipped = 0;
@@ -408,7 +421,7 @@ export class ImportService {
 
   // ── Import suppliers ──────────────────────────────────────────────────────
   async importSuppliers(companyId: string, buffer: Buffer, mapping: Record<string, string> = {}): Promise<ImportResult> {
-    const rows = this.parseFile(buffer, "suppliers");
+    const rows = await this.parseFile(buffer, "suppliers");
     if (!rows.length) return { total: 0, inserted: 0, skipped: 0, errors: [] };
 
     let inserted = 0, skipped = 0;
@@ -446,7 +459,7 @@ export class ImportService {
   }
 
   // ── Template generator ────────────────────────────────────────────────────
-  generateTemplate(entity: "clients" | "products" | "invoices" | "suppliers"): Buffer {
+  async generateTemplate(entity: "clients" | "products" | "invoices" | "suppliers"): Promise<Buffer> {
     const templates = {
       clients:   { headers: ["Nombre","Email","Teléfono","CIF/NIF","Dirección","Ciudad","Provincia","Código postal","País","Web","Notas"],    example: ["Empresa Ejemplo S.L.","contacto@empresa.com","912345678","B12345678","Calle Mayor 1","Madrid","Madrid","28001","ES","www.empresa.com",""] },
       products:  { headers: ["Nombre","SKU","Descripción","Precio","Coste","Tipo","Control stock"],                                          example: ["Consultoría hora","CONS-001","Hora de consultoría","75.00","0","SERVICE","NO"] },
@@ -454,10 +467,10 @@ export class ImportService {
       suppliers: { headers: ["Nombre","Email","Teléfono","CIF/NIF","Persona contacto","Dirección","Ciudad","País","Web","IBAN / Cuenta","Notas"], example: ["Proveedor S.L.","proveedor@email.com","912345678","B87654321","Ana García","Calle Industria 5","Barcelona","ES","www.proveedor.com","ES12 1234 5678 90 1234567890",""] },
     };
     const tpl = templates[entity];
-    const ws = XLSX.utils.aoa_to_sheet([tpl.headers, tpl.example]);
-    ws["!cols"] = tpl.headers.map(() => ({ wch: 20 }));
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Plantilla");
-    return XLSX.write(wb, { type: "buffer", bookType: "xlsx" }) as Buffer;
+    const wb = new ExcelJS.Workbook();
+    const ws = wb.addWorksheet("Plantilla");
+    ws.columns = tpl.headers.map((h) => ({ header: h, key: h, width: 20 }));
+    ws.addRow(Object.fromEntries(tpl.headers.map((h, i) => [h, tpl.example[i]])));
+    return Buffer.from(await wb.xlsx.writeBuffer());
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 
 @Injectable()
 export class ExportService {
@@ -106,17 +106,15 @@ export class ExportService {
     return this.toXlsx(rows, "Proveedores");
   }
 
-  private toXlsx(rows: Record<string, any>[], sheetName: string): Buffer {
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.json_to_sheet(rows);
-
-    const colWidths = Object.keys(rows[0] ?? {}).map((key) => {
+  private async toXlsx(rows: Record<string, any>[], sheetName: string): Promise<Buffer> {
+    const wb = new ExcelJS.Workbook();
+    const ws = wb.addWorksheet(sheetName);
+    const keys = Object.keys(rows[0] ?? {});
+    ws.columns = keys.map((key) => {
       const maxLen = Math.max(key.length, ...rows.map((r) => String(r[key] ?? "").length));
-      return { wch: Math.min(maxLen + 2, 40) };
+      return { header: key, key, width: Math.min(maxLen + 2, 40) };
     });
-    ws["!cols"] = colWidths;
-
-    XLSX.utils.book_append_sheet(wb, ws, sheetName);
-    return Buffer.from(XLSX.write(wb, { type: "buffer", bookType: "xlsx" }));
+    ws.addRows(rows);
+    return Buffer.from(await wb.xlsx.writeBuffer());
   }
 }

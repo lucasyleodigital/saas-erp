@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 
 export interface ReconcileResult {
   imported: number;
@@ -79,7 +79,7 @@ export class BankService {
     });
     if (!account) throw new BadRequestException("Cuenta no encontrada");
 
-    const rows = this.parseStatement(buffer);
+    const rows = await this.parseStatement(buffer);
     if (!rows.length) throw new BadRequestException("No se encontraron transacciones en el archivo");
 
     let imported = 0;
@@ -183,21 +183,21 @@ export class BankService {
     return false;
   }
 
-  private parseStatement(buffer: Buffer): Array<{ date: Date; amount: number; description: string; reference: string }> {
+  private async parseStatement(buffer: Buffer): Promise<Array<{ date: Date; amount: number; description: string; reference: string }>> {
     let rows: Record<string, any>[];
 
     const isZip = buffer[0] === 0x50 && buffer[1] === 0x4B;
     const isXls = buffer[0] === 0xD0 && buffer[1] === 0xCF;
 
     if (isZip || isXls) {
-      rows = this.parseExcelBuffer(buffer);
+      rows = await this.parseExcelBuffer(buffer);
     } else {
       const raw = buffer.toString("utf8").trimStart();
       if (raw.startsWith("[") || raw.startsWith("{")) {
         rows = JSON.parse(raw);
         if (!Array.isArray(rows)) rows = [rows];
       } else {
-        rows = this.parseExcelBuffer(buffer);
+        rows = await this.parseExcelBuffer(buffer);
       }
     }
 
@@ -257,12 +257,16 @@ export class BankService {
     }).filter((r) => !isNaN(r.amount) && r.amount !== 0);
   }
 
-  private parseExcelBuffer(buffer: Buffer): Record<string, any>[] {
-    const wb = XLSX.read(buffer, { type: "buffer" });
-    const ws = wb.Sheets[wb.SheetNames[0]!];
+  private async parseExcelBuffer(buffer: Buffer): Promise<Record<string, any>[]> {
+    const wb = new ExcelJS.Workbook();
+    await wb.xlsx.load(buffer as any);
+    const ws = wb.worksheets[0];
     if (!ws) throw new BadRequestException("Hoja vacia");
 
-    const rawRows: any[][] = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
+    const rawRows: any[][] = [];
+    ws.eachRow((row) => {
+      rawRows.push((row.values as any[]).slice(1));
+    });
 
     const HEADER_HINTS = [
       "importe", "amount", "fecha", "date", "concepto", "descripcion",
@@ -287,7 +291,13 @@ export class BankService {
     }
 
     if (headerIdx === -1) {
-      return XLSX.utils.sheet_to_json(ws, { defval: "" });
+      if (rawRows.length < 2) return [];
+      const hdrs = (rawRows[0] as any[]).map((h: any) => String(h ?? "").trim());
+      return rawRows.slice(1).map((row: any[]) => {
+        const obj: Record<string, any> = {};
+        hdrs.forEach((h, i) => { if (h) obj[h] = row[i] ?? ""; });
+        return obj;
+      });
     }
 
     const headers = (rawRows[headerIdx] as any[]).map((h: any) =>

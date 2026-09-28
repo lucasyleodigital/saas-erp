@@ -1,5 +1,10 @@
 export const CONTRACT_VERSION = "2026-08";
 
+function esc(str: string | null | undefined): string {
+  if (!str) return "";
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
 export type ContractPlan = "FREE" | "STARTER" | "PRO" | "ENTERPRISE";
 
 const PLAN_LABEL: Record<ContractPlan, string> = {
@@ -49,7 +54,7 @@ export function buildContractDocument(params: BuildContractParams): ContractDocu
   const sections: ContractSection[] = [
     {
       title: "PARTES",
-      body: `Alex Lucas Torrubia (NIF 41003566V), titular de la plataforma YouWhole bajo el nombre comercial «Lucas y Leo Digital» («YouWhole»), y <strong>${companyName}</strong> (CIF/NIF: ${cif ?? "—"}) («Cliente»).`,
+      body: `Alex Lucas Torrubia (NIF 41003566V), titular de la plataforma YouWhole bajo el nombre comercial «Lucas y Leo Digital» («YouWhole»), y <strong>${esc(companyName)}</strong> (CIF/NIF: ${esc(cif) || "—"}) («Cliente»).`,
     },
     {
       title: "OBJETO",
@@ -89,7 +94,7 @@ export function buildContractDocument(params: BuildContractParams): ContractDocu
   ];
 
   return {
-    subject: `Contrato de servicios YouWhole ${planLabel} — ${companyName}`,
+    subject: `Contrato de servicios YouWhole ${planLabel} — ${esc(companyName)}`,
     companyName,
     cif,
     plan,

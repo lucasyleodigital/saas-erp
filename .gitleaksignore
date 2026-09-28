@@ -1,0 +1,14 @@
+# False positives — variable names without values in example files,
+# and the IndexNow key which is public by protocol design.
+
+# CLAUDE_API_KEY= in .env.example (empty placeholder)
+14b28a8cc70b6a3cf697913bf00f6db1b87328e5:.env.example:generic-api-key:40
+
+# CLAUDE_API_KEY= in apps/api/.env.example (empty placeholder)
+14b28a8cc70b6a3cf697913bf00f6db1b87328e5:apps/api/.env.example:generic-api-key:43
+
+# IndexNow key in route.ts — public by spec (Bing verifies it as a public file)
+4fc4754f49d813b79c49adf453043517cc3e4dd6:apps/web/src/app/api/indexnow/route.ts:generic-api-key:3
+
+# sk_live_xxxxxxxxxxxx in .env.example — x-placeholder, not a real Stripe key
+5a5bd297636283c0a1a3b7db367d106110ab7258:apps/api/.env.example:stripe-access-token:22

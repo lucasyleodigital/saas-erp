@@ -12,8 +12,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
     private prisma: PrismaService
   ) {
     super({
-      clientID: config.get<string>("GOOGLE_CLIENT_ID") || "google-oauth-not-configured",
-      clientSecret: config.get<string>("GOOGLE_CLIENT_SECRET") || "google-oauth-not-configured",
+      clientID: config.get<string>("GOOGLE_CLIENT_ID") ?? "",
+      clientSecret: config.get<string>("GOOGLE_CLIENT_SECRET") ?? "",
       // Must point to the API server (Railway), NOT the web frontend (Vercel)
       callbackURL: `${config.get("API_URL", "http://localhost:3001")}/api/v1/auth/google/callback`,
       scope: ["email", "profile"],

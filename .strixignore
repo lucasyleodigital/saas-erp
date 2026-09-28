@@ -1,0 +1,6 @@
+COMPLIANCE-IA.md
+*.log
+node_modules/
+.next/
+dist/
+.env*

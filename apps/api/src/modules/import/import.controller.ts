@@ -38,7 +38,7 @@ export class ImportController {
   constructor(private importService: ImportService) {}
 
   @Get("template/:entity")
-  downloadTemplate(
+  async downloadTemplate(
     @Param("entity") entity: string,
     @Res() res: Response,
   ) {
@@ -47,7 +47,7 @@ export class ImportController {
       throw new BadRequestException("Entidad no válida. Usa: clients, products, invoices, suppliers");
     }
 
-    const buffer = this.importService.generateTemplate(entity as any);
+    const buffer = await this.importService.generateTemplate(entity as any);
     const names: Record<string, string> = {
       clients:   "plantilla_clientes.xlsx",
       products:  "plantilla_productos.xlsx",
