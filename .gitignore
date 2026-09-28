@@ -35,3 +35,7 @@ pnpm-debug.log*
 
 # Prisma
 packages/database/prisma/migrations
+
+gitleaks.exe
+gitleaks-report.json
+apps/bearer-report.json
