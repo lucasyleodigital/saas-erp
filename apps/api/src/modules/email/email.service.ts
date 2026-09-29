@@ -266,6 +266,81 @@ export class EmailService {
     );
   }
 
+  async sendPlanChanged(to: string, firstName: string, plan: string, price: number) {
+    const planLabel: Record<string, string> = {
+      STARTER: "Starter",
+      PRO: "Pro",
+      ENTERPRISE: "Enterprise",
+    };
+    const planFeatures: Record<string, string[]> = {
+      STARTER: ["Facturas ilimitadas", "VeriFactu incluido", "Hasta 3 usuarios", "Soporte por email"],
+      PRO: ["Todo lo de Starter", "Hasta 10 usuarios", "Informes avanzados", "Soporte prioritario"],
+      ENTERPRISE: ["Todo lo de Pro", "Usuarios ilimitados", "Integraciones API", "Soporte dedicado"],
+    };
+    const features = planFeatures[plan] ?? [];
+    const label = planLabel[plan] ?? plan;
+    const fmt = new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(price);
+
+    await this.send(
+      to,
+      `Tu plan de YouWhole ha cambiado a ${label}`,
+      `
+      <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;margin:0;padding:0;background:#f8fafc;">
+        <div style="background:linear-gradient(135deg,#040c0a 0%,#061410 60%,#080f0c 100%);padding:40px 32px 32px;text-align:center;">
+          <img src="https://youwhole.com/logo.png" alt="YouWhole" width="220" style="display:inline-block;margin-bottom:12px;" />
+          <h1 style="color:#ffffff;font-size:24px;font-weight:700;margin:0 0 8px;">Plan actualizado</h1>
+          <p style="color:#94a3b8;font-size:15px;margin:0;">Tu cuenta ya está en el plan <strong style="color:#0d9488;">${label}</strong></p>
+        </div>
+
+        <div style="max-width:560px;margin:0 auto;padding:32px;">
+          <div style="background:#ffffff;border-radius:12px;border:1px solid #e5e7eb;padding:32px;margin-bottom:24px;">
+            <p style="color:#374151;font-size:15px;line-height:1.7;margin:0 0 20px;">
+              Hola <strong>${firstName}</strong>, tu plan de YouWhole ha cambiado correctamente a
+              <strong style="color:#0d9488;">${label}</strong> por <strong>${fmt}/mes</strong>.
+              El acceso a las nuevas funcionalidades está activo desde este momento.
+            </p>
+
+            <p style="color:#6b7280;font-size:14px;font-weight:600;margin:0 0 12px;text-transform:uppercase;letter-spacing:0.5px;">Lo que incluye tu plan</p>
+            <table style="width:100%;border-collapse:collapse;">
+              ${features.map((f) => `
+              <tr>
+                <td style="padding:9px 12px;border-bottom:1px solid #f3f4f6;">
+                  <span style="color:#0d9488;font-weight:700;margin-right:10px;">✓</span>
+                  <span style="color:#374151;font-size:14px;">${f}</span>
+                </td>
+              </tr>`).join("")}
+            </table>
+          </div>
+
+          <div style="text-align:center;margin-bottom:24px;">
+            <a href="${this.clientUrl}/es/dashboard"
+              style="display:inline-block;background:linear-gradient(135deg,#0d9488 0%,#0f766e 100%);color:white;padding:14px 36px;border-radius:10px;text-decoration:none;font-weight:600;font-size:15px;box-shadow:0 4px 14px rgba(13,148,136,0.3);">
+              Ir a mi cuenta
+            </a>
+          </div>
+
+          <div style="background:#f0fdf9;border-left:4px solid #0d9488;padding:16px 20px;border-radius:0 8px 8px 0;margin-bottom:24px;">
+            <p style="margin:0;font-size:13px;color:#374151;line-height:1.6;">
+              <strong>¿Tienes dudas sobre tu factura o el plan?</strong> Escríbenos a
+              <a href="mailto:hola@youwhole.com" style="color:#0d9488;text-decoration:none;font-weight:500;">hola@youwhole.com</a>
+              o llámanos al <a href="tel:+34624029617" style="color:#0d9488;text-decoration:none;font-weight:500;">624 029 617</a>.
+            </p>
+          </div>
+        </div>
+
+        <div style="text-align:center;padding:24px 32px 32px;border-top:1px solid #e5e7eb;">
+          <p style="margin:0 0 4px;font-size:13px;color:#6b7280;font-weight:500;">YouWhole</p>
+          <p style="margin:0;font-size:12px;color:#9ca3af;">
+            El ERP todo en uno para autónomos y pymes españolas<br/>
+            <a href="https://youwhole.com" style="color:#0d9488;text-decoration:none;">youwhole.com</a> ·
+            Hecho por <a href="https://lucasyleodigital.com" style="color:#9ca3af;text-decoration:none;">Lucas y Leo Digital</a>
+          </p>
+        </div>
+      </div>
+      `
+    );
+  }
+
   async sendNewSignupAlert(email: string, firstName: string, lastName: string, companyName: string) {
     const now = new Intl.DateTimeFormat("es-ES", {
       day: "2-digit", month: "2-digit", year: "numeric",

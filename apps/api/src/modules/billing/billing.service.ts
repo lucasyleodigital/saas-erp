@@ -3,6 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import Stripe from "stripe";
 import { PrismaService } from "../../database/prisma.service";
 import { ContractsService } from "../contracts/contracts.service";
+import { EmailService } from "../email/email.service";
 import type { ContractPlan } from "../contracts/contract-content";
 
 // These must be replaced with real Stripe price IDs from the Stripe dashboard
@@ -19,7 +20,8 @@ export class BillingService {
   constructor(
     private config: ConfigService,
     private prisma: PrismaService,
-    private contracts: ContractsService
+    private contracts: ContractsService,
+    private email: EmailService,
   ) {
     const stripeKey = this.config.get<string>("STRIPE_SECRET_KEY");
     if (stripeKey && stripeKey.startsWith("sk_")) {
@@ -251,6 +253,21 @@ export class BillingService {
               price: priceByPlan[plan] ?? 0,
               ipAddress: null,
             });
+
+            // Send plan-change confirmation email (fire-and-forget)
+            this.prisma.user.findUnique({
+              where: { id: acceptingUserId },
+              select: { email: true, firstName: true },
+            }).then((user) => {
+              if (user?.email) {
+                this.email.sendPlanChanged(
+                  user.email,
+                  user.firstName ?? "Usuario",
+                  plan,
+                  priceByPlan[plan] ?? 0,
+                ).catch((e) => console.warn("[EMAIL] sendPlanChanged error:", e));
+              }
+            }).catch(() => {});
           }
         }
         break;
