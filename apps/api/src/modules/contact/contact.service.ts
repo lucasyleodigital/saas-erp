@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { EmailService } from "../email/email.service";
+import { PrismaService } from "../../database/prisma.service";
 import { ContactDto } from "./dto/contact.dto";
 
 function esc(s: string): string {
@@ -13,9 +14,11 @@ function esc(s: string): string {
 
 @Injectable()
 export class ContactService {
-  constructor(private email: EmailService) {}
+  constructor(private email: EmailService, private prisma: PrismaService) {}
 
-  async submitFeedback(rating: number, comment: string, userEmail: string, companyName: string) {
+  async submitFeedback(rating: number, comment: string, userEmail: string, companyId: string) {
+    const co = await this.prisma.company.findUnique({ where: { id: companyId }, select: { name: true } });
+    const companyName = co?.name ?? "";
     const stars = "★".repeat(Math.max(1, Math.min(5, rating))) + "☆".repeat(5 - Math.max(1, Math.min(5, rating)));
     const safeComment = esc(comment ?? "");
     const safeCompany = esc(companyName ?? "");

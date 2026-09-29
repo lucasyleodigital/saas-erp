@@ -29,6 +29,6 @@ export class ContactController {
     @Body("rating") rating: number,
     @Body("comment") comment: string,
   ) {
-    return this.contact.submitFeedback(rating, comment ?? "", u.email ?? "", u.companyName ?? "");
+    return this.contact.submitFeedback(rating, comment ?? "", u.email ?? "", u.companyId);
   }
 }
