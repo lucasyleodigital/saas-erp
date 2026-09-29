@@ -60,8 +60,9 @@ export default function AdminPage() {
     try {
       const res = await api.post(`/admin/companies/${companyId}/notify-plan`, {});
       toast.success(`Email enviado a ${res.data.sentTo}`);
-    } catch {
-      toast.error("Error al enviar la notificación");
+    } catch (e: any) {
+      const msg = e?.response?.data?.message ?? e?.message ?? "Error desconocido";
+      toast.error(`Error al notificar: ${msg}`);
     }
   }
 
