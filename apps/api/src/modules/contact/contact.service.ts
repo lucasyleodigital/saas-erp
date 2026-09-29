@@ -15,6 +15,40 @@ function esc(s: string): string {
 export class ContactService {
   constructor(private email: EmailService) {}
 
+  async submitFeedback(rating: number, comment: string, userEmail: string, companyName: string) {
+    const stars = "★".repeat(Math.max(1, Math.min(5, rating))) + "☆".repeat(5 - Math.max(1, Math.min(5, rating)));
+    const safeComment = esc(comment ?? "");
+    const safeCompany = esc(companyName ?? "");
+    const safeEmail = esc(userEmail ?? "");
+
+    await this.email.sendGeneric(
+      "lucasyleodigital@gmail.com",
+      `[YouWhole Feedback] ${stars} — ${safeCompany}`,
+      `
+        <div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#111827">
+          <div style="background:linear-gradient(135deg,#040c0a,#061410);padding:24px 28px;border-radius:12px 12px 0 0">
+            <h2 style="color:#2dd4bf;margin:0 0 4px;font-size:20px">Nueva valoración en YouWhole</h2>
+            <p style="color:#94a3b8;margin:0;font-size:13px">Feedback de un usuario</p>
+          </div>
+          <div style="background:#fff;border:1px solid #e5e7eb;border-top:none;padding:24px 28px;border-radius:0 0 12px 12px">
+            <div style="font-size:28px;letter-spacing:2px;margin-bottom:16px">${stars}</div>
+            <table style="width:100%;border-collapse:collapse;margin-bottom:16px">
+              <tr><td style="padding:6px 0;color:#6b7280;width:110px;font-size:13px">Empresa</td><td style="padding:6px 0;font-weight:600">${safeCompany || "—"}</td></tr>
+              <tr><td style="padding:6px 0;color:#6b7280;font-size:13px">Email</td><td style="padding:6px 0"><a href="mailto:${safeEmail}" style="color:#0d9488">${safeEmail || "—"}</a></td></tr>
+              <tr><td style="padding:6px 0;color:#6b7280;font-size:13px">Puntuación</td><td style="padding:6px 0;font-weight:600">${rating} / 5</td></tr>
+            </table>
+            ${safeComment ? `
+            <div style="background:#f0fdf9;border-left:4px solid #0d9488;padding:14px 16px;border-radius:4px">
+              <p style="margin:0;font-size:13px;color:#374151;white-space:pre-wrap">${safeComment}</p>
+            </div>` : `<p style="color:#9ca3af;font-size:13px;font-style:italic">Sin comentario adicional.</p>`}
+          </div>
+        </div>
+      `,
+    ).catch((e) => console.warn("[feedback] email error:", e));
+
+    return { ok: true };
+  }
+
   async submit(dto: ContactDto) {
     const name = esc(dto.name);
     const email = esc(dto.email);
