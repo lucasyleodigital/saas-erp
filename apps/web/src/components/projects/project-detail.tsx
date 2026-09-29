@@ -1,6 +1,6 @@
 "use client";
 
-import { useProject, useProjectProfitability, useDeleteProject } from "@/hooks/use-projects";
+import { useProject, useProjectProfitability, useDeleteProject, useUpdateProject } from "@/hooks/use-projects";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -44,6 +44,7 @@ export function ProjectDetail({ id }: { id: string }) {
   const { data: project, isLoading, isError } = useProject(id);
   const { data: profitability } = useProjectProfitability(id);
   const deleteProject = useDeleteProject();
+  const updateProject = useUpdateProject();
 
   if (isLoading) {
     return (
@@ -105,6 +106,17 @@ export function ProjectDetail({ id }: { id: string }) {
             )}
           </p>
         </div>
+        <select
+          value={project.status}
+          disabled={updateProject.isPending}
+          onChange={(e) => updateProject.mutate({ id: project.id, status: e.target.value })}
+          className="h-9 rounded-lg border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+        >
+          <option value="ACTIVE">{t("statusActive")}</option>
+          <option value="ON_HOLD">{t("statusOnHold")}</option>
+          <option value="COMPLETED">{t("statusCompleted")}</option>
+          <option value="CANCELLED">{t("statusCancelled")}</option>
+        </select>
         <Button
           variant="outline"
           size="sm"
