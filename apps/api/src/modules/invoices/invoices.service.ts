@@ -249,6 +249,81 @@ export class InvoicesService {
     return invoice;
   }
 
+  async update(companyId: string, id: string, dto: any) {
+    const invoice = await this.prisma.invoice.findFirst({ where: { id, companyId } });
+    if (!invoice) throw new NotFoundException("Factura no encontrada");
+    if (invoice.status !== "DRAFT") throw new BadRequestException("Solo se pueden editar facturas en borrador");
+
+    const subtotal = (dto.items as any[]).reduce(
+      (sum: number, item: any) => sum + item.quantity * item.unitPrice * (1 - (item.discount ?? 0) / 100),
+      0,
+    );
+
+    const rawTaxes: any[] = dto.taxes ?? [];
+    const taxesToCreate: Array<{ taxId: string; rate: number; base: number }> = [];
+    for (const t of rawTaxes) {
+      let resolvedTaxId = t.taxId;
+      const existing = await this.prisma.tax.findFirst({ where: { id: t.taxId, companyId } });
+      if (!existing) {
+        const taxName = t.rate > 0 ? `IVA ${t.rate}%` : `IRPF ${Math.abs(t.rate)}%`;
+        const found = await this.prisma.tax.findFirst({ where: { companyId, rate: t.rate } });
+        resolvedTaxId = found
+          ? found.id
+          : (await this.prisma.tax.create({ data: { companyId, name: taxName, rate: t.rate, isDefault: t.rate > 0 } })).id;
+      }
+      taxesToCreate.push({ taxId: resolvedTaxId, rate: t.rate, base: t.base ?? subtotal });
+    }
+
+    if (taxesToCreate.length === 0) {
+      let ivaTax = await this.prisma.tax.findFirst({ where: { companyId, rate: 21 } });
+      if (!ivaTax) ivaTax = await this.prisma.tax.create({ data: { companyId, name: "IVA 21%", rate: 21, isDefault: true } });
+      taxesToCreate.push({ taxId: ivaTax.id, rate: 21, base: subtotal });
+    }
+
+    const taxAmount = taxesToCreate.reduce((sum, t) => sum + t.base * (t.rate / 100), 0);
+    const total = subtotal + taxAmount;
+
+    await this.prisma.$transaction([
+      this.prisma.invoiceItem.deleteMany({ where: { invoiceId: id } }),
+      this.prisma.invoiceTax.deleteMany({ where: { invoiceId: id } }),
+      this.prisma.invoice.update({
+        where: { id },
+        data: {
+          clientId: dto.clientId,
+          issueDate: dto.issueDate ? new Date(dto.issueDate) : undefined,
+          dueDate: dto.dueDate ? new Date(dto.dueDate) : null,
+          currency: dto.currency ?? "EUR",
+          notes: dto.notes ?? null,
+          subtotal,
+          taxAmount,
+          total,
+          items: {
+            create: (dto.items as any[]).map((item: any, i: number) => ({
+              productId: item.productId ?? null,
+              description: item.description,
+              quantity: item.quantity,
+              unitPrice: item.unitPrice,
+              discount: item.discount ?? 0,
+              subtotal: item.quantity * item.unitPrice * (1 - (item.discount ?? 0) / 100),
+              order: i,
+            })),
+          },
+          taxes: {
+            create: taxesToCreate.map((t) => ({
+              taxId: t.taxId,
+              rate: t.rate,
+              base: t.base,
+              amount: t.base * (t.rate / 100),
+            })),
+          },
+        },
+      }),
+    ]);
+
+    this.updateClientBillingTotals(companyId, invoice.clientId).catch(() => {});
+    return this.findOne(companyId, id);
+  }
+
   async updateStatus(companyId: string, id: string, status: string) {
     await this.findOne(companyId, id);
     const updated = await this.prisma.invoice.update({

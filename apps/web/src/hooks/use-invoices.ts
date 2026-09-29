@@ -48,6 +48,19 @@ export function useCreateInvoice() {
   });
 }
 
+export function useUpdateInvoice() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, ...data }: Record<string, unknown> & { id: string }) =>
+      api.put(`/invoices/${id}`, data).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: invoiceKeys.all });
+      toast.success("Factura actualizada");
+    },
+    onError: (err: any) => toast.error(err?.response?.data?.message ?? "Error al actualizar la factura"),
+  });
+}
+
 export function useUpdateInvoiceStatus() {
   const qc = useQueryClient();
   return useMutation({

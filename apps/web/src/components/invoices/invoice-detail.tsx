@@ -10,7 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { ArrowLeft, Download, Send, CheckCircle, Shield, ExternalLink, Copy, Banknote } from "lucide-react";
+import { ArrowLeft, Download, Send, CheckCircle, Shield, ExternalLink, Copy, Banknote, Pencil } from "lucide-react";
+import { InvoiceEditDialog } from "./invoice-edit-dialog";
 import { downloadInvoicePdf } from "@/lib/pdf/download-pdf";
 import { LocaleLink as Link } from "@/components/ui/locale-link";
 import { toast } from "sonner";
@@ -34,6 +35,7 @@ export function InvoiceDetail({ id }: { id: string }) {
   const tCommon = useTranslations("common");
   const [partialOpen, setPartialOpen] = useState(false);
   const [partialAmount, setPartialAmount] = useState("");
+  const [editOpen, setEditOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -91,15 +93,26 @@ export function InvoiceDetail({ id }: { id: string }) {
             PDF
           </Button>
           {invoice.status === "DRAFT" && (
-            <Button
-              size="sm"
-              className="gap-2"
-              onClick={() => updateStatus.mutate({ id, status: "SENT" })}
-              disabled={updateStatus.isPending}
-            >
-              <Send className="h-4 w-4" />
-              {t("detail.send")}
-            </Button>
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2"
+                onClick={() => setEditOpen(true)}
+              >
+                <Pencil className="h-4 w-4" />
+                Editar
+              </Button>
+              <Button
+                size="sm"
+                className="gap-2"
+                onClick={() => updateStatus.mutate({ id, status: "SENT" })}
+                disabled={updateStatus.isPending}
+              >
+                <Send className="h-4 w-4" />
+                {t("detail.send")}
+              </Button>
+            </>
           )}
           {["SENT", "PARTIAL", "OVERDUE"].includes(invoice.status) && (
             <>
@@ -432,6 +445,13 @@ export function InvoiceDetail({ id }: { id: string }) {
           </Card>
         </div>
       </div>
+
+      {/* Edit dialog (DRAFT only) */}
+      <InvoiceEditDialog
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        invoice={invoice}
+      />
 
       {/* Partial payment dialog */}
       <Dialog open={partialOpen} onOpenChange={setPartialOpen}>
