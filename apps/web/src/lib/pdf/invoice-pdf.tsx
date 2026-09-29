@@ -207,7 +207,6 @@ export function InvoicePdf({ invoice }: { invoice: any }) {
             <Text style={s.bankLabel}>Datos de pago</Text>
             <Text style={s.bankTxt}>Titular: {co.legalName ?? co.name}</Text>
             {bank.iban && <Text style={[s.bankTxt, { fontFamily: "Helvetica-Bold" }]}>IBAN: {bank.iban}</Text>}
-            {bank.bic  && <Text style={s.bankTxt}>BIC/SWIFT: {bank.bic}</Text>}
           </View>
         )}
 
@@ -216,13 +215,6 @@ export function InvoicePdf({ invoice }: { invoice: any }) {
           <View style={s.notes}>
             <Text style={[s.notesTxt, { fontFamily: "Helvetica-Bold", marginBottom: 3 }]}>Notas</Text>
             <Text style={s.notesTxt}>{invoice.notes}</Text>
-          </View>
-        )}
-
-        {/* Payment terms */}
-        {settings.invoiceTerms && (
-          <View style={s.termsBox}>
-            <Text style={s.termsTxt}>{settings.invoiceTerms}</Text>
           </View>
         )}
 
