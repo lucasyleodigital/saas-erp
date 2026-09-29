@@ -1,12 +1,16 @@
 import { Injectable, ForbiddenException, NotFoundException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { PrismaService } from "../../database/prisma.service";
+import { EmailService } from "../email/email.service";
+
+const PLAN_PRICE: Record<string, number> = { FREE: 0, STARTER: 29, PRO: 79, ENTERPRISE: 199 };
 
 @Injectable()
 export class AdminService {
   constructor(
     private prisma: PrismaService,
     private jwt: JwtService,
+    private email: EmailService,
   ) {}
 
   assertSuperAdmin(role: string) {
@@ -118,13 +122,31 @@ export class AdminService {
     };
   }
 
-  async updateCompanyPlan(companyId: string, plan: string) {
+  async updateCompanyPlan(companyId: string, plan: string, notify = false) {
     const valid = ["FREE", "STARTER", "PRO", "ENTERPRISE"];
     if (!valid.includes(plan)) throw new ForbiddenException("Plan no valido");
-    return this.prisma.company.update({
-      where: { id: companyId },
-      data: { plan: plan as any },
+    await this.prisma.company.update({ where: { id: companyId }, data: { plan: plan as any } });
+    if (notify) await this.notifyPlanChanged(companyId, plan);
+    return { ok: true };
+  }
+
+  async notifyPlanChanged(companyId: string, plan?: string) {
+    const owner = await this.prisma.userCompany.findFirst({
+      where: { companyId, role: "OWNER" },
+      include: { user: { select: { email: true, firstName: true } } },
     });
+    if (!owner?.user?.email) throw new NotFoundException("Propietario sin email");
+
+    const company = await this.prisma.company.findUnique({ where: { id: companyId }, select: { plan: true } });
+    const activePlan = plan ?? company?.plan ?? "PRO";
+
+    await this.email.sendPlanChanged(
+      owner.user.email,
+      owner.user.firstName ?? "Usuario",
+      activePlan,
+      PLAN_PRICE[activePlan] ?? 0,
+    );
+    return { ok: true, sentTo: owner.user.email };
   }
 
   async toggleCompanyActive(companyId: string) {

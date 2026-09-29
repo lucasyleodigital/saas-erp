@@ -37,9 +37,15 @@ export class AdminController {
   }
 
   @Patch("companies/:id/plan")
-  updatePlan(@CurrentUser() u: JwtPayload, @Param("id") id: string, @Body("plan") plan: string) {
+  updatePlan(@CurrentUser() u: JwtPayload, @Param("id") id: string, @Body("plan") plan: string, @Body("notify") notify?: boolean) {
     this.svc.assertSuperAdmin(u.role);
-    return this.svc.updateCompanyPlan(id, plan);
+    return this.svc.updateCompanyPlan(id, plan, notify);
+  }
+
+  @Post("companies/:id/notify-plan")
+  notifyPlan(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
+    this.svc.assertSuperAdmin(u.role);
+    return this.svc.notifyPlanChanged(id);
   }
 
   @Patch("companies/:id/toggle-active")
