@@ -34,7 +34,7 @@ export function useCreateProject() {
       qc.invalidateQueries({ queryKey: ["projects"] });
       toast.success("Proyecto creado");
     },
-    onError: () => toast.error("Error al crear el proyecto"),
+    onError: (err: any) => toast.error(err?.response?.data?.message ?? "Error al crear el proyecto"),
   });
 }
 
@@ -47,7 +47,7 @@ export function useUpdateProject() {
       qc.invalidateQueries({ queryKey: ["projects"] });
       toast.success("Proyecto actualizado");
     },
-    onError: () => toast.error("Error al actualizar"),
+    onError: (err: any) => toast.error(err?.response?.data?.message ?? "Error al actualizar"),
   });
 }
 
@@ -60,6 +60,6 @@ export function useDeleteProject() {
       qc.invalidateQueries({ queryKey: ["projects"] });
       toast.success("Proyecto eliminado");
     },
-    onError: () => toast.error("Error al eliminar"),
+    onError: (err: any) => toast.error(err?.response?.data?.message ?? "Error al eliminar"),
   });
 }

@@ -66,6 +66,8 @@ export class ProjectsService {
         companyId,
         budget: data.budget ? Number(data.budget) : null,
         hourlyRate: data.hourlyRate ? Number(data.hourlyRate) : null,
+        startDate: data.startDate ? new Date(data.startDate) : null,
+        endDate: data.endDate ? new Date(data.endDate) : null,
       },
     });
   }
@@ -81,6 +83,14 @@ export class ProjectsService {
         hourlyRate:
           data.hourlyRate !== undefined
             ? Number(data.hourlyRate)
+            : undefined,
+        startDate:
+          data.startDate !== undefined
+            ? (data.startDate ? new Date(data.startDate) : null)
+            : undefined,
+        endDate:
+          data.endDate !== undefined
+            ? (data.endDate ? new Date(data.endDate) : null)
             : undefined,
       },
     });
