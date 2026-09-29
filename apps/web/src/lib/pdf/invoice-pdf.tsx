@@ -5,8 +5,8 @@ const DEFAULT_COLOR = "#4f46e5";
 
 function createStyles(primary: string) {
   return StyleSheet.create({
-    page:        { fontFamily: "Helvetica", fontSize: 9, paddingTop: 48, paddingBottom: 80, paddingHorizontal: 50, color: "#111827" },
-    header:      { flexDirection: "row", justifyContent: "space-between", marginBottom: 28 },
+    page:        { fontFamily: "Helvetica", fontSize: 9, paddingTop: 40, paddingBottom: 52, paddingHorizontal: 50, color: "#111827" },
+    header:      { flexDirection: "row", justifyContent: "space-between", marginBottom: 20 },
     logoImg:     { width: 48, height: 48, borderRadius: 4, objectFit: "contain", marginBottom: 6 },
     logoBox:     { width: 38, height: 38, backgroundColor: primary, borderRadius: 6, alignItems: "center", justifyContent: "center" },
     logoLetter:  { color: "#fff", fontSize: 20, fontFamily: "Helvetica-Bold" },
@@ -16,7 +16,7 @@ function createStyles(primary: string) {
     docNum:      { fontSize: 10, color: "#6b7280", textAlign: "right", marginTop: 2 },
     badge:       { marginTop: 6, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 4, alignSelf: "flex-end" },
     badgeTxt:    { fontSize: 8, fontFamily: "Helvetica-Bold", color: "#fff" },
-    infoRow:     { flexDirection: "row", justifyContent: "space-between", backgroundColor: "#f9fafb", borderRadius: 4, padding: 14, marginBottom: 20 },
+    infoRow:     { flexDirection: "row", justifyContent: "space-between", backgroundColor: "#f9fafb", borderRadius: 4, padding: 12, marginBottom: 16 },
     infoBlock:   { width: "46%" },
     infoLabel:   { fontSize: 7, color: "#9ca3af", fontFamily: "Helvetica-Bold", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 5 },
     infoName:    { fontSize: 11, fontFamily: "Helvetica-Bold", marginBottom: 3 },
@@ -32,7 +32,7 @@ function createStyles(primary: string) {
     cDisc:       { flex: 1, textAlign: "center" },
     cIva:        { flex: 1, textAlign: "center" },
     cTotal:      { flex: 1.5, textAlign: "right" },
-    totals:      { alignItems: "flex-end", marginTop: 8, marginBottom: 20 },
+    totals:      { alignItems: "flex-end", marginTop: 6, marginBottom: 16 },
     tRow:        { flexDirection: "row", width: 210, justifyContent: "space-between", paddingVertical: 4, paddingHorizontal: 10 },
     tLbl:        { fontSize: 9, color: "#6b7280" },
     tVal:        { fontSize: 9, color: "#111827", fontFamily: "Helvetica-Bold" },
@@ -201,22 +201,22 @@ export function InvoicePdf({ invoice }: { invoice: any }) {
           )}
         </View>
 
-        {/* Bank account */}
-        {bank && (
-          <View style={s.bankBox} wrap={false}>
-            <Text style={s.bankLabel}>Datos de pago</Text>
-            <Text style={s.bankTxt}>Titular: {co.legalName ?? co.name}</Text>
-            {bank.iban && <Text style={[s.bankTxt, { fontFamily: "Helvetica-Bold" }]}>IBAN: {bank.iban}</Text>}
-          </View>
-        )}
-
-        {/* Notes */}
-        {invoice.notes && (
-          <View style={[s.notes, { marginBottom: 0 }]} wrap={false}>
-            <Text style={[s.notesTxt, { fontFamily: "Helvetica-Bold", marginBottom: 3 }]}>Notas</Text>
-            <Text style={s.notesTxt}>{invoice.notes}</Text>
-          </View>
-        )}
+        {/* Bank + Notes — kept together on the same page */}
+        <View wrap={false}>
+          {bank && (
+            <View style={s.bankBox}>
+              <Text style={s.bankLabel}>Datos de pago</Text>
+              <Text style={s.bankTxt}>Titular: {co.legalName ?? co.name}</Text>
+              {bank.iban && <Text style={[s.bankTxt, { fontFamily: "Helvetica-Bold" }]}>IBAN: {bank.iban}</Text>}
+            </View>
+          )}
+          {invoice.notes && (
+            <View style={[s.notes, { marginBottom: 0 }]}>
+              <Text style={[s.notesTxt, { fontFamily: "Helvetica-Bold", marginBottom: 3 }]}>Notas</Text>
+              <Text style={s.notesTxt}>{invoice.notes}</Text>
+            </View>
+          )}
+        </View>
 
         {/* Footer */}
         <View style={s.footer} fixed>
