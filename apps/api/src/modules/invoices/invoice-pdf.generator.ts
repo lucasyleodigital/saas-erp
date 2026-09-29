@@ -309,7 +309,6 @@ export async function generateInvoicePdf(invoice: any): Promise<Buffer> {
       doc.fontSize(8.5).fillColor("#1e3a5f").text(`${t.holder}: ${co.legalName ?? co.name}`, 62, tableY + 20);
       doc.font("Helvetica-Bold").text(`IBAN: ${bank.iban}`, 62, tableY + 32);
       doc.font("Helvetica");
-      if (bank.bic) doc.text(`BIC: ${bank.bic}`, 300, tableY + 32);
       tableY += 55;
     }
 

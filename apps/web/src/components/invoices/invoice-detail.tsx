@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useInvoice, useUpdateInvoiceStatus, useRegisterPayment } from "@/hooks/use-invoices";
+import { useInvoice, useUpdateInvoiceStatus, useRegisterPayment, useSendInvoiceEmail } from "@/hooks/use-invoices";
 import { useGenerateVerifactu } from "@/hooks/use-verifactu";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { ArrowLeft, Download, Send, CheckCircle, Shield, ExternalLink, Copy, Banknote, Pencil } from "lucide-react";
+import { ArrowLeft, Download, Send, CheckCircle, Shield, ExternalLink, Copy, Banknote, Pencil, MailCheck } from "lucide-react";
 import { InvoiceEditDialog } from "./invoice-edit-dialog";
 import { downloadInvoicePdf } from "@/lib/pdf/download-pdf";
 import { LocaleLink as Link } from "@/components/ui/locale-link";
@@ -30,6 +30,7 @@ export function InvoiceDetail({ id }: { id: string }) {
   const { data: invoice, isLoading } = useInvoice(id);
   const updateStatus = useUpdateInvoiceStatus();
   const registerPayment = useRegisterPayment();
+  const sendEmail = useSendInvoiceEmail();
   const generateVerifactu = useGenerateVerifactu();
   const t = useTranslations("invoices");
   const tCommon = useTranslations("common");
@@ -104,13 +105,23 @@ export function InvoiceDetail({ id }: { id: string }) {
                 Editar
               </Button>
               <Button
+                variant="outline"
                 size="sm"
                 className="gap-2"
                 onClick={() => updateStatus.mutate({ id, status: "SENT" })}
                 disabled={updateStatus.isPending}
               >
-                <Send className="h-4 w-4" />
-                {t("detail.send")}
+                <CheckCircle className="h-4 w-4" />
+                Marcar como emitida
+              </Button>
+              <Button
+                size="sm"
+                className="gap-2"
+                onClick={() => sendEmail.mutate(id)}
+                disabled={sendEmail.isPending}
+              >
+                <MailCheck className="h-4 w-4" />
+                Enviar por email
               </Button>
             </>
           )}
