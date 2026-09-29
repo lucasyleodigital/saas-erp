@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
   Shield, Users, Building2, FileText, Search, LogIn,
-  ChevronRight, ArrowLeft, ToggleLeft, ToggleRight, Trash2,
+  ChevronRight, ArrowLeft, ToggleLeft, ToggleRight, Trash2, Bell,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -52,6 +52,16 @@ export default function AdminPage() {
       window.location.href = "/es/dashboard";
     } catch (e: any) {
       toast.error(e?.response?.data?.message ?? "Error al impersonar");
+    }
+  }
+
+  async function notifyPlan(companyId: string) {
+    if (!confirm("¿Enviar email al propietario notificando el plan actual?")) return;
+    try {
+      const res = await api.post(`/admin/companies/${companyId}/notify-plan`, {});
+      toast.success(`Email enviado a ${res.data.sentTo}`);
+    } catch {
+      toast.error("Error al enviar la notificación");
     }
   }
 
@@ -122,6 +132,9 @@ export default function AdminPage() {
           <div className="flex items-center gap-2">
             <Badge variant={PLAN_COLORS[detail.plan] as any}>{detail.plan}</Badge>
             <Button variant="outline" size="sm" onClick={() => changePlan(detail.id, detail.plan)}>Cambiar plan</Button>
+            <Button variant="outline" size="sm" onClick={() => notifyPlan(detail.id)} className="gap-1.5">
+              <Bell className="h-3.5 w-3.5" /> Notificar plan
+            </Button>
             <Button variant="outline" size="sm" onClick={() => toggleActive(detail.id)}>
               {detail.isActive ? <><ToggleRight className="h-4 w-4 mr-1" /> Activa</> : <><ToggleLeft className="h-4 w-4 mr-1" /> Inactiva</>}
             </Button>
