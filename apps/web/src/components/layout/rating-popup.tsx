@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 const STORAGE_KEY = "youwhole_rating_v1";
 const DELAY_MS = 20_000; // show after 20s on the dashboard
-const REVIEW_URL = "https://g.page/r/YOUR_GOOGLE_PLACE_ID/review"; // cambiar por tu enlace real de Google
+const REVIEW_URL = "https://www.capterra.co.uk/software/1105745/YouWhole";
 
 export function RatingPopup() {
   const [visible, setVisible] = useState(false);
@@ -61,7 +61,7 @@ export function RatingPopup() {
           ¿Te está ayudando YouWhole?
         </p>
         <p className="text-xs text-muted-foreground leading-relaxed">
-          Una valoración en Google nos ayuda a llegar a más autónomos y pymes como tú. Solo te lleva 30 segundos.
+          Una reseña en Capterra nos ayuda a llegar a más autónomos y pymes como tú. Solo te lleva 2 minutos.
         </p>
       </div>
 
