@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { useUpdateInvoice } from "@/hooks/use-invoices";
 import { useClients } from "@/hooks/use-clients";
 import { useProducts } from "@/hooks/use-products";
+import { useProjects } from "@/hooks/use-projects";
 import { useMyCompany } from "@/hooks/use-company";
 import { formatCurrency } from "@/lib/utils";
 import { Plus, Trash2, Loader2 } from "lucide-react";
@@ -55,12 +56,15 @@ export function InvoiceEditDialog({ open, onOpenChange, invoice }: InvoiceEditDi
   const updateInvoice = useUpdateInvoice();
   const { data: clientsData } = useClients({ limit: 200 } as any);
   const { data: productsData } = useProducts();
+  const { data: projectsData } = useProjects({});
   const { data: company } = useMyCompany();
   const clients = clientsData?.data ?? [];
   const products = productsData?.data ?? [];
+  const projects = projectsData?.data ?? projectsData ?? [];
 
   const [currency, setCurrency] = useState("EUR");
   const [language, setLanguage] = useState("es");
+  const [projectId, setProjectId] = useState("");
   const [applyIrpf, setApplyIrpf] = useState(false);
   const [irpfRate, setIrpfRate] = useState(15);
 
@@ -115,6 +119,7 @@ export function InvoiceEditDialog({ open, onOpenChange, invoice }: InvoiceEditDi
 
       setCurrency(invoice.currency ?? "EUR");
       setLanguage(invoice.language ?? "es");
+      setProjectId(invoice.projectId ?? "");
 
       if (irpfTaxes.length > 0) {
         setApplyIrpf(true);
@@ -156,6 +161,7 @@ export function InvoiceEditDialog({ open, onOpenChange, invoice }: InvoiceEditDi
       ...data,
       currency,
       language,
+      projectId: projectId || null,
       taxes,
     } as any);
     onOpenChange(false);
@@ -199,10 +205,23 @@ export function InvoiceEditDialog({ open, onOpenChange, invoice }: InvoiceEditDi
             </div>
           </div>
 
-          {/* Moneda e idioma */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Moneda, idioma y proyecto */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <CurrencySelector value={currency} onChange={setCurrency} amount={total} />
             <LanguageSelector value={language} onChange={setLanguage} />
+            <div className="space-y-1.5">
+              <Label>{t("form.project")}</Label>
+              <select
+                value={projectId}
+                onChange={(e) => setProjectId(e.target.value)}
+                className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              >
+                <option value="">{t("form.noProject")}</option>
+                {(Array.isArray(projects) ? projects : []).map((p: any) => (
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {/* IRPF toggle para autonomos */}

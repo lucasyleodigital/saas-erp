@@ -290,6 +290,7 @@ export class InvoicesService {
         where: { id },
         data: {
           clientId: dto.clientId,
+          projectId: dto.projectId ?? null,
           issueDate: dto.issueDate ? new Date(dto.issueDate) : undefined,
           dueDate: dto.dueDate ? new Date(dto.dueDate) : null,
           currency: dto.currency ?? "EUR",
