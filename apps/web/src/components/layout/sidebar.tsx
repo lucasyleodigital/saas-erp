@@ -132,7 +132,6 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         { href: "/importacion",     label: t("import"),        icon: UploadCloud },
         { href: "/empresa",         label: t("company"),       icon: Building2 },
         { href: "/automatizaciones",label: t("automations"),   icon: Zap },
-        { href: "/webhooks",        label: t("webhooks"),         icon: Webhook },
         { href: "/auditoria",       label: t("audit"),        icon: Shield },
         { href: "/backup",          label: t("backup"),           icon: HardDrive },
         { href: "/notificaciones",  label: t("notifications"), icon: Bell },
