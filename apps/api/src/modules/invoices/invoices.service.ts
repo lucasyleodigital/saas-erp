@@ -382,6 +382,29 @@ export class InvoicesService {
     return payment;
   }
 
+  async deletePayment(companyId: string, invoiceId: string, paymentId: string) {
+    const invoice = await this.findOne(companyId, invoiceId);
+    const payment = await this.prisma.payment.findFirst({
+      where: { id: paymentId, invoiceId },
+    });
+    if (!payment) throw new NotFoundException("Pago no encontrado");
+
+    const newPaid = Math.max(0, Number(invoice.paidAmount) - Number(payment.amount));
+    const newStatus =
+      newPaid <= 0 ? "SENT" : newPaid >= Number(invoice.total) ? "PAID" : "PARTIAL";
+
+    await this.prisma.$transaction([
+      this.prisma.payment.delete({ where: { id: paymentId } }),
+      this.prisma.invoice.update({
+        where: { id: invoiceId },
+        data: { paidAmount: newPaid, status: newStatus as any },
+      }),
+    ]);
+
+    this.updateClientBillingTotals(companyId, invoice.clientId).catch(() => {});
+    return { deleted: true };
+  }
+
   async remove(companyId: string, id: string, role?: string) {
     const invoice = await this.findOne(companyId, id);
 

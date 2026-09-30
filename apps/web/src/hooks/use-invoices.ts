@@ -181,3 +181,16 @@ export function useRegisterPayment() {
     onError: (err: any) => toast.error(err?.response?.data?.message ?? "Error al registrar el pago"),
   });
 }
+
+export function useDeletePayment() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ invoiceId, paymentId }: { invoiceId: string; paymentId: string }) =>
+      api.delete(`/invoices/${invoiceId}/payments/${paymentId}`).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: invoiceKeys.all });
+      toast.success("Pago eliminado");
+    },
+    onError: (err: any) => toast.error(err?.response?.data?.message ?? "Error al eliminar el pago"),
+  });
+}

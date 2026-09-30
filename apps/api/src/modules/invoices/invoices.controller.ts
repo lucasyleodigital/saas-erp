@@ -112,4 +112,13 @@ export class InvoicesController {
   ) {
     return this.svc.registerPayment(u.companyId, id, body.amount, body.method);
   }
+
+  @Delete(":id/payments/:paymentId")
+  deletePayment(
+    @CurrentUser() u: JwtPayload,
+    @Param("id") id: string,
+    @Param("paymentId") paymentId: string,
+  ) {
+    return this.svc.deletePayment(u.companyId, id, paymentId);
+  }
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useInvoice, useUpdateInvoiceStatus, useRegisterPayment, useSendInvoiceEmail } from "@/hooks/use-invoices";
+import { useInvoice, useUpdateInvoiceStatus, useRegisterPayment, useDeletePayment, useSendInvoiceEmail } from "@/hooks/use-invoices";
 import { useGenerateVerifactu } from "@/hooks/use-verifactu";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { ArrowLeft, Download, Send, CheckCircle, Shield, ExternalLink, Copy, Banknote, Pencil, MailCheck } from "lucide-react";
+import { ArrowLeft, Download, Send, CheckCircle, Shield, ExternalLink, Copy, Banknote, Pencil, MailCheck, Trash2 } from "lucide-react";
 import { InvoiceEditDialog } from "./invoice-edit-dialog";
 import { downloadInvoicePdf } from "@/lib/pdf/download-pdf";
 import { LocaleLink as Link } from "@/components/ui/locale-link";
@@ -30,6 +30,7 @@ export function InvoiceDetail({ id }: { id: string }) {
   const { data: invoice, isLoading } = useInvoice(id);
   const updateStatus = useUpdateInvoiceStatus();
   const registerPayment = useRegisterPayment();
+  const deletePayment = useDeletePayment();
   const sendEmail = useSendInvoiceEmail();
   const generateVerifactu = useGenerateVerifactu();
   const t = useTranslations("invoices");
@@ -334,13 +335,24 @@ export function InvoiceDetail({ id }: { id: string }) {
               ) : (
                 <div className="space-y-2">
                   {invoice.payments.map((p: any) => (
-                    <div key={p.id} className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">
+                    <div key={p.id} className="flex items-center justify-between text-sm gap-2">
+                      <span className="text-muted-foreground shrink-0">
                         {formatDate(p.paidAt)}
                       </span>
-                      <span className="font-medium text-emerald-600">
+                      <span className="font-medium text-emerald-600 flex-1 text-right">
                         {formatCurrency(Number(p.amount))}
                       </span>
+                      <button
+                        onClick={() => {
+                          if (!confirm(`¿Eliminar este pago de ${formatCurrency(Number(p.amount))}?`)) return;
+                          deletePayment.mutate({ invoiceId: invoice.id, paymentId: p.id });
+                        }}
+                        className="text-muted-foreground hover:text-destructive transition-colors shrink-0"
+                        title="Eliminar pago"
+                        disabled={deletePayment.isPending}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
                     </div>
                   ))}
                 </div>
