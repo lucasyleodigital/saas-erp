@@ -86,7 +86,7 @@ export class ClientsService {
     return client;
   }
 
-  async create(companyId: string, dto: CreateClientDto) {
+  async create(companyId: string, dto: CreateClientDto, userId?: string) {
     const count = await this.plans.countClients(companyId);
     await this.plans.checkLimit(companyId, "maxClients", count);
     const client = await this.prisma.client.create({ data: { ...dto, companyId } });
@@ -102,25 +102,30 @@ export class ClientsService {
       body: `Cliente "${client.name}" creado`,
     }).catch(() => {});
     this.audit.log({
-      companyId, action: "CREATE", entity: "Client", entityId: client.id,
+      companyId, userId, action: "CREATE", entity: "Client", entityId: client.id,
       newData: { name: client.name, email: client.email },
     }).catch(() => {});
     return client;
   }
 
-  async update(companyId: string, id: string, dto: UpdateClientDto) {
-    await this.findOne(companyId, id);
-    return this.prisma.client.update({
-      where: { id },
-      data: dto,
-    });
+  async update(companyId: string, id: string, dto: UpdateClientDto, userId?: string) {
+    const before = await this.findOne(companyId, id);
+    const updated = await this.prisma.client.update({ where: { id }, data: dto });
+    this.audit.log({
+      companyId, userId, action: "UPDATE", entity: "Client", entityId: id,
+      oldData: { name: before.name, email: before.email },
+      newData: { name: updated.name, email: updated.email },
+    }).catch(() => {});
+    return updated;
   }
 
-  async remove(companyId: string, id: string) {
-    await this.findOne(companyId, id);
-    return this.prisma.client.update({
-      where: { id },
-      data: { isActive: false },
-    });
+  async remove(companyId: string, id: string, userId?: string) {
+    const client = await this.findOne(companyId, id);
+    const updated = await this.prisma.client.update({ where: { id }, data: { isActive: false } });
+    this.audit.log({
+      companyId, userId, action: "DELETE", entity: "Client", entityId: id,
+      oldData: { name: client.name, isActive: true },
+    }).catch(() => {});
+    return updated;
   }
 }

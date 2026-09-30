@@ -35,7 +35,7 @@ export class ClientsController {
 
   @Post()
   create(@CurrentUser() user: JwtPayload, @Body() dto: CreateClientDto) {
-    return this.clientsService.create(user.companyId, dto);
+    return this.clientsService.create(user.companyId, dto, user.sub);
   }
 
   @Put(":id")
@@ -44,11 +44,11 @@ export class ClientsController {
     @Param("id") id: string,
     @Body() dto: UpdateClientDto
   ) {
-    return this.clientsService.update(user.companyId, id, dto);
+    return this.clientsService.update(user.companyId, id, dto, user.sub);
   }
 
   @Delete(":id")
   remove(@CurrentUser() user: JwtPayload, @Param("id") id: string) {
-    return this.clientsService.remove(user.companyId, id);
+    return this.clientsService.remove(user.companyId, id, user.sub);
   }
 }

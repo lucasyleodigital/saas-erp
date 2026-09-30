@@ -216,10 +216,9 @@ export function AuditView() {
                             </div>
                           </td>
                           <td className="px-4 py-3 hidden md:table-cell">
-                            {log.user?.name ??
-                              log.userName ??
-                              log.userId ??
-                              t("system")}
+                            {log.user
+                              ? `${log.user.firstName ?? ""} ${log.user.lastName ?? ""}`.trim() || log.user.email
+                              : log.userName ?? t("system")}
                           </td>
                           <td className="px-4 py-3">
                             <Badge variant={abDef.variant}>{t(`actions.${abDef.key}`)}</Badge>

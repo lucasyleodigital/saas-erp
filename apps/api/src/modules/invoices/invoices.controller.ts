@@ -35,7 +35,7 @@ export class InvoicesController {
 
   @Post()
   create(@CurrentUser() u: JwtPayload, @Body() dto: CreateInvoiceDto) {
-    return this.svc.create(u.companyId, dto);
+    return this.svc.create(u.companyId, dto, u.sub);
   }
 
   @Put(":id")
@@ -110,7 +110,7 @@ export class InvoicesController {
     @Param("id") id: string,
     @Body() body: RegisterPaymentDto,
   ) {
-    return this.svc.registerPayment(u.companyId, id, body.amount, body.method);
+    return this.svc.registerPayment(u.companyId, id, body.amount, body.method, u.sub);
   }
 
   @Delete(":id/payments/:paymentId")

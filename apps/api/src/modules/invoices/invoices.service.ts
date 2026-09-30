@@ -95,7 +95,7 @@ export class InvoicesService {
     return invoice;
   }
 
-  async create(companyId: string, dto: CreateInvoiceDto) {
+  async create(companyId: string, dto: CreateInvoiceDto, userId?: string) {
     const monthCount = await this.plans.countInvoicesThisMonth(companyId);
     await this.plans.checkLimit(companyId, "maxInvoicesPerMonth", monthCount);
 
@@ -239,7 +239,7 @@ export class InvoicesService {
     }).catch(() => {});
 
     this.audit.log({
-      companyId,
+      companyId, userId,
       action: "CREATE",
       entity: "Invoice",
       entityId: invoice.id,
@@ -337,7 +337,7 @@ export class InvoicesService {
     return updated;
   }
 
-  async registerPayment(companyId: string, id: string, amount: number, method: string) {
+  async registerPayment(companyId: string, id: string, amount: number, method: string, userId?: string) {
     const invoice = await this.findOne(companyId, id);
     const newPaid = Number(invoice.paidAmount) + amount;
     const newStatus = newPaid >= Number(invoice.total) ? "PAID" : "PARTIAL";
@@ -358,7 +358,7 @@ export class InvoicesService {
     }).catch(() => {});
 
     this.audit.log({
-      companyId,
+      companyId, userId,
       action: "UPDATE",
       entity: "Invoice",
       entityId: id,
