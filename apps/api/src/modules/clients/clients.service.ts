@@ -38,7 +38,7 @@ export class ClientsService {
       }),
     };
 
-    const [data, total] = await Promise.all([
+    const [clients, total] = await Promise.all([
       this.prisma.client.findMany({
         where,
         skip,
@@ -48,6 +48,27 @@ export class ClientsService {
       }),
       this.prisma.client.count({ where }),
     ]);
+
+    // Aggregate invoice totals per client in a single query
+    const clientIds = clients.map((c) => c.id);
+    const invoiceTotals = clientIds.length
+      ? await this.prisma.invoice.groupBy({
+          by: ["clientId"],
+          where: { clientId: { in: clientIds }, status: { not: "CANCELLED" } },
+          _sum: { total: true, paidAmount: true },
+        })
+      : [];
+
+    const totalsMap = new Map(
+      invoiceTotals.map((r) => [r.clientId, r._sum]),
+    );
+
+    const data = clients.map((c) => {
+      const sums = totalsMap.get(c.id);
+      const totalBilled = Number(sums?.total ?? 0);
+      const totalPaid = Number(sums?.paidAmount ?? 0);
+      return { ...c, totalBilled, pendingBalance: totalBilled - totalPaid };
+    });
 
     return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
   }
