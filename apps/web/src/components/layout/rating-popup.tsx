@@ -3,16 +3,36 @@
 import { useEffect, useState } from "react";
 import { Star, X, Send, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/lib/api";
 
 const STORAGE_KEY = "youwhole_feedback_v1";
 const DELAY_MS = 25_000;
 
+const STRENGTHS = ["Facilidad de uso", "Facturación", "VeriFactu", "CRM", "Precio", "Soporte"];
+const IMPROVEMENTS = ["Más rapidez", "App móvil", "Más integraciones", "Informes", "Documentación", "Más funciones"];
+
+function Chip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`rounded-full border px-2.5 py-1 text-xs transition-colors ${
+        active
+          ? "border-teal-500 bg-teal-500/10 text-teal-600 dark:text-teal-400"
+          : "border-border text-muted-foreground hover:border-teal-400 hover:text-foreground"
+      }`}
+    >
+      {label}
+    </button>
+  );
+}
+
 export function RatingPopup() {
   const [visible, setVisible] = useState(false);
   const [rating, setRating] = useState(0);
   const [hovered, setHovered] = useState(0);
+  const [strengths, setStrengths] = useState<string[]>([]);
+  const [improvements, setImprovements] = useState<string[]>([]);
   const [comment, setComment] = useState("");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -34,16 +54,19 @@ export function RatingPopup() {
     }
   }
 
+  function toggle(list: string[], setList: (v: string[]) => void, item: string) {
+    setList(list.includes(item) ? list.filter((x) => x !== item) : [...list, item]);
+  }
+
   async function submit() {
     if (!rating) return;
     setSending(true);
     try {
-      await api.post("/contact/feedback", { rating, comment });
+      await api.post("/contact/feedback", { rating, comment, strengths, improvements });
       setSent(true);
       try { localStorage.setItem(STORAGE_KEY, "1"); } catch {}
       setTimeout(() => setVisible(false), 2500);
     } catch {
-      // fail silently — don't block the user
       dismiss(true);
     } finally {
       setSending(false);
@@ -54,7 +77,6 @@ export function RatingPopup() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50 w-80 rounded-2xl border border-border bg-background shadow-2xl">
-      {/* Header */}
       <div className="flex items-center justify-between rounded-t-2xl bg-gradient-to-r from-teal-600 to-teal-500 px-4 py-3">
         <span className="text-sm font-semibold text-white">YouWhole</span>
         <button
@@ -66,7 +88,6 @@ export function RatingPopup() {
         </button>
       </div>
 
-      {/* Body */}
       <div className="px-5 py-4">
         {sent ? (
           <div className="flex flex-col items-center gap-2 py-2 text-center">
@@ -76,12 +97,10 @@ export function RatingPopup() {
           </div>
         ) : (
           <>
-            <p className="mb-3 text-sm font-semibold text-foreground">
-              ¿Cómo valorarías YouWhole?
-            </p>
+            <p className="mb-3 text-sm font-semibold text-foreground">¿Cómo valorarías YouWhole?</p>
 
             {/* Stars */}
-            <div className="mb-3 flex gap-1">
+            <div className="mb-4 flex gap-1">
               {[1, 2, 3, 4, 5].map((i) => (
                 <button
                   key={i}
@@ -100,21 +119,38 @@ export function RatingPopup() {
               ))}
             </div>
 
-            {/* Comment */}
             {rating > 0 && (
-              <Textarea
-                placeholder="Cuéntanos qué te parece o qué mejorarías... (opcional)"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                rows={3}
-                className="mb-3 resize-none text-xs"
-              />
+              <>
+                {/* Strengths */}
+                <p className="mb-1.5 text-xs font-medium text-muted-foreground">¿Qué valoras más?</p>
+                <div className="mb-3 flex flex-wrap gap-1.5">
+                  {STRENGTHS.map((s) => (
+                    <Chip key={s} label={s} active={strengths.includes(s)} onClick={() => toggle(strengths, setStrengths, s)} />
+                  ))}
+                </div>
+
+                {/* Improvements */}
+                <p className="mb-1.5 text-xs font-medium text-muted-foreground">¿Qué mejorarías?</p>
+                <div className="mb-3 flex flex-wrap gap-1.5">
+                  {IMPROVEMENTS.map((s) => (
+                    <Chip key={s} label={s} active={improvements.includes(s)} onClick={() => toggle(improvements, setImprovements, s)} />
+                  ))}
+                </div>
+
+                {/* Optional comment */}
+                <textarea
+                  placeholder="Algo más que quieras contarnos... (opcional)"
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  rows={2}
+                  className="w-full resize-none rounded-md border border-border bg-background px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-teal-500"
+                />
+              </>
             )}
           </>
         )}
       </div>
 
-      {/* Actions */}
       {!sent && (
         <div className="flex gap-2 border-t border-border px-5 py-3">
           <Button

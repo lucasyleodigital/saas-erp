@@ -28,7 +28,16 @@ export class ContactController {
     @CurrentUser() u: JwtPayload,
     @Body("rating") rating: number,
     @Body("comment") comment: string,
+    @Body("strengths") strengths: string[],
+    @Body("improvements") improvements: string[],
   ) {
-    return this.contact.submitFeedback(rating, comment ?? "", u.email ?? "", u.companyId);
+    return this.contact.submitFeedback(
+      rating,
+      comment ?? "",
+      u.email ?? "",
+      u.companyId,
+      strengths ?? [],
+      improvements ?? [],
+    );
   }
 }

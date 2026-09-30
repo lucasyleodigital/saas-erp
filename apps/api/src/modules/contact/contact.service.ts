@@ -16,13 +16,30 @@ function esc(s: string): string {
 export class ContactService {
   constructor(private email: EmailService, private prisma: PrismaService) {}
 
-  async submitFeedback(rating: number, comment: string, userEmail: string, companyId: string) {
+  async submitFeedback(
+    rating: number,
+    comment: string,
+    userEmail: string,
+    companyId: string,
+    strengths: string[] = [],
+    improvements: string[] = [],
+  ) {
     const co = await this.prisma.company.findUnique({ where: { id: companyId }, select: { name: true } });
     const companyName = co?.name ?? "";
     const stars = "★".repeat(Math.max(1, Math.min(5, rating))) + "☆".repeat(5 - Math.max(1, Math.min(5, rating)));
     const safeComment = esc(comment ?? "");
     const safeCompany = esc(companyName ?? "");
     const safeEmail = esc(userEmail ?? "");
+
+    const chipsHtml = (items: string[], color: string) =>
+      items.map((i) => `<span style="display:inline-block;background:${color};color:#fff;border-radius:99px;padding:3px 10px;font-size:12px;margin:2px">${esc(i)}</span>`).join(" ");
+
+    const strengthsHtml = strengths.length
+      ? `<div style="margin-bottom:12px"><p style="margin:0 0 6px;font-size:12px;color:#6b7280;font-weight:600">PUNTOS FUERTES</p>${chipsHtml(strengths, "#0d9488")}</div>`
+      : "";
+    const improvementsHtml = improvements.length
+      ? `<div style="margin-bottom:12px"><p style="margin:0 0 6px;font-size:12px;color:#6b7280;font-weight:600">MEJORAS PEDIDAS</p>${chipsHtml(improvements, "#6366f1")}</div>`
+      : "";
 
     await this.email.sendGeneric(
       "lucasyleodigital@gmail.com",
@@ -40,10 +57,13 @@ export class ContactService {
               <tr><td style="padding:6px 0;color:#6b7280;font-size:13px">Email</td><td style="padding:6px 0"><a href="mailto:${safeEmail}" style="color:#0d9488">${safeEmail || "—"}</a></td></tr>
               <tr><td style="padding:6px 0;color:#6b7280;font-size:13px">Puntuación</td><td style="padding:6px 0;font-weight:600">${rating} / 5</td></tr>
             </table>
+            ${strengthsHtml}
+            ${improvementsHtml}
             ${safeComment ? `
-            <div style="background:#f0fdf9;border-left:4px solid #0d9488;padding:14px 16px;border-radius:4px">
+            <div style="background:#f0fdf9;border-left:4px solid #0d9488;padding:14px 16px;border-radius:4px;margin-top:4px">
+              <p style="margin:0 0 4px;font-size:12px;color:#6b7280;font-weight:600">COMENTARIO</p>
               <p style="margin:0;font-size:13px;color:#374151;white-space:pre-wrap">${safeComment}</p>
-            </div>` : `<p style="color:#9ca3af;font-size:13px;font-style:italic">Sin comentario adicional.</p>`}
+            </div>` : ""}
           </div>
         </div>
       `,
