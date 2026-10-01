@@ -46,9 +46,9 @@ function createStyles(primary: string) {
     bankTxt:     { fontSize: 8.5, color: "#1e3a5f", marginBottom: 1 },
     termsBox:    { marginBottom: 16, padding: 12 },
     termsTxt:    { fontSize: 8, color: "#6b7280" },
-    qrRow:       { flexDirection: "row", alignItems: "flex-start", marginTop: 12, marginBottom: 4, gap: 10 },
-    qrImg:       { width: 60, height: 60 },
-    qrLbl:       { fontSize: 7, color: "#6b7280", marginTop: 2, maxWidth: 140 },
+    qrBox:       { position: "absolute", bottom: 52, right: 50, alignItems: "flex-end" },
+    qrImg:       { width: 55, height: 55 },
+    qrLbl:       { fontSize: 6, color: "#9ca3af", textAlign: "right", marginTop: 2, maxWidth: 100 },
     footer:      { position: "absolute", bottom: 28, left: 50, right: 50, textAlign: "center", fontSize: 7.5, color: "#9ca3af", borderTopWidth: 1, borderTopColor: "#e5e7eb", borderTopStyle: "solid", paddingTop: 8 },
   });
 }
@@ -221,21 +221,16 @@ export function InvoicePdf({ invoice, qrCodeDataUrl, verifactuHash }: { invoice:
           )}
         </View>
 
-        {/* VeriFactu QR + hash */}
+        {/* VeriFactu QR — fixed bottom-right, out of normal flow */}
         {qrCodeDataUrl && (
-          <View style={s.qrRow}>
+          <View style={s.qrBox} fixed>
             <Image src={qrCodeDataUrl} style={s.qrImg} />
-            <View>
+            <Text style={s.qrLbl}>Verificable en la AEAT</Text>
+            {verifactuHash && (
               <Text style={s.qrLbl}>
-                Factura verificable en la Sede Electronica de la AEAT.{"\n"}
-                Escanea el codigo QR o visita www2.agenciatributaria.gob.es
+                Hash: {verifactuHash.slice(0, 8)}...{verifactuHash.slice(-6)}
               </Text>
-              {verifactuHash && (
-                <Text style={[s.qrLbl, { marginTop: 4, fontFamily: "Helvetica-Bold" }]}>
-                  Hash: {verifactuHash.slice(0, 16)}...{verifactuHash.slice(-8)}
-                </Text>
-              )}
-            </View>
+            )}
           </View>
         )}
 
