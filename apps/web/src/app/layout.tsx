@@ -27,11 +27,11 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.com";
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
   title: {
-    default: "YouWhole — ERP para autonomos y pymes españolas",
+    default: "YouWhole — ERP para autónomos y pymes españolas",
     template: "%s | YouWhole",
   },
   description:
-    "ERP para autonomos y pymes españolas. VeriFactu, IRPF, Modelo 130/303, CRM y contabilidad todo en uno. Desde 29 EUR/mes, sin permanencia.",
+    "ERP para autónomos y pymes españolas. VeriFactu, IRPF, Modelo 130/303, CRM y contabilidad todo en uno. Desde 29 EUR/mes, sin permanencia.",
   keywords: [
     "ERP autonomos España",
     "ERP pymes España",
@@ -78,9 +78,9 @@ export const metadata: Metadata = {
     locale: "es_ES",
     url: APP_URL,
     siteName: "YouWhole",
-    title: "YouWhole — ERP para autonomos y pymes españolas",
+    title: "YouWhole — ERP para autónomos y pymes españolas",
     description:
-      "ERP creado por autonomos para autonomos y pymes. VeriFactu, IRPF automatico, Modelo 130/303, CRM y contabilidad en una sola plataforma. Desde 29 EUR/mes.",
+      "ERP creado por autónomos para autónomos y pymes. VeriFactu, IRPF automático, Modelo 130/303, CRM y contabilidad en una sola plataforma. Desde 29 EUR/mes.",
     images: [
       {
         url: "/logo.png",
@@ -92,9 +92,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "YouWhole — ERP para autonomos y pymes españolas",
+    title: "YouWhole — ERP para autónomos y pymes españolas",
     description:
-      "Creado por autonomos para autonomos y pymes. VeriFactu, IRPF, Modelo 130/303, CRM y contabilidad. Desde 29 EUR/mes.",
+      "Creado por autónomos para autónomos y pymes. VeriFactu, IRPF, Modelo 130/303, CRM y contabilidad. Desde 29 EUR/mes.",
     images: ["/logo.png"],
   },
 };

@@ -2,72 +2,63 @@ import type { MetadataRoute } from "next";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.com";
 
+// App routes that require authentication — no SEO value, waste crawl budget
+const APP_ROUTES = [
+  "/dashboard",
+  "/facturas",
+  "/clientes",
+  "/presupuestos",
+  "/pedidos",
+  "/albaranes",
+  "/inventario",
+  "/configuracion",
+  "/empresa",
+  "/contabilidad",
+  "/fiscal",
+  "/banco",
+  "/compras",
+  "/proveedores",
+  "/productos",
+  "/empleados",
+  "/nominas",
+  "/control-horario",
+  "/calendario",
+  "/pipeline",
+  "/leads",
+  "/proyectos",
+  "/importacion",
+  "/auditoria",
+  "/backup",
+  "/notificaciones",
+  "/automatizaciones",
+  "/webhooks",
+  "/campos-personalizados",
+  "/billing",
+  "/verifactu",
+  "/contratos",
+  "/api/",
+  "/portal/",
+  "/fichar/",
+  "/invite/",
+  "/auth/",
+  "/admin",
+];
+
+// Generate locale-prefixed variants for each app route
+const LOCALES = ["es", "ca", "eu", "gl", "en"];
+const localeAppRoutes = APP_ROUTES.flatMap((route) =>
+  LOCALES.map((locale) => `/${locale}${route}`),
+);
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
         userAgent: "*",
-        allow: [
-          "/",
-          "/es/",
-          "/ca",
-          "/eu",
-          "/gl",
-          "/en",
-          "/sobre-nosotros",
-          "/contacto",
-          "/ayuda",
-          "/privacidad",
-          "/aviso-legal",
-          "/terminos",
-          "/cookies",
-        ],
-        disallow: [
-          "/manifest.json",
-          "/dashboard/",
-          "/facturas/",
-          "/clientes/",
-          "/presupuestos/",
-          "/productos/",
-          "/inventario/",
-          "/pedidos/",
-          "/compras/",
-          "/proveedores/",
-          "/leads/",
-          "/pipeline/",
-          "/automatizaciones/",
-          "/contabilidad/",
-          "/empleados/",
-          "/nominas/",
-          "/albaranes/",
-          "/configuracion/",
-          "/empresa/",
-          "/billing/",
-          "/notificaciones/",
-          "/verifactu/",
-          "/importacion/",
-          "/invite/",
-          "/portal/",
-          "/api/",
-        ],
-      },
-      {
-        userAgent: "GPTBot",
-        allow: ["/", "/sobre-nosotros", "/contacto", "/ayuda"],
-        disallow: ["/dashboard/", "/api/"],
-      },
-      {
-        userAgent: "ClaudeBot",
-        allow: ["/", "/sobre-nosotros", "/contacto", "/ayuda"],
-        disallow: ["/dashboard/", "/api/"],
-      },
-      {
-        userAgent: "PerplexityBot",
-        allow: ["/", "/sobre-nosotros", "/contacto", "/ayuda"],
-        disallow: ["/dashboard/", "/api/"],
+        allow: "/",
+        disallow: [...APP_ROUTES, ...localeAppRoutes],
       },
     ],
     sitemap: `${APP_URL}/sitemap.xml`,
-    host: APP_URL,
   };
 }

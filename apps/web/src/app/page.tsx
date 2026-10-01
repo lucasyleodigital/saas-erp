@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { MarketingHomeContent } from "@/components/marketing/marketing-home";
 
 export const metadata: Metadata = {
-  title: "YouWhole — ERP para autonomos y pymes españolas",
+  title: "YouWhole — ERP para autónomos y pymes españolas",
   description:
-    "ERP creado por autonomos para autonomos y pymes. VeriFactu, IRPF automatico, Modelo 130/303, CRM y contabilidad. Plan gratis para siempre, sin tarjeta.",
+    "ERP creado por autónomos para autónomos y pymes. VeriFactu, IRPF automático, Modelo 130/303, CRM y contabilidad. Plan gratis para siempre, sin tarjeta.",
   robots: { index: true, follow: true },
   alternates: {
     canonical: "https://youwhole.com",

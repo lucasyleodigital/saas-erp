@@ -2,38 +2,39 @@ import type { Metadata } from "next";
 import { RrhhContent } from "@/components/marketing/pages/rrhh-content";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.com";
+const SLUG = "software-recursos-humanos-pymes";
 
 export const metadata: Metadata = {
   title: "Software de Recursos Humanos para Pymes — YouWhole",
   description:
-    "Gestiona empleados, nóminas, contratos, vacaciones y control horario en una sola plataforma. Software RRHH para pymes español, sin complicaciones. Desde 29 EUR/mes.",
+    "Gestiona empleados, nóminas, contratos, vacaciones y control horario en una sola plataforma. Software RRHH para pymes. Desde 29 EUR/mes.",
   keywords: [
     "software recursos humanos pymes",
-    "programa nóminas pymes España",
-    "gestión empleados pymes",
     "software RRHH España",
+    "gestión empleados pymes",
+    "nóminas online pymes",
     "control horario empleados",
-    "gestión vacaciones empleados",
-    "software nóminas autónomos",
+    "contratos laborales online",
+    "portal del empleado",
   ],
   alternates: {
-    canonical: `${APP_URL}/software-recursos-humanos-pymes`,
+    canonical: `${APP_URL}/${SLUG}`,
     languages: {
-      es: `${APP_URL}/software-recursos-humanos-pymes`,
-      ca: `${APP_URL}/ca/software-recursos-humanos-pymes`,
-      eu: `${APP_URL}/eu/software-recursos-humanos-pymes`,
-      gl: `${APP_URL}/gl/software-recursos-humanos-pymes`,
-      en: `${APP_URL}/en/software-recursos-humanos-pymes`,
-      "x-default": `${APP_URL}/software-recursos-humanos-pymes`,
+      es: `${APP_URL}/${SLUG}`,
+      ca: `${APP_URL}/ca/${SLUG}`,
+      eu: `${APP_URL}/eu/${SLUG}`,
+      gl: `${APP_URL}/gl/${SLUG}`,
+      en: `${APP_URL}/en/${SLUG}`,
+      "x-default": `${APP_URL}/${SLUG}`,
     },
   },
   openGraph: {
     title: "Software RRHH para Pymes — YouWhole",
     description: "Nóminas, contratos, vacaciones y control horario integrados con tu facturación. Todo en uno.",
-    url: `${APP_URL}/software-recursos-humanos-pymes`,
+    url: `${APP_URL}/${SLUG}`,
   },
 };
 
-export default function SoftwareRRHHPage() {
+export default function SoftwareRrhhPage() {
   return <RrhhContent />;
 }
