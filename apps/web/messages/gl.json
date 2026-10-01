@@ -1154,7 +1154,9 @@
       "noTrackedProducts": "Non hai produtos con seguimento de stock activo",
       "system": "Sistema:",
       "applying": "Aplicando...",
-      "apply": "Aplicar inventario"
+      "apply": "Aplicar inventario",
+      "searchPlaceholder": "Buscar produto...",
+      "adjustmentSummary": "{count} axuste(s) pendente(s)"
     },
     "minStockDialog": {
       "title": "Stock minimo — {name}",
@@ -2803,9 +2805,9 @@
         "p1Pre": "VeriFactu é o sistema de verificación de facturas aprobado pola Axencia Tributaria española no marco do Regulamento de Facturación (RD 1007/2023). O seu obxectivo é garantir a",
         "p1Strong": "integridade e inalterabilidade",
         "p1Post": "de todas as facturas emitidas por empresas e autónomos en España.",
-        "p2Pre": "Desde 2025, calquera software de facturación que uses debe estar",
+        "p2Pre": "VeriFactu será obrigatorio desde o 1 de xaneiro de 2027 para sociedades e desde o 1 de xullo de 2027 para autónomos (Real Decreto-lei 15/2025), pero xa podes ter o teu software",
         "p2Strong": "certificado VeriFactu",
-        "p2Post": "para poder operar legalmente. Usar un programa non certificado pode acarrear sancións de Facenda de ata 50.000 EUR.",
+        "p2Post": "hoxe mesmo para evitar sancións de Facenda de ata 50.000 EUR e non ter que migrar de sistema no último momento.",
         "p3": "Con YouWhole, cada factura que emites rexístrase automaticamente na AEAT coa súa pegada dixital correspondente. Ti non tes que facer nada extra — o sistema xestiónao en segundo plano."
       },
       "howItWorks": {
@@ -2830,11 +2832,11 @@
         "items": {
           "q1": {
             "q": "Que é VeriFactu?",
-            "a": "VeriFactu é o sistema de verificación de facturas da Axencia Tributaria española (AEAT). Desde 2025, todo software de facturación usado por empresas e autónomos debe estar certificado VeriFactu para garantir a integridade e inalterabilidade das facturas emitidas."
+            "a": "VeriFactu é o sistema de verificación de facturas da Axencia Tributaria española (AEAT). Esixe que o software de facturación usado por empresas e autónomos garanta a integridade e inalterabilidade das facturas emitidas, enviando un rexistro a Facenda en tempo real."
           },
           "q2": {
             "q": "É obrigatorio usar un software con VeriFactu?",
-            "a": "Si. O Regulamento de Facturación aprobado en 2023 obriga a todos os empresarios e profesionais en España a usar sistemas de facturación que cumpran con VeriFactu. O incumprimento pode conlevar sancións de Facenda."
+            "a": "Si, a partir das datas límite fixadas por Facenda. O Regulamento de Facturación (RD 1007/2023) obriga a todos os empresarios e profesionais en España a usar sistemas de facturación que cumpran con VeriFactu. O incumprimento pode conlevar sancións de ata 50.000 EUR."
           },
           "q3": {
             "q": "Está YouWhole certificado pola AEAT?",
@@ -2843,6 +2845,18 @@
           "q4": {
             "q": "Teño que facer algo especial para activar VeriFactu en YouWhole?",
             "a": "Non. VeriFactu está activo por defecto en todas as contas de YouWhole desde o momento do rexistro. Non precisas configurar nada nin contratar un módulo adicional."
+          },
+          "q5": {
+            "q": "Cando entra en vigor VeriFactu?",
+            "a": "O Real Decreto-lei 15/2025 ampliou os prazos oficiais: VeriFactu será obrigatorio desde o 1 de xaneiro de 2027 para as empresas que tributan no Imposto de Sociedades, e desde o 1 de xullo de 2027 para autónomos e o resto de obrigados tributarios. Ata esas datas, adaptar o teu software é voluntario pero recomendable."
+          },
+          "q6": {
+            "q": "A que autónomos afecta VeriFactu?",
+            "a": "Afecta a todos os autónomos e profesionais que emitan facturas en España, sen excepción por volume de facturación nin sector de actividade. A súa data límite é o 1 de xullo de 2027, tres meses despois que as sociedades."
+          },
+          "q7": {
+            "q": "Canto custa un software VeriFactu?",
+            "a": "En YouWhole, VeriFactu está incluído de serie en todos os plans, incluído o plan gratuíto para sempre — non é un módulo de pago á parte nin ten custo adicional. Non fai falta esperar a 2027 para comezar a cumprir."
           }
         }
       },

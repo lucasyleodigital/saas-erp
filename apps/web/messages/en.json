@@ -1162,7 +1162,9 @@
       "noTrackedProducts": "No products with active stock tracking",
       "system": "System:",
       "applying": "Applying...",
-      "apply": "Apply inventory"
+      "apply": "Apply inventory",
+      "searchPlaceholder": "Search product...",
+      "adjustmentSummary": "{count} pending adjustment(s)"
     },
     "minStockDialog": {
       "title": "Minimum stock — {name}",

@@ -1162,7 +1162,9 @@
       "noTrackedProducts": "Ez dago stock-aren jarraipena aktibatuta duten produkturik",
       "system": "Sistema:",
       "applying": "Aplikatzen...",
-      "apply": "Inbentarioa aplikatu"
+      "apply": "Inbentarioa aplikatu",
+      "searchPlaceholder": "Produktua bilatu...",
+      "adjustmentSummary": "{count} doikuntza zain"
     },
     "minStockDialog": {
       "title": "Gutxieneko stock-a — {name}",

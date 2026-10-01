@@ -668,6 +668,7 @@ function PhysicalDialog({ stock, warehouses, onClose }: { stock: any[]; warehous
   const tCommon = useTranslations("common");
   const physical = usePhysicalInventory();
   const [warehouseId, setWarehouseId] = useState(warehouses.find((w) => w.isDefault)?.id ?? "");
+  const [search, setSearch] = useState("");
   const [quantities, setQuantities] = useState<Record<string, number>>(() => {
     const init: Record<string, number> = {};
     stock.filter((p) => p.trackStock).forEach((p) => { init[p.id] = p.currentStock; });
@@ -675,6 +676,14 @@ function PhysicalDialog({ stock, warehouses, onClose }: { stock: any[]; warehous
   });
 
   const tracked = stock.filter((p) => p.trackStock);
+  const visible = tracked.filter((p) =>
+    !search || p.name.toLowerCase().includes(search.toLowerCase()) || p.sku?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const adjustments = tracked.filter((p) => {
+    const actual = quantities[p.id] ?? p.currentStock;
+    return actual !== p.currentStock;
+  });
 
   async function handleSubmit() {
     const items = Object.entries(quantities).map(([productId, actualQty]) => ({ productId, warehouseId, actualQty }));
@@ -697,23 +706,44 @@ function PhysicalDialog({ stock, warehouses, onClose }: { stock: any[]; warehous
             </Select>
           </div>
           <p className="text-xs text-muted-foreground">{t("physicalDialog.helpText")}</p>
-          {tracked.length === 0 ? (
+          <Input
+            placeholder={t("physicalDialog.searchPlaceholder")}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="h-8 text-sm"
+          />
+          {visible.length === 0 ? (
             <p className="text-sm text-center text-muted-foreground py-4">{t("physicalDialog.noTrackedProducts")}</p>
-          ) : tracked.map((p) => (
-            <div key={p.id} className="flex items-center justify-between gap-4">
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{p.name}</p>
-                <p className="text-xs text-muted-foreground">{t("physicalDialog.system")} {p.currentStock}</p>
+          ) : visible.map((p) => {
+            const actual = quantities[p.id] ?? p.currentStock;
+            const diff = actual - p.currentStock;
+            const changed = diff !== 0;
+            return (
+              <div key={p.id} className={`flex items-center justify-between gap-4 rounded-lg px-3 py-2 transition-colors ${changed ? "bg-muted/50" : ""}`}>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">{p.name}</p>
+                  <p className="text-xs text-muted-foreground">{t("physicalDialog.system")} {p.currentStock}</p>
+                </div>
+                {changed && (
+                  <span className={`text-xs font-semibold px-1.5 py-0.5 rounded-full ${diff > 0 ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400" : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400"}`}>
+                    {diff > 0 ? `+${diff}` : diff}
+                  </span>
+                )}
+                <div className="w-24">
+                  <Input
+                    type="number" min={0} step={0.001} className="h-8 text-sm"
+                    value={actual}
+                    onChange={(e) => setQuantities((q) => ({ ...q, [p.id]: Number(e.target.value) }))}
+                  />
+                </div>
               </div>
-              <div className="w-28">
-                <Input
-                  type="number" min={0} step={0.001} className="h-8 text-sm"
-                  value={quantities[p.id] ?? p.currentStock}
-                  onChange={(e) => setQuantities((q) => ({ ...q, [p.id]: Number(e.target.value) }))}
-                />
-              </div>
+            );
+          })}
+          {adjustments.length > 0 && (
+            <div className="rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs text-muted-foreground">
+              {t("physicalDialog.adjustmentSummary", { count: adjustments.length })}
             </div>
-          ))}
+          )}
         </div>
         <div className="flex justify-end gap-2 mt-4">
           <Button variant="outline" onClick={onClose}>{tCommon("cancel")}</Button>
