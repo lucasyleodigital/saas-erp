@@ -61,7 +61,7 @@ const fmt = (n: number, cur = "EUR") =>
 const fmtDate = (d: string | Date) =>
   new Date(d).toLocaleDateString("es-ES", { day: "2-digit", month: "2-digit", year: "numeric" });
 
-export function InvoicePdf({ invoice, qrCodeDataUrl }: { invoice: any; qrCodeDataUrl?: string }) {
+export function InvoicePdf({ invoice, qrCodeDataUrl, verifactuHash }: { invoice: any; qrCodeDataUrl?: string; verifactuHash?: string }) {
   const co       = invoice.company ?? {};
   const cl       = invoice.client  ?? {};
   const rawItems = invoice.items ?? [];
@@ -221,14 +221,21 @@ export function InvoicePdf({ invoice, qrCodeDataUrl }: { invoice: any; qrCodeDat
           )}
         </View>
 
-        {/* VeriFactu QR */}
+        {/* VeriFactu QR + hash */}
         {qrCodeDataUrl && (
           <View style={s.qrRow}>
             <Image src={qrCodeDataUrl} style={s.qrImg} />
-            <Text style={s.qrLbl}>
-              Factura verificable en la Sede Electronica de la AEAT.{"\n"}
-              Escanea el codigo QR o visita www2.agenciatributaria.gob.es
-            </Text>
+            <View>
+              <Text style={s.qrLbl}>
+                Factura verificable en la Sede Electronica de la AEAT.{"\n"}
+                Escanea el codigo QR o visita www2.agenciatributaria.gob.es
+              </Text>
+              {verifactuHash && (
+                <Text style={[s.qrLbl, { marginTop: 4, fontFamily: "Helvetica-Bold" }]}>
+                  Hash: {verifactuHash.slice(0, 16)}...{verifactuHash.slice(-8)}
+                </Text>
+              )}
+            </View>
           </View>
         )}
 

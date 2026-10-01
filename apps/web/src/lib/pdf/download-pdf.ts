@@ -42,7 +42,9 @@ export async function downloadInvoicePdf(invoiceId: string) {
     qrCodeDataUrl = await QRCode.default.toDataURL(qrUrl, { margin: 1, width: 150, color: { dark: "#000000", light: "#ffffff" } });
   }
 
-  const blob = await pdf(createElement(InvoicePdf, { invoice, qrCodeDataUrl }) as any).toBlob();
+  const verifactuHash: string | undefined = verifactu?.hash ?? undefined;
+
+  const blob = await pdf(createElement(InvoicePdf, { invoice, qrCodeDataUrl, verifactuHash }) as any).toBlob();
   triggerDownload(blob, `${invoice.number}.pdf`);
 }
 
