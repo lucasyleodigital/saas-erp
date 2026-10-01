@@ -16,9 +16,10 @@ export async function downloadInvoicePdf(invoiceId: string) {
   const { createElement } = await import("react");
   const { InvoicePdf }  = await import("./invoice-pdf");
 
-  const [invoice, company] = await Promise.all([
+  const [invoice, company, verifactu] = await Promise.all([
     api.get(`/invoices/${invoiceId}`).then((r) => r.data),
     api.get("/companies/me").then((r) => r.data),
+    api.get(`/verifactu/invoices/${invoiceId}/status`).then((r) => r.data).catch(() => null),
   ]);
 
   if (company) {
@@ -34,7 +35,14 @@ export async function downloadInvoicePdf(invoiceId: string) {
     };
   }
 
-  const blob = await pdf(createElement(InvoicePdf, { invoice }) as any).toBlob();
+  let qrCodeDataUrl: string | undefined;
+  const qrUrl = verifactu?.qrCode;
+  if (qrUrl) {
+    const QRCode = await import("qrcode");
+    qrCodeDataUrl = await QRCode.default.toDataURL(qrUrl, { margin: 1, width: 150, color: { dark: "#000000", light: "#ffffff" } });
+  }
+
+  const blob = await pdf(createElement(InvoicePdf, { invoice, qrCodeDataUrl }) as any).toBlob();
   triggerDownload(blob, `${invoice.number}.pdf`);
 }
 

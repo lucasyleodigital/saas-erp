@@ -46,6 +46,9 @@ function createStyles(primary: string) {
     bankTxt:     { fontSize: 8.5, color: "#1e3a5f", marginBottom: 1 },
     termsBox:    { marginBottom: 16, padding: 12 },
     termsTxt:    { fontSize: 8, color: "#6b7280" },
+    qrRow:       { flexDirection: "row", alignItems: "flex-start", marginTop: 12, marginBottom: 4, gap: 10 },
+    qrImg:       { width: 60, height: 60 },
+    qrLbl:       { fontSize: 7, color: "#6b7280", marginTop: 2, maxWidth: 140 },
     footer:      { position: "absolute", bottom: 28, left: 50, right: 50, textAlign: "center", fontSize: 7.5, color: "#9ca3af", borderTopWidth: 1, borderTopColor: "#e5e7eb", borderTopStyle: "solid", paddingTop: 8 },
   });
 }
@@ -58,7 +61,7 @@ const fmt = (n: number, cur = "EUR") =>
 const fmtDate = (d: string | Date) =>
   new Date(d).toLocaleDateString("es-ES", { day: "2-digit", month: "2-digit", year: "numeric" });
 
-export function InvoicePdf({ invoice }: { invoice: any }) {
+export function InvoicePdf({ invoice, qrCodeDataUrl }: { invoice: any; qrCodeDataUrl?: string }) {
   const co       = invoice.company ?? {};
   const cl       = invoice.client  ?? {};
   const rawItems = invoice.items ?? [];
@@ -217,6 +220,17 @@ export function InvoicePdf({ invoice }: { invoice: any }) {
             </View>
           )}
         </View>
+
+        {/* VeriFactu QR */}
+        {qrCodeDataUrl && (
+          <View style={s.qrRow}>
+            <Image src={qrCodeDataUrl} style={s.qrImg} />
+            <Text style={s.qrLbl}>
+              Factura verificable en la Sede Electronica de la AEAT.{"\n"}
+              Escanea el codigo QR o visita www2.agenciatributaria.gob.es
+            </Text>
+          </View>
+        )}
 
         {/* Footer */}
         <View style={s.footer} fixed>
