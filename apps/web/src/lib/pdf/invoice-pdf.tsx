@@ -5,7 +5,7 @@ const DEFAULT_COLOR = "#4f46e5";
 
 function createStyles(primary: string) {
   return StyleSheet.create({
-    page:        { fontFamily: "Helvetica", fontSize: 9, paddingTop: 40, paddingBottom: 52, paddingHorizontal: 50, color: "#111827" },
+    page:        { fontFamily: "Helvetica", fontSize: 9, paddingTop: 40, paddingBottom: 85, paddingHorizontal: 50, color: "#111827" },
     header:      { flexDirection: "row", justifyContent: "space-between", marginBottom: 20 },
     logoImg:     { width: 48, height: 48, borderRadius: 4, objectFit: "contain", marginBottom: 6 },
     logoBox:     { width: 38, height: 38, backgroundColor: primary, borderRadius: 6, alignItems: "center", justifyContent: "center" },
@@ -46,10 +46,10 @@ function createStyles(primary: string) {
     bankTxt:     { fontSize: 8.5, color: "#1e3a5f", marginBottom: 1 },
     termsBox:    { marginBottom: 16, padding: 12 },
     termsTxt:    { fontSize: 8, color: "#6b7280" },
-    qrBox:       { position: "absolute", bottom: 52, right: 50, alignItems: "flex-end" },
-    qrImg:       { width: 55, height: 55 },
-    qrLbl:       { fontSize: 6, color: "#9ca3af", textAlign: "right", marginTop: 2, maxWidth: 100 },
-    footer:      { position: "absolute", bottom: 28, left: 50, right: 50, textAlign: "center", fontSize: 7.5, color: "#9ca3af", borderTopWidth: 1, borderTopColor: "#e5e7eb", borderTopStyle: "solid", paddingTop: 8 },
+    qrImg:       { width: 52, height: 52, marginLeft: 10 },
+    qrLbl:       { fontSize: 6, color: "#9ca3af", textAlign: "right", marginTop: 2 },
+    footer:      { position: "absolute", bottom: 15, left: 50, right: 50, flexDirection: "row", alignItems: "flex-start", fontSize: 7.5, color: "#9ca3af", borderTopWidth: 1, borderTopColor: "#e5e7eb", borderTopStyle: "solid", paddingTop: 8 },
+    footerTxt:   { flex: 1 },
   });
 }
 
@@ -221,22 +221,9 @@ export function InvoicePdf({ invoice, qrCodeDataUrl, verifactuHash }: { invoice:
           )}
         </View>
 
-        {/* VeriFactu QR — fixed bottom-right, out of normal flow */}
-        {qrCodeDataUrl && (
-          <View style={s.qrBox} fixed>
-            <Image src={qrCodeDataUrl} style={s.qrImg} />
-            <Text style={s.qrLbl}>Verificable en la AEAT</Text>
-            {verifactuHash && (
-              <Text style={s.qrLbl}>
-                Hash: {verifactuHash.slice(0, 8)}...{verifactuHash.slice(-6)}
-              </Text>
-            )}
-          </View>
-        )}
-
-        {/* Footer */}
+        {/* Footer — left: company info · right: VeriFactu QR (when present) */}
         <View style={s.footer} fixed>
-          <Text>
+          <Text style={s.footerTxt}>
             {settings.invoiceFooter
               ? settings.invoiceFooter
               : [
@@ -246,6 +233,17 @@ export function InvoicePdf({ invoice, qrCodeDataUrl, verifactuHash }: { invoice:
                   co.email,
                 ].filter(Boolean).join(" · ")}
           </Text>
+          {qrCodeDataUrl && (
+            <View style={{ alignItems: "flex-end" }}>
+              <Image src={qrCodeDataUrl} style={s.qrImg} />
+              <Text style={s.qrLbl}>Verificable en la AEAT</Text>
+              {verifactuHash && (
+                <Text style={s.qrLbl}>
+                  Hash: {verifactuHash.slice(0, 8)}...{verifactuHash.slice(-6)}
+                </Text>
+              )}
+            </View>
+          )}
         </View>
 
       </Page>
