@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
-import ExcelJS from "exceljs";
+import * as XLSX from "xlsx";
 
 export interface ReconcileResult {
   imported: number;
@@ -186,19 +186,12 @@ export class BankService {
   private async parseStatement(buffer: Buffer): Promise<Array<{ date: Date; amount: number; description: string; reference: string }>> {
     let rows: Record<string, any>[];
 
-    const isZip = buffer[0] === 0x50 && buffer[1] === 0x4B;
-    const isXls = buffer[0] === 0xD0 && buffer[1] === 0xCF;
-
-    if (isZip || isXls) {
-      rows = await this.parseExcelBuffer(buffer);
+    const raw = buffer.toString("utf8").trimStart();
+    if (raw.startsWith("[") || raw.startsWith("{")) {
+      rows = JSON.parse(raw);
+      if (!Array.isArray(rows)) rows = [rows];
     } else {
-      const raw = buffer.toString("utf8").trimStart();
-      if (raw.startsWith("[") || raw.startsWith("{")) {
-        rows = JSON.parse(raw);
-        if (!Array.isArray(rows)) rows = [rows];
-      } else {
-        rows = await this.parseExcelBuffer(buffer);
-      }
+      rows = this.parseSpreadsheetBuffer(buffer);
     }
 
     const AMOUNT_KEYS = ["importe", "amount", "cantidad", "monto", "valor", "debe", "haber", "cargo", "abono"];
@@ -223,7 +216,7 @@ export class BankService {
 
       let amount = 0;
       if (amountKey) {
-        const val = String(r[amountKey]).replace(/[^\d.,-]/g, "").replace(",", ".");
+        const val = String(r[amountKey]).replace(/\s/g, "").replace(/[^\d.,-]/g, "").replace(",", ".");
         amount = parseFloat(val) || 0;
       }
 
@@ -233,9 +226,8 @@ export class BankService {
         if (val instanceof Date) {
           date = val;
         } else if (typeof val === "number" && val > 25000 && val < 60000) {
-          // Excel serial date number (days since 1900-01-01)
-          const excelEpoch = new Date(1899, 11, 30);
-          date = new Date(excelEpoch.getTime() + val * 86400000);
+          // Excel serial date
+          date = new Date(Math.round((val - 25569) * 86400 * 1000));
         } else {
           const s = String(val).trim();
           const dmY = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
@@ -257,16 +249,21 @@ export class BankService {
     }).filter((r) => !isNaN(r.amount) && r.amount !== 0);
   }
 
-  private async parseExcelBuffer(buffer: Buffer): Promise<Record<string, any>[]> {
-    const wb = new ExcelJS.Workbook();
-    await wb.xlsx.load(buffer as any);
-    const ws = wb.worksheets[0];
-    if (!ws) throw new BadRequestException("Hoja vacia");
+  private parseSpreadsheetBuffer(buffer: Buffer): Record<string, any>[] {
+    let wb: XLSX.WorkBook;
+    try {
+      // SheetJS handles .xlsx, .xls (binary), and HTML-disguised-as-xls (ING/CaixaBank format)
+      wb = XLSX.read(buffer, { type: "buffer", cellDates: true, raw: false });
+    } catch {
+      throw new BadRequestException("Formato de archivo no soportado. Usa .xlsx, .xls o .csv");
+    }
 
-    const rawRows: any[][] = [];
-    ws.eachRow((row) => {
-      rawRows.push((row.values as any[]).slice(1));
-    });
+    const wsName = wb.SheetNames[0];
+    if (!wsName) throw new BadRequestException("Archivo vacio");
+    const ws = wb.Sheets[wsName];
+
+    const rawRows: any[][] = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" }) as any[][];
+    if (!rawRows.length) return [];
 
     const HEADER_HINTS = [
       "importe", "amount", "fecha", "date", "concepto", "descripcion",
@@ -274,44 +271,31 @@ export class BankService {
       "f. valor", "f.valor", "categoria", "referencia",
     ];
 
+    const normalize = (s: string) =>
+      s.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "").trim();
+
     let headerIdx = -1;
-    for (let i = 0; i < Math.min(15, rawRows.length); i++) {
+    for (let i = 0; i < Math.min(20, rawRows.length); i++) {
       const row = rawRows[i];
       if (!row || !Array.isArray(row)) continue;
-      const cellsText = row.map((c: any) =>
-        String(c ?? "").toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "").trim()
-      );
-      const matches = cellsText.filter((c: string) =>
-        HEADER_HINTS.some((h) => c.includes(h))
-      ).length;
-      if (matches >= 2) {
-        headerIdx = i;
-        break;
-      }
+      const cells = row.map((c: any) => normalize(String(c ?? "")));
+      const matches = cells.filter((c) => HEADER_HINTS.some((h) => c.includes(h))).length;
+      if (matches >= 2) { headerIdx = i; break; }
     }
 
     if (headerIdx === -1) {
       if (rawRows.length < 2) return [];
-      const hdrs = (rawRows[0] as any[]).map((h: any) => String(h ?? "").trim());
-      return rawRows.slice(1).map((row: any[]) => {
-        const obj: Record<string, any> = {};
-        hdrs.forEach((h, i) => { if (h) obj[h] = row[i] ?? ""; });
-        return obj;
-      });
+      headerIdx = 0;
     }
 
-    const headers = (rawRows[headerIdx] as any[]).map((h: any) =>
-      String(h ?? "").trim()
-    );
-
+    const headers = (rawRows[headerIdx] as any[]).map((h: any) => String(h ?? "").trim());
     const dataRows: Record<string, any>[] = [];
+
     for (let i = headerIdx + 1; i < rawRows.length; i++) {
       const row = rawRows[i] as any[];
       if (!row || row.every((c: any) => c === "" || c === null || c === undefined)) continue;
       const obj: Record<string, any> = {};
-      headers.forEach((h, idx) => {
-        if (h) obj[h] = row[idx] ?? "";
-      });
+      headers.forEach((h, idx) => { if (h) obj[h] = row[idx] ?? ""; });
       dataRows.push(obj);
     }
 
