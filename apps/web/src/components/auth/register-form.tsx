@@ -15,6 +15,7 @@ import { api } from "@/lib/api";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 const LOCALES = ["es", "ca", "eu", "gl", "en"];
 
@@ -38,6 +39,7 @@ export function RegisterForm() {
   const t        = useTranslations("auth.register");
   const tCommon  = useTranslations("common");
   const setUser  = useAuthStore((s) => s.setUser);
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const segments = pathname.split("/");
   const locale   = LOCALES.includes(segments[1] ?? "") ? segments[1]! : "es";
@@ -53,7 +55,11 @@ export function RegisterForm() {
   async function onSubmit(data: FormData) {
     setFormError("");
     try {
-      await registerAction(data);
+      let recaptchaToken: string | undefined;
+      if (executeRecaptcha) {
+        recaptchaToken = await executeRecaptcha("register").catch(() => undefined);
+      }
+      await registerAction({ ...data, recaptchaToken });
       const { data: me } = await api.get("/auth/me");
       setUser(me);
       trackEvent("sign_up", { method: "email" });

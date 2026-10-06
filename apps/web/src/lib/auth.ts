@@ -11,14 +11,30 @@ function clearAuthCookie() {
   document.cookie = "auth_session=; path=/; max-age=0; SameSite=Lax";
 }
 
-export async function loginAction(email: string, password: string) {
-  const { data } = await api.post<{ accessToken: string }>("/auth/login", {
-    email,
-    password,
+export type LoginResponse =
+  | { requires2FA: false; accessToken: string }
+  | { requires2FA: true; pendingToken: string };
+
+export async function loginAction(email: string, password: string): Promise<LoginResponse> {
+  const { data } = await api.post<{ accessToken?: string; requires2FA?: boolean; pendingToken?: string }>(
+    "/auth/login",
+    { email, password }
+  );
+  if (data.requires2FA) {
+    return { requires2FA: true, pendingToken: data.pendingToken! };
+  }
+  localStorage.setItem("access_token", data.accessToken!);
+  setAuthCookie(data.accessToken!);
+  return { requires2FA: false, accessToken: data.accessToken! };
+}
+
+export async function complete2FALoginAction(pendingToken: string, code: string): Promise<void> {
+  const { data } = await api.post<{ accessToken: string }>("/auth/2fa/complete", {
+    pendingToken,
+    code,
   });
   localStorage.setItem("access_token", data.accessToken);
   setAuthCookie(data.accessToken);
-  return data;
 }
 
 export async function registerAction(payload: {
@@ -28,6 +44,7 @@ export async function registerAction(payload: {
   lastName: string;
   companyName: string;
   acceptTerms: boolean;
+  recaptchaToken?: string;
 }) {
   const { data } = await api.post<{ accessToken: string }>("/auth/register", payload);
   localStorage.setItem("access_token", data.accessToken);

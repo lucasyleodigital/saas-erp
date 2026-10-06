@@ -6,13 +6,14 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, ShieldCheck } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { loginAction } from "@/lib/auth";
+import { loginAction, complete2FALoginAction } from "@/lib/auth";
 import { useAuthStore } from "@/store/auth.store";
 import { api } from "@/lib/api";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 const LOCALES = ["es", "ca", "eu", "gl", "en"];
 
@@ -25,16 +26,19 @@ type FormData = z.infer<typeof schema>;
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [formError, setFormError] = useState("");
+  const [pending2FA, setPending2FA] = useState<{ pendingToken: string } | null>(null);
+  const [twoFACode, setTwoFACode] = useState("");
+  const [submitting2FA, setSubmitting2FA] = useState(false);
+
   const router = useRouter();
   const pathname = usePathname();
   const t = useTranslations("auth.login");
   const setUser = useAuthStore((s) => s.setUser);
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
-  // Get current locale from URL so redirect keeps the language
   const segments = pathname.split("/");
   const locale = LOCALES.includes(segments[1] ?? "") ? segments[1]! : "es";
-
-  const [formError, setFormError] = useState("");
 
   const {
     register,
@@ -45,17 +49,86 @@ export function LoginForm() {
   async function onSubmit(data: FormData) {
     setFormError("");
     try {
-      await loginAction(data.email, data.password);
+      const result = await loginAction(data.email, data.password);
+      if (result.requires2FA) {
+        setPending2FA({ pendingToken: result.pendingToken });
+        return;
+      }
       const { data: me } = await api.get("/auth/me");
       setUser(me);
       router.push(`/${locale}/dashboard`);
     } catch (err: any) {
       const msg = err.response?.data?.message ?? t("error");
-      const errorText = Array.isArray(msg) ? msg[0] : msg;
-      setFormError(errorText);
+      setFormError(Array.isArray(msg) ? msg[0] : msg);
     }
   }
 
+  async function onSubmit2FA(e: React.FormEvent) {
+    e.preventDefault();
+    if (!pending2FA || twoFACode.length !== 6) return;
+    setFormError("");
+    setSubmitting2FA(true);
+    try {
+      await complete2FALoginAction(pending2FA.pendingToken, twoFACode);
+      const { data: me } = await api.get("/auth/me");
+      setUser(me);
+      router.push(`/${locale}/dashboard`);
+    } catch (err: any) {
+      const msg = err.response?.data?.message ?? "Código incorrecto";
+      setFormError(Array.isArray(msg) ? msg[0] : msg);
+    } finally {
+      setSubmitting2FA(false);
+    }
+  }
+
+  // ── 2FA step ────────────────────────────────────────────────────────────────
+  if (pending2FA) {
+    return (
+      <form onSubmit={onSubmit2FA} className="space-y-4">
+        <div className="flex flex-col items-center gap-2 pb-2">
+          <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+            <ShieldCheck className="h-6 w-6 text-primary" />
+          </div>
+          <p className="text-sm text-center text-muted-foreground">
+            Introduce el codigo de 6 digitos de tu app de autenticacion
+          </p>
+        </div>
+        {formError && (
+          <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-4 py-3 text-sm text-destructive">
+            {formError}
+          </div>
+        )}
+        <Input
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          maxLength={6}
+          placeholder="000000"
+          value={twoFACode}
+          onChange={(e) => setTwoFACode(e.target.value.replace(/\D/g, ""))}
+          className="text-center text-2xl tracking-[0.4em] font-mono"
+          autoFocus
+        />
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={submitting2FA || twoFACode.length !== 6}
+        >
+          {submitting2FA && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+          Verificar
+        </Button>
+        <button
+          type="button"
+          className="w-full text-xs text-muted-foreground hover:text-foreground text-center"
+          onClick={() => { setPending2FA(null); setFormError(""); setTwoFACode(""); }}
+        >
+          Volver al inicio de sesion
+        </button>
+      </form>
+    );
+  }
+
+  // ── Normal login step ────────────────────────────────────────────────────────
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {formError && (

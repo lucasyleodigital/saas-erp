@@ -8,14 +8,177 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuthStore } from "@/store/auth.store";
 import { useUpdateProfile, useChangePassword } from "@/hooks/use-user";
-import { Loader2, User, Lock, Bell } from "lucide-react";
+import { Loader2, User, Lock, Bell, ShieldCheck, ShieldOff, QrCode } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
+import { api } from "@/lib/api";
 
 interface PasswordFormData {
   currentPassword: string;
   newPassword: string;
   confirmPassword: string;
+}
+
+// ─── 2FA Card ─────────────────────────────────────────────────────────────────
+
+function TwoFactorCard() {
+  const [step, setStep] = useState<"idle" | "setup" | "disable">("idle");
+  const [qrDataUrl, setQrDataUrl] = useState<string>("");
+  const [secret, setSecret] = useState<string>("");
+  const [code, setCode] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [enabled, setEnabled] = useState<boolean | null>(null);
+
+  // Get 2FA status from /auth/me (user profile)
+  useState(() => {
+    api.get("/auth/me/profile").then((r: any) => setEnabled(r.data?.twoFactorEnabled ?? false)).catch(() => {});
+  });
+
+  async function startSetup() {
+    setLoading(true);
+    try {
+      const { data } = await api.post("/auth/2fa/setup");
+      // Generate QR code image from otpauthUrl
+      const QRCode = await import("qrcode");
+      const url = await QRCode.default.toDataURL(data.otpauthUrl, { margin: 1, width: 180 });
+      setQrDataUrl(url);
+      setSecret(data.secret);
+      setStep("setup");
+    } catch {
+      toast.error("Error al iniciar la configuracion de 2FA");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function confirmSetup() {
+    if (code.length !== 6) return;
+    setLoading(true);
+    try {
+      await api.post("/auth/2fa/verify", { token: code });
+      setEnabled(true);
+      setStep("idle");
+      setCode("");
+      toast.success("Verificacion en dos pasos activada");
+    } catch {
+      toast.error("Codigo incorrecto. Intentalo de nuevo.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function confirmDisable() {
+    if (code.length !== 6) return;
+    setLoading(true);
+    try {
+      await api.post("/auth/2fa/disable", { code });
+      setEnabled(false);
+      setStep("idle");
+      setCode("");
+      toast.success("Verificacion en dos pasos desactivada");
+    } catch {
+      toast.error("Codigo incorrecto. Intentalo de nuevo.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <Card>
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm flex items-center gap-2">
+          <ShieldCheck className="h-4 w-4 text-primary" />
+          Verificacion en dos pasos (2FA)
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {step === "idle" && (
+          <>
+            <p className="text-sm text-muted-foreground">
+              {enabled
+                ? "La verificacion en dos pasos esta activa. Tu cuenta esta protegida con una capa extra de seguridad."
+                : "Protege tu cuenta con Google Authenticator u otra app de autenticacion. Al iniciar sesion se pedira un codigo adicional."}
+            </p>
+            {enabled ? (
+              <Button size="sm" variant="outline" className="gap-2 text-destructive border-destructive/30 hover:bg-destructive/10" onClick={() => { setStep("disable"); setCode(""); }}>
+                <ShieldOff className="h-4 w-4" />
+                Desactivar 2FA
+              </Button>
+            ) : (
+              <Button size="sm" variant="outline" className="gap-2" onClick={startSetup} disabled={loading}>
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <QrCode className="h-4 w-4" />}
+                Activar 2FA
+              </Button>
+            )}
+          </>
+        )}
+
+        {step === "setup" && (
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Escanea este codigo QR con <strong>Google Authenticator</strong>, <strong>Authy</strong> u otra app compatible.
+            </p>
+            {qrDataUrl && (
+              <div className="flex justify-center">
+                <img src={qrDataUrl} alt="QR 2FA" className="rounded-lg border border-border" width={180} height={180} />
+              </div>
+            )}
+            <p className="text-xs text-muted-foreground text-center break-all">
+              Clave manual: <span className="font-mono text-foreground">{secret}</span>
+            </p>
+            <div className="space-y-2">
+              <Label className="text-xs">Introduce el codigo de 6 digitos para confirmar</Label>
+              <Input
+                type="text"
+                inputMode="numeric"
+                maxLength={6}
+                placeholder="000000"
+                value={code}
+                onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+                className="text-center font-mono tracking-widest"
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button size="sm" className="flex-1" onClick={confirmSetup} disabled={loading || code.length !== 6}>
+                {loading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                Confirmar y activar
+              </Button>
+              <Button size="sm" variant="ghost" onClick={() => { setStep("idle"); setCode(""); }}>
+                Cancelar
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {step === "disable" && (
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Introduce el codigo de tu app de autenticacion para desactivar el 2FA.
+            </p>
+            <Input
+              type="text"
+              inputMode="numeric"
+              maxLength={6}
+              placeholder="000000"
+              value={code}
+              onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+              className="text-center font-mono tracking-widest"
+            />
+            <div className="flex gap-2">
+              <Button size="sm" variant="destructive" className="flex-1" onClick={confirmDisable} disabled={loading || code.length !== 6}>
+                {loading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                Desactivar
+              </Button>
+              <Button size="sm" variant="ghost" onClick={() => { setStep("idle"); setCode(""); }}>
+                Cancelar
+              </Button>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
 }
 
 export function UserSettings() {
@@ -193,25 +356,7 @@ export function UserSettings() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm">
-                  {t("user.twoFactorTitle")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  {t("user.twoFactorDescription")}
-                </p>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => toast.info(t("user.twoFactorComingSoon"))}
-                >
-                  {t("user.configure2FA")}
-                </Button>
-              </CardContent>
-            </Card>
+            <TwoFactorCard />
           </div>
         </TabsContent>
 

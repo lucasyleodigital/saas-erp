@@ -18,6 +18,8 @@ import { AuthService } from "./auth.service";
 import { RegisterDto } from "./dto/register.dto";
 import { LoginDto } from "./dto/login.dto";
 import { Verify2FADto } from "./dto/verify-2fa.dto";
+import { Complete2FALoginDto } from "./dto/complete-2fa-login.dto";
+import { Disable2FADto } from "./dto/disable-2fa.dto";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { CurrentUser } from "./decorators/current-user.decorator";
 import { CompaniesService } from "../companies/companies.service";
@@ -58,7 +60,7 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response
   ) {
-    const tokens = await this.authService.register(dto, req.ip ?? null);
+    const tokens = await this.authService.register(dto, req.ip ?? null, dto.recaptchaToken);
     res.cookie(REFRESH_COOKIE, tokens.refreshToken, COOKIE_OPTIONS);
     res.cookie("auth_session", "1", SESSION_COOKIE_OPTIONS);
     return { accessToken: tokens.accessToken };
@@ -71,7 +73,23 @@ export class AuthController {
   @UseGuards(AuthGuard("local"))
   async login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const user = req.user as any;
-    const tokens = await this.authService.login(user.id, user.email);
+    const result = await this.authService.loginOrRequire2FA(user.id, user.email);
+    if (result.requires2FA) {
+      return { requires2FA: true, pendingToken: result.pendingToken };
+    }
+    res.cookie(REFRESH_COOKIE, result.refreshToken, COOKIE_OPTIONS);
+    res.cookie("auth_session", "1", SESSION_COOKIE_OPTIONS);
+    return { accessToken: result.accessToken };
+  }
+
+  @Throttle({ short: { ttl: 60000, limit: 5 } })
+  @Post("2fa/complete")
+  @HttpCode(HttpStatus.OK)
+  async complete2FALogin(
+    @Body() dto: Complete2FALoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const tokens = await this.authService.complete2FALogin(dto.pendingToken, dto.code);
     res.cookie(REFRESH_COOKIE, tokens.refreshToken, COOKIE_OPTIONS);
     res.cookie("auth_session", "1", SESSION_COOKIE_OPTIONS);
     return { accessToken: tokens.accessToken };
@@ -105,6 +123,14 @@ export class AuthController {
     return user;
   }
 
+  @Get("me/profile")
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  async getMeProfile(@CurrentUser() user: JwtPayload) {
+    const dbUser = await this.authService.getUserProfile(user.sub);
+    return dbUser;
+  }
+
   @Post("switch-company/:companyId")
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
@@ -132,6 +158,14 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   verify2FA(@CurrentUser() user: JwtPayload, @Body() dto: Verify2FADto) {
     return this.authService.verify2FA(user.sub, dto.token);
+  }
+
+  @Post("2fa/disable")
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  disable2FA(@CurrentUser() user: JwtPayload, @Body() dto: Disable2FADto) {
+    return this.authService.disable2FA(user.sub, dto.code);
   }
 
   @Get("google")

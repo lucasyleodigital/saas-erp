@@ -1,5 +1,5 @@
-import { IsEmail, IsString, MinLength, MaxLength, IsBoolean } from "class-validator";
-import { ApiProperty } from "@nestjs/swagger";
+import { IsEmail, IsString, MinLength, MaxLength, IsBoolean, IsOptional } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
 export class RegisterDto {
   @ApiProperty()
@@ -33,4 +33,9 @@ export class RegisterDto {
   @ApiProperty()
   @IsBoolean()
   acceptTerms!: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  recaptchaToken?: string;
 }

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { RecaptchaProvider } from "@/components/providers/recaptcha-provider";
 import { CookieBanner } from "@/components/layout/cookie-banner";
 import { Toaster } from "sonner";
 import Script from "next/script";
@@ -125,11 +126,13 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <NextIntlClientProvider locale="es" messages={{ marketing: esMessages.marketing }}>
-            <QueryProvider>
-              {children}
-              <CookieBanner />
-              <Toaster richColors position="top-right" />
-            </QueryProvider>
+            <RecaptchaProvider>
+              <QueryProvider>
+                {children}
+                <CookieBanner />
+                <Toaster richColors position="top-right" />
+              </QueryProvider>
+            </RecaptchaProvider>
           </NextIntlClientProvider>
         </ThemeProvider>
 

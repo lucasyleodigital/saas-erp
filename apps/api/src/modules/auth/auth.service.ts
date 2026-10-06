@@ -14,6 +14,10 @@ import { ContractsService } from "../contracts/contracts.service";
 import { RegisterDto } from "./dto/register.dto";
 import type { JwtPayload, AuthTokens } from "@saas/types";
 
+export type LoginResult =
+  | (AuthTokens & { requires2FA?: false })
+  | { requires2FA: true; pendingToken: string };
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -24,7 +28,38 @@ export class AuthService {
     private contracts: ContractsService
   ) {}
 
-  async register(dto: RegisterDto, ipAddress: string | null) {
+  async getUserProfile(userId: string) {
+    const user = await this.prisma.user.findUniqueOrThrow({ where: { id: userId } });
+    return {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      twoFactorEnabled: user.twoFactorEnabled,
+    };
+  }
+
+  async verifyRecaptcha(token: string | undefined): Promise<void> {
+    const secret = this.config.get<string>("RECAPTCHA_SECRET_KEY");
+    if (!secret || !token) return; // graceful skip in dev / no key configured
+    try {
+      const res = await fetch(
+        `https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${token}`,
+        { method: "POST" }
+      );
+      const json = (await res.json()) as { success: boolean; score?: number };
+      if (!json.success || (json.score !== undefined && json.score < 0.5)) {
+        throw new BadRequestException("Verificación reCAPTCHA fallida. Inténtalo de nuevo.");
+      }
+    } catch (err: any) {
+      if (err instanceof BadRequestException) throw err;
+      // Network issues → allow through rather than block legitimate users
+    }
+  }
+
+  async register(dto: RegisterDto, ipAddress: string | null, recaptchaToken?: string) {
+    await this.verifyRecaptcha(recaptchaToken);
+
     if (!dto.acceptTerms) {
       throw new BadRequestException("Debes aceptar los Términos y Condiciones para registrarte");
     }
@@ -130,6 +165,61 @@ export class AuthService {
       .split(",")
       .map((e) => e.trim().toLowerCase())
       .filter(Boolean);
+  }
+
+  async loginOrRequire2FA(userId: string, email: string): Promise<LoginResult> {
+    const user = await this.prisma.user.findUniqueOrThrow({ where: { id: userId } });
+    if (user.twoFactorEnabled) {
+      const pendingToken = this.jwt.sign(
+        { sub: userId, scope: "2fa_pending" },
+        { expiresIn: "5m" }
+      );
+      return { requires2FA: true, pendingToken };
+    }
+    return this.login(userId, email);
+  }
+
+  async complete2FALogin(pendingToken: string, code: string): Promise<AuthTokens> {
+    let payload: { sub: string; scope: string };
+    try {
+      payload = this.jwt.verify(pendingToken) as any;
+    } catch {
+      throw new UnauthorizedException("Token 2FA expirado o inválido");
+    }
+    if (payload.scope !== "2fa_pending") throw new UnauthorizedException("Token inválido");
+
+    const user = await this.prisma.user.findUniqueOrThrow({ where: { id: payload.sub } });
+    if (!user.twoFactorSecret) throw new BadRequestException("2FA no configurado");
+
+    const valid = speakeasy.totp.verify({
+      secret: user.twoFactorSecret,
+      encoding: "base32",
+      token: code,
+      window: 1,
+    });
+    if (!valid) throw new UnauthorizedException("Código 2FA incorrecto");
+
+    return this.login(user.id, user.email);
+  }
+
+  async disable2FA(userId: string, code: string): Promise<{ disabled: boolean }> {
+    const user = await this.prisma.user.findUniqueOrThrow({ where: { id: userId } });
+    if (!user.twoFactorEnabled || !user.twoFactorSecret) {
+      throw new BadRequestException("2FA no está activo");
+    }
+    const valid = speakeasy.totp.verify({
+      secret: user.twoFactorSecret,
+      encoding: "base32",
+      token: code,
+      window: 1,
+    });
+    if (!valid) throw new UnauthorizedException("Código 2FA incorrecto");
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { twoFactorEnabled: false, twoFactorSecret: null },
+    });
+    return { disabled: true };
   }
 
   async login(userId: string, email: string, companyId?: string): Promise<AuthTokens> {
