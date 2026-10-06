@@ -113,7 +113,7 @@ export class BankService {
       imported++;
 
       if (amount > 0) {
-        const matched = await this.tryReconcile(companyId, tx.id, amount, row.description);
+        const matched = await this.tryReconcile(companyId, tx.id, amount, row.description, row.date);
         if (matched) reconciled++;
         else unmatched++;
       } else {
@@ -134,7 +134,7 @@ export class BankService {
 
     let reconciled = 0;
     for (const tx of pending) {
-      const matched = await this.tryReconcile(companyId, tx.id, Number(tx.amount), tx.description);
+      const matched = await this.tryReconcile(companyId, tx.id, Number(tx.amount), tx.description, tx.date ?? new Date());
       if (matched) reconciled++;
     }
     return { reconciled };
@@ -145,6 +145,7 @@ export class BankService {
     txId: string,
     amount: number,
     description: string,
+    txDate?: Date,
   ): Promise<boolean> {
     const pendingInvoices = await this.prisma.invoice.findMany({
       where: {
@@ -181,6 +182,20 @@ export class BankService {
         amount >= remaining * 0.1;
 
       if (matchByAmount || matchByRef || matchByClient) {
+        // Skip if a payment with the same amount already exists for this invoice within the last 7 days
+        if (txDate) {
+          const dupWindow = new Date(txDate);
+          dupWindow.setDate(dupWindow.getDate() - 7);
+          const existing = await this.prisma.payment.findFirst({
+            where: {
+              invoiceId: inv.id,
+              amount: { gte: amount - 0.01, lte: amount + 0.01 },
+              createdAt: { gte: dupWindow },
+            },
+          });
+          if (existing) continue;
+        }
+
         const newPaid = Number(inv.paidAmount) + amount;
         const newStatus = newPaid >= Number(inv.total) ? "PAID" : "PARTIAL";
 
