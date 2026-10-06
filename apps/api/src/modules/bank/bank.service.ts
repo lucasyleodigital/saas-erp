@@ -190,7 +190,7 @@ export class BankService {
             where: {
               invoiceId: inv.id,
               amount: { gte: amount - 0.01, lte: amount + 0.01 },
-              createdAt: { gte: dupWindow },
+              paidAt: { gte: dupWindow },
             },
           });
           if (existing) continue;
