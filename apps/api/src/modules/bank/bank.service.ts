@@ -154,11 +154,30 @@ export class BankService {
       include: { client: true },
     });
 
+    // Sort: exact amount match first, then by date descending
+    pendingInvoices.sort((a, b) => {
+      const remA = Number(a.total) - Number(a.paidAmount);
+      const remB = Number(b.total) - Number(b.paidAmount);
+      const aExact = Math.abs(remA - amount) < 0.02 ? 0 : 1;
+      const bExact = Math.abs(remB - amount) < 0.02 ? 0 : 1;
+      return aExact - bExact;
+    });
+
+    const descNorm = description.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
+
     for (const inv of pendingInvoices) {
       const remaining = Number(inv.total) - Number(inv.paidAmount);
       const matchByAmount = Math.abs(remaining - amount) < 0.02;
       const matchByRef = description.toLowerCase().includes(inv.number.toLowerCase());
-      const matchByClient = inv.client?.name && description.toLowerCase().includes(inv.client.name.toLowerCase());
+      // Client name match only applies when payment ≤ remaining (no overpayment) and amount is > 10% of remaining
+      const clientName = inv.client?.name
+        ? inv.client.name.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")
+        : "";
+      const matchByClient =
+        clientName.length > 3 &&
+        descNorm.includes(clientName) &&
+        amount <= remaining + 0.02 &&
+        amount >= remaining * 0.1;
 
       if (matchByAmount || matchByRef || matchByClient) {
         const newPaid = Number(inv.paidAmount) + amount;
