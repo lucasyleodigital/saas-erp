@@ -167,6 +167,7 @@ export class BankService {
 
     for (const inv of pendingInvoices) {
       const remaining = Number(inv.total) - Number(inv.paidAmount);
+      if (remaining <= 0) continue; // already fully paid, skip
       const matchByAmount = Math.abs(remaining - amount) < 0.02;
       const matchByRef = description.toLowerCase().includes(inv.number.toLowerCase());
       // Client name match only applies when payment ≤ remaining (no overpayment) and amount is > 10% of remaining
