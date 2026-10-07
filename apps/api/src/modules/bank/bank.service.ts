@@ -201,7 +201,7 @@ export class BankService {
 
         await this.prisma.$transaction([
           this.prisma.payment.create({
-            data: { invoiceId: inv.id, amount, method: "BANK_TRANSFER" as any },
+            data: { invoiceId: inv.id, amount, method: "BANK_TRANSFER" as any, paidAt: txDate ?? new Date() },
           }),
           this.prisma.invoice.update({
             where: { id: inv.id },
