@@ -222,7 +222,7 @@ export class BankService {
 
   async linkTransactionToInvoice(companyId: string, accountId: string, txId: string, invoiceId: string) {
     const tx = await this.prisma.bankTransaction.findFirst({
-      where: { id: txId, accountId, account: { companyId } },
+      where: { id: txId, account: { id: accountId, companyId } },
     });
     if (!tx) throw new Error("Movimiento no encontrado");
 
