@@ -76,4 +76,19 @@ export class BankController {
   ) {
     return this.bankService.clearTransactions(u.companyId, accountId);
   }
+
+  @Post("accounts/:accountId/transactions/:txId/link")
+  linkTransaction(
+    @CurrentUser() u: JwtPayload,
+    @Param("accountId") accountId: string,
+    @Param("txId") txId: string,
+    @Body("invoiceId") invoiceId: string,
+  ) {
+    return this.bankService.linkTransactionToInvoice(u.companyId, accountId, txId, invoiceId);
+  }
+
+  @Get("pending-invoices")
+  getPendingInvoices(@CurrentUser() u: JwtPayload) {
+    return this.bankService.getPendingInvoices(u.companyId);
+  }
 }

@@ -10,6 +10,8 @@ import {
   useDeleteTransaction,
   useClearTransactions,
   useReconcilePending,
+  usePendingInvoices,
+  useLinkTransaction,
 } from "@/hooks/use-bank";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -37,6 +39,7 @@ import {
   ArrowDownLeft,
   Trash2,
   RefreshCw,
+  Link2,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -137,6 +140,102 @@ function CreateAccountDialog({
   );
 }
 
+// ─── Link Transaction Dialog ─────────────────────────────────────────────────
+
+function LinkTransactionDialog({
+  open,
+  onOpenChange,
+  accountId,
+  tx,
+}: {
+  open: boolean;
+  onOpenChange: (o: boolean) => void;
+  accountId: string;
+  tx: any;
+}) {
+  const { data: invoices, isLoading } = usePendingInvoices();
+  const link = useLinkTransaction();
+  const [search, setSearch] = useState("");
+
+  const list: any[] = invoices ?? [];
+  const filtered = list.filter((inv) => {
+    const q = search.toLowerCase();
+    return (
+      !q ||
+      inv.number?.toLowerCase().includes(q) ||
+      inv.client?.name?.toLowerCase().includes(q)
+    );
+  });
+
+  async function handleLink(invoiceId: string) {
+    await link.mutateAsync({ accountId, txId: tx.id, invoiceId });
+    onOpenChange(false);
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Link2 className="h-5 w-5 text-primary" />
+            Enlazar movimiento a factura
+          </DialogTitle>
+        </DialogHeader>
+        {tx && (
+          <div className="rounded-lg bg-muted/40 px-4 py-3 text-sm space-y-0.5">
+            <p className="font-medium">{tx.description}</p>
+            <p className="text-muted-foreground">
+              {new Date(tx.date).toLocaleDateString("es-ES")} · {formatCurrency(Number(tx.amount))}
+            </p>
+          </div>
+        )}
+        <Input
+          placeholder="Buscar factura o cliente..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="mt-1"
+        />
+        <div className="max-h-72 overflow-y-auto space-y-1 mt-1">
+          {isLoading ? (
+            <div className="flex justify-center py-8">
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            </div>
+          ) : filtered.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-6">No hay facturas pendientes</p>
+          ) : (
+            filtered.map((inv) => {
+              const remaining = Number(inv.total) - Number(inv.paidAmount);
+              return (
+                <button
+                  key={inv.id}
+                  type="button"
+                  className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-muted/60 text-left transition-colors border border-transparent hover:border-border"
+                  onClick={() => handleLink(inv.id)}
+                  disabled={link.isPending}
+                >
+                  <div>
+                    <p className="text-sm font-medium">{inv.number}</p>
+                    <p className="text-xs text-muted-foreground">{inv.client?.name ?? "—"}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-semibold">{formatCurrency(remaining)} pendiente</p>
+                    <p className="text-xs text-muted-foreground">total {formatCurrency(Number(inv.total))}</p>
+                  </div>
+                </button>
+              );
+            })
+          )}
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            Cancelar
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 // ─── Account Card ────────────────────────────────────────────────────────────
 
 function AccountCard({ account }: { account: any }) {
@@ -145,6 +244,7 @@ function AccountCard({ account }: { account: any }) {
   const importStatement = useImportBankStatement();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [expanded, setExpanded] = useState(false);
+  const [linkTx, setLinkTx] = useState<any>(null);
   const deleteTx = useDeleteTransaction();
   const clearTx = useClearTransactions();
   const reconcile = useReconcilePending();
@@ -325,14 +425,27 @@ function AccountCard({ account }: { account: any }) {
                           )}
                         </td>
                         <td className="px-2 py-2.5">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7 text-muted-foreground hover:text-destructive"
-                            onClick={() => deleteTx.mutate({ accountId: account.id, txId: tx.id })}
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
+                          <div className="flex gap-1">
+                            {!tx.isReconciled && amount > 0 && (
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7 text-muted-foreground hover:text-primary"
+                                title="Enlazar a factura manualmente"
+                                onClick={() => setLinkTx(tx)}
+                              >
+                                <Link2 className="h-3.5 w-3.5" />
+                              </Button>
+                            )}
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                              onClick={() => deleteTx.mutate({ accountId: account.id, txId: tx.id })}
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     );
@@ -344,6 +457,15 @@ function AccountCard({ account }: { account: any }) {
           </div>
         )}
       </CardContent>
+
+      {linkTx && (
+        <LinkTransactionDialog
+          open={!!linkTx}
+          onOpenChange={(o) => { if (!o) setLinkTx(null); }}
+          accountId={account.id}
+          tx={linkTx}
+        />
+      )}
     </Card>
   );
 }

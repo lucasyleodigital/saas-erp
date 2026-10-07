@@ -171,26 +171,28 @@ export class BankService {
       if (remaining <= 0) continue; // already fully paid, skip
       const matchByAmount = Math.abs(remaining - amount) < 0.02;
       const matchByRef = description.toLowerCase().includes(inv.number.toLowerCase());
-      // Client name match only applies when payment ≤ remaining (no overpayment) and amount is > 10% of remaining
+      // Client name match only applies when payment ≤ remaining (no overpayment)
       const clientName = inv.client?.name
         ? inv.client.name.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")
         : "";
       const matchByClient =
         clientName.length > 3 &&
         descNorm.includes(clientName) &&
-        amount <= remaining + 0.02 &&
-        amount >= remaining * 0.1;
+        amount <= remaining + 0.02;
 
       if (matchByAmount || matchByRef || matchByClient) {
-        // Skip if a payment with the same amount already exists for this invoice within the last 7 days
+        // Skip if a payment for the same invoice+amount already exists on the same day
+        // (prevents duplicates when re-importing, but allows multiple same-amount payments on different dates)
         if (txDate) {
-          const dupWindow = new Date(txDate);
-          dupWindow.setDate(dupWindow.getDate() - 7);
+          const dayStart = new Date(txDate);
+          dayStart.setHours(0, 0, 0, 0);
+          const dayEnd = new Date(txDate);
+          dayEnd.setHours(23, 59, 59, 999);
           const existing = await this.prisma.payment.findFirst({
             where: {
               invoiceId: inv.id,
               amount: { gte: amount - 0.01, lte: amount + 0.01 },
-              paidAt: { gte: dupWindow },
+              paidAt: { gte: dayStart, lte: dayEnd },
             },
           });
           if (existing) continue;
@@ -216,6 +218,48 @@ export class BankService {
       }
     }
     return false;
+  }
+
+  async linkTransactionToInvoice(companyId: string, accountId: string, txId: string, invoiceId: string) {
+    const tx = await this.prisma.bankTransaction.findFirst({
+      where: { id: txId, accountId, account: { companyId } },
+    });
+    if (!tx) throw new Error("Movimiento no encontrado");
+
+    const inv = await this.prisma.invoice.findFirst({
+      where: { id: invoiceId, companyId },
+    });
+    if (!inv) throw new Error("Factura no encontrada");
+
+    const amount = Number(tx.amount);
+    const remaining = Number(inv.total) - Number(inv.paidAmount);
+    const newPaid = Number(inv.paidAmount) + amount;
+    const newStatus = newPaid >= Number(inv.total) ? "PAID" : "PARTIAL";
+
+    await this.prisma.$transaction([
+      this.prisma.payment.create({
+        data: { invoiceId: inv.id, amount, method: "BANK_TRANSFER" as any, paidAt: tx.date },
+      }),
+      this.prisma.invoice.update({
+        where: { id: inv.id },
+        data: { paidAmount: newPaid, status: newStatus as any },
+      }),
+      this.prisma.bankTransaction.update({
+        where: { id: txId },
+        data: { isReconciled: true, reconcileStatus: newStatus },
+      }),
+    ]);
+
+    return { linked: true, invoiceStatus: newStatus };
+  }
+
+  async getPendingInvoices(companyId: string) {
+    return this.prisma.invoice.findMany({
+      where: { companyId, status: { in: ["SENT", "PARTIAL", "OVERDUE"] } },
+      include: { client: true },
+      orderBy: { issueDate: "desc" },
+      take: 50,
+    });
   }
 
   private async parseStatement(buffer: Buffer): Promise<Array<{ date: Date; amount: number; description: string; reference: string }>> {

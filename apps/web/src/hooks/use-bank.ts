@@ -77,6 +77,29 @@ export function useReconcilePending() {
   });
 }
 
+export function usePendingInvoices() {
+  return useQuery({
+    queryKey: ["bank", "pending-invoices"],
+    queryFn: () => api.get("/bank/pending-invoices").then((r) => r.data),
+  });
+}
+
+export function useLinkTransaction() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ accountId, txId, invoiceId }: { accountId: string; txId: string; invoiceId: string }) =>
+      api.post(`/bank/accounts/${accountId}/transactions/${txId}/link`, { invoiceId }).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["bank"] });
+      qc.invalidateQueries({ queryKey: ["invoices"] });
+      qc.invalidateQueries({ queryKey: ["invoice"] });
+      qc.invalidateQueries({ queryKey: ["dashboard"] });
+      toast.success("Movimiento enlazado a la factura");
+    },
+    onError: () => toast.error("Error al enlazar movimiento"),
+  });
+}
+
 export function useImportBankStatement() {
   const qc = useQueryClient();
   return useMutation({
