@@ -266,6 +266,7 @@ model Company {
   calendarEntries CalendarEntry[]
   meetings        Meeting[]
   contractAcceptances ContractAcceptance[]
+  shipments       Shipment[]
 
   @@map("companies")
 }
@@ -1483,6 +1484,46 @@ model FiscalPeriod {
 
   @@unique([companyId, year, quarter])
   @@map("fiscal_periods")
+}
+
+// ============================================================
+// SHIPMENTS / ENVÍOS (DeCA)
+// ============================================================
+
+model Shipment {
+  id                  String    @id @default(uuid())
+  companyId           String
+  referencia          String?
+  cargadorNombre      String
+  cargadorNif         String
+  transportistaNombre String
+  transportistaNif    String
+  origen              String
+  destino             String
+  naturalezaCarga     String
+  pesoKg              Float
+  matricula           String
+  fechaRecogida       DateTime?
+  horarioRecogida     String?
+  fechaEntrega        DateTime?
+  horarioEntrega      String?
+  palets              Int?
+  metrosLineales      Float?
+
+  // Decafly response
+  decaflyId           String?
+  decaflyVerifyUrl    String?
+  decaflyPdfUrl       String?
+  decaflyHash         String?
+  decaflyEstado       String?   @default("pendiente")
+
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  company             Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@map("shipments")
 }
 
 // ============================================================
