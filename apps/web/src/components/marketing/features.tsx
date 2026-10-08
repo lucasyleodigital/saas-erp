@@ -18,6 +18,8 @@ import {
   Globe,
   Landmark,
   HardDrive,
+  Truck,
+  FileCheck,
 } from "lucide-react";
 
 const FEATURE_META = [
@@ -36,6 +38,8 @@ const FEATURE_META = [
   { key: "multiLanguage", icon: Globe, color: "#0ea5e9", bg: "rgba(14,165,233,0.08)", border: "rgba(14,165,233,0.2)", glow: "rgba(14,165,233,0.12)" },
   { key: "bankReconciliation", icon: Landmark, color: "#84cc16", bg: "rgba(132,204,22,0.08)", border: "rgba(132,204,22,0.2)", glow: "rgba(132,204,22,0.12)" },
   { key: "backup", icon: HardDrive, color: "#64748b", bg: "rgba(100,116,139,0.08)", border: "rgba(100,116,139,0.2)", glow: "rgba(100,116,139,0.12)" },
+  { key: "fleet", icon: Truck, color: "#f97316", bg: "rgba(249,115,22,0.08)", border: "rgba(249,115,22,0.2)", glow: "rgba(249,115,22,0.12)" },
+  { key: "deca", icon: FileCheck, color: "#6366f1", bg: "rgba(99,102,241,0.08)", border: "rgba(99,102,241,0.2)", glow: "rgba(99,102,241,0.12)" },
 ] as const;
 
 interface FeatureCardData {

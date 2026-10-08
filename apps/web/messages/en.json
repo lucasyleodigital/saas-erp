@@ -2354,7 +2354,7 @@
       "freeSuffix": " invoices"
     },
     "features": {
-      "badge": "15 modules included",
+      "badge": "17 modules included",
       "title": "Everything your business needs",
       "subtitle": "Purpose-built for the Spanish market. No external integrations, no add-on subscriptions.",
       "items": {
@@ -2417,6 +2417,14 @@
         "backup": {
           "title": "Backup & audit trail",
           "desc": "Download all your data in one click. A full audit log tracking who did what, and when."
+        },
+        "fleet": {
+          "title": "Vehicle fleet",
+          "desc": "Manage your fleet: license plates, MOT, insurance and maintenance. Automatic expiry alerts. Link vehicles directly to delivery notes."
+        },
+        "deca": {
+          "title": "DeCA built-in",
+          "desc": "Generate DeCA transport control documents compliant with Spanish regulations. Integrated with Decafly directly from the delivery note."
         }
       }
     },

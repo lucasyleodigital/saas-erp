@@ -2353,7 +2353,7 @@
       "freeSuffix": " factures"
     },
     "features": {
-      "badge": "15 mòduls inclosos",
+      "badge": "17 mòduls inclosos",
       "title": "Tot el que necessita la teva empresa",
       "subtitle": "Dissenyat específicament per al mercat espanyol. Sense integracions externes, sense subscripcions addicionals.",
       "items": {
@@ -2416,6 +2416,14 @@
         "backup": {
           "title": "Còpia de seguretat i auditoria",
           "desc": "Descarrega totes les teves dades en un clic. Registre d'auditoria amb historial de qui va fer què i quan."
+        },
+        "fleet": {
+          "title": "Flota de vehicles",
+          "desc": "Gestiona la teva flota: matrícules, ITV, assegurances i revisions. Alertes automàtiques abans dels venciments. Vincula vehicles als albarans."
+        },
+        "deca": {
+          "title": "DeCA integrat",
+          "desc": "Genera documents DeCA per al transport de mercaderies d'acord amb la normativa espanyola. Integrat amb Decafly directament des de l'albarà."
         }
       }
     },

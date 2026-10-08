@@ -2299,7 +2299,7 @@
       "freeSuffix": " faktura"
     },
     "features": {
-      "badge": "15 modulu barne",
+      "badge": "17 modulu barne",
       "title": "Zure enpresak behar duen guztia",
       "subtitle": "Espainiako merkaturako berariaz diseinatua. Kanpo-integraziorik gabe, harpidetza gehigarririk gabe.",
       "items": {
@@ -2362,6 +2362,14 @@
         "backup": {
           "title": "Babeskopia eta auditoretza",
           "desc": "Deskargatu zure datu guztiak klik batean. Auditoretza-erregistroa, nork zer eta noiz egin zuen jasotzen duena."
+        },
+        "fleet": {
+          "title": "Ibilgailuen flota",
+          "desc": "Kudeatu zure flota: matrikulak, ITV, asegurantzak eta berrikuspenak. Iraungipen-datuen aurreko alertak. Lotu ibilgailuak albaran-ei."
+        },
+        "deca": {
+          "title": "DeCA integratua",
+          "desc": "Sortu DeCA garraioa kontrolatzeko dokumentuak Espainiako arauegiarekin bat etorriz. Decafly-rekin integratuta, albaranetik zuzenean."
         }
       }
     },

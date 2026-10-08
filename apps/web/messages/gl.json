@@ -2214,7 +2214,7 @@
       "freeSuffix": " facturas"
     },
     "features": {
-      "badge": "15 módulos incluídos",
+      "badge": "17 módulos incluídos",
       "title": "Todo o que precisa a túa empresa",
       "subtitle": "Deseñado especificamente para o mercado español. Sen integracións externas, sen subscricións adicionais.",
       "items": {
@@ -2277,6 +2277,14 @@
         "backup": {
           "title": "Copia de seguridade e auditoría",
           "desc": "Descarga todos os teus datos nun clic. Rexistro de auditoría co historial de quen fixo que e cando."
+        },
+        "fleet": {
+          "title": "Flota de vehículos",
+          "desc": "Xestiona a túa flota: matrículas, ITV, seguros e revisións. Alertas automáticas antes dos vencementos. Vincula vehículos directamente aos albaráns."
+        },
+        "deca": {
+          "title": "DeCA integrado",
+          "desc": "Xera documentos DeCA para o transporte de mercadorías conforme á normativa española. Integrado con Decafly directamente dende o albarán."
         }
       }
     },
