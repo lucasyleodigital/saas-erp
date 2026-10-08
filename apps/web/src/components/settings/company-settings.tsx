@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Building2, CreditCard, Palette, Landmark, Plus, Trash2, Scale, Truck } from "lucide-react";
+import { Loader2, Building2, CreditCard, Palette, Landmark, Plus, Trash2, Scale, Truck, ExternalLink, CheckCircle2 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { LocaleLink as Link } from "@/components/ui/locale-link";
 import { TeamSection } from "@/components/empresa/team-section";
@@ -555,18 +555,52 @@ function DecaflySettings() {
     }
   }
 
+  const connected = !!(company as any)?.decaflyApiKey;
+
   return (
     <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-sm flex items-center gap-2">
           <Truck className="h-4 w-4 text-muted-foreground" />
           Decafly — DeCA (Transporte)
+          {connected && (
+            <span className="ml-auto inline-flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
+              <CheckCircle2 className="h-3.5 w-3.5" /> Conectado
+            </span>
+          )}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="text-xs text-muted-foreground">
-          Configura tu clave API de Decafly para generar Documentos de Control de Transporte desde los albaranes.
-        </p>
+        {/* Onboarding steps */}
+        {!connected && (
+          <div className="rounded-lg border border-dashed p-4 space-y-3 bg-muted/30">
+            <p className="text-xs font-medium text-foreground">Cómo conectar con Decafly:</p>
+            <ol className="space-y-2 text-xs text-muted-foreground list-none">
+              <li className="flex gap-2">
+                <span className="shrink-0 font-semibold text-foreground">1.</span>
+                <span>Crea una cuenta gratuita en Decafly para generar DeCA (Documentos de Control de Transporte).</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="shrink-0 font-semibold text-foreground">2.</span>
+                <span>En tu panel de Decafly, ve a <strong>API</strong> y genera una clave de acceso.</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="shrink-0 font-semibold text-foreground">3.</span>
+                <span>Pega la clave aquí y guarda.</span>
+              </li>
+            </ol>
+            <a
+              href="https://porteo-pi.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+              Ir a Decafly →
+            </a>
+          </div>
+        )}
+
         <div className="space-y-1.5">
           <Label>Clave API</Label>
           <Input
@@ -578,7 +612,7 @@ function DecaflySettings() {
           />
         </div>
         <div className="space-y-1.5">
-          <Label>Secreto de webhook</Label>
+          <Label>Secreto de webhook <span className="text-muted-foreground font-normal">(opcional)</span></Label>
           <Input
             type="password"
             value={webhookSecret}
@@ -587,7 +621,10 @@ function DecaflySettings() {
             autoComplete="off"
           />
           <p className="text-xs text-muted-foreground">
-            Configura en Decafly la URL de webhook: <code className="font-mono bg-muted px-1 rounded text-xs">/api/delivery-notes/webhook/decafly/{"{companyId}"}</code>
+            Si configuras webhooks en Decafly, usa esta URL:{" "}
+            <code className="font-mono bg-muted px-1 rounded text-xs break-all">
+              /api/delivery-notes/webhook/decafly/{(company as any)?.id ?? "{companyId}"}
+            </code>
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -598,12 +635,28 @@ function DecaflySettings() {
             onChange={(e) => setTestMode(e.target.checked)}
             className="h-4 w-4 rounded border"
           />
-          <Label htmlFor="decafly-test" className="cursor-pointer">Modo pruebas</Label>
+          <Label htmlFor="decafly-test" className="cursor-pointer">
+            Modo pruebas{" "}
+            <span className="text-muted-foreground font-normal text-xs">(los DeCA no tienen validez oficial)</span>
+          </Label>
         </div>
-        <Button size="sm" onClick={save} disabled={saving} className="gap-2">
-          {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-          Guardar configuración
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button size="sm" onClick={save} disabled={saving} className="gap-2">
+            {saving && <Loader2 className="h-4 w-4 animate-spin" />}
+            Guardar configuración
+          </Button>
+          {connected && (
+            <a
+              href="https://porteo-pi.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+              Panel Decafly
+            </a>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
