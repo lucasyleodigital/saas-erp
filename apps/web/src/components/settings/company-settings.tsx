@@ -541,7 +541,7 @@ function DecaflySettings() {
     setSaving(true);
     try {
       await api.patch("/companies/me", {
-        decaflyApiKey: apiKey || null,
+        decaflyApiKey: apiKey.trim() || null,
         decaflyTestMode: testMode,
       });
       toast.success("Configuración Decafly guardada");

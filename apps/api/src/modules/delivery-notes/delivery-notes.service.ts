@@ -233,7 +233,7 @@ export class DeliveryNotesService {
     if (note.decaflyId) throw new BadRequestException("Este albarán ya tiene un DeCA generado");
 
     const company = note.company as any;
-    const apiKey = company.decaflyApiKey;
+    const apiKey = (company.decaflyApiKey as string | null)?.trim();
     if (!apiKey) throw new BadRequestException("La empresa no tiene configurada la clave API de Decafly");
 
     const baseUrl = company.decaflyTestMode
@@ -292,7 +292,7 @@ export class DeliveryNotesService {
     if (note.decaflyEstado === "anulado") throw new BadRequestException("El DeCA ya está anulado");
 
     const company = note.company as any;
-    const apiKey = company.decaflyApiKey;
+    const apiKey = (company.decaflyApiKey as string | null)?.trim();
     if (!apiKey) throw new BadRequestException("La empresa no tiene configurada la clave API de Decafly");
 
     const baseUrl = company.decaflyTestMode
