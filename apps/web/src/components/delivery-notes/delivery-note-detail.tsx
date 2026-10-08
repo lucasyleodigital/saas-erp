@@ -58,7 +58,15 @@ export function DeliveryNoteDetailView({ id }: { id: string }) {
   const router = useRouter();
   const locale = useLocale();
   const [decaDialog, setDecaDialog] = useState(false);
-  const [matricula, setMatricula] = useState("");
+  const [decaForm, setDecaForm] = useState({
+    matricula: "",
+    transportistaNombre: "",
+    transportistaNif: "",
+    origen: "",
+  });
+  function setDeca(k: keyof typeof decaForm, v: string) {
+    setDecaForm((p) => ({ ...p, [k]: v }));
+  }
 
   if (isLoading) {
     return (
@@ -416,26 +424,37 @@ export function DeliveryNoteDetailView({ id }: { id: string }) {
 
       {/* Generar DeCA dialog */}
       <Dialog open={decaDialog} onOpenChange={setDecaDialog}>
-        <DialogContent className="max-w-sm">
+        <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Truck className="h-5 w-5 text-primary" />
-              Generar DeCA
+              Generar DeCA — {note.number}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-2">
-            <p className="text-sm text-muted-foreground">
-              Se creará un Documento de Control de Transporte para el albarán <span className="font-mono font-medium">{note.number}</span>.
-            </p>
-            <div className="space-y-1.5">
-              <Label htmlFor="matricula">Matrícula del vehículo *</Label>
-              <Input
-                id="matricula"
-                value={matricula}
-                onChange={(e) => setMatricula(e.target.value)}
-                placeholder="1234ABC"
-                autoFocus
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5 col-span-2">
+                <Label className="text-xs text-muted-foreground uppercase tracking-wide">Transportista</Label>
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="deca-tnom">Nombre / razón social *</Label>
+                <Input id="deca-tnom" value={decaForm.transportistaNombre} onChange={(e) => setDeca("transportistaNombre", e.target.value)} placeholder="Transportes Ejemplo SL" autoFocus />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="deca-tnif">NIF / CIF *</Label>
+                <Input id="deca-tnif" value={decaForm.transportistaNif} onChange={(e) => setDeca("transportistaNif", e.target.value)} placeholder="B12345678" />
+              </div>
+              <div className="space-y-1.5 col-span-2">
+                <Label className="text-xs text-muted-foreground uppercase tracking-wide mt-1">Transporte</Label>
+              </div>
+              <div className="space-y-1.5 col-span-2">
+                <Label htmlFor="deca-origen">Origen *</Label>
+                <Input id="deca-origen" value={decaForm.origen} onChange={(e) => setDeca("origen", e.target.value)} placeholder="Calle Mayor 1, Amposta" />
+              </div>
+              <div className="space-y-1.5 col-span-2">
+                <Label htmlFor="deca-mat">Matrícula *</Label>
+                <Input id="deca-mat" value={decaForm.matricula} onChange={(e) => setDeca("matricula", e.target.value)} placeholder="1234ABC" />
+              </div>
             </div>
           </div>
           <DialogFooter className="gap-2">
@@ -443,11 +462,17 @@ export function DeliveryNoteDetailView({ id }: { id: string }) {
               Cancelar
             </Button>
             <Button
-              disabled={!matricula.trim() || generateDeca.isPending}
+              disabled={
+                !decaForm.matricula.trim() ||
+                !decaForm.transportistaNombre.trim() ||
+                !decaForm.transportistaNif.trim() ||
+                !decaForm.origen.trim() ||
+                generateDeca.isPending
+              }
               onClick={async () => {
-                await generateDeca.mutateAsync({ id: note.id, matricula: matricula.trim() });
+                await generateDeca.mutateAsync({ id: note.id, ...decaForm });
                 setDecaDialog(false);
-                setMatricula("");
+                setDecaForm({ matricula: "", transportistaNombre: "", transportistaNif: "", origen: "" });
               }}
               className="gap-2"
             >

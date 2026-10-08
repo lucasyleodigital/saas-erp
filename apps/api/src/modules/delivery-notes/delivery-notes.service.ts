@@ -224,7 +224,19 @@ export class DeliveryNotesService {
     });
   }
 
-  async generateDeca(companyId: string, id: string, matricula: string) {
+  async generateDeca(
+    companyId: string,
+    id: string,
+    dto: {
+      matricula: string;
+      transportistaNombre: string;
+      transportistaNif: string;
+      origen: string;
+      destino?: string;
+      naturalezaCarga?: string;
+      pesoKg?: number;
+    },
+  ) {
     const note = await this.prisma.deliveryNote.findFirst({
       where: { id, companyId },
       include: { client: true, items: true, company: true },
@@ -241,14 +253,15 @@ export class DeliveryNotesService {
       : "https://porteo-pi.vercel.app/api";
 
     const body = {
-      cargador: {
-        nombre: company.legalName ?? company.name,
-        nif: company.cif ?? company.vatNumber ?? "",
-      },
-      destino: (note.client as any)?.address ?? "",
-      naturalezaCarga: note.items.map((i: any) => i.description).join(", "),
-      pesoKg: note.items.reduce((sum: number, i: any) => sum + Number(i.quantity), 0),
-      matricula,
+      cargadorNombre: company.legalName ?? company.name,
+      cargadorNif: (company.cif ?? company.vatNumber ?? "").trim(),
+      transportistaNombre: dto.transportistaNombre,
+      transportistaNif: dto.transportistaNif,
+      origen: dto.origen,
+      destino: dto.destino ?? (note.client as any)?.address ?? "",
+      naturalezaCarga: dto.naturalezaCarga ?? note.items.map((i: any) => i.description).join(", "),
+      pesoKg: dto.pesoKg ?? note.items.reduce((sum: number, i: any) => sum + Number(i.quantity), 0),
+      matricula: dto.matricula,
       referencia: note.number,
     };
 
@@ -272,7 +285,7 @@ export class DeliveryNotesService {
     return this.prisma.deliveryNote.update({
       where: { id },
       data: {
-        matricula,
+        matricula: dto.matricula,
         decaflyId: data.id,
         decaflyVerifyUrl: data.verifyUrl,
         decaflyPdfUrl: data.pdfUrl,

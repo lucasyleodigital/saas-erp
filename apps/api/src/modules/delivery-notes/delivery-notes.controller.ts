@@ -84,9 +84,9 @@ export class DeliveryNotesController {
   generateDeca(
     @CurrentUser() u: JwtPayload,
     @Param("id") id: string,
-    @Body("matricula") matricula: string,
+    @Body() body: any,
   ) {
-    return this.deliveryNotesService.generateDeca(u.companyId, id, matricula);
+    return this.deliveryNotesService.generateDeca(u.companyId, id, body);
   }
 
   @Post(":id/deca/anular")
