@@ -47,6 +47,12 @@ export class CompaniesController {
     return this.companiesService.update(user.companyId, body);
   }
 
+  @Patch("me")
+  patchMyCompany(@CurrentUser() user: JwtPayload, @Body() body: UpdateCompanyDto) {
+    requireAdminOrOwner(user.role);
+    return this.companiesService.update(user.companyId, body);
+  }
+
   // ─── TEAM ─────────────────────────────────────────────────────────
 
   @Get("members")

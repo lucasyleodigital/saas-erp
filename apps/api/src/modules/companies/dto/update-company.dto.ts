@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsEmail, Allow, MaxLength } from "class-validator";
+import { IsString, IsOptional, IsEmail, IsBoolean, Allow, MaxLength } from "class-validator";
 
 export class UpdateCompanyDto {
   @IsOptional() @IsString() @MaxLength(200) name?: string;
@@ -15,4 +15,7 @@ export class UpdateCompanyDto {
   @IsOptional() @IsString() logo?: string;
   @IsOptional() @IsString() website?: string;
   @IsOptional() @Allow() settings?: Record<string, any>;
+  @IsOptional() @IsString() decaflyApiKey?: string | null;
+  @IsOptional() @IsString() decaflyWebhookSecret?: string | null;
+  @IsOptional() @IsBoolean() decaflyTestMode?: boolean;
 }
