@@ -527,14 +527,12 @@ export function CompanySettings() {
 function DecaflySettings() {
   const { data: company } = useMyCompany();
   const [apiKey, setApiKey] = useState("");
-  const [webhookSecret, setWebhookSecret] = useState("");
   const [testMode, setTestMode] = useState(false);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (company) {
       setApiKey((company as any).decaflyApiKey ?? "");
-      setWebhookSecret((company as any).decaflyWebhookSecret ?? "");
       setTestMode((company as any).decaflyTestMode ?? false);
     }
   }, [company]);
@@ -544,7 +542,6 @@ function DecaflySettings() {
     try {
       await api.patch("/companies/me", {
         decaflyApiKey: apiKey || null,
-        decaflyWebhookSecret: webhookSecret || null,
         decaflyTestMode: testMode,
       });
       toast.success("Configuración Decafly guardada");
@@ -610,22 +607,6 @@ function DecaflySettings() {
             placeholder="dk_live_..."
             autoComplete="off"
           />
-        </div>
-        <div className="space-y-1.5">
-          <Label>Secreto de webhook <span className="text-muted-foreground font-normal">(opcional)</span></Label>
-          <Input
-            type="password"
-            value={webhookSecret}
-            onChange={(e) => setWebhookSecret(e.target.value)}
-            placeholder="whsec_..."
-            autoComplete="off"
-          />
-          <p className="text-xs text-muted-foreground">
-            Si configuras webhooks en Decafly, usa esta URL:{" "}
-            <code className="font-mono bg-muted px-1 rounded text-xs break-all">
-              /api/delivery-notes/webhook/decafly/{(company as any)?.id ?? "{companyId}"}
-            </code>
-          </p>
         </div>
         <div className="flex items-center gap-3">
           <input
