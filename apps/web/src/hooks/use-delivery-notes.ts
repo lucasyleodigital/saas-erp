@@ -179,7 +179,7 @@ export function useCreateDeliveryNoteFromQuote() {
 export function useGenerateDeca() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, ...dto }: { id: string; matricula: string; transportistaNombre: string; transportistaNif: string; origen: string }) =>
+    mutationFn: ({ id, ...dto }: { id: string; matricula: string; transportistaNombre: string; transportistaNif: string; origen: string; pesoKg: number }) =>
       api.post(`/delivery-notes/${id}/deca`, dto).then((r) => r.data),
     onSuccess: (_, { id }) => {
       toast.success("DeCA generado correctamente");

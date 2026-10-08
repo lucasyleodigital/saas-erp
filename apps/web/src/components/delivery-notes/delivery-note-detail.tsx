@@ -63,6 +63,7 @@ export function DeliveryNoteDetailView({ id }: { id: string }) {
     transportistaNombre: "",
     transportistaNif: "",
     origen: "",
+    pesoKg: "",
   });
   function setDeca(k: keyof typeof decaForm, v: string) {
     setDecaForm((p) => ({ ...p, [k]: v }));
@@ -451,9 +452,13 @@ export function DeliveryNoteDetailView({ id }: { id: string }) {
                 <Label htmlFor="deca-origen">Origen *</Label>
                 <Input id="deca-origen" value={decaForm.origen} onChange={(e) => setDeca("origen", e.target.value)} placeholder="Calle Mayor 1, Amposta" />
               </div>
-              <div className="space-y-1.5 col-span-2">
+              <div className="space-y-1.5">
                 <Label htmlFor="deca-mat">Matrícula *</Label>
                 <Input id="deca-mat" value={decaForm.matricula} onChange={(e) => setDeca("matricula", e.target.value)} placeholder="1234ABC" />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="deca-peso">Peso total (kg) *</Label>
+                <Input id="deca-peso" type="number" value={decaForm.pesoKg} onChange={(e) => setDeca("pesoKg", e.target.value)} placeholder="1500" min="0" step="any" />
               </div>
             </div>
           </div>
@@ -467,12 +472,17 @@ export function DeliveryNoteDetailView({ id }: { id: string }) {
                 !decaForm.transportistaNombre.trim() ||
                 !decaForm.transportistaNif.trim() ||
                 !decaForm.origen.trim() ||
+                !decaForm.pesoKg ||
                 generateDeca.isPending
               }
               onClick={async () => {
-                await generateDeca.mutateAsync({ id: note.id, ...decaForm });
+                await generateDeca.mutateAsync({
+                  id: note.id,
+                  ...decaForm,
+                  pesoKg: parseFloat(decaForm.pesoKg),
+                });
                 setDecaDialog(false);
-                setDecaForm({ matricula: "", transportistaNombre: "", transportistaNif: "", origen: "" });
+                setDecaForm({ matricula: "", transportistaNombre: "", transportistaNif: "", origen: "", pesoKg: "" });
               }}
               className="gap-2"
             >
