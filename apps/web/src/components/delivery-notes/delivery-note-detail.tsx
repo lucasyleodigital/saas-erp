@@ -10,6 +10,7 @@ import {
   useAnularDeca,
   getDNStatusConfig,
 } from "@/hooks/use-delivery-notes";
+import { useVehicles } from "@/hooks/use-fleet";
 import { useLocale } from "@/hooks/use-locale";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,13 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -65,8 +73,20 @@ export function DeliveryNoteDetailView({ id }: { id: string }) {
     origen: "",
     pesoKg: "",
   });
+  const { data: fleetVehicles = [] } = useVehicles({ activeOnly: "true" });
   function setDeca(k: keyof typeof decaForm, v: string) {
     setDecaForm((p) => ({ ...p, [k]: v }));
+  }
+  function applyVehicle(vehicleId: string) {
+    if (vehicleId === "__manual__") return;
+    const v = fleetVehicles.find((x) => x.id === vehicleId);
+    if (!v) return;
+    setDecaForm((p) => ({
+      ...p,
+      matricula: v.matricula,
+      transportistaNombre: v.transportistaNombre ?? p.transportistaNombre,
+      transportistaNif: v.transportistaNif ?? p.transportistaNif,
+    }));
   }
 
   if (isLoading) {
@@ -433,6 +453,24 @@ export function DeliveryNoteDetailView({ id }: { id: string }) {
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-2">
+            {fleetVehicles.length > 0 && (
+              <div className="space-y-1.5">
+                <Label className="text-xs text-muted-foreground uppercase tracking-wide">Vehículo de la flota</Label>
+                <Select onValueChange={applyVehicle} defaultValue="__manual__">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar vehículo..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__manual__">Introducir manualmente</SelectItem>
+                    {fleetVehicles.map((v) => (
+                      <SelectItem key={v.id} value={v.id}>
+                        {v.matricula}{v.marca ? ` — ${v.marca}${v.modelo ? " " + v.modelo : ""}` : ""}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5 col-span-2">
                 <Label className="text-xs text-muted-foreground uppercase tracking-wide">Transportista</Label>

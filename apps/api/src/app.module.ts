@@ -44,6 +44,7 @@ import { FiscalModule } from "./modules/fiscal/fiscal.module";
 import { MeetingsModule } from "./modules/meetings/meetings.module";
 import { ContactModule } from "./modules/contact/contact.module";
 import { ContractsModule } from "./modules/contracts/contracts.module";
+import { FleetModule } from "./modules/fleet/fleet.module";
 import { DatabaseModule } from "./database/database.module";
 import { validateEnv } from "./config/env.validation";
 
@@ -100,6 +101,7 @@ import { validateEnv } from "./config/env.validation";
     MeetingsModule,
     ContactModule,
     ContractsModule,
+    FleetModule,
   ],
   providers: [
     // Apply rate limiting globally to ALL routes

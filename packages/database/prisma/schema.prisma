@@ -272,6 +272,8 @@ model Company {
   decaflyWebhookSecret String?
   decaflyTestMode     Boolean @default(false)
 
+  vehicles             Vehicle[]
+
   @@map("companies")
 }
 
@@ -1497,6 +1499,65 @@ model FiscalPeriod {
 
   @@unique([companyId, year, quarter])
   @@map("fiscal_periods")
+}
+
+// ============================================================
+// FLOTA
+// ============================================================
+
+enum MaintenanceType {
+  ITV
+  REVISION
+  SEGURO
+  AVERIA
+  CAMBIO_ACEITE
+  NEUMATICOS
+  FRENOS
+  OTRO
+}
+
+model Vehicle {
+  id                  String    @id @default(uuid())
+  companyId           String
+  matricula           String
+  marca               String?
+  modelo              String?
+  anio                Int?
+  transportistaNombre String?
+  transportistaNif    String?
+  itvDate             DateTime?
+  seguroDate          DateTime?
+  notas               String?
+  isActive            Boolean   @default(true)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  company             Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  maintenances        VehicleMaintenance[]
+
+  @@unique([companyId, matricula])
+  @@index([companyId])
+  @@map("vehicles")
+}
+
+model VehicleMaintenance {
+  id              String          @id @default(uuid())
+  vehicleId       String
+  companyId       String
+  tipo            MaintenanceType @default(REVISION)
+  descripcion     String?
+  fecha           DateTime
+  km              Int?
+  coste           Decimal?        @db.Decimal(10, 2)
+  proveedor       String?
+  proximaRevision DateTime?
+  createdAt       DateTime        @default(now())
+
+  vehicle         Vehicle         @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId])
+  @@index([companyId, fecha])
+  @@map("vehicle_maintenances")
 }
 
 // ============================================================
