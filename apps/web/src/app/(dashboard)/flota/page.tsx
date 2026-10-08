@@ -578,7 +578,7 @@ export default function FlotaPage() {
           <VehicleForm
             key={vehicleDialog === "create" ? "create" : (vehicleDialog as Vehicle)?.id}
             initial={
-              vehicleDialog === "create"
+              !vehicleDialog || vehicleDialog === "create"
                 ? EMPTY_VEHICLE
                 : {
                     matricula: (vehicleDialog as Vehicle).matricula,
