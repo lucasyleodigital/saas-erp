@@ -266,7 +266,11 @@ model Company {
   calendarEntries CalendarEntry[]
   meetings        Meeting[]
   contractAcceptances ContractAcceptance[]
-  shipments       Shipment[]
+
+  // Decafly / DeCA config (per-company, stored encrypted-at-rest via Railway env)
+  decaflyApiKey       String?
+  decaflyWebhookSecret String?
+  decaflyTestMode     Boolean @default(false)
 
   @@map("companies")
 }
@@ -819,6 +823,15 @@ model DeliveryNote {
   taxAmount            Decimal            @db.Decimal(12, 2)
   total                Decimal            @db.Decimal(12, 2)
   convertedToInvoiceId String?
+
+  // DeCA (Documento de Control de Transporte) via Decafly
+  matricula            String?
+  decaflyId            String?
+  decaflyVerifyUrl     String?
+  decaflyPdfUrl        String?
+  decaflyHash          String?
+  decaflyEstado        String?
+
   createdAt            DateTime           @default(now())
   updatedAt            DateTime           @updatedAt
 
@@ -1484,46 +1497,6 @@ model FiscalPeriod {
 
   @@unique([companyId, year, quarter])
   @@map("fiscal_periods")
-}
-
-// ============================================================
-// SHIPMENTS / ENVÍOS (DeCA)
-// ============================================================
-
-model Shipment {
-  id                  String    @id @default(uuid())
-  companyId           String
-  referencia          String?
-  cargadorNombre      String
-  cargadorNif         String
-  transportistaNombre String
-  transportistaNif    String
-  origen              String
-  destino             String
-  naturalezaCarga     String
-  pesoKg              Float
-  matricula           String
-  fechaRecogida       DateTime?
-  horarioRecogida     String?
-  fechaEntrega        DateTime?
-  horarioEntrega      String?
-  palets              Int?
-  metrosLineales      Float?
-
-  // Decafly response
-  decaflyId           String?
-  decaflyVerifyUrl    String?
-  decaflyPdfUrl       String?
-  decaflyHash         String?
-  decaflyEstado       String?   @default("pendiente")
-
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
-
-  company             Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
-
-  @@index([companyId])
-  @@map("shipments")
 }
 
 // ============================================================

@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
 import { InvoicesService } from "../invoices/invoices.service";
+import { createHmac } from "crypto";
 
 @Injectable()
 export class DeliveryNotesService {
@@ -221,5 +222,117 @@ export class DeliveryNotesService {
         discount: i.discount,
       })),
     });
+  }
+
+  async generateDeca(companyId: string, id: string, matricula: string) {
+    const note = await this.prisma.deliveryNote.findFirst({
+      where: { id, companyId },
+      include: { client: true, items: true, company: true },
+    });
+    if (!note) throw new NotFoundException("Albarán no encontrado");
+    if (note.decaflyId) throw new BadRequestException("Este albarán ya tiene un DeCA generado");
+
+    const company = note.company as any;
+    const apiKey = company.decaflyApiKey;
+    if (!apiKey) throw new BadRequestException("La empresa no tiene configurada la clave API de Decafly");
+
+    const baseUrl = company.decaflyTestMode
+      ? "https://porteo-pi.vercel.app/api/test"
+      : "https://porteo-pi.vercel.app/api";
+
+    const body = {
+      cargador: {
+        nombre: company.legalName ?? company.name,
+        nif: company.cif ?? company.vatNumber ?? "",
+      },
+      destino: (note.client as any)?.address ?? "",
+      naturalezaCarga: note.items.map((i: any) => i.description).join(", "),
+      pesoKg: note.items.reduce((sum: number, i: any) => sum + Number(i.quantity), 0),
+      matricula,
+      referencia: note.number,
+    };
+
+    const res = await fetch(`${baseUrl}/v1/documentos`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+        "Idempotency-Key": note.id,
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      throw new BadRequestException(`Error Decafly: ${err}`);
+    }
+
+    const data = await res.json() as any;
+
+    return this.prisma.deliveryNote.update({
+      where: { id },
+      data: {
+        matricula,
+        decaflyId: data.id,
+        decaflyVerifyUrl: data.verifyUrl,
+        decaflyPdfUrl: data.pdfUrl,
+        decaflyHash: data.hash ?? null,
+        decaflyEstado: data.estado ?? "vigente",
+      },
+    });
+  }
+
+  async anularDeca(companyId: string, id: string) {
+    const note = await this.prisma.deliveryNote.findFirst({
+      where: { id, companyId },
+      include: { company: true },
+    });
+    if (!note) throw new NotFoundException("Albarán no encontrado");
+    if (!note.decaflyId) throw new BadRequestException("Este albarán no tiene un DeCA activo");
+    if (note.decaflyEstado === "anulado") throw new BadRequestException("El DeCA ya está anulado");
+
+    const company = note.company as any;
+    const apiKey = company.decaflyApiKey;
+    if (!apiKey) throw new BadRequestException("La empresa no tiene configurada la clave API de Decafly");
+
+    const baseUrl = company.decaflyTestMode
+      ? "https://porteo-pi.vercel.app/api/test"
+      : "https://porteo-pi.vercel.app/api";
+
+    const res = await fetch(`${baseUrl}/v1/documentos/${note.decaflyId}/anular`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Idempotency-Key": `anular-${note.id}`,
+      },
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      throw new BadRequestException(`Error Decafly al anular: ${err}`);
+    }
+
+    return this.prisma.deliveryNote.update({
+      where: { id },
+      data: { decaflyEstado: "anulado" },
+    });
+  }
+
+  async handleDecaflyWebhook(companyId: string, payload: any, signature: string) {
+    const company = await this.prisma.company.findUnique({ where: { id: companyId } }) as any;
+    if (!company?.decaflyWebhookSecret) return;
+
+    const expected = createHmac("sha256", company.decaflyWebhookSecret)
+      .update(JSON.stringify(payload))
+      .digest("hex");
+    if (signature !== expected) throw new BadRequestException("Firma inválida");
+
+    const { documentoId, estado } = payload;
+    if (documentoId && estado) {
+      await this.prisma.deliveryNote.updateMany({
+        where: { companyId, decaflyId: documentoId },
+        data: { decaflyEstado: estado },
+      });
+    }
   }
 }

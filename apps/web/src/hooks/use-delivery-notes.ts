@@ -30,6 +30,12 @@ export interface DeliveryNote {
   taxAmount: string | number;
   total: string | number;
   convertedToInvoiceId: string | null;
+  matricula: string | null;
+  decaflyId: string | null;
+  decaflyVerifyUrl: string | null;
+  decaflyPdfUrl: string | null;
+  decaflyHash: string | null;
+  decaflyEstado: string | null;
   createdAt: string;
   updatedAt: string;
   client?: { id: string; name: string };
@@ -166,6 +172,38 @@ export function useCreateDeliveryNoteFromQuote() {
     },
     onError: (err: any) => {
       toast.error(err?.response?.data?.message ?? "Error al crear albarán");
+    },
+  });
+}
+
+export function useGenerateDeca() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, matricula }: { id: string; matricula: string }) =>
+      api.post(`/delivery-notes/${id}/deca`, { matricula }).then((r) => r.data),
+    onSuccess: (_, { id }) => {
+      toast.success("DeCA generado correctamente");
+      qc.invalidateQueries({ queryKey: ["delivery-note", id] });
+      qc.invalidateQueries({ queryKey: ["delivery-notes"] });
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message ?? "Error al generar el DeCA");
+    },
+  });
+}
+
+export function useAnularDeca() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) =>
+      api.post(`/delivery-notes/${id}/deca/anular`).then((r) => r.data),
+    onSuccess: (_, id) => {
+      toast.success("DeCA anulado");
+      qc.invalidateQueries({ queryKey: ["delivery-note", id] });
+      qc.invalidateQueries({ queryKey: ["delivery-notes"] });
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message ?? "Error al anular el DeCA");
     },
   });
 }

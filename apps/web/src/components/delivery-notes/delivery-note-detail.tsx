@@ -1,15 +1,27 @@
 "use client";
 
+import { useState } from "react";
 import {
   useDeliveryNote,
   useUpdateDeliveryNoteStatus,
   useConvertDeliveryNoteToInvoice,
   useDeleteDeliveryNote,
+  useGenerateDeca,
+  useAnularDeca,
   getDNStatusConfig,
 } from "@/hooks/use-delivery-notes";
 import { useLocale } from "@/hooks/use-locale";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,6 +42,8 @@ import {
   Building2,
   Calendar,
   FileText,
+  ExternalLink,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -39,8 +53,12 @@ export function DeliveryNoteDetailView({ id }: { id: string }) {
   const updateStatus = useUpdateDeliveryNoteStatus();
   const convertToInvoice = useConvertDeliveryNoteToInvoice();
   const deleteNote = useDeleteDeliveryNote();
+  const generateDeca = useGenerateDeca();
+  const anularDeca = useAnularDeca();
   const router = useRouter();
   const locale = useLocale();
+  const [decaDialog, setDecaDialog] = useState(false);
+  const [matricula, setMatricula] = useState("");
 
   if (isLoading) {
     return (
@@ -98,6 +116,17 @@ export function DeliveryNoteDetailView({ id }: { id: string }) {
         </div>
 
         <div className="flex items-center gap-2">
+          {!note.decaflyId && note.status !== "CANCELLED" && (
+            <Button
+              size="sm"
+              variant="outline"
+              className="gap-2"
+              onClick={() => setDecaDialog(true)}
+            >
+              <Truck className="h-4 w-4" />
+              Generar DeCA
+            </Button>
+          )}
           {canConvert && (
             <Button
               size="sm"
@@ -314,6 +343,122 @@ export function DeliveryNoteDetailView({ id }: { id: string }) {
           </CardContent>
         </Card>
       )}
+
+      {/* DeCA */}
+      {note.decaflyId && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm flex items-center gap-2">
+              <Truck className="h-4 w-4" />
+              Documento de Control de Transporte (DeCA)
+              <span className={cn(
+                "ml-auto inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+                note.decaflyEstado === "vigente"
+                  ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+                  : note.decaflyEstado === "anulado"
+                  ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
+                  : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+              )}>
+                {note.decaflyEstado ?? "pendiente"}
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {note.matricula && (
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Matrícula</span>
+                <span className="font-mono font-medium">{note.matricula}</span>
+              </div>
+            )}
+            <div className="flex gap-3 flex-wrap">
+              {note.decaflyVerifyUrl && (
+                <a
+                  href={note.decaflyVerifyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+                >
+                  <ExternalLink className="h-3.5 w-3.5" />
+                  Verificar DeCA
+                </a>
+              )}
+              {note.decaflyPdfUrl && (
+                <a
+                  href={note.decaflyPdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+                >
+                  <FileText className="h-3.5 w-3.5" />
+                  Descargar PDF
+                </a>
+              )}
+            </div>
+            {note.decaflyEstado === "vigente" && (
+              <Button
+                variant="destructive"
+                size="sm"
+                className="gap-2"
+                onClick={() => {
+                  if (confirm("¿Anular este DeCA? Esta acción no se puede deshacer.")) {
+                    anularDeca.mutate(note.id);
+                  }
+                }}
+                disabled={anularDeca.isPending}
+              >
+                {anularDeca.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <XCircle className="h-3.5 w-3.5" />}
+                Anular DeCA
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Generar DeCA dialog */}
+      <Dialog open={decaDialog} onOpenChange={setDecaDialog}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Truck className="h-5 w-5 text-primary" />
+              Generar DeCA
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <p className="text-sm text-muted-foreground">
+              Se creará un Documento de Control de Transporte para el albarán <span className="font-mono font-medium">{note.number}</span>.
+            </p>
+            <div className="space-y-1.5">
+              <Label htmlFor="matricula">Matrícula del vehículo *</Label>
+              <Input
+                id="matricula"
+                value={matricula}
+                onChange={(e) => setMatricula(e.target.value)}
+                placeholder="1234ABC"
+                autoFocus
+              />
+            </div>
+          </div>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setDecaDialog(false)}>
+              Cancelar
+            </Button>
+            <Button
+              disabled={!matricula.trim() || generateDeca.isPending}
+              onClick={async () => {
+                await generateDeca.mutateAsync({ id: note.id, matricula: matricula.trim() });
+                setDecaDialog(false);
+                setMatricula("");
+              }}
+              className="gap-2"
+            >
+              {generateDeca.isPending
+                ? <><Loader2 className="h-4 w-4 animate-spin" /> Generando...</>
+                : <><Truck className="h-4 w-4" /> Generar DeCA</>
+              }
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

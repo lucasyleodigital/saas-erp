@@ -110,7 +110,6 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         { href: "/presupuestos", label: t("quotes"),        icon: ClipboardList },
         { href: "/pedidos",      label: t("orders"),        icon: ShoppingCart },
         { href: "/albaranes",    label: t("deliveryNotes"), icon: Truck },
-        { href: "/envios",       label: "Envíos (DeCA)",    icon: Truck },
         { href: "/calendario",   label: t("calendar"),       icon: CalendarDays },
         { href: "/productos",    label: t("products"),      icon: Package },
         { href: "/verifactu",    label: t("verifactu"),     icon: Shield },

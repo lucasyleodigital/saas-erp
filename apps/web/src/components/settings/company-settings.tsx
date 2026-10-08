@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Building2, CreditCard, Palette, Landmark, Plus, Trash2, Scale } from "lucide-react";
+import { Loader2, Building2, CreditCard, Palette, Landmark, Plus, Trash2, Scale, Truck } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { LocaleLink as Link } from "@/components/ui/locale-link";
 import { TeamSection } from "@/components/empresa/team-section";
@@ -493,6 +493,9 @@ export function CompanySettings() {
         </CardContent>
       </Card>
 
+      {/* Decafly / DeCA config */}
+      <DecaflySettings />
+
       {/* Plan card */}
       <Card>
         <CardHeader className="pb-3">
@@ -516,5 +519,92 @@ export function CompanySettings() {
 
       <TeamSection currentRole={currentUser?.role ?? "EMPLOYEE"} />
     </div>
+  );
+}
+
+// ─── Decafly / DeCA settings ─────────────────────────────────────────────────
+
+function DecaflySettings() {
+  const { data: company } = useMyCompany();
+  const [apiKey, setApiKey] = useState("");
+  const [webhookSecret, setWebhookSecret] = useState("");
+  const [testMode, setTestMode] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (company) {
+      setApiKey((company as any).decaflyApiKey ?? "");
+      setWebhookSecret((company as any).decaflyWebhookSecret ?? "");
+      setTestMode((company as any).decaflyTestMode ?? false);
+    }
+  }, [company]);
+
+  async function save() {
+    setSaving(true);
+    try {
+      await api.patch("/companies/me", {
+        decaflyApiKey: apiKey || null,
+        decaflyWebhookSecret: webhookSecret || null,
+        decaflyTestMode: testMode,
+      });
+      toast.success("Configuración Decafly guardada");
+    } catch {
+      toast.error("Error al guardar la configuración");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <Card>
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm flex items-center gap-2">
+          <Truck className="h-4 w-4 text-muted-foreground" />
+          Decafly — DeCA (Transporte)
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <p className="text-xs text-muted-foreground">
+          Configura tu clave API de Decafly para generar Documentos de Control de Transporte desde los albaranes.
+        </p>
+        <div className="space-y-1.5">
+          <Label>Clave API</Label>
+          <Input
+            type="password"
+            value={apiKey}
+            onChange={(e) => setApiKey(e.target.value)}
+            placeholder="dk_live_..."
+            autoComplete="off"
+          />
+        </div>
+        <div className="space-y-1.5">
+          <Label>Secreto de webhook</Label>
+          <Input
+            type="password"
+            value={webhookSecret}
+            onChange={(e) => setWebhookSecret(e.target.value)}
+            placeholder="whsec_..."
+            autoComplete="off"
+          />
+          <p className="text-xs text-muted-foreground">
+            Configura en Decafly la URL de webhook: <code className="font-mono bg-muted px-1 rounded text-xs">/api/delivery-notes/webhook/decafly/{"{companyId}"}</code>
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <input
+            id="decafly-test"
+            type="checkbox"
+            checked={testMode}
+            onChange={(e) => setTestMode(e.target.checked)}
+            className="h-4 w-4 rounded border"
+          />
+          <Label htmlFor="decafly-test" className="cursor-pointer">Modo pruebas</Label>
+        </div>
+        <Button size="sm" onClick={save} disabled={saving} className="gap-2">
+          {saving && <Loader2 className="h-4 w-4 animate-spin" />}
+          Guardar configuración
+        </Button>
+      </CardContent>
+    </Card>
   );
 }

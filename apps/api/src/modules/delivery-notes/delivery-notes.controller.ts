@@ -7,6 +7,7 @@ import {
   Param,
   Body,
   Query,
+  Headers,
   UseGuards,
   HttpCode,
   HttpStatus,
@@ -76,5 +77,39 @@ export class DeliveryNotesController {
   @HttpCode(HttpStatus.OK)
   remove(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
     return this.deliveryNotesService.remove(u.companyId, id);
+  }
+
+  @Post(":id/deca")
+  @HttpCode(HttpStatus.CREATED)
+  generateDeca(
+    @CurrentUser() u: JwtPayload,
+    @Param("id") id: string,
+    @Body("matricula") matricula: string,
+  ) {
+    return this.deliveryNotesService.generateDeca(u.companyId, id, matricula);
+  }
+
+  @Post(":id/deca/anular")
+  @HttpCode(HttpStatus.OK)
+  anularDeca(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
+    return this.deliveryNotesService.anularDeca(u.companyId, id);
+  }
+
+}
+
+@ApiTags("DeliveryNotes")
+@Controller("delivery-notes")
+export class DeliveryNotesWebhookController {
+  constructor(private deliveryNotesService: DeliveryNotesService) {}
+
+  // Public endpoint — signature verified inside the service
+  @Post("webhook/decafly/:companyId")
+  @HttpCode(HttpStatus.OK)
+  decaflyWebhook(
+    @Param("companyId") companyId: string,
+    @Body() body: any,
+    @Headers("x-decafly-signature") sig: string,
+  ) {
+    return this.deliveryNotesService.handleDecaflyWebhook(companyId, body, sig);
   }
 }
