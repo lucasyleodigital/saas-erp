@@ -145,7 +145,7 @@ export function DeliveryNoteDetailView({ id }: { id: string }) {
         </div>
 
         <div className="flex items-center gap-2">
-          {!note.decaflyId && note.status !== "CANCELLED" && (
+          {(!note.decaflyId || note.decaflyEstado === "anulado") && note.status !== "CANCELLED" && (
             <Button
               size="sm"
               variant="outline"

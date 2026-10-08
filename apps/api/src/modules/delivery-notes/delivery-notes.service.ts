@@ -242,7 +242,8 @@ export class DeliveryNotesService {
       include: { client: true, items: true, company: true },
     });
     if (!note) throw new NotFoundException("Albarán no encontrado");
-    if (note.decaflyId) throw new BadRequestException("Este albarán ya tiene un DeCA generado");
+    if (note.decaflyId && note.decaflyEstado !== "anulado")
+      throw new BadRequestException("Este albarán ya tiene un DeCA activo. Anúlalo primero para generar uno nuevo.");
 
     const company = note.company as any;
     const apiKey = (company.decaflyApiKey as string | null)?.trim();
