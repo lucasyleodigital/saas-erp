@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, cn } from "@/lib/utils";
+import { VehicleExpensesCard } from "@/components/expenses/vehicle-expenses-card";
 import {
   Plus,
   Truck,
@@ -73,6 +74,8 @@ const EMPTY_MAINTENANCE = {
   proveedor: "",
   proximaRevision: "",
 };
+
+const needsAttention = (s: string) => s === "warn" || s === "expired";
 
 function ExpiryBadge({ dateStr, label }: { dateStr: string | null; label: string }) {
   const status = getExpiryStatus(dateStr);
@@ -277,7 +280,7 @@ export default function FlotaPage() {
   const alerts = vehicles.filter(
     (v) =>
       v.isActive &&
-      (getExpiryStatus(v.itvDate) !== "ok" || getExpiryStatus(v.seguroDate) !== "ok")
+      (needsAttention(getExpiryStatus(v.itvDate)) || needsAttention(getExpiryStatus(v.seguroDate)))
   );
 
   async function handleSaveVehicle(form: any) {
@@ -378,7 +381,7 @@ export default function FlotaPage() {
             vehicles.map((v) => {
               const itvStatus = getExpiryStatus(v.itvDate);
               const segStatus = getExpiryStatus(v.seguroDate);
-              const hasAlert = v.isActive && (itvStatus !== "ok" || segStatus !== "ok");
+              const hasAlert = v.isActive && (needsAttention(itvStatus) || needsAttention(segStatus));
               return (
                 <button
                   key={v.id}
@@ -555,6 +558,8 @@ export default function FlotaPage() {
                 )}
               </CardContent>
             </Card>
+
+            <VehicleExpensesCard vehicleId={selectedVehicle.id} />
           </div>
         ) : (
           <div className="flex-1 hidden lg:flex items-center justify-center text-muted-foreground">

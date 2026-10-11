@@ -42,6 +42,7 @@ import {
   ScanLine,
   Receipt,
   FileSignature,
+  Wallet,
 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -76,6 +77,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         { href: "/dashboard", label: t("home"), icon: LayoutDashboard },
         { href: "/control-horario", label: t("clockIn"), icon: Timer },
         { href: "/nominas", label: t("myPayslips"), icon: Banknote },
+        { href: "/gastos", label: t("myExpenses"), icon: Wallet },
         { href: "/configuracion", label: t("settings"), icon: Settings },
       ],
     },
@@ -101,6 +103,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         { href: "/empleados", label: t("employees"), icon: UserCheck },
         { href: "/control-horario", label: t("timeTracking"), icon: Timer },
         { href: "/nominas",   label: t("payroll"),   icon: Banknote },
+        { href: "/gastos",    label: t("expenses"),  icon: Wallet },
       ],
     },
     {
@@ -110,7 +113,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         { href: "/presupuestos", label: t("quotes"),        icon: ClipboardList },
         { href: "/pedidos",      label: t("orders"),        icon: ShoppingCart },
         { href: "/albaranes",    label: t("deliveryNotes"), icon: Truck },
-        { href: "/flota",        label: "Flota",             icon: Truck },
+        { href: "/flota",        label: t("fleet"),         icon: Truck },
         { href: "/calendario",   label: t("calendar"),       icon: CalendarDays },
         { href: "/productos",    label: t("products"),      icon: Package },
         { href: "/verifactu",    label: t("verifactu"),     icon: Shield },

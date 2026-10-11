@@ -73,6 +73,8 @@ export default function PrintPayslipPage({ params }: { params: Promise<{ id: str
   const irpfRate    = Number(p.irpfRate);
   const irpfAmt     = Number(p.irpfAmount);
   const otherDed    = Number(p.otherDeductions ?? 0);
+  const allowances  = Number(p.taxableAllowances ?? 0);
+  const reimbursement = Number(p.expenseReimbursement ?? 0);
   const netSalary   = Number(p.netSalary);
   const ssEmployer  = Number(p.ssEmployer);
   const ssEmployeeRate = Number(p.ssEmployeeRate) * 100;
@@ -165,6 +167,22 @@ export default function PrintPayslipPage({ params }: { params: Promise<{ id: str
                 <td />
               </tr>
             )}
+            {allowances > 0 && (
+              <tr>
+                <TdLabel>Dietas/kilometraje sujetos</TdLabel>
+                <td /><td />
+                <TdVal>{fmtN(allowances)}</TdVal>
+                <td />
+              </tr>
+            )}
+            {reimbursement > 0 && (
+              <tr>
+                <TdLabel>Reembolso gastos (no salarial)</TdLabel>
+                <td /><td />
+                <TdVal>{fmtN(reimbursement)}</TdVal>
+                <td />
+              </tr>
+            )}
 
             {/* SS empleado */}
             <tr>
@@ -216,7 +234,7 @@ export default function PrintPayslipPage({ params }: { params: Promise<{ id: str
             </thead>
             <tbody>
               <tr className="border-b border-gray-400">
-                <TdVal cls="text-center">{fmtN(grossSalary)}</TdVal>
+                <TdVal cls="text-center">{fmtN(grossSalary + reimbursement)}</TdVal>
                 <TdVal cls="text-center border-l border-gray-400">{fmtN(totalDeducciones)}</TdVal>
               </tr>
               <tr>

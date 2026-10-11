@@ -20,6 +20,8 @@ export interface Payroll {
   irpfRate: number;
   irpfAmount: number;
   otherDeductions: number;
+  expenseReimbursement?: number;
+  taxableAllowances?: number;
   netSalary: number;
   totalCost: number;
   status: "DRAFT" | "APPROVED" | "PAID";

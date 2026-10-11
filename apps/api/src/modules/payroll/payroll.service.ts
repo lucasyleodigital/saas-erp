@@ -4,6 +4,7 @@ import {
   ConflictException,
 } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
+import { AccountingService } from "../accounting/accounting.service";
 
 // Spain 2024 IRPF brackets (state + avg autonomous community)
 const IRPF_BRACKETS = [
@@ -42,18 +43,22 @@ function round2(n: number): number {
 
 @Injectable()
 export class PayrollService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private accounting: AccountingService) {}
 
   private computePayroll(monthlySalary: number, overrides?: {
     overtimePay?: number;
     bonuses?: number;
     otherDeductions?: number;
     irpfRate?: number;
+    expenseReimbursement?: number;
+    taxableAllowances?: number;
   }) {
     const baseSalary = round2(monthlySalary);
     const overtimePay = round2(overrides?.overtimePay ?? 0);
     const bonuses = round2(overrides?.bonuses ?? 0);
-    const grossSalary = round2(baseSalary + overtimePay + bonuses);
+    const taxableAllowances = round2(overrides?.taxableAllowances ?? 0);
+    const expenseReimbursement = round2(overrides?.expenseReimbursement ?? 0);
+    const grossSalary = round2(baseSalary + overtimePay + bonuses + taxableAllowances);
 
     const annualGross = grossSalary * 12;
     const irpfRate = overrides?.irpfRate !== undefined
@@ -64,13 +69,15 @@ export class PayrollService {
     const ssEmployer = round2(grossSalary * SS_EMPLOYER_RATE);
     const irpfAmount = round2(grossSalary * (irpfRate / 100));
     const otherDeductions = round2(overrides?.otherDeductions ?? 0);
-    const netSalary = round2(grossSalary - ssEmployee - irpfAmount - otherDeductions);
+    const netSalary = round2(grossSalary - ssEmployee - irpfAmount - otherDeductions + expenseReimbursement);
     const totalCost = round2(grossSalary + ssEmployer);
 
     return {
       baseSalary,
       overtimePay,
       bonuses,
+      taxableAllowances,
+      expenseReimbursement,
       grossSalary,
       ssEmployeeRate: SS_EMPLOYEE_RATE,
       ssEmployerRate: SS_EMPLOYER_RATE,
@@ -137,9 +144,48 @@ export class PayrollService {
       const payroll = await this.prisma.payroll.create({
         data: { companyId, employeeId: emp.id, year, month, ...computed, status: "DRAFT" },
       });
-      created.push(payroll);
+      created.push((await this.attachExpenseReports(companyId, payroll.id)) ?? payroll);
     }
     return created;
+  }
+
+  // Vincula a la nómina las notas de gasto aprobadas para reembolsar por nómina y recalcula importes.
+  async attachExpenseReports(companyId: string, payrollId: string) {
+    const payroll = await this.prisma.payroll.findFirst({ where: { id: payrollId, companyId } });
+    if (!payroll || payroll.status === "PAID") return null;
+
+    await this.prisma.expenseReport.updateMany({
+      where: {
+        companyId, employeeId: payroll.employeeId, status: "APPROVED",
+        reimbursementMethod: "PAYROLL", payrollId: null,
+      },
+      data: { payrollId: payroll.id },
+    });
+
+    const claims = await this.prisma.expenseClaim.findMany({
+      where: { report: { payrollId: payroll.id, status: "APPROVED" }, status: "APPROVED", paidWithCompanyCard: false },
+      select: { amount: true, taxableAmount: true },
+    });
+    const taxableAllowances = round2(claims.reduce((s, c) => s + Number(c.taxableAmount), 0));
+    const expenseReimbursement = round2(claims.reduce((s, c) => s + Number(c.amount) - Number(c.taxableAmount), 0));
+
+    const unchanged =
+      Math.abs(Number(payroll.taxableAllowances) - taxableAllowances) < 0.005 &&
+      Math.abs(Number(payroll.expenseReimbursement) - expenseReimbursement) < 0.005;
+    if (unchanged) return payroll;
+
+    const computed = this.computePayroll(Number(payroll.baseSalary), {
+      overtimePay: Number(payroll.overtimePay),
+      bonuses: Number(payroll.bonuses),
+      otherDeductions: Number(payroll.otherDeductions),
+      irpfRate: Number(payroll.irpfRate),
+      expenseReimbursement,
+      taxableAllowances,
+    });
+    return this.prisma.payroll.update({
+      where: { id: payroll.id },
+      data: { ...computed, status: "DRAFT" },
+    });
   }
 
   async update(companyId: string, id: string, dto: {
@@ -158,6 +204,8 @@ export class PayrollService {
       bonuses: dto.bonuses,
       otherDeductions: dto.otherDeductions,
       irpfRate: dto.irpfRate,
+      expenseReimbursement: Number(payroll.expenseReimbursement),
+      taxableAllowances: Number(payroll.taxableAllowances),
     });
     return this.prisma.payroll.update({
       where: { id },
@@ -174,10 +222,35 @@ export class PayrollService {
   async markPaid(companyId: string, id: string, paymentDate?: string) {
     const payroll = await this.prisma.payroll.findFirst({ where: { id, companyId } });
     if (!payroll) throw new NotFoundException("Nómina no encontrada");
-    return this.prisma.payroll.update({
+    const paidAt = paymentDate ? new Date(paymentDate) : new Date();
+    const updated = await this.prisma.payroll.update({
       where: { id },
-      data: { status: "PAID", paymentDate: paymentDate ? new Date(paymentDate) : new Date() },
+      data: { status: "PAID", paymentDate: paidAt },
     });
+
+    const reports = await this.prisma.expenseReport.findMany({
+      where: { companyId, payrollId: id, status: "APPROVED" },
+    });
+    for (const report of reports) {
+      await this.prisma.$transaction([
+        this.prisma.expenseReport.update({
+          where: { id: report.id },
+          data: { status: "REIMBURSED", reimbursedAt: paidAt },
+        }),
+        this.prisma.expenseClaim.updateMany({
+          where: { reportId: report.id, status: "APPROVED" },
+          data: { status: "REIMBURSED" },
+        }),
+      ]);
+      await this.accounting.createExpenseReimbursementJournalEntry(companyId, {
+        reference: `REEMB-${report.number}`,
+        date: paidAt,
+        description: `Reembolso nota de gasto ${report.number} (nómina ${payroll.month}/${payroll.year})`,
+        amount: Number(report.reimbursableTotal),
+        method: "PAYROLL",
+      }).catch((err) => console.error("[Payroll] Failed to post reimbursement entry:", err?.message));
+    }
+    return updated;
   }
 
   async remove(companyId: string, id: string) {

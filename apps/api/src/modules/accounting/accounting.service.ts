@@ -606,6 +606,73 @@ export class AccountingService {
     await this.prisma.journalEntry.deleteMany({ where: { companyId, reference: ref } });
   }
 
+  // ─── Gastos de empleado (notas de gasto) ─────────────────────────────────────
+  // Debe: cuenta de gasto (+ 472 si el IVA es deducible, + 640 por el exceso que tributa como salario)
+  // Haber: 465 si hay que reembolsar al empleado, 572 si lo pagó la tarjeta de empresa
+  async createExpenseClaimJournalEntry(companyId: string, entry: {
+    reference: string; date: Date; description: string;
+    expenseAccountCode: string; base: number; vatAmount: number;
+    taxableAmount: number; paidWithCompanyCard: boolean;
+  }) {
+    await this.ensureDefaultAccounts(companyId);
+    const expenseAccount = await this.findOrCreateAccount(companyId, entry.expenseAccountCode);
+    const creditAccount  = await this.findOrCreateAccount(companyId, entry.paidWithCompanyCard ? "572" : "465");
+
+    const exemptBase = Math.round((entry.base - entry.taxableAmount) * 100) / 100;
+    const items: { accountId: string; description?: string; debit: number; credit: number }[] = [];
+    if (exemptBase > 0) items.push({ accountId: expenseAccount.id, description: entry.description, debit: exemptBase, credit: 0 });
+    if (entry.taxableAmount > 0) {
+      const salaryAccount = await this.findOrCreateAccount(companyId, "640");
+      items.push({ accountId: salaryAccount.id, description: "Exceso sobre límite exento (tributa)", debit: entry.taxableAmount, credit: 0 });
+    }
+    if (entry.vatAmount > 0) {
+      const ivaAccount = await this.findOrCreateAccount(companyId, "472");
+      items.push({ accountId: ivaAccount.id, description: "IVA soportado", debit: entry.vatAmount, credit: 0 });
+    }
+    const total = Math.round((entry.base + entry.vatAmount) * 100) / 100;
+    items.push({ accountId: creditAccount.id, description: entry.description, debit: 0, credit: total });
+
+    return this.prisma.journalEntry.create({
+      data: {
+        companyId,
+        type: "MANUAL",
+        reference: entry.reference,
+        description: entry.description,
+        entryDate: entry.date,
+        items: { create: items },
+      },
+    });
+  }
+
+  async createExpenseReimbursementJournalEntry(companyId: string, entry: {
+    reference: string; date: Date; description: string; amount: number; method: "PAYROLL" | "TRANSFER" | "CASH";
+  }) {
+    if (entry.amount <= 0) return null;
+    await this.ensureDefaultAccounts(companyId);
+    const pending = await this.findOrCreateAccount(companyId, "465");
+    const treasury = await this.findOrCreateAccount(companyId, entry.method === "CASH" ? "570" : "572");
+    return this.prisma.journalEntry.create({
+      data: {
+        companyId,
+        type: "PAYMENT",
+        reference: entry.reference,
+        description: entry.description,
+        entryDate: entry.date,
+        items: {
+          create: [
+            { accountId: pending.id, description: entry.description, debit: entry.amount, credit: 0 },
+            { accountId: treasury.id, description: entry.description, debit: 0, credit: entry.amount },
+          ],
+        },
+      },
+    });
+  }
+
+  async deleteJournalEntriesByReference(companyId: string, references: string[]) {
+    if (!references.length) return;
+    await this.prisma.journalEntry.deleteMany({ where: { companyId, reference: { in: references } } });
+  }
+
   // ─── Sincronizar TODOS los gastos existentes → asientos contables ─────────────
   async syncAllExpenses(companyId: string) {
     await this.ensureDefaultAccounts(companyId);
@@ -653,6 +720,12 @@ export class AccountingService {
         "472":  { name: "HP, IVA soportado",                    type: "ASSET" },
         "410":  { name: "Acreedores varios",                     type: "LIABILITY" },
         "4751": { name: "HP, retenciones practicadas a terceros", type: "LIABILITY" },
+        "465":  { name: "Remuneraciones pendientes de pago",     type: "LIABILITY" },
+        "570":  { name: "Caja, euros",                           type: "ASSET" },
+        "572":  { name: "Bancos e instituciones de credito",     type: "ASSET" },
+        "628":  { name: "Suministros",                           type: "EXPENSE" },
+        "640":  { name: "Sueldos y salarios",                    type: "EXPENSE" },
+        "649":  { name: "Otros gastos sociales",                 type: "EXPENSE" },
         "623":  { name: "Servicios de profesionales independientes", type: "EXPENSE" },
         "624":  { name: "Transportes",                           type: "EXPENSE" },
         "627":  { name: "Publicidad y relaciones publicas",      type: "EXPENSE" },

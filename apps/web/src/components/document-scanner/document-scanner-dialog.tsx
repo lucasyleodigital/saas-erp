@@ -157,6 +157,25 @@ export function DocumentScannerDialog({ open, onOpenChange }: { open: boolean; o
     }
   }
 
+  function handleEmployeeExpense() {
+    if (!result) return;
+    const ex = result.extracted;
+    const params = new URLSearchParams({ scan: "1" });
+    if (ex.date) params.set("date", ex.date);
+    if (ex.supplier) params.set("merchant", ex.supplier);
+    if (ex.supplierNif) params.set("nif", ex.supplierNif);
+    if (ex.subtotal !== undefined) {
+      const total = Math.round(ex.subtotal * (1 + (ex.vatRate ?? 0) / 100) * 100) / 100;
+      params.set("amount", String(total));
+    }
+    if (ex.vatRate !== undefined) params.set("vat", String(ex.vatRate));
+    if (ex.description) params.set("description", ex.description);
+    if (result.attachmentUrl) params.set("receipt", result.attachmentUrl);
+    onOpenChange(false);
+    reset();
+    router.push(`/gastos?${params.toString()}`);
+  }
+
   const docConfig = result ? DOC_TYPE_CONFIG[result.documentType] : null;
   const DocIcon = docConfig?.icon ?? FileText;
 
@@ -271,6 +290,11 @@ export function DocumentScannerDialog({ open, onOpenChange }: { open: boolean; o
                 {result.documentType === "OTRO"          && "Cerrar"}
               </Button>
             </div>
+            {result.documentType === "GASTO" && (
+              <Button variant="ghost" size="sm" className="w-full" onClick={handleEmployeeExpense}>
+                Es un gasto de un empleado (nota de gasto) <ExternalLink className="h-3 w-3 ml-1" />
+              </Button>
+            )}
           </div>
         )}
       </DialogContent>

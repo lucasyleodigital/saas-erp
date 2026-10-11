@@ -79,7 +79,13 @@ export function PayslipDetail({ id }: Props) {
               <Row label={t("payslip.baseSalary")} value={fmt(payroll.baseSalary)} />
               {Number(payroll.overtimePay) > 0 && <Row label={t("payslip.overtimePay")} value={fmt(payroll.overtimePay)} />}
               {Number(payroll.bonuses) > 0 && <Row label={t("payslip.bonuses")} value={fmt(payroll.bonuses)} />}
+              {Number(payroll.taxableAllowances ?? 0) > 0 && (
+                <Row label={t("payslip.taxableAllowances")} value={fmt(payroll.taxableAllowances ?? 0)} />
+              )}
               <Row label={t("payslip.totalEarnings")} value={fmt(payroll.grossSalary)} bold />
+              {Number(payroll.expenseReimbursement ?? 0) > 0 && (
+                <Row label={t("payslip.expenseReimbursement")} value={fmt(payroll.expenseReimbursement ?? 0)} />
+              )}
             </tbody>
           </table>
         </div>

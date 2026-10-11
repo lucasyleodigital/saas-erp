@@ -206,6 +206,34 @@ enum NotificationChannel {
   WHATSAPP
 }
 
+enum ExpenseClaimStatus {
+  DRAFT
+  PENDING
+  APPROVED
+  REJECTED
+  REIMBURSED
+}
+
+enum ExpenseClaimCategory {
+  TRANSPORT
+  FUEL
+  TOLLS_PARKING
+  MEALS
+  ACCOMMODATION
+  PER_DIEM
+  MILEAGE
+  REPRESENTATION
+  SUPPLIES
+  TRAINING
+  OTHER
+}
+
+enum ReimbursementMethod {
+  PAYROLL
+  TRANSFER
+  CASH
+}
+
 // ============================================================
 // TENANT / COMPANY
 // ============================================================
@@ -273,6 +301,10 @@ model Company {
   decaflyTestMode     Boolean @default(false)
 
   vehicles             Vehicle[]
+  expenseClaims        ExpenseClaim[]
+  expenseReports       ExpenseReport[]
+  expensePolicies      ExpensePolicy[]
+  expenseSettings      ExpenseSettings?
 
   @@map("companies")
 }
@@ -1110,6 +1142,8 @@ model Employee {
   leaveRequests        LeaveRequest[]
   shiftAssignments     ShiftAssignment[]
   payrolls             Payroll[]
+  expenseClaims        ExpenseClaim[]
+  expenseReports       ExpenseReport[]
 
   @@index([companyId, status])
   @@map("employees")
@@ -1206,6 +1240,9 @@ model Payroll {
   irpfAmount      Decimal       @db.Decimal(12, 2)
 
   otherDeductions Decimal       @default(0) @db.Decimal(12, 2)
+  // Gastos de empleado: la parte exenta se suma al líquido; la que excede los límites del RIRPF tributa como salario
+  expenseReimbursement Decimal  @default(0) @db.Decimal(12, 2)
+  taxableAllowances    Decimal  @default(0) @db.Decimal(12, 2)
   netSalary       Decimal       @db.Decimal(12, 2)
   totalCost       Decimal       @db.Decimal(12, 2)
 
@@ -1217,6 +1254,7 @@ model Payroll {
 
   company         Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
   employee        Employee      @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  expenseReports  ExpenseReport[]
 
   @@unique([companyId, employeeId, year, month])
   @@index([companyId, year, month])
@@ -1289,6 +1327,7 @@ model Project {
   client      Client?       @relation(fields: [clientId], references: [id])
   timeEntries TimeEntry[]
   invoices    Invoice[]
+  expenseClaims ExpenseClaim[]
 
   @@index([companyId])
   @@index([companyId, status])
@@ -1534,6 +1573,7 @@ model Vehicle {
 
   company             Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
   maintenances        VehicleMaintenance[]
+  expenseClaims       ExpenseClaim[]
 
   @@unique([companyId, matricula])
   @@index([companyId])
@@ -1585,4 +1625,120 @@ model Meeting {
 
   @@index([companyId, date])
   @@map("meetings")
+}
+
+// ============================================================
+// GASTOS DE EMPLEADOS (notas de gasto)
+// ============================================================
+
+model ExpenseReport {
+  id                  String               @id @default(uuid())
+  companyId           String
+  employeeId          String
+  number              String
+  title               String
+  status              ExpenseClaimStatus   @default(PENDING)
+  total               Decimal              @default(0) @db.Decimal(12, 2)
+  approvedTotal       Decimal              @default(0) @db.Decimal(12, 2)
+  reimbursableTotal   Decimal              @default(0) @db.Decimal(12, 2)
+  submittedAt         DateTime             @default(now())
+  approvedAt          DateTime?
+  approvedById        String?
+  approverName        String?
+  rejectionReason     String?
+  reimbursementMethod ReimbursementMethod?
+  reimbursedAt        DateTime?
+  payrollId           String?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  company             Company              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee            Employee             @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  payroll             Payroll?             @relation(fields: [payrollId], references: [id], onDelete: SetNull)
+  claims              ExpenseClaim[]
+
+  @@unique([companyId, number])
+  @@index([companyId, status])
+  @@index([employeeId])
+  @@map("expense_reports")
+}
+
+model ExpenseClaim {
+  id                  String               @id @default(uuid())
+  companyId           String
+  employeeId          String
+  reportId            String?
+  category            ExpenseClaimCategory @default(OTHER)
+  date                DateTime
+  merchant            String?
+  merchantNif         String?
+  description         String?
+  amount              Decimal              @db.Decimal(12, 2)
+  vatRate             Decimal              @default(0) @db.Decimal(5, 2)
+  vatDeductible       Boolean              @default(false)
+  receiptUrl          String?
+  paidWithCompanyCard Boolean              @default(false)
+  distanceKm          Decimal?             @db.Decimal(8, 1)
+  mileageRate         Decimal?             @db.Decimal(6, 3)
+  origin              String?
+  destination         String?
+  perDiemType         String?
+  perDiemDays         Decimal?             @db.Decimal(5, 1)
+  exemptAmount        Decimal              @default(0) @db.Decimal(12, 2)
+  taxableAmount       Decimal              @default(0) @db.Decimal(12, 2)
+  projectId           String?
+  vehicleId           String?
+  status              ExpenseClaimStatus   @default(DRAFT)
+  rejectionReason     String?
+  policyWarnings      Json?
+  fiscalExpenseId     String?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  company             Company              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee            Employee             @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  report              ExpenseReport?       @relation(fields: [reportId], references: [id], onDelete: SetNull)
+  project             Project?             @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  vehicle             Vehicle?             @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+
+  @@index([companyId, status])
+  @@index([companyId, date])
+  @@index([employeeId, date])
+  @@index([reportId])
+  @@index([projectId])
+  @@index([vehicleId])
+  @@map("expense_claims")
+}
+
+model ExpensePolicy {
+  id              String               @id @default(uuid())
+  companyId       String
+  category        ExpenseClaimCategory
+  maxAmount       Decimal?             @db.Decimal(12, 2)
+  requiresReceipt Boolean              @default(true)
+  isActive        Boolean              @default(true)
+
+  company         Company              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, category])
+  @@map("expense_policies")
+}
+
+model ExpenseSettings {
+  id                     String              @id @default(uuid())
+  companyId              String              @unique
+  mileageRate            Decimal             @default(0.26) @db.Decimal(6, 3)
+  perDiemEsOvernight     Decimal             @default(53.34) @db.Decimal(8, 2)
+  perDiemEsDay           Decimal             @default(26.67) @db.Decimal(8, 2)
+  perDiemAbroadOvernight Decimal             @default(91.35) @db.Decimal(8, 2)
+  perDiemAbroadDay       Decimal             @default(48.08) @db.Decimal(8, 2)
+  maxDaysOld             Int                 @default(90)
+  requireProject         Boolean             @default(false)
+  autoPostAccounting     Boolean             @default(true)
+  defaultReimbursement   ReimbursementMethod @default(PAYROLL)
+  updatedAt              DateTime            @updatedAt
+
+  company                Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@map("expense_settings")
 }

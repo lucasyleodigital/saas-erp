@@ -4,7 +4,7 @@ import { MarketingHomeContent } from "@/components/marketing/marketing-home";
 export const metadata: Metadata = {
   title: "YouWhole — ERP para autónomos y pymes españolas",
   description:
-    "ERP creado por autónomos para autónomos y pymes. VeriFactu, IRPF automático, Modelo 130/303, CRM, contabilidad, flota de vehículos y DeCA. Plan gratis para siempre, sin tarjeta.",
+    "ERP creado por autónomos para autónomos y pymes. VeriFactu, IRPF automático, Modelo 130/303, CRM, contabilidad, gastos y dietas de empleados, flota de vehículos y DeCA. Plan gratis para siempre, sin tarjeta.",
   robots: { index: true, follow: true },
   alternates: {
     canonical: "https://youwhole.com",
@@ -56,7 +56,7 @@ const JSONLD_SOFTWARE = {
   operatingSystem: "Web, iOS, Android",
   url: "https://youwhole.com",
   description:
-    "ERP para autonomos y pymes: facturacion con VeriFactu, IRPF automatico, Modelo 130/303/347, CRM, contabilidad PGC, nominas, inventario, flota de vehiculos y DeCA.",
+    "ERP para autonomos y pymes: facturacion con VeriFactu, IRPF automatico, Modelo 130/303/347, CRM, contabilidad PGC, nominas, gastos y dietas de empleados, inventario, flota de vehiculos y DeCA.",
   featureList: [
     "Facturacion electronica con VeriFactu certificado AEAT",
     "CRM integrado con pipeline Kanban",
@@ -82,6 +82,8 @@ const JSONLD_SOFTWARE = {
     "Calendario integrado",
     "Gestión de flota de vehículos con alertas de ITV y seguro",
     "Generación de documentos DeCA para transporte de mercancías",
+    "Gastos de empleados: captura de tickets con IA, kilometraje y dietas con límites exentos del IRPF",
+    "Notas de gasto con aprobación y reembolso en nómina",
   ],
   offers: [
     {

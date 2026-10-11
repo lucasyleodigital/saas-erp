@@ -128,7 +128,10 @@
     "myPortal": "Nire ataria",
     "home": "Hasiera",
     "clockIn": "Fitxatzea",
-    "myPayslips": "Nire nominak"
+    "myPayslips": "Nire nominak",
+    "expenses": "Gastuak eta dietak",
+    "myExpenses": "Nire gastuak",
+    "fleet": "Flota"
   },
   "auth": {
     "login": {
@@ -1676,7 +1679,9 @@
       "companyCost": "Enpresaren kostua",
       "grossSalary": "Soldata gordina",
       "ssEmployer": "GS enpresaren kotizazioa ({rate})",
-      "totalCompanyCost": "Enpresaren kostu osoa"
+      "totalCompanyCost": "Enpresaren kostu osoa",
+      "taxableAllowances": "PFEZaren menpeko dietak eta kilometrajea",
+      "expenseReimbursement": "Gastuen itzulketa (ez soldata, salbuetsia)"
     }
   },
   "projects": {
@@ -2299,7 +2304,7 @@
       "freeSuffix": " faktura"
     },
     "features": {
-      "badge": "17 modulu barne",
+      "badge": "18 modulu barne",
       "title": "Zure enpresak behar duen guztia",
       "subtitle": "Espainiako merkaturako berariaz diseinatua. Kanpo-integraziorik gabe, harpidetza gehigarririk gabe.",
       "items": {
@@ -2370,6 +2375,10 @@
         "deca": {
           "title": "DeCA integratua",
           "desc": "Sortu DeCA garraioa kontrolatzeko dokumentuak Espainiako arauegiarekin bat etorriz. Decafly-rekin integratuta, albaranetik zuzenean."
+        },
+        "expenses": {
+          "title": "Gastuak eta dietak",
+          "desc": "Langileek tiketari argazkia ateratzen diote eta IAk betetzen du. Kilometrajea eta dietak PFEZaren muga salbuetsiekin, lerroz lerroko onarpena eta itzulketa nominan."
         }
       }
     },

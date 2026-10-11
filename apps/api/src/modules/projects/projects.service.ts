@@ -110,9 +110,19 @@ export class ProjectsService {
           select: { total: true, paidAmount: true },
         },
         timeEntries: { select: { totalMinutes: true } },
+        expenseClaims: {
+          where: { status: { in: ["APPROVED", "REIMBURSED"] } },
+          select: { amount: true, vatRate: true, vatDeductible: true },
+        },
       },
     });
     if (!project) throw new NotFoundException("Proyecto no encontrado");
+
+    // El IVA deducible no es coste: se recupera vía modelo 303
+    const expensesCost = project.expenseClaims.reduce((sum, c) => {
+      const amount = Number(c.amount);
+      return sum + (c.vatDeductible ? amount / (1 + Number(c.vatRate) / 100) : amount);
+    }, 0);
 
     const revenue = project.invoices.reduce(
       (sum, inv) => sum + Number(inv.paidAmount),
@@ -125,9 +135,12 @@ export class ProjectsService {
       ) / 60;
     const budget = Number(project.budget ?? 0);
     const hourlyRate = Number(project.hourlyRate ?? 0);
-    const estimatedCost = totalHours * hourlyRate;
+    const laborCost = totalHours * hourlyRate;
+    const estimatedCost = Math.round((laborCost + expensesCost) * 100) / 100;
 
     return {
+      laborCost: Math.round(laborCost * 100) / 100,
+      expensesCost: Math.round(expensesCost * 100) / 100,
       revenue,
       totalHours: Math.round(totalHours * 100) / 100,
       budget,

@@ -128,7 +128,10 @@
     "myPortal": "El meu portal",
     "home": "Inici",
     "clockIn": "Fitxatge",
-    "myPayslips": "Les meves nomines"
+    "myPayslips": "Les meves nomines",
+    "expenses": "Despeses i dietes",
+    "myExpenses": "Les meves despeses",
+    "fleet": "Flota"
   },
   "auth": {
     "login": {
@@ -1677,7 +1680,9 @@
       "companyCost": "Cost empresa",
       "grossSalary": "Salari brut",
       "ssEmployer": "Cotitzacio SS empresa ({rate})",
-      "totalCompanyCost": "Cost total empresa"
+      "totalCompanyCost": "Cost total empresa",
+      "taxableAllowances": "Dietes i quilometratge subjectes a IRPF",
+      "expenseReimbursement": "Reemborsament de despeses (no salarial, exempt)"
     }
   },
   "projects": {
@@ -2353,7 +2358,7 @@
       "freeSuffix": " factures"
     },
     "features": {
-      "badge": "17 mòduls inclosos",
+      "badge": "18 mòduls inclosos",
       "title": "Tot el que necessita la teva empresa",
       "subtitle": "Dissenyat específicament per al mercat espanyol. Sense integracions externes, sense subscripcions addicionals.",
       "items": {
@@ -2424,6 +2429,10 @@
         "deca": {
           "title": "DeCA integrat",
           "desc": "Genera documents DeCA per al transport de mercaderies d'acord amb la normativa espanyola. Integrat amb Decafly directament des de l'albarà."
+        },
+        "expenses": {
+          "title": "Despeses i dietes",
+          "desc": "Els teus empleats fotografien el tiquet i la IA l'omple. Quilometratge i dietes amb els límits exempts de l'IRPF, aprovació per línies i reemborsament a la nòmina."
         }
       }
     },

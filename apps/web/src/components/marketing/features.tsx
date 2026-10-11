@@ -20,6 +20,7 @@ import {
   HardDrive,
   Truck,
   FileCheck,
+  Wallet,
 } from "lucide-react";
 
 const FEATURE_META = [
@@ -40,6 +41,7 @@ const FEATURE_META = [
   { key: "backup", icon: HardDrive, color: "#64748b", bg: "rgba(100,116,139,0.08)", border: "rgba(100,116,139,0.2)", glow: "rgba(100,116,139,0.12)" },
   { key: "fleet", icon: Truck, color: "#f97316", bg: "rgba(249,115,22,0.08)", border: "rgba(249,115,22,0.2)", glow: "rgba(249,115,22,0.12)" },
   { key: "deca", icon: FileCheck, color: "#6366f1", bg: "rgba(99,102,241,0.08)", border: "rgba(99,102,241,0.2)", glow: "rgba(99,102,241,0.12)" },
+  { key: "expenses", icon: Wallet, color: "#eab308", bg: "rgba(234,179,8,0.08)", border: "rgba(234,179,8,0.2)", glow: "rgba(234,179,8,0.12)" },
 ] as const;
 
 interface FeatureCardData {

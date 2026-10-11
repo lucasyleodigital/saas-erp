@@ -128,7 +128,10 @@
     "myPortal": "Mi portal",
     "home": "Inicio",
     "clockIn": "Fichaje",
-    "myPayslips": "Mis nominas"
+    "myPayslips": "Mis nominas",
+    "expenses": "Gastos y dietas",
+    "myExpenses": "Mis gastos",
+    "fleet": "Flota"
   },
   "auth": {
     "login": {
@@ -1678,7 +1681,9 @@
       "companyCost": "Coste empresa",
       "grossSalary": "Salario bruto",
       "ssEmployer": "Cotizacion SS empresa ({rate})",
-      "totalCompanyCost": "Coste total empresa"
+      "totalCompanyCost": "Coste total empresa",
+      "taxableAllowances": "Dietas y kilometraje sujetos a IRPF",
+      "expenseReimbursement": "Reembolso de gastos (no salarial, exento)"
     }
   },
   "projects": {
@@ -2354,7 +2359,7 @@
       "freeSuffix": " facturas"
     },
     "features": {
-      "badge": "17 módulos incluidos",
+      "badge": "18 módulos incluidos",
       "title": "Todo lo que necesita tu empresa",
       "subtitle": "Diseñado específicamente para el mercado español. Sin integraciones externas, sin suscripciones adicionales.",
       "items": {
@@ -2425,6 +2430,10 @@
         "deca": {
           "title": "DeCA integrado",
           "desc": "Genera documentos DeCA para el transporte de mercancías en cumplimiento de la normativa española. Integrado con Decafly directamente desde el albarán."
+        },
+        "expenses": {
+          "title": "Gastos y dietas",
+          "desc": "Tus empleados fotografían el ticket y la IA lo rellena. Kilometraje y dietas con los límites exentos del IRPF, aprobación por líneas y reembolso en la nómina."
         }
       }
     },

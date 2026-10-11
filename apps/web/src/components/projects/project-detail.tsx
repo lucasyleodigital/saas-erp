@@ -74,8 +74,10 @@ export function ProjectDetail({ id }: { id: string }) {
   const budget = Number(project.budget) || 0;
   const revenue = Number(profitability?.revenue ?? project.revenue ?? 0);
   const hours = Number(profitability?.totalHours ?? project.totalHours ?? 0);
-  const budgetUsedPct = Number(profitability?.budgetUsedPercent ?? (budget > 0 ? ((Number(project.budgetUsed ?? project.spent ?? 0) / budget) * 100) : 0));
-  const margin = Number(profitability?.profitMargin ?? 0);
+  const budgetUsedPct = Number(profitability?.budgetUsed ?? (budget > 0 ? ((Number(project.budgetUsed ?? project.spent ?? 0) / budget) * 100) : 0));
+  const margin = Number(profitability?.margin ?? 0);
+  const laborCost = Number(profitability?.laborCost ?? 0);
+  const expensesCost = Number(profitability?.expensesCost ?? 0);
   const timeEntries = project.timeEntries ?? profitability?.timeEntries ?? [];
   const invoices = project.invoices ?? profitability?.invoices ?? [];
 
@@ -197,6 +199,14 @@ export function ProjectDetail({ id }: { id: string }) {
           </motion.div>
         ))}
       </div>
+
+      {(laborCost > 0 || expensesCost > 0) && (
+        <p className="text-sm text-muted-foreground">
+          Coste del proyecto: {formatCurrency(laborCost)} en horas
+          {expensesCost > 0 && <> + {formatCurrency(expensesCost)} en gastos de empleados aprobados (sin IVA deducible)</>}
+          {" "}= <span className="font-medium text-foreground">{formatCurrency(laborCost + expensesCost)}</span>
+        </p>
+      )}
 
       {/* Time entries table */}
       <Card>

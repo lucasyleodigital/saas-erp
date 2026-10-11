@@ -128,7 +128,10 @@
     "myPortal": "My portal",
     "home": "Home",
     "clockIn": "Clock in",
-    "myPayslips": "My payslips"
+    "myPayslips": "My payslips",
+    "expenses": "Expenses",
+    "myExpenses": "My expenses",
+    "fleet": "Fleet"
   },
   "auth": {
     "login": {
@@ -1678,7 +1681,9 @@
       "companyCost": "Company cost",
       "grossSalary": "Gross salary",
       "ssEmployer": "SS employer contribution ({rate})",
-      "totalCompanyCost": "Total company cost"
+      "totalCompanyCost": "Total company cost",
+      "taxableAllowances": "Taxable allowances and mileage",
+      "expenseReimbursement": "Expense reimbursement (non-salary, tax-exempt)"
     }
   },
   "projects": {
@@ -2354,7 +2359,7 @@
       "freeSuffix": " invoices"
     },
     "features": {
-      "badge": "17 modules included",
+      "badge": "18 modules included",
       "title": "Everything your business needs",
       "subtitle": "Purpose-built for the Spanish market. No external integrations, no add-on subscriptions.",
       "items": {
@@ -2425,6 +2430,10 @@
         "deca": {
           "title": "DeCA built-in",
           "desc": "Generate DeCA transport control documents compliant with Spanish regulations. Integrated with Decafly directly from the delivery note."
+        },
+        "expenses": {
+          "title": "Expenses & per diems",
+          "desc": "Employees snap the receipt and AI fills it in. Mileage and per diems within Spanish tax-exempt limits, line-by-line approval and reimbursement through payroll."
         }
       }
     },
