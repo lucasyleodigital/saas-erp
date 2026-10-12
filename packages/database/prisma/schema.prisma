@@ -305,6 +305,7 @@ model Company {
   expenseReports       ExpenseReport[]
   expensePolicies      ExpensePolicy[]
   expenseSettings      ExpenseSettings?
+  companyCards         CompanyCard[]
 
   @@map("companies")
 }
@@ -965,6 +966,7 @@ model BankAccount {
 
   company    Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
   transactions BankTransaction[]
+  companyCards CompanyCard[]
 
   @@index([companyId])
   @@map("bank_accounts")
@@ -981,6 +983,7 @@ model BankTransaction {
   reference       String?
 
   bankAccount   BankAccount @relation(fields: [bankAccountId], references: [id], onDelete: Cascade)
+  expenseClaim  ExpenseClaim?
 
   @@map("bank_transactions")
 }
@@ -1144,6 +1147,8 @@ model Employee {
   payrolls             Payroll[]
   expenseClaims        ExpenseClaim[]
   expenseReports       ExpenseReport[]
+  companyCards         CompanyCard[]
+  expenseEmailToken    String?        @unique
 
   @@index([companyId, status])
   @@map("employees")
@@ -1678,6 +1683,9 @@ model ExpenseClaim {
   vatDeductible       Boolean              @default(false)
   receiptUrl          String?
   paidWithCompanyCard Boolean              @default(false)
+  cardId              String?
+  bankTransactionId   String?              @unique
+  source              String               @default("MANUAL")
   distanceKm          Decimal?             @db.Decimal(8, 1)
   mileageRate         Decimal?             @db.Decimal(6, 3)
   origin              String?
@@ -1700,6 +1708,8 @@ model ExpenseClaim {
   report              ExpenseReport?       @relation(fields: [reportId], references: [id], onDelete: SetNull)
   project             Project?             @relation(fields: [projectId], references: [id], onDelete: SetNull)
   vehicle             Vehicle?             @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+  card                CompanyCard?         @relation(fields: [cardId], references: [id], onDelete: SetNull)
+  bankTransaction     BankTransaction?     @relation(fields: [bankTransactionId], references: [id], onDelete: SetNull)
 
   @@index([companyId, status])
   @@index([companyId, date])
@@ -1741,4 +1751,26 @@ model ExpenseSettings {
   company                Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
   @@map("expense_settings")
+}
+
+model CompanyCard {
+  id            String         @id @default(uuid())
+  companyId     String
+  employeeId    String?
+  bankAccountId String?
+  name          String
+  last4         String
+  // true si la cuenta solo recibe cargos de esta tarjeta (extracto de tarjeta de crédito)
+  dedicatedAccount Boolean     @default(false)
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+
+  company       Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee      Employee?      @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+  bankAccount   BankAccount?   @relation(fields: [bankAccountId], references: [id], onDelete: SetNull)
+  claims        ExpenseClaim[]
+
+  @@unique([companyId, last4])
+  @@index([employeeId])
+  @@map("company_cards")
 }

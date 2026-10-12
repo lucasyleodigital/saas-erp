@@ -84,6 +84,7 @@ const JSONLD_SOFTWARE = {
     "Generación de documentos DeCA para transporte de mercancías",
     "Gastos de empleados: captura de tickets con IA, kilometraje y dietas con límites exentos del IRPF",
     "Notas de gasto con aprobación y reembolso en nómina",
+    "Reenvío de tickets por email y conciliación de tarjetas de empresa con el extracto bancario",
   ],
   offers: [
     {

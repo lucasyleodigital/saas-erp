@@ -58,7 +58,7 @@ export async function downloadQuotePdf(quoteId: string) {
   triggerDownload(blob, `${quote.number}.pdf`);
 }
 
-export async function downloadExpenseReportPdf(reportId: string) {
+export async function downloadExpenseReportPdf(reportId: string, labels: import("./expense-report-pdf").ExpenseReportPdfLabels) {
   const { pdf }              = await import("@react-pdf/renderer");
   const { createElement }    = await import("react");
   const { ExpenseReportPdf } = await import("./expense-report-pdf");
@@ -67,7 +67,7 @@ export async function downloadExpenseReportPdf(reportId: string) {
     api.get(`/expense-claims/reports/${reportId}`).then((r) => r.data),
     api.get("/companies/me").then((r) => r.data).catch(() => null),
   ]);
-  const blob = await pdf(createElement(ExpenseReportPdf, { report, company }) as any).toBlob();
+  const blob = await pdf(createElement(ExpenseReportPdf, { report, company, labels }) as any).toBlob();
   triggerDownload(blob, `${report.number}.pdf`);
 }
 

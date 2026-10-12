@@ -1,0 +1,9 @@
+name = "youwhole-recibos"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+[vars]
+API_URL = "https://saasapi-production-b5f3.up.railway.app/api/v1"
+
+# Secreto compartido con la API (Railway: INBOUND_EMAIL_SECRET). Se configura con:
+#   npx wrangler secret put INBOUND_EMAIL_SECRET

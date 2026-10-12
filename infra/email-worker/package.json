@@ -1,0 +1,13 @@
+{
+  "name": "youwhole-email-worker",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "test": "node test/local-test.mjs"
+  },
+  "dependencies": {
+    "postal-mime": "2.7.6"
+  }
+}

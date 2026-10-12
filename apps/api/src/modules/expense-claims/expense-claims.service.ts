@@ -9,6 +9,9 @@ import { PrismaService } from "../../database/prisma.service";
 import { AccountingService } from "../accounting/accounting.service";
 import { NotificationsService } from "../notifications/notifications.service";
 import { PayrollService } from "../payroll/payroll.service";
+import { FiscalService } from "../fiscal/fiscal.service";
+import { ConfigService } from "@nestjs/config";
+import { randomBytes, timingSafeEqual } from "crypto";
 
 type Category =
   | "TRANSPORT" | "FUEL" | "TOLLS_PARKING" | "MEALS" | "ACCOMMODATION" | "PER_DIEM"
@@ -20,6 +23,8 @@ export interface PolicyWarning {
   code: string;
   message: string;
   severity: "warning" | "info";
+  // Datos variables del mensaje para que el frontend lo traduzca
+  params?: Record<string, string | number>;
 }
 
 const CATEGORIES: Category[] = [
@@ -124,6 +129,8 @@ export class ExpenseClaimsService {
     private accounting: AccountingService,
     private notifications: NotificationsService,
     private payroll: PayrollService,
+    private fiscal: FiscalService,
+    private config: ConfigService,
   ) {}
 
   // ─── Contexto del usuario ─────────────────────────────────────────────────
@@ -265,6 +272,7 @@ export class ExpenseClaimsService {
     if (policy?.isActive !== false && policy?.maxAmount != null && claim.amount > Number(policy.maxAmount)) {
       warnings.push({
         code: "OVER_LIMIT", severity: "warning",
+        params: { category: claim.category, max: Number(policy.maxAmount) },
         message: `Supera el máximo de la política para ${CATEGORY_LABEL[claim.category].toLowerCase()} (${fmtEur(Number(policy.maxAmount))})`,
       });
     }
@@ -299,7 +307,10 @@ export class ExpenseClaimsService {
     }
     const oldest = new Date(todayEnd.getTime() - (Number(settings.maxDaysOld) + 1) * 24 * 60 * 60 * 1000);
     if (claim.date < oldest) {
-      warnings.push({ code: "TOO_OLD", severity: "warning", message: `Gasto con más de ${settings.maxDaysOld} días de antigüedad` });
+      warnings.push({
+        code: "TOO_OLD", severity: "warning", params: { days: Number(settings.maxDaysOld) },
+        message: `Gasto con más de ${settings.maxDaysOld} días de antigüedad`,
+      });
     }
 
     const weekday = claim.date.getUTCDay();
@@ -311,6 +322,7 @@ export class ExpenseClaimsService {
       const what = claim.category === "MILEAGE" ? "0,26 €/km" : "los límites de dietas del art. 9 RIRPF";
       warnings.push({
         code: "TAXABLE_EXCESS", severity: "info",
+        params: { amount: claim.taxableAmount, kind: claim.category === "MILEAGE" ? "mileage" : "perDiem" },
         message: `${fmtEur(claim.taxableAmount)} superan ${what} y tributan como salario en nómina`,
       });
     }
@@ -328,6 +340,7 @@ export class ExpenseClaimsService {
       if (dayTotal > LEGAL_PER_DIEM.ES_OVERNIGHT) {
         warnings.push({
           code: "MEALS_DAILY_LIMIT", severity: "info",
+          params: { total: round2(dayTotal), limit: LEGAL_PER_DIEM.ES_OVERNIGHT },
           message: `Manutención del día: ${fmtEur(dayTotal)}. Supera ${fmtEur(LEGAL_PER_DIEM.ES_OVERNIGHT)}/día exentos en España; si son comidas del empleado, el exceso puede tributar`,
         });
       }
@@ -354,6 +367,7 @@ export class ExpenseClaimsService {
     project: { select: { id: true, name: true, color: true } },
     vehicle: { select: { id: true, matricula: true } },
     report: { select: { id: true, number: true, status: true } },
+    card: { select: { id: true, name: true, last4: true } },
   } as const;
 
   async listClaims(u: JwtPayload, q: any) {
@@ -430,6 +444,16 @@ export class ExpenseClaimsService {
     const vehicleId = optString(input.vehicleId, 64);
     await this.validateLinks(companyId, projectId, vehicleId);
 
+    const paidWithCompanyCard = NO_RECEIPT_CATEGORIES.includes(input.category) ? false : Boolean(input.paidWithCompanyCard);
+    const cardId = paidWithCompanyCard ? optString(input.cardId, 64) : null;
+    if (cardId) {
+      const card = await this.prisma.companyCard.findFirst({ where: { id: cardId, companyId }, select: { employeeId: true } });
+      if (!card) throw new NotFoundException("Tarjeta no encontrada");
+      if (card.employeeId && card.employeeId !== employeeId) {
+        throw new BadRequestException("Esa tarjeta pertenece a otro empleado");
+      }
+    }
+
     const receiptUrl = optString(input.receiptUrl, 1000);
     if (receiptUrl && !/^https:\/\//.test(receiptUrl)) throw new BadRequestException("URL del justificante no válida");
     const merchantNif = optString(input.merchantNif, 20);
@@ -450,7 +474,8 @@ export class ExpenseClaimsService {
       origin: input.category === "MILEAGE" ? optString(input.origin, 150) : null,
       destination: input.category === "MILEAGE" ? optString(input.destination, 150) : null,
       receiptUrl,
-      paidWithCompanyCard: NO_RECEIPT_CATEGORIES.includes(input.category) ? false : Boolean(input.paidWithCompanyCard),
+      paidWithCompanyCard,
+      cardId,
       projectId,
       vehicleId,
       ...amounts,
@@ -491,6 +516,7 @@ export class ExpenseClaimsService {
       vatDeductible: claim.vatDeductible,
       receiptUrl: claim.receiptUrl,
       paidWithCompanyCard: claim.paidWithCompanyCard,
+      cardId: claim.cardId,
       distanceKm: claim.distanceKm != null ? Number(claim.distanceKm) : undefined,
       origin: claim.origin,
       destination: claim.destination,
@@ -514,6 +540,12 @@ export class ExpenseClaimsService {
       throw new BadRequestException("Solo se pueden eliminar gastos en borrador o rechazados");
     }
     await this.prisma.expenseClaim.delete({ where: { id } });
+    if (claim.bankTransactionId) {
+      await this.prisma.bankTransaction.update({
+        where: { id: claim.bankTransactionId },
+        data: { isReconciled: false, reconcileStatus: null },
+      }).catch(() => null);
+    }
     return { success: true };
   }
 
@@ -592,6 +624,9 @@ export class ExpenseClaimsService {
     if (!canApprove && employeeId !== employee?.id) throw new ForbiddenException("Solo puedes enviar tus propios gastos");
     if (claims.some((c) => !EDITABLE_STATUSES.includes(c.status))) {
       throw new BadRequestException("Solo se pueden enviar gastos en borrador o rechazados");
+    }
+    if (claims.some((c) => Number(c.amount) <= 0)) {
+      throw new BadRequestException("Hay gastos sin importe: revísalos antes de enviar la nota");
     }
 
     const settings = await this.getSettings(u.companyId);
@@ -1015,6 +1050,410 @@ export class ExpenseClaimsService {
       byMonth: months,
       warnings: [...warningCodes.entries()].map(([code, count]) => ({ code, count })).sort((a, b) => b.count - a.count),
     };
+  }
+
+  // ─── Tarjetas de empresa y conciliación con el banco ──────────────────────
+
+  async listCards(u: JwtPayload) {
+    const { employee, canApprove } = await this.context(u);
+    return this.prisma.companyCard.findMany({
+      where: {
+        companyId: u.companyId,
+        ...(!canApprove && { employeeId: employee?.id ?? "__none__", isActive: true }),
+      },
+      include: {
+        employee: { select: { id: true, firstName: true, lastName: true } },
+        bankAccount: { select: { id: true, name: true } },
+      },
+      orderBy: [{ isActive: "desc" }, { name: "asc" }],
+    });
+  }
+
+  private async cardData(companyId: string, body: any) {
+    const name = optString(body?.name, 80);
+    if (!name) throw new BadRequestException("Indica un nombre para la tarjeta");
+    const last4 = String(body?.last4 ?? "").trim();
+    if (!/^\d{4}$/.test(last4)) throw new BadRequestException("Indica los 4 últimos dígitos de la tarjeta");
+    const employeeId = optString(body?.employeeId, 64);
+    if (employeeId) {
+      const e = await this.prisma.employee.findFirst({ where: { id: employeeId, companyId }, select: { id: true } });
+      if (!e) throw new NotFoundException("Empleado no encontrado");
+    }
+    const bankAccountId = optString(body?.bankAccountId, 64);
+    if (bankAccountId) {
+      const b = await this.prisma.bankAccount.findFirst({ where: { id: bankAccountId, companyId }, select: { id: true } });
+      if (!b) throw new NotFoundException("Cuenta bancaria no encontrada");
+    }
+    return {
+      name, last4, employeeId, bankAccountId,
+      dedicatedAccount: !!bankAccountId && body?.dedicatedAccount === true,
+      isActive: body?.isActive !== false,
+    };
+  }
+
+  async createCard(u: JwtPayload, body: any) {
+    const { canApprove } = await this.context(u);
+    this.requireApprover(canApprove);
+    const data = await this.cardData(u.companyId, body);
+    const dup = await this.prisma.companyCard.findFirst({ where: { companyId: u.companyId, last4: data.last4 } });
+    if (dup) throw new BadRequestException(`Ya existe una tarjeta terminada en ${data.last4}`);
+    return this.prisma.companyCard.create({ data: { companyId: u.companyId, ...data } });
+  }
+
+  async updateCard(u: JwtPayload, id: string, body: any) {
+    const { canApprove } = await this.context(u);
+    this.requireApprover(canApprove);
+    const card = await this.prisma.companyCard.findFirst({ where: { id, companyId: u.companyId } });
+    if (!card) throw new NotFoundException("Tarjeta no encontrada");
+    const data = await this.cardData(u.companyId, { ...card, ...body });
+    const dup = await this.prisma.companyCard.findFirst({ where: { companyId: u.companyId, last4: data.last4, id: { not: id } } });
+    if (dup) throw new BadRequestException(`Ya existe una tarjeta terminada en ${data.last4}`);
+    return this.prisma.companyCard.update({ where: { id }, data });
+  }
+
+  async removeCard(u: JwtPayload, id: string) {
+    const { canApprove } = await this.context(u);
+    this.requireApprover(canApprove);
+    const card = await this.prisma.companyCard.findFirst({ where: { id, companyId: u.companyId } });
+    if (!card) throw new NotFoundException("Tarjeta no encontrada");
+    await this.prisma.companyCard.delete({ where: { id } });
+    return { success: true };
+  }
+
+  // Los extractos muestran la tarjeta enmascarada ("5402 **** **** 1234", "TARJ. *1234"). Solo se asigna por
+  // cuenta cuando la cuenta es exclusiva de la tarjeta: en una cuenta corriente también hay recibos y transferencias.
+  private matchCard<T extends { id: string; last4: string; bankAccountId: string | null; dedicatedAccount: boolean }>(
+    cards: T[], tx: { description: string; bankAccountId: string },
+  ): T | null {
+    const digits = tx.description.replace(/[^0-9]/g, " ");
+    const byDigits = cards.filter(
+      (c) => (!c.bankAccountId || c.bankAccountId === tx.bankAccountId) && new RegExp(`(^|[^0-9])${c.last4}([^0-9]|$)`).test(digits),
+    );
+    if (byDigits.length === 1) return byDigits[0]!;
+    const byAccount = cards.filter((c) => c.dedicatedAccount && c.bankAccountId === tx.bankAccountId);
+    return byAccount.length === 1 ? byAccount[0]! : null;
+  }
+
+  private rangeOf(q: any) {
+    const to = q?.to ? parseDate(q.to, "fecha hasta") : new Date();
+    const from = q?.from
+      ? parseDate(q.from, "fecha desde")
+      : new Date(Date.UTC(to.getUTCFullYear(), to.getUTCMonth() - 2, 1));
+    return { from, toEnd: new Date(to.getTime() + 24 * 60 * 60 * 1000) };
+  }
+
+  async reconciliation(u: JwtPayload, q: any) {
+    const { canApprove } = await this.context(u);
+    this.requireApprover(canApprove);
+    const { from, toEnd } = this.rangeOf(q);
+
+    const cards = await this.prisma.companyCard.findMany({
+      where: { companyId: u.companyId, isActive: true },
+      include: { employee: { select: { id: true, firstName: true, lastName: true } } },
+    });
+    const txs = await this.prisma.bankTransaction.findMany({
+      where: { bankAccount: { companyId: u.companyId }, amount: { lt: 0 }, date: { gte: from, lt: toEnd } },
+      include: {
+        bankAccount: { select: { name: true } },
+        expenseClaim: {
+          select: {
+            id: true, status: true, category: true, merchant: true, receiptUrl: true, amount: true, cardId: true,
+            employee: { select: { firstName: true, lastName: true } },
+          },
+        },
+      },
+      orderBy: { date: "desc" },
+    });
+
+    const charges = txs
+      .map((tx) => {
+        const claim = tx.expenseClaim;
+        const card = this.matchCard(cards, tx) ?? (claim?.cardId ? cards.find((c) => c.id === claim.cardId) ?? null : null);
+        if (!card && !claim) return null;
+        const status = !claim ? "MISSING" : claim.receiptUrl ? "JUSTIFIED" : "PENDING_RECEIPT";
+        return {
+          id: tx.id,
+          date: tx.date,
+          amount: round2(Math.abs(Number(tx.amount))),
+          description: tx.description,
+          bankAccount: tx.bankAccount.name,
+          card: card ? { id: card.id, name: card.name, last4: card.last4, employee: card.employee } : null,
+          claim,
+          status,
+        };
+      })
+      .filter((x): x is NonNullable<typeof x> => x !== null);
+
+    const unmatchedClaims = await this.prisma.expenseClaim.findMany({
+      where: {
+        companyId: u.companyId, paidWithCompanyCard: true, bankTransactionId: null,
+        status: { not: "REJECTED" }, date: { gte: from, lt: toEnd },
+      },
+      include: this.claimInclude,
+      orderBy: { date: "desc" },
+    });
+
+    const sum = (list: typeof charges) => round2(list.reduce((s, c) => s + c.amount, 0));
+    const missing = charges.filter((c) => c.status === "MISSING");
+    return {
+      range: { from: from.toISOString().slice(0, 10), to: new Date(toEnd.getTime() - 1).toISOString().slice(0, 10) },
+      cards: cards.length,
+      totals: {
+        charges: charges.length,
+        amount: sum(charges),
+        justified: charges.filter((c) => c.status === "JUSTIFIED").length,
+        missing: missing.length,
+        missingAmount: sum(missing),
+        pendingReceipt: charges.filter((c) => c.status === "PENDING_RECEIPT").length,
+        unmatchedClaims: unmatchedClaims.length,
+      },
+      charges,
+      unmatchedClaims,
+    };
+  }
+
+  async autoMatchCardCharges(u: JwtPayload, q: any) {
+    const { canApprove } = await this.context(u);
+    this.requireApprover(canApprove);
+    const { from, toEnd } = this.rangeOf(q);
+    const day = 24 * 60 * 60 * 1000;
+
+    const claims = await this.prisma.expenseClaim.findMany({
+      where: {
+        companyId: u.companyId, paidWithCompanyCard: true, bankTransactionId: null,
+        status: { not: "REJECTED" }, date: { gte: new Date(from.getTime() - 7 * day), lt: toEnd },
+      },
+      include: { card: { select: { last4: true } } },
+      orderBy: { date: "asc" },
+    });
+
+    let linked = 0;
+    for (const c of claims) {
+      const amount = Number(c.amount);
+      const candidates = await this.prisma.bankTransaction.findMany({
+        where: {
+          bankAccount: { companyId: u.companyId },
+          expenseClaim: null,
+          amount: { gte: -(amount + 0.01), lte: -(amount - 0.01) },
+          date: { gte: new Date(c.date.getTime() - 2 * day), lte: new Date(c.date.getTime() + 7 * day) },
+        },
+      });
+      if (!candidates.length) continue;
+      const score = (tx: (typeof candidates)[number]) =>
+        (c.card && tx.description.includes(c.card.last4) ? 0 : 100) + Math.abs(tx.date.getTime() - c.date.getTime()) / day;
+      const best = candidates.sort((a, b) => score(a) - score(b))[0]!;
+      await this.linkClaimToTransaction(c.id, best.id);
+      linked++;
+    }
+    return { linked, checked: claims.length };
+  }
+
+  private async linkClaimToTransaction(claimId: string, txId: string) {
+    await this.prisma.$transaction([
+      this.prisma.expenseClaim.update({ where: { id: claimId }, data: { bankTransactionId: txId } }),
+      this.prisma.bankTransaction.update({ where: { id: txId }, data: { isReconciled: true, reconcileStatus: "EXPENSE_CLAIM" } }),
+    ]);
+  }
+
+  async linkTransaction(u: JwtPayload, claimId: string, body: any) {
+    const { canApprove } = await this.context(u);
+    this.requireApprover(canApprove);
+    const claim = await this.prisma.expenseClaim.findFirst({ where: { id: claimId, companyId: u.companyId } });
+    if (!claim) throw new NotFoundException("Gasto no encontrado");
+    const txId = optString(body?.bankTransactionId, 64);
+    if (!txId) throw new BadRequestException("Indica el movimiento bancario");
+    const tx = await this.prisma.bankTransaction.findFirst({
+      where: { id: txId, bankAccount: { companyId: u.companyId } },
+      include: { expenseClaim: { select: { id: true } } },
+    });
+    if (!tx) throw new NotFoundException("Movimiento no encontrado");
+    if (tx.expenseClaim && tx.expenseClaim.id !== claimId) throw new BadRequestException("Ese cargo ya está vinculado a otro gasto");
+    if (claim.bankTransactionId && claim.bankTransactionId !== txId) await this.unlinkTransaction(u, claimId);
+    await this.linkClaimToTransaction(claimId, txId);
+    if (!claim.paidWithCompanyCard) {
+      await this.prisma.expenseClaim.update({ where: { id: claimId }, data: { paidWithCompanyCard: true } });
+    }
+    return { success: true };
+  }
+
+  async unlinkTransaction(u: JwtPayload, claimId: string) {
+    const { canApprove } = await this.context(u);
+    this.requireApprover(canApprove);
+    const claim = await this.prisma.expenseClaim.findFirst({ where: { id: claimId, companyId: u.companyId } });
+    if (!claim) throw new NotFoundException("Gasto no encontrado");
+    if (!claim.bankTransactionId) return { success: true };
+    await this.prisma.$transaction([
+      this.prisma.expenseClaim.update({ where: { id: claimId }, data: { bankTransactionId: null } }),
+      this.prisma.bankTransaction.update({ where: { id: claim.bankTransactionId }, data: { isReconciled: false, reconcileStatus: null } }),
+    ]);
+    return { success: true };
+  }
+
+  // Cargo sin justificar: crea un borrador para el titular de la tarjeta y le avisa para que añada el ticket
+  async requestReceiptForCharge(u: JwtPayload, txId: string) {
+    const { canApprove } = await this.context(u);
+    this.requireApprover(canApprove);
+    const tx = await this.prisma.bankTransaction.findFirst({
+      where: { id: txId, bankAccount: { companyId: u.companyId }, amount: { lt: 0 } },
+      include: { expenseClaim: { select: { id: true } } },
+    });
+    if (!tx) throw new NotFoundException("Movimiento no encontrado");
+    if (tx.expenseClaim) throw new BadRequestException("Este cargo ya tiene un gasto asociado");
+
+    const cards = await this.prisma.companyCard.findMany({ where: { companyId: u.companyId, isActive: true } });
+    const card = this.matchCard(cards, tx);
+    if (!card?.employeeId) {
+      throw new BadRequestException("No se sabe a qué empleado pertenece este cargo: asigna un titular a la tarjeta");
+    }
+    const employee = await this.prisma.employee.findUnique({
+      where: { id: card.employeeId }, select: { id: true, email: true },
+    });
+    if (!employee) throw new NotFoundException("Empleado no encontrado");
+
+    const settings = await this.getSettings(u.companyId);
+    const amount = round2(Math.abs(Number(tx.amount)));
+    const date = new Date(Date.UTC(tx.date.getUTCFullYear(), tx.date.getUTCMonth(), tx.date.getUTCDate()));
+    const merchant = tx.description.replace(/\s+/g, " ").trim().slice(0, 150);
+    const warnings = await this.evaluatePolicies(u.companyId, settings, {
+      employeeId: employee.id, category: "OTHER", date, amount, receiptUrl: null,
+      projectId: null, taxableAmount: 0, vatDeductible: false, merchantNif: null,
+    });
+    const claim = await this.prisma.expenseClaim.create({
+      data: {
+        companyId: u.companyId, employeeId: employee.id, category: "OTHER", date, merchant, amount,
+        exemptAmount: amount, paidWithCompanyCard: true, cardId: card.id, bankTransactionId: tx.id,
+        source: "CARD", status: "DRAFT", policyWarnings: warnings as any,
+      },
+    });
+    await this.prisma.bankTransaction.update({ where: { id: tx.id }, data: { isReconciled: true, reconcileStatus: "EXPENSE_CLAIM" } });
+
+    const ddmmyyyy = date.toISOString().slice(0, 10).split("-").reverse().join("/");
+    await this.notifyEmployee(u.companyId, employee.email, {
+      title: "Falta el ticket de un cargo de tu tarjeta",
+      body: `Cargo de ${fmtEur(amount)} del ${ddmmyyyy} (${merchant}) en la tarjeta ${card.name} ·${card.last4}. Añade la foto del ticket en Gastos y dietas.`,
+      data: { type: "EXPENSE_CLAIM", claimId: claim.id, link: "/gastos" },
+    });
+    return claim;
+  }
+
+  // ─── Tickets por email ────────────────────────────────────────────────────
+
+  private inboundDomain() {
+    return (this.config.get<string>("INBOUND_EMAIL_DOMAIN") || "").trim().toLowerCase();
+  }
+
+  async getEmailAddress(u: JwtPayload, regenerate = false) {
+    const { employee } = await this.context(u);
+    const domain = this.inboundDomain();
+    if (!employee) return { configured: !!domain, address: null };
+    const current = await this.prisma.employee.findUnique({ where: { id: employee.id }, select: { expenseEmailToken: true } });
+    let token = current?.expenseEmailToken ?? null;
+    if (!token || regenerate) {
+      token = `g${randomBytes(6).toString("hex")}`;
+      await this.prisma.employee.update({ where: { id: employee.id }, data: { expenseEmailToken: token } });
+    }
+    return { configured: !!domain, address: domain ? `${token}@${domain}` : null };
+  }
+
+  verifyInboundSecret(provided: string | undefined) {
+    const expected = this.config.get<string>("INBOUND_EMAIL_SECRET") || "";
+    if (!expected) throw new ForbiddenException("Recepción de tickets por email no configurada");
+    const a = Buffer.from(provided ?? "");
+    const b = Buffer.from(expected);
+    if (a.length !== b.length || !timingSafeEqual(a, b)) throw new ForbiddenException("Firma no válida");
+  }
+
+  async processInboundEmail(
+    body: { to?: string; from?: string; headerFrom?: string; subject?: string },
+    files: Express.Multer.File[],
+  ) {
+    const extractAddress = (v?: string) => {
+      const m = String(v ?? "").match(/<([^>]+)>/);
+      return (m ? m[1]! : String(v ?? "")).trim().toLowerCase();
+    };
+    const domain = this.inboundDomain();
+    const token = String(body.to ?? "")
+      .split(",")
+      .map(extractAddress)
+      .filter((r) => !domain || r.endsWith(`@${domain}`))
+      .map((r) => r.split("@")[0]!.split("+")[0]!)
+      .find((t) => /^g[0-9a-f]{12}$/.test(t));
+    if (!token) return { status: "unknown_recipient", created: 0 };
+
+    const employee = await this.prisma.employee.findUnique({
+      where: { expenseEmailToken: token },
+      select: { id: true, companyId: true, email: true },
+    });
+    if (!employee) return { status: "unknown_recipient", created: 0 };
+
+    const senders = [extractAddress(body.from), extractAddress(body.headerFrom)].filter(Boolean);
+    const employeeEmail = (employee.email ?? "").toLowerCase();
+    if (!employeeEmail || !senders.includes(employeeEmail)) {
+      await this.notifyEmployee(employee.companyId, employee.email, {
+        title: "Ticket por email no aceptado",
+        body: `Recibimos un email desde ${senders[0] ?? "una dirección desconocida"}. Por seguridad solo aceptamos tickets enviados desde tu email (${employee.email ?? "sin email en tu ficha"}).`,
+        data: { type: "EXPENSE_EMAIL", link: "/gastos" },
+      });
+      return { status: "sender_mismatch", created: 0 };
+    }
+
+    const valid = (files ?? []).filter((f) => f.mimetype.startsWith("image/") || f.mimetype === "application/pdf").slice(0, 5);
+    if (!valid.length) {
+      await this.notifyEmployee(employee.companyId, employee.email, {
+        title: "Email recibido sin ticket",
+        body: `Tu email "${String(body.subject ?? "").slice(0, 80)}" no traía ninguna foto ni PDF adjunto. Adjunta el ticket y vuelve a enviarlo.`,
+        data: { type: "EXPENSE_EMAIL", link: "/gastos" },
+      });
+      return { status: "no_attachments", created: 0 };
+    }
+
+    const company = await this.prisma.company.findUnique({ where: { id: employee.companyId }, select: { cif: true, vatNumber: true } });
+    const norm = (v: unknown) => String(v ?? "").toUpperCase().replace(/[^A-Z0-9]/g, "").replace(/^ES/, "");
+    const companyNif = norm(company?.cif || company?.vatNumber);
+    const settings = await this.getSettings(employee.companyId);
+    const created: { id: string; amount: number; merchant: string | null }[] = [];
+
+    for (const file of valid) {
+      const scan = await this.fiscal.analyzeExpense(file, employee.companyId).catch(() => null);
+      const ex: Record<string, any> = scan?.extracted ?? {};
+      const vatRate = typeof ex.vatRate === "number" && ex.vatRate >= 0 && ex.vatRate <= 30 ? ex.vatRate : 0;
+      const amount = typeof ex.subtotal === "number" && ex.subtotal > 0 ? round2(ex.subtotal * (1 + vatRate / 100)) : 0;
+      const date = typeof ex.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(ex.date)
+        ? parseDate(ex.date)
+        : parseDate(new Date().toISOString().slice(0, 10));
+      const category: Category = ({ TRANSPORTE: "TRANSPORT", FORMACION: "TRAINING", OFICINA: "SUPPLIES" } as Record<string, Category>)[ex.category ?? ""] ?? "OTHER";
+      // IVA deducible solo si la factura va a nombre de la empresa (NIF del destinatario = NIF de la empresa)
+      const vatDeductible = vatRate > 0 && !!companyNif && norm(ex.clientNif) === companyNif;
+      const merchant = optString(ex.supplier, 150);
+      const merchantNif = optString(ex.supplierNif, 20);
+      const receiptUrl = scan?.attachmentUrl ?? null;
+
+      const warnings = await this.evaluatePolicies(employee.companyId, settings, {
+        employeeId: employee.id, category, date, amount, receiptUrl,
+        projectId: null, taxableAmount: 0, vatDeductible, merchantNif,
+      });
+      if (!amount) {
+        warnings.unshift({ code: "NEEDS_REVIEW", severity: "warning", message: "No se pudo leer el importe: complétalo antes de enviar" });
+      }
+
+      const claim = await this.prisma.expenseClaim.create({
+        data: {
+          companyId: employee.companyId, employeeId: employee.id, category, date, merchant, merchantNif,
+          description: optString(ex.description, 500) ?? optString(body.subject, 200),
+          amount, vatRate, vatDeductible, exemptAmount: amount, receiptUrl,
+          source: "EMAIL", status: "DRAFT", policyWarnings: warnings as any,
+        },
+      });
+      created.push({ id: claim.id, amount, merchant });
+    }
+
+    const list = created.map((c) => `${c.merchant ?? "ticket"} (${c.amount ? fmtEur(c.amount) : "sin importe"})`).join(", ");
+    await this.notifyEmployee(employee.companyId, employee.email, {
+      title: `${created.length} ticket(s) recibido(s) por email`,
+      body: `${list}. Revísalos en Gastos y dietas y envíalos en una nota de gasto.`,
+      data: { type: "EXPENSE_EMAIL", link: "/gastos" },
+    });
+    return { status: "ok", created: created.length };
   }
 
   // ─── Notificaciones ───────────────────────────────────────────────────────

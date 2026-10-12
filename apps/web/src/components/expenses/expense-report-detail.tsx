@@ -8,15 +8,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { cn, formatCurrency, formatDate } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { AlertTriangle, Download, ExternalLink, Info, Loader2, Paperclip, Undo2 } from "lucide-react";
 import { toast } from "sonner";
 import { downloadExpenseReportPdf } from "@/lib/pdf/download-pdf";
 import {
-  CATEGORY_LABELS,
-  METHOD_LABELS,
-  PER_DIEM_LABELS,
-  STATUS_LABELS,
+  REIMBURSEMENT_METHODS,
   STATUS_VARIANT,
   useApproveExpenseReport,
   useExpenseReport,
@@ -28,21 +25,11 @@ import {
   type ExpenseSettings,
   type ReimbursementMethod,
 } from "@/hooks/use-expense-claims";
-
-const MONTHS = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
-
-export function claimDetail(c: ExpenseClaim) {
-  if (c.category === "MILEAGE") {
-    const route = [c.origin, c.destination].filter(Boolean).join(" → ");
-    return `${route ? route + " · " : ""}${Number(c.distanceKm)} km`;
-  }
-  if (c.category === "PER_DIEM" && c.perDiemType) {
-    return `${PER_DIEM_LABELS[c.perDiemType]} · ${Number(c.perDiemDays)} día(s)`;
-  }
-  return c.merchant || c.description || "—";
-}
+import { useExpenseFormat } from "./use-expense-format";
+import { usePdfLabels } from "./use-pdf-labels";
 
 export function WarningIcons({ claim }: { claim: ExpenseClaim }) {
+  const { warningText } = useExpenseFormat();
   const list = claim.policyWarnings ?? [];
   if (!list.length) return null;
   const hasWarning = list.some((w) => w.severity === "warning");
@@ -50,7 +37,7 @@ export function WarningIcons({ claim }: { claim: ExpenseClaim }) {
   return (
     <span
       className={cn("inline-flex items-center gap-1 text-xs", hasWarning ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground")}
-      title={list.map((w) => w.message).join("\n")}
+      title={list.map(warningText).join("\n")}
     >
       <Icon className="h-3.5 w-3.5" />
       {list.length}
@@ -67,6 +54,8 @@ export function ExpenseReportDetail({
   onClose: () => void;
   settings: ExpenseSettings;
 }) {
+  const { t, money, date, monthYear, claimDetail, warningText } = useExpenseFormat();
+  const pdfLabels = usePdfLabels();
   const { data: report, isLoading } = useExpenseReport(reportId);
   const approve = useApproveExpenseReport();
   const reject = useRejectExpenseReport();
@@ -104,12 +93,19 @@ export function ExpenseReportDetail({
     });
   }
 
+  function close() {
+    onClose();
+    setRejectedLines({});
+    setRejectMode(false);
+    setMethod(null);
+  }
+
   async function handleApprove() {
     if (!report) return;
     await approve.mutateAsync({
       id: report.id,
       reimbursementMethod: effectiveMethod,
-      rejectedClaims: Object.entries(rejectedLines).map(([id, reason]) => ({ id, reason: reason || "Rechazado por administración" })),
+      rejectedClaims: Object.entries(rejectedLines).map(([id, reason]) => ({ id, reason: reason || t("report.defaultLineReason") })),
     });
     setRejectedLines({});
   }
@@ -125,20 +121,20 @@ export function ExpenseReportDetail({
     if (!report) return;
     setDownloading(true);
     try {
-      await downloadExpenseReportPdf(report.id);
+      await downloadExpenseReportPdf(report.id, pdfLabels);
     } catch {
-      toast.error("No se pudo generar el PDF");
+      toast.error(t("report.pdfError"));
     } finally {
       setDownloading(false);
     }
   }
 
   return (
-    <Dialog open={!!reportId} onOpenChange={(v) => { if (!v) { onClose(); setRejectedLines({}); setRejectMode(false); setMethod(null); } }}>
+    <Dialog open={!!reportId} onOpenChange={(v) => { if (!v) close(); }}>
       <DialogContent className="max-w-3xl max-h-[92vh] overflow-y-auto">
         {isLoading || !report ? (
           <div className="flex justify-center py-16">
-            <DialogTitle className="sr-only">Cargando nota de gasto</DialogTitle>
+            <DialogTitle className="sr-only">{t("report.loading")}</DialogTitle>
             <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
           </div>
         ) : (
@@ -151,11 +147,11 @@ export function ExpenseReportDetail({
                   <p className="text-sm text-muted-foreground mt-0.5">
                     {report.employee.firstName} {report.employee.lastName}
                     {report.employee.department ? ` · ${report.employee.department}` : ""}
-                    {" · "}enviada el {formatDate(report.submittedAt)}
+                    {" · "}{t("report.sentOn", { date: date(report.submittedAt) })}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant={STATUS_VARIANT[report.status]}>{STATUS_LABELS[report.status]}</Badge>
+                  <Badge variant={STATUS_VARIANT[report.status]}>{t(`status.${report.status}`)}</Badge>
                   <Button variant="outline" size="sm" onClick={handleDownload} disabled={downloading}>
                     {downloading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
                     <span className="ml-1.5">PDF</span>
@@ -166,15 +162,16 @@ export function ExpenseReportDetail({
 
             {report.status === "REJECTED" && report.rejectionReason && (
               <div className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
-                Rechazada: {report.rejectionReason}
+                {t("report.rejectedReason", { reason: report.rejectionReason })}
               </div>
             )}
             {report.approvedAt && (
               <p className="text-sm text-muted-foreground">
-                Aprobada el {formatDate(report.approvedAt)}{report.approverName ? ` por ${report.approverName}` : ""}
-                {report.reimbursementMethod ? ` · Reembolso: ${METHOD_LABELS[report.reimbursementMethod].toLowerCase()}` : ""}
-                {report.payroll ? ` (nómina de ${MONTHS[report.payroll.month - 1]} ${report.payroll.year})` : ""}
-                {report.reimbursedAt ? ` · Pagado el ${formatDate(report.reimbursedAt)}` : ""}
+                {t("report.approvedOn", { date: date(report.approvedAt) })}
+                {report.approverName ? t("report.by", { name: report.approverName }) : ""}
+                {report.reimbursementMethod ? t("report.reimbursement", { method: t(`methods.${report.reimbursementMethod}`).toLowerCase() }) : ""}
+                {report.payroll ? t("report.payrollOf", { period: monthYear(report.payroll.month, report.payroll.year) }) : ""}
+                {report.reimbursedAt ? t("report.paidOn", { date: date(report.reimbursedAt) }) : ""}
               </p>
             )}
 
@@ -182,11 +179,11 @@ export function ExpenseReportDetail({
               <table className="w-full text-sm">
                 <thead className="bg-muted/50 text-xs text-muted-foreground">
                   <tr>
-                    {reviewing && <th className="px-3 py-2 text-left font-medium w-8" title="Rechazar línea">Rech.</th>}
-                    <th className="px-3 py-2 text-left font-medium">Fecha</th>
-                    <th className="px-3 py-2 text-left font-medium">Concepto</th>
-                    <th className="px-3 py-2 text-left font-medium hidden md:table-cell">Proyecto</th>
-                    <th className="px-3 py-2 text-right font-medium">Importe</th>
+                    {reviewing && <th className="px-3 py-2 text-left font-medium w-8" title={t("report.cols.rejectTitle")}>{t("report.cols.reject")}</th>}
+                    <th className="px-3 py-2 text-left font-medium">{t("report.cols.date")}</th>
+                    <th className="px-3 py-2 text-left font-medium">{t("report.cols.concept")}</th>
+                    <th className="px-3 py-2 text-left font-medium hidden md:table-cell">{t("report.cols.project")}</th>
+                    <th className="px-3 py-2 text-right font-medium">{t("report.cols.amount")}</th>
                     <th className="px-3 py-2 w-16" />
                   </tr>
                 </thead>
@@ -199,25 +196,30 @@ export function ExpenseReportDetail({
                           <td className="px-3 py-2.5">
                             <input
                               type="checkbox"
-                              aria-label="Rechazar esta línea"
+                              aria-label={t("report.rejectLine")}
                               checked={c.id in rejectedLines}
                               onChange={() => toggleLine(c.id)}
                               className="h-4 w-4 accent-destructive"
                             />
                           </td>
                         )}
-                        <td className="px-3 py-2.5 whitespace-nowrap tabular-nums">{formatDate(c.date)}</td>
+                        <td className="px-3 py-2.5 whitespace-nowrap tabular-nums">{date(c.date)}</td>
                         <td className="px-3 py-2.5 min-w-[180px]">
-                          <div className="font-medium">{CATEGORY_LABELS[c.category]}</div>
+                          <div className="font-medium">{t(`categories.${c.category}`)}</div>
                           <div className="text-xs text-muted-foreground">{claimDetail(c)}</div>
                           {c.description && c.merchant && <div className="text-xs text-muted-foreground">{c.description}</div>}
                           <div className="flex flex-wrap gap-1.5 mt-1">
-                            {c.paidWithCompanyCard && <Badge variant="secondary" className="text-[10px]">Tarjeta empresa</Badge>}
-                            {c.vatDeductible && <Badge variant="info" className="text-[10px]">IVA deducible {Number(c.vatRate)}%</Badge>}
+                            {c.paidWithCompanyCard && (
+                              <Badge variant="secondary" className="text-[10px]">
+                                {t("report.companyCard")}{c.card ? ` ·${c.card.last4}` : ""}
+                              </Badge>
+                            )}
+                            {c.vatDeductible && <Badge variant="info" className="text-[10px]">{t("report.vatDeductible", { rate: Number(c.vatRate) })}</Badge>}
                             {Number(c.taxableAmount) > 0 && (
-                              <Badge variant="warning" className="text-[10px]">Tributa {formatCurrency(Number(c.taxableAmount))}</Badge>
+                              <Badge variant="warning" className="text-[10px]">{t("report.taxable", { amount: money(c.taxableAmount) })}</Badge>
                             )}
                             {c.vehicle && <Badge variant="outline" className="text-[10px]">{c.vehicle.matricula}</Badge>}
+                            {c.source !== "MANUAL" && <Badge variant="outline" className="text-[10px]">{t(`source.${c.source}`)}</Badge>}
                           </div>
                           {(c.policyWarnings ?? []).length > 0 && (
                             <ul className="mt-1.5 space-y-0.5">
@@ -227,18 +229,18 @@ export function ExpenseReportDetail({
                                   className={cn("flex items-start gap-1 text-xs", w.severity === "warning" ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground")}
                                 >
                                   {w.severity === "warning" ? <AlertTriangle className="h-3 w-3 mt-0.5 shrink-0" /> : <Info className="h-3 w-3 mt-0.5 shrink-0" />}
-                                  {w.message}
+                                  {warningText(w)}
                                 </li>
                               ))}
                             </ul>
                           )}
                           {c.status === "REJECTED" && c.rejectionReason && (
-                            <p className="text-xs text-destructive mt-1">Rechazado: {c.rejectionReason}</p>
+                            <p className="text-xs text-destructive mt-1">{t("report.lineRejected", { reason: c.rejectionReason })}</p>
                           )}
                           {reviewing && c.id in rejectedLines && (
                             <Input
                               className="mt-1.5 h-8 text-xs"
-                              placeholder="Motivo del rechazo de esta línea"
+                              placeholder={t("report.lineRejectPlaceholder")}
                               value={rejectedLines[c.id]}
                               onChange={(e) => setRejectedLines((cur) => ({ ...cur, [c.id]: e.target.value }))}
                             />
@@ -253,11 +255,11 @@ export function ExpenseReportDetail({
                           ) : <span className="text-muted-foreground">—</span>}
                         </td>
                         <td className={cn("px-3 py-2.5 text-right font-medium tabular-nums whitespace-nowrap", lineRejected && "line-through text-muted-foreground")}>
-                          {formatCurrency(Number(c.amount))}
+                          {money(c.amount)}
                         </td>
                         <td className="px-3 py-2.5 text-right">
                           {c.receiptUrl ? (
-                            <a href={c.receiptUrl} target="_blank" rel="noreferrer" className="inline-flex items-center text-primary hover:underline" title="Ver justificante">
+                            <a href={c.receiptUrl} target="_blank" rel="noreferrer" className="inline-flex items-center text-primary hover:underline" title={t("report.viewReceipt")}>
                               <Paperclip className="h-4 w-4" />
                             </a>
                           ) : null}
@@ -271,41 +273,43 @@ export function ExpenseReportDetail({
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
               <div className="rounded-lg border p-3">
-                <p className="text-xs text-muted-foreground">Total nota</p>
-                <p className="font-semibold tabular-nums">{formatCurrency(Number(report.total))}</p>
+                <p className="text-xs text-muted-foreground">{t("report.total")}</p>
+                <p className="font-semibold tabular-nums">{money(report.total)}</p>
               </div>
               <div className="rounded-lg border p-3">
-                <p className="text-xs text-muted-foreground">{reviewing ? "A aprobar" : "Aprobado"}</p>
-                <p className="font-semibold tabular-nums">{formatCurrency(reviewing ? previewTotal : Number(report.approvedTotal))}</p>
+                <p className="text-xs text-muted-foreground">{reviewing ? t("report.toApprove") : t("report.approved")}</p>
+                <p className="font-semibold tabular-nums">{money(reviewing ? previewTotal : report.approvedTotal)}</p>
               </div>
               <div className="rounded-lg border p-3">
-                <p className="text-xs text-muted-foreground">A reembolsar</p>
-                <p className="font-semibold tabular-nums">{formatCurrency(reviewing ? previewReimbursable : Number(report.reimbursableTotal))}</p>
+                <p className="text-xs text-muted-foreground">{t("report.toReimburse")}</p>
+                <p className="font-semibold tabular-nums">{money(reviewing ? previewReimbursable : report.reimbursableTotal)}</p>
               </div>
               <div className="rounded-lg border p-3">
-                <p className="text-xs text-muted-foreground">IVA deducible</p>
-                <p className="font-semibold tabular-nums">{formatCurrency(vatDeductible)}</p>
+                <p className="text-xs text-muted-foreground">{t("report.vatDeductibleTotal")}</p>
+                <p className="font-semibold tabular-nums">{money(vatDeductible)}</p>
               </div>
             </div>
 
             {reviewing && !rejectMode && (
               <div className="flex flex-col sm:flex-row sm:items-end gap-3 rounded-lg border bg-muted/30 p-3">
                 <div className="space-y-1.5 flex-1">
-                  <Label htmlFor="approve-method">Cómo se reembolsa</Label>
+                  <Label htmlFor="approve-method">{t("report.howReimbursed")}</Label>
                   <Select value={effectiveMethod} onValueChange={(v) => setMethod(v as ReimbursementMethod)}>
                     <SelectTrigger id="approve-method"><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      {(Object.keys(METHOD_LABELS) as ReimbursementMethod[]).map((m) => (
-                        <SelectItem key={m} value={m}>{METHOD_LABELS[m]}</SelectItem>
+                      {REIMBURSEMENT_METHODS.map((m) => (
+                        <SelectItem key={m} value={m}>{t(`methods.${m}`)}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" onClick={() => setRejectMode(true)}>Rechazar nota</Button>
+                  <Button variant="outline" onClick={() => setRejectMode(true)}>{t("report.rejectReport")}</Button>
                   <Button onClick={handleApprove} disabled={approve.isPending || approvedPreview.length === 0}>
                     {approve.isPending && <Loader2 className="h-4 w-4 animate-spin mr-1.5" />}
-                    {Object.keys(rejectedLines).length ? `Aprobar ${approvedPreview.length} de ${claims.length}` : "Aprobar"}
+                    {Object.keys(rejectedLines).length
+                      ? t("report.approvePartial", { approved: approvedPreview.length, total: claims.length })
+                      : t("report.approve")}
                   </Button>
                 </div>
               </div>
@@ -313,13 +317,13 @@ export function ExpenseReportDetail({
 
             {reviewing && rejectMode && (
               <div className="space-y-2 rounded-lg border border-destructive/30 p-3">
-                <Label htmlFor="reject-reason">Motivo del rechazo</Label>
-                <Textarea id="reject-reason" rows={2} value={rejectReason} onChange={(e) => setRejectReason(e.target.value)} placeholder="Falta el justificante del hotel..." />
+                <Label htmlFor="reject-reason">{t("report.rejectReason")}</Label>
+                <Textarea id="reject-reason" rows={2} value={rejectReason} onChange={(e) => setRejectReason(e.target.value)} placeholder={t("report.rejectPlaceholder")} />
                 <div className="flex justify-end gap-2">
-                  <Button variant="ghost" onClick={() => setRejectMode(false)}>Cancelar</Button>
+                  <Button variant="ghost" onClick={() => setRejectMode(false)}>{t("report.cancel")}</Button>
                   <Button variant="destructive" onClick={handleReject} disabled={!rejectReason.trim() || reject.isPending}>
                     {reject.isPending && <Loader2 className="h-4 w-4 animate-spin mr-1.5" />}
-                    Rechazar nota completa
+                    {t("report.rejectAll")}
                   </Button>
                 </div>
               </div>
@@ -330,33 +334,33 @@ export function ExpenseReportDetail({
                 {report.reimbursementMethod === "PAYROLL" && (
                   <p className="text-sm text-muted-foreground">
                     {report.payroll
-                      ? `Incluida en la nómina de ${MONTHS[report.payroll.month - 1]} ${report.payroll.year}. Se marcará como reembolsada al pagar la nómina.`
-                      : "Se incluirá automáticamente al generar la próxima nómina del empleado."}
-                    {" "}También puedes pagarla ahora por otro medio:
+                      ? t("report.payrollIncluded", { period: monthYear(report.payroll.month, report.payroll.year) })
+                      : t("report.payrollNext")}
+                    {" "}{t("report.payOther")}
                   </p>
                 )}
                 <div className="flex flex-col sm:flex-row sm:items-end gap-3">
                   <div className="space-y-1.5">
-                    <Label htmlFor="pay-method">Medio de pago</Label>
+                    <Label htmlFor="pay-method">{t("report.payMethod")}</Label>
                     <Select value={payMethod} onValueChange={(v) => setPayMethod(v as "TRANSFER" | "CASH")}>
                       <SelectTrigger id="pay-method" className="w-40"><SelectValue /></SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="TRANSFER">Transferencia</SelectItem>
-                        <SelectItem value="CASH">Efectivo</SelectItem>
+                        <SelectItem value="TRANSFER">{t("methods.TRANSFER")}</SelectItem>
+                        <SelectItem value="CASH">{t("methods.CASH")}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="pay-date">Fecha de pago</Label>
+                    <Label htmlFor="pay-date">{t("report.payDate")}</Label>
                     <Input id="pay-date" type="date" className="w-40" value={payDate} onChange={(e) => setPayDate(e.target.value)} />
                   </div>
                   <div className="flex gap-2 sm:ml-auto">
                     <Button variant="ghost" onClick={() => reopen.mutate({ id: report.id })} disabled={reopen.isPending}>
-                      <Undo2 className="h-4 w-4 mr-1.5" /> Reabrir
+                      <Undo2 className="h-4 w-4 mr-1.5" /> {t("report.reopen")}
                     </Button>
                     <Button onClick={() => reimburse.mutate({ id: report.id, method: payMethod, date: payDate })} disabled={reimburse.isPending}>
                       {reimburse.isPending && <Loader2 className="h-4 w-4 animate-spin mr-1.5" />}
-                      Marcar reembolsada
+                      {t("report.markReimbursed")}
                     </Button>
                   </div>
                 </div>
@@ -366,14 +370,14 @@ export function ExpenseReportDetail({
             {report.isOwn && isPending && (
               <div className="flex justify-end">
                 <Button variant="outline" onClick={async () => { await withdraw.mutateAsync({ id: report.id }); onClose(); }} disabled={withdraw.isPending}>
-                  Retirar nota y volver a editar
+                  {t("report.withdraw")}
                 </Button>
               </div>
             )}
 
             {claims.some((c) => c.receiptUrl) && (
               <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                <ExternalLink className="h-3 w-3" /> Los justificantes se abren en una pestaña nueva.
+                <ExternalLink className="h-3 w-3" /> {t("report.receiptsHint")}
               </p>
             )}
           </div>

@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 export interface VehicleMaintenance {
   id: string;
@@ -37,16 +38,9 @@ export interface Vehicle {
   _count?: { maintenances: number };
 }
 
-export const MAINTENANCE_LABELS: Record<VehicleMaintenance["tipo"], string> = {
-  ITV: "ITV",
-  REVISION: "Revisión",
-  SEGURO: "Seguro",
-  AVERIA: "Avería",
-  CAMBIO_ACEITE: "Cambio de aceite",
-  NEUMATICOS: "Neumáticos",
-  FRENOS: "Frenos",
-  OTRO: "Otro",
-};
+export const MAINTENANCE_TYPES: VehicleMaintenance["tipo"][] = [
+  "ITV", "REVISION", "SEGURO", "AVERIA", "CAMBIO_ACEITE", "NEUMATICOS", "FRENOS", "OTRO",
+];
 
 export function getExpiryStatus(dateStr: string | null): "ok" | "warn" | "expired" | "none" {
   if (!dateStr) return "none";
@@ -76,92 +70,98 @@ export function useVehicle(id: string | undefined) {
 }
 
 export function useCreateVehicle() {
+  const t = useTranslations("fleet.toasts");
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (data: any) => api.post("/fleet", data).then((r) => r.data),
     onSuccess: () => {
-      toast.success("Vehículo creado");
+      toast.success(t("vehicleCreated"));
       qc.invalidateQueries({ queryKey: ["fleet"] });
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.message ?? "Error al crear el vehículo");
+      toast.error(err?.response?.data?.message ?? t("vehicleCreateError"));
     },
   });
 }
 
 export function useUpdateVehicle() {
+  const t = useTranslations("fleet.toasts");
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ id, ...data }: any) => api.patch(`/fleet/${id}`, data).then((r) => r.data),
     onSuccess: (_, { id }) => {
-      toast.success("Vehículo actualizado");
+      toast.success(t("vehicleUpdated"));
       qc.invalidateQueries({ queryKey: ["fleet"] });
       qc.invalidateQueries({ queryKey: ["fleet-vehicle", id] });
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.message ?? "Error al actualizar");
+      toast.error(err?.response?.data?.message ?? t("updateError"));
     },
   });
 }
 
 export function useDeleteVehicle() {
+  const t = useTranslations("fleet.toasts");
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => api.delete(`/fleet/${id}`).then((r) => r.data),
     onSuccess: () => {
-      toast.success("Vehículo eliminado");
+      toast.success(t("vehicleDeleted"));
       qc.invalidateQueries({ queryKey: ["fleet"] });
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.message ?? "Error al eliminar");
+      toast.error(err?.response?.data?.message ?? t("deleteError"));
     },
   });
 }
 
 export function useCreateMaintenance() {
+  const t = useTranslations("fleet.toasts");
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ vehicleId, ...data }: any) =>
       api.post(`/fleet/${vehicleId}/maintenances`, data).then((r) => r.data),
     onSuccess: (_, { vehicleId }) => {
-      toast.success("Mantenimiento registrado");
+      toast.success(t("maintenanceCreated"));
       qc.invalidateQueries({ queryKey: ["fleet"] });
       qc.invalidateQueries({ queryKey: ["fleet-vehicle", vehicleId] });
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.message ?? "Error al registrar el mantenimiento");
+      toast.error(err?.response?.data?.message ?? t("maintenanceCreateError"));
     },
   });
 }
 
 export function useUpdateMaintenance() {
+  const t = useTranslations("fleet.toasts");
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ vehicleId, id, ...data }: any) =>
       api.patch(`/fleet/${vehicleId}/maintenances/${id}`, data).then((r) => r.data),
     onSuccess: (_, { vehicleId }) => {
-      toast.success("Mantenimiento actualizado");
+      toast.success(t("maintenanceUpdated"));
       qc.invalidateQueries({ queryKey: ["fleet"] });
       qc.invalidateQueries({ queryKey: ["fleet-vehicle", vehicleId] });
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.message ?? "Error al actualizar");
+      toast.error(err?.response?.data?.message ?? t("updateError"));
     },
   });
 }
 
 export function useDeleteMaintenance() {
+  const t = useTranslations("fleet.toasts");
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ vehicleId, id }: { vehicleId: string; id: string }) =>
       api.delete(`/fleet/${vehicleId}/maintenances/${id}`).then((r) => r.data),
     onSuccess: (_, { vehicleId }) => {
-      toast.success("Mantenimiento eliminado");
+      toast.success(t("maintenanceDeleted"));
       qc.invalidateQueries({ queryKey: ["fleet"] });
       qc.invalidateQueries({ queryKey: ["fleet-vehicle", vehicleId] });
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.message ?? "Error al eliminar");
+      toast.error(err?.response?.data?.message ?? t("deleteError"));
     },
   });
 }

@@ -36,9 +36,12 @@ const DOC_TYPE_CONFIG: Record<DocType, { label: string; icon: React.ElementType;
 };
 
 const AI_PROVIDER_LABEL: Record<string, string> = {
-  "nvidia-nim": "NVIDIA NIM (Llama 4)",
-  "claude":     "Claude Haiku",
-  "none":       "Sin IA",
+  "openrouter": "IA: Gemma (OpenRouter)",
+  "gemini":     "IA: Google Gemini",
+  "nvidia-nim": "IA: NVIDIA Nemotron",
+  "claude":     "IA: Claude Haiku",
+  "mistral":    "IA: Mistral Pixtral",
+  "none":       "Sin IA: rellena los datos a mano",
 };
 
 function Field({ label, value }: { label: string; value?: string | number }) {

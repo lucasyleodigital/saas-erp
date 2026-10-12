@@ -80,9 +80,9 @@ export class FiscalController {
 
   @Post("expenses/analyze")
   @UseInterceptors(FileInterceptor("file", { limits: { fileSize: 10 * 1024 * 1024 } }))
-  analyzeExpense(@UploadedFile() file: Express.Multer.File) {
+  analyzeExpense(@CurrentUser() u: JwtPayload, @UploadedFile() file: Express.Multer.File) {
     if (!file) throw new BadRequestException("No se recibió ningún archivo");
-    return this.fiscal.analyzeExpense(file);
+    return this.fiscal.analyzeExpense(file, u.companyId);
   }
 
   @Patch("expenses/:id")

@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { formatCurrency } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
+import { useExpenseFormat } from "./use-expense-format";
 import {
-  CATEGORY_LABELS,
-  METHOD_LABELS,
+  EXPENSE_CATEGORIES,
+  REIMBURSEMENT_METHODS,
   RECEIPTLESS_CATEGORIES,
   useExpensePolicies,
   useSaveExpenseConfig,
@@ -27,14 +27,15 @@ interface PolicyRow {
 }
 
 const RATE_FIELDS = [
-  { key: "mileageRate", label: "Kilometraje (€/km)", legal: "mileage", step: "0.001" },
-  { key: "perDiemEsOvernight", label: "Dieta España con pernocta (€/día)", legal: "ES_OVERNIGHT", step: "0.01" },
-  { key: "perDiemEsDay", label: "Dieta España sin pernocta (€/día)", legal: "ES_DAY", step: "0.01" },
-  { key: "perDiemAbroadOvernight", label: "Dieta extranjero con pernocta (€/día)", legal: "ABROAD_OVERNIGHT", step: "0.01" },
-  { key: "perDiemAbroadDay", label: "Dieta extranjero sin pernocta (€/día)", legal: "ABROAD_DAY", step: "0.01" },
+  { key: "mileageRate", legal: "mileage", step: "0.001" },
+  { key: "perDiemEsOvernight", legal: "ES_OVERNIGHT", step: "0.01" },
+  { key: "perDiemEsDay", legal: "ES_DAY", step: "0.01" },
+  { key: "perDiemAbroadOvernight", legal: "ABROAD_OVERNIGHT", step: "0.01" },
+  { key: "perDiemAbroadDay", legal: "ABROAD_DAY", step: "0.01" },
 ] as const;
 
 export function ExpenseSettingsPanel({ context }: { context: ExpenseContext }) {
+  const { t, money, locale } = useExpenseFormat();
   const { data: policies, isLoading } = useExpensePolicies();
   const save = useSaveExpenseConfig();
 
@@ -57,7 +58,7 @@ export function ExpenseSettingsPanel({ context }: { context: ExpenseContext }) {
   useEffect(() => {
     if (!policies) return;
     setRows(
-      (Object.keys(CATEGORY_LABELS) as ExpenseCategory[]).map((category) => {
+      EXPENSE_CATEGORIES.map((category) => {
         const p = policies.find((x) => x.category === category);
         return {
           category,
@@ -98,10 +99,8 @@ export function ExpenseSettingsPanel({ context }: { context: ExpenseContext }) {
     <div className="space-y-5">
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-base">Tarifas de la empresa</CardTitle>
-          <p className="text-sm text-muted-foreground">
-            Lo que pagas por encima del límite legal exento tributa como salario y se lleva a la nómina automáticamente.
-          </p>
+          <CardTitle className="text-base">{t("settings.ratesTitle")}</CardTitle>
+          <p className="text-sm text-muted-foreground">{t("settings.ratesBody")}</p>
         </CardHeader>
         <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {RATE_FIELDS.map((f) => {
@@ -109,7 +108,7 @@ export function ExpenseSettingsPanel({ context }: { context: ExpenseContext }) {
             const current = Number(rates[f.key] ?? 0);
             return (
               <div key={f.key} className="space-y-1.5">
-                <Label htmlFor={`rate-${f.key}`}>{f.label}</Label>
+                <Label htmlFor={`rate-${f.key}`}>{t(`settings.${f.key}`)}</Label>
                 <Input
                   id={`rate-${f.key}`}
                   type="number"
@@ -120,8 +119,12 @@ export function ExpenseSettingsPanel({ context }: { context: ExpenseContext }) {
                   onChange={(e) => setRates((r) => ({ ...r, [f.key]: e.target.value }))}
                 />
                 <p className={current > legal ? "text-xs text-amber-600 dark:text-amber-400" : "text-xs text-muted-foreground"}>
-                  Exento hasta {f.legal === "mileage" ? `${legal.toFixed(2).replace(".", ",")} €/km` : formatCurrency(legal)}
-                  {current > legal ? " · el exceso tributa" : ""}
+                  {t("settings.exemptUpTo", {
+                    value: f.legal === "mileage"
+                      ? `${new Intl.NumberFormat(locale, { minimumFractionDigits: 2 }).format(legal)} €/km`
+                      : money(legal),
+                  })}
+                  {current > legal ? t("settings.excessTaxed") : ""}
                 </p>
               </div>
             );
@@ -130,33 +133,33 @@ export function ExpenseSettingsPanel({ context }: { context: ExpenseContext }) {
       </Card>
 
       <Card>
-        <CardHeader className="pb-3"><CardTitle className="text-base">Reglas generales</CardTitle></CardHeader>
+        <CardHeader className="pb-3"><CardTitle className="text-base">{t("settings.generalTitle")}</CardTitle></CardHeader>
         <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <Label htmlFor="cfg-method">Reembolso por defecto al aprobar</Label>
+            <Label htmlFor="cfg-method">{t("settings.defaultMethod")}</Label>
             <Select value={defaultMethod} onValueChange={(v) => setDefaultMethod(v as ReimbursementMethod)}>
               <SelectTrigger id="cfg-method"><SelectValue /></SelectTrigger>
               <SelectContent>
-                {(Object.keys(METHOD_LABELS) as ReimbursementMethod[]).map((m) => (
-                  <SelectItem key={m} value={m}>{METHOD_LABELS[m]}</SelectItem>
+                {REIMBURSEMENT_METHODS.map((m) => (
+                  <SelectItem key={m} value={m}>{t(`methods.${m}`)}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="cfg-days">Avisar si el gasto tiene más de (días)</Label>
+            <Label htmlFor="cfg-days">{t("settings.maxDays")}</Label>
             <Input id="cfg-days" type="number" min="1" value={maxDaysOld} onChange={(e) => setMaxDaysOld(e.target.value)} />
           </div>
           <label htmlFor="cfg-project" className="flex items-start gap-2.5 cursor-pointer">
             <input id="cfg-project" type="checkbox" checked={requireProject} onChange={(e) => setRequireProject(e.target.checked)} className="mt-0.5 h-4 w-4 accent-primary" />
-            <span className="text-sm">Exigir proyecto en cada gasto
-              <span className="block text-xs text-muted-foreground">Los gastos sin proyecto se marcan con aviso.</span>
+            <span className="text-sm">{t("settings.requireProject")}
+              <span className="block text-xs text-muted-foreground">{t("settings.requireProjectHint")}</span>
             </span>
           </label>
           <label htmlFor="cfg-autopost" className="flex items-start gap-2.5 cursor-pointer">
             <input id="cfg-autopost" type="checkbox" checked={autoPost} onChange={(e) => setAutoPost(e.target.checked)} className="mt-0.5 h-4 w-4 accent-primary" />
-            <span className="text-sm">Contabilizar al aprobar
-              <span className="block text-xs text-muted-foreground">Crea el gasto deducible (303/130) y el asiento contra la 465.</span>
+            <span className="text-sm">{t("settings.autoPost")}
+              <span className="block text-xs text-muted-foreground">{t("settings.autoPostHint")}</span>
             </span>
           </label>
         </CardContent>
@@ -164,8 +167,8 @@ export function ExpenseSettingsPanel({ context }: { context: ExpenseContext }) {
 
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-base">Política por categoría</CardTitle>
-          <p className="text-sm text-muted-foreground">Los gastos que no cumplen se marcan para que quien aprueba los revise.</p>
+          <CardTitle className="text-base">{t("settings.policyTitle")}</CardTitle>
+          <p className="text-sm text-muted-foreground">{t("settings.policyBody")}</p>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -175,25 +178,26 @@ export function ExpenseSettingsPanel({ context }: { context: ExpenseContext }) {
               <table className="w-full text-sm">
                 <thead className="text-xs text-muted-foreground">
                   <tr className="border-b">
-                    <th className="py-2 pr-3 text-left font-medium">Categoría</th>
-                    <th className="py-2 px-3 text-left font-medium">Máximo por gasto</th>
-                    <th className="py-2 px-3 text-center font-medium">Exige ticket</th>
-                    <th className="py-2 pl-3 text-center font-medium">Activa</th>
+                    <th className="py-2 pr-3 text-left font-medium">{t("settings.colCategory")}</th>
+                    <th className="py-2 px-3 text-left font-medium">{t("settings.colMax")}</th>
+                    <th className="py-2 px-3 text-center font-medium">{t("settings.colReceipt")}</th>
+                    <th className="py-2 pl-3 text-center font-medium">{t("settings.colActive")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {rows.map((r) => {
                     const receiptless = RECEIPTLESS_CATEGORIES.includes(r.category);
+                    const category = t(`categories.${r.category}`);
                     return (
                       <tr key={r.category} className="border-b last:border-0">
-                        <td className="py-2 pr-3">{CATEGORY_LABELS[r.category]}</td>
+                        <td className="py-2 pr-3">{category}</td>
                         <td className="py-2 px-3">
                           <Input
-                            aria-label={`Máximo para ${CATEGORY_LABELS[r.category]}`}
+                            aria-label={t("settings.maxFor", { category })}
                             type="number"
                             min="0"
                             step="0.01"
-                            placeholder="Sin límite"
+                            placeholder={t("settings.noLimit")}
                             className="h-8 w-32"
                             value={r.maxAmount}
                             onChange={(e) => updateRow(r.category, { maxAmount: e.target.value })}
@@ -201,11 +205,11 @@ export function ExpenseSettingsPanel({ context }: { context: ExpenseContext }) {
                         </td>
                         <td className="py-2 px-3 text-center">
                           {receiptless ? (
-                            <span className="text-xs text-muted-foreground">No aplica</span>
+                            <span className="text-xs text-muted-foreground">{t("settings.notApplicable")}</span>
                           ) : (
                             <input
                               type="checkbox"
-                              aria-label={`Exigir ticket en ${CATEGORY_LABELS[r.category]}`}
+                              aria-label={t("settings.receiptFor", { category })}
                               checked={r.requiresReceipt}
                               onChange={(e) => updateRow(r.category, { requiresReceipt: e.target.checked })}
                               className="h-4 w-4 accent-primary"
@@ -215,7 +219,7 @@ export function ExpenseSettingsPanel({ context }: { context: ExpenseContext }) {
                         <td className="py-2 pl-3 text-center">
                           <input
                             type="checkbox"
-                            aria-label={`Política activa en ${CATEGORY_LABELS[r.category]}`}
+                            aria-label={t("settings.activeFor", { category })}
                             checked={r.isActive}
                             onChange={(e) => updateRow(r.category, { isActive: e.target.checked })}
                             className="h-4 w-4 accent-primary"
@@ -234,7 +238,7 @@ export function ExpenseSettingsPanel({ context }: { context: ExpenseContext }) {
       <div className="flex justify-end">
         <Button onClick={submit} disabled={save.isPending}>
           {save.isPending && <Loader2 className="h-4 w-4 animate-spin mr-1.5" />}
-          Guardar configuración
+          {t("settings.save")}
         </Button>
       </div>
     </div>

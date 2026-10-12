@@ -112,4 +112,62 @@ export class ExpenseClaimsController {
   reimburseReport(@CurrentUser() u: JwtPayload, @Param("id") id: string, @Body() body: any) {
     return this.service.reimburseReport(u, id, body);
   }
+
+  @Get("cards")
+  listCards(@CurrentUser() u: JwtPayload) {
+    return this.service.listCards(u);
+  }
+
+  @Post("cards")
+  @HttpCode(HttpStatus.CREATED)
+  createCard(@CurrentUser() u: JwtPayload, @Body() body: any) {
+    return this.service.createCard(u, body);
+  }
+
+  @Get("cards/reconciliation")
+  reconciliation(@CurrentUser() u: JwtPayload, @Query() q: any) {
+    return this.service.reconciliation(u, q);
+  }
+
+  @Post("cards/auto-match")
+  autoMatch(@CurrentUser() u: JwtPayload, @Body() body: any) {
+    return this.service.autoMatchCardCharges(u, body);
+  }
+
+  @Post("cards/charges/:txId/request-receipt")
+  requestReceipt(@CurrentUser() u: JwtPayload, @Param("txId") txId: string) {
+    return this.service.requestReceiptForCharge(u, txId);
+  }
+
+  @Patch("cards/:id")
+  updateCard(@CurrentUser() u: JwtPayload, @Param("id") id: string, @Body() body: any) {
+    return this.service.updateCard(u, id, body);
+  }
+
+  @Delete("cards/:id")
+  @HttpCode(HttpStatus.OK)
+  removeCard(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
+    return this.service.removeCard(u, id);
+  }
+
+  @Post("claims/:id/link-transaction")
+  linkTransaction(@CurrentUser() u: JwtPayload, @Param("id") id: string, @Body() body: any) {
+    return this.service.linkTransaction(u, id, body);
+  }
+
+  @Delete("claims/:id/link-transaction")
+  @HttpCode(HttpStatus.OK)
+  unlinkTransaction(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
+    return this.service.unlinkTransaction(u, id);
+  }
+
+  @Get("email-address")
+  emailAddress(@CurrentUser() u: JwtPayload) {
+    return this.service.getEmailAddress(u);
+  }
+
+  @Post("email-address/regenerate")
+  regenerateEmailAddress(@CurrentUser() u: JwtPayload) {
+    return this.service.getEmailAddress(u, true);
+  }
 }

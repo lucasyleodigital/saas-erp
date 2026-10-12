@@ -4,9 +4,9 @@ import { useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { formatCurrency } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
-import { useExpenseAnalytics, WARNING_LABELS } from "@/hooks/use-expense-claims";
+import { useExpenseAnalytics } from "@/hooks/use-expense-claims";
+import { useExpenseFormat } from "./use-expense-format";
 
 type Range = "12m" | "ytd" | "3m";
 
@@ -18,8 +18,6 @@ function rangeParams(range: Range) {
   const from = new Date(Date.UTC(now.getFullYear(), now.getMonth() - months, 1)).toISOString().slice(0, 10);
   return { from, to };
 }
-
-const MONTH_SHORT = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
 
 function Kpi({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
@@ -36,6 +34,7 @@ function BarList({ title, rows, empty }: {
   rows: { key: string; label: string; amount: number; count: number; color?: string | null }[];
   empty: string;
 }) {
+  const { t, money } = useExpenseFormat();
   const max = Math.max(1, ...rows.map((r) => r.amount));
   return (
     <Card>
@@ -49,7 +48,7 @@ function BarList({ title, rows, empty }: {
               <li key={r.key} className="space-y-1">
                 <div className="flex justify-between gap-3 text-sm">
                   <span className="truncate">{r.label}</span>
-                  <span className="tabular-nums font-medium shrink-0">{formatCurrency(r.amount)}</span>
+                  <span className="tabular-nums font-medium shrink-0">{money(r.amount)}</span>
                 </div>
                 <div className="h-1.5 rounded-full bg-muted overflow-hidden">
                   <div
@@ -57,7 +56,7 @@ function BarList({ title, rows, empty }: {
                     style={{ width: `${(r.amount / max) * 100}%`, ...(r.color ? { background: r.color } : {}) }}
                   />
                 </div>
-                <p className="text-[11px] text-muted-foreground">{r.count} gasto(s)</p>
+                <p className="text-[11px] text-muted-foreground">{t("analytics.count", { count: r.count })}</p>
               </li>
             ))}
           </ul>
@@ -68,6 +67,7 @@ function BarList({ title, rows, empty }: {
 }
 
 export function ExpenseAnalytics() {
+  const { t, money, locale } = useExpenseFormat();
   const [range, setRange] = useState<Range>("12m");
   const params = useMemo(() => rangeParams(range), [range]);
   const { data, isLoading } = useExpenseAnalytics(params);
@@ -76,35 +76,35 @@ export function ExpenseAnalytics() {
     return <div className="flex justify-center py-16"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
   }
 
-  const t = data.totals;
+  const k = data.totals;
   const chart = data.byMonth.map((m) => ({
-    name: `${MONTH_SHORT[Number(m.month.slice(5, 7)) - 1]} ${m.month.slice(2, 4)}`,
+    name: new Date(`${m.month}-01T00:00:00Z`).toLocaleDateString(locale, { month: "short", year: "2-digit", timeZone: "UTC" }),
     amount: m.amount,
   }));
 
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-muted-foreground">Gastos aprobados y reembolsados por fecha del gasto.</p>
+        <p className="text-sm text-muted-foreground">{t("analytics.intro")}</p>
         <Select value={range} onValueChange={(v) => setRange(v as Range)}>
-          <SelectTrigger className="w-48" aria-label="Periodo"><SelectValue /></SelectTrigger>
+          <SelectTrigger className="w-48" aria-label={t("analytics.period")}><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="3m">Últimos 3 meses</SelectItem>
-            <SelectItem value="12m">Últimos 12 meses</SelectItem>
-            <SelectItem value="ytd">Este año</SelectItem>
+            <SelectItem value="3m">{t("analytics.last3")}</SelectItem>
+            <SelectItem value="12m">{t("analytics.last12")}</SelectItem>
+            <SelectItem value="ytd">{t("analytics.ytd")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <Kpi label="Gasto aprobado" value={formatCurrency(t.approved)} sub={`${t.claims} gastos · ${t.employees} empleado(s)`} />
-        <Kpi label="Pendiente de aprobar" value={formatCurrency(t.pendingApproval)} sub={`${t.pendingApprovalCount} gasto(s)`} />
-        <Kpi label="Pendiente de reembolsar" value={formatCurrency(t.pendingReimbursement)} sub={`${t.pendingReimbursementCount} nota(s)`} />
-        <Kpi label="IVA recuperable" value={formatCurrency(t.vatRecoverable)} sub="Va al modelo 303" />
+        <Kpi label={t("analytics.approved")} value={money(k.approved)} sub={t("analytics.approvedSub", { claims: k.claims, employees: k.employees })} />
+        <Kpi label={t("analytics.pendingApproval")} value={money(k.pendingApproval)} sub={t("analytics.pendingApprovalSub", { count: k.pendingApprovalCount })} />
+        <Kpi label={t("analytics.pendingReimbursement")} value={money(k.pendingReimbursement)} sub={t("analytics.pendingReimbursementSub", { count: k.pendingReimbursementCount })} />
+        <Kpi label={t("analytics.vatRecoverable")} value={money(k.vatRecoverable)} sub={t("analytics.vatRecoverableSub")} />
       </div>
 
       <Card>
-        <CardHeader className="pb-2"><CardTitle className="text-sm font-semibold">Evolución mensual</CardTitle></CardHeader>
+        <CardHeader className="pb-2"><CardTitle className="text-sm font-semibold">{t("analytics.monthly")}</CardTitle></CardHeader>
         <CardContent>
           <div className="h-56 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -119,7 +119,7 @@ export function ExpenseAnalytics() {
                   tickFormatter={(v: number) => (v >= 1000 ? `${(v / 1000).toFixed(1)}k` : String(v))}
                 />
                 <Tooltip
-                  formatter={(v: number) => [formatCurrency(v), "Gasto"]}
+                  formatter={(v: number) => [money(v), t("analytics.tooltip")]}
                   contentStyle={{ background: "hsl(var(--popover))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }}
                   cursor={{ fill: "hsl(var(--muted))" }}
                 />
@@ -132,42 +132,42 @@ export function ExpenseAnalytics() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <BarList
-          title="Por categoría"
-          rows={data.byCategory.map((r) => ({ key: r.category, label: r.label, amount: r.amount, count: r.count }))}
-          empty="Sin gastos aprobados en el periodo."
+          title={t("analytics.byCategory")}
+          rows={data.byCategory.map((r) => ({ key: r.category, label: t(`categories.${r.category}`), amount: r.amount, count: r.count }))}
+          empty={t("analytics.emptyPeriod")}
         />
         <BarList
-          title="Por empleado"
+          title={t("analytics.byEmployee")}
           rows={data.byEmployee.map((r) => ({ key: r.employeeId, label: r.label, amount: r.amount, count: r.count }))}
-          empty="Sin gastos aprobados en el periodo."
+          empty={t("analytics.emptyPeriod")}
         />
         <BarList
-          title="Por proyecto"
+          title={t("analytics.byProject")}
           rows={data.byProject.map((r) => ({ key: r.projectId, label: r.label, amount: r.amount, count: r.count, color: r.color }))}
-          empty="Ningún gasto imputado a proyectos."
+          empty={t("analytics.emptyProject")}
         />
         <BarList
-          title="Por vehículo"
+          title={t("analytics.byVehicle")}
           rows={data.byVehicle.map((r) => ({ key: r.vehicleId, label: r.label, amount: r.amount, count: r.count }))}
-          empty="Ningún gasto asociado a vehículos de la flota."
+          empty={t("analytics.emptyVehicle")}
         />
       </div>
 
       <Card>
-        <CardHeader className="pb-2"><CardTitle className="text-sm font-semibold">Avisos de política en gastos aprobados</CardTitle></CardHeader>
+        <CardHeader className="pb-2"><CardTitle className="text-sm font-semibold">{t("analytics.policyTitle")}</CardTitle></CardHeader>
         <CardContent>
           {data.warnings.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Todos los gastos aprobados cumplen la política.</p>
+            <p className="text-sm text-muted-foreground">{t("analytics.policyOk")}</p>
           ) : (
             <div className="flex flex-wrap gap-2">
               {data.warnings.map((w) => (
                 <span key={w.code} className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm">
-                  {WARNING_LABELS[w.code] ?? w.code}
+                  {t.has(`warnings.${w.code}`) ? t(`warnings.${w.code}`) : w.code}
                   <span className="tabular-nums font-semibold">{w.count}</span>
                 </span>
               ))}
               <span className="text-xs text-muted-foreground self-center">
-                {t.withWarnings} de {t.claims} gastos aprobados tenían algún aviso
+                {t("analytics.policySummary", { with: k.withWarnings, total: k.claims })}
               </span>
             </div>
           )}

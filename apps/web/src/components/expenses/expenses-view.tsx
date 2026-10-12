@@ -13,43 +13,39 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LocaleLink } from "@/components/ui/locale-link";
-import { cn, formatCurrency, formatDate } from "@/lib/utils";
-import { AlertTriangle, ChevronRight, Loader2, Paperclip, Pencil, Plus, Receipt, Send, Trash2 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { AlertTriangle, ChevronRight, Copy, Loader2, Mail, Paperclip, Pencil, Plus, Receipt, RefreshCw, Send, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import {
-  CATEGORY_LABELS,
-  STATUS_LABELS,
   STATUS_VARIANT,
   useCreateExpenseReport,
   useDeleteExpenseClaim,
   useExpenseClaims,
   useExpenseContext,
+  useExpenseEmailAddress,
   useExpenseReports,
+  useRegenerateExpenseEmail,
   warningsOf,
   type ExpenseClaim,
   type ExpenseContext,
 } from "@/hooks/use-expense-claims";
 import { ExpenseClaimForm, type ClaimPrefill } from "./expense-claim-form";
-import { ExpenseReportDetail, WarningIcons, claimDetail } from "./expense-report-detail";
+import { ExpenseReportDetail, WarningIcons } from "./expense-report-detail";
 import { ExpenseAnalytics } from "./expense-analytics";
 import { ExpenseSettingsPanel } from "./expense-settings";
+import { ExpenseCards } from "./expense-cards";
+import { useUser } from "@/hooks/use-user";
+import { useExpenseFormat } from "./use-expense-format";
 
-type ClaimFilter = "todo" | "open" | "PENDING" | "APPROVED" | "REIMBURSED" | "all";
-const CLAIM_FILTERS: { value: ClaimFilter; label: string; status?: string; unreported?: boolean }[] = [
-  { value: "open", label: "Por enviar", unreported: true },
-  { value: "PENDING", label: "En aprobación", status: "PENDING" },
-  { value: "APPROVED", label: "Aprobados", status: "APPROVED" },
-  { value: "REIMBURSED", label: "Reembolsados", status: "REIMBURSED" },
-  { value: "all", label: "Todos" },
+type ClaimFilter = "open" | "PENDING" | "APPROVED" | "REIMBURSED" | "all";
+const CLAIM_FILTERS: { value: ClaimFilter; status?: string; unreported?: boolean }[] = [
+  { value: "open", unreported: true },
+  { value: "PENDING", status: "PENDING" },
+  { value: "APPROVED", status: "APPROVED" },
+  { value: "REIMBURSED", status: "REIMBURSED" },
+  { value: "all" },
 ];
-
-const REPORT_FILTERS = [
-  { value: "PENDING", label: "Pendientes" },
-  { value: "APPROVED", label: "Por reembolsar" },
-  { value: "REIMBURSED", label: "Reembolsadas" },
-  { value: "REJECTED", label: "Rechazadas" },
-  { value: "all", label: "Todas" },
-];
-
+const REPORT_FILTERS = ["PENDING", "APPROVED", "REIMBURSED", "REJECTED", "all"] as const;
 const EDITABLE = ["DRAFT", "REJECTED"];
 
 function FilterChips<T extends string>({ value, onChange, options }: {
@@ -76,12 +72,60 @@ function FilterChips<T extends string>({ value, onChange, options }: {
   );
 }
 
+function EmailAddressCard({ employeeEmail }: { employeeEmail: string | null }) {
+  const { t } = useExpenseFormat();
+  const { data } = useExpenseEmailAddress();
+  const regenerate = useRegenerateExpenseEmail();
+  const [confirm, setConfirm] = useState(false);
+  if (!data?.configured || !data.address) return null;
+  const address = data.address;
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(address);
+      toast.success(t("email.copied"));
+    } catch {
+      toast.info(address);
+    }
+  }
+
+  return (
+    <div className="flex flex-col sm:flex-row sm:items-center gap-3 rounded-lg border bg-muted/30 px-4 py-3">
+      <Mail className="h-5 w-5 text-primary shrink-0 hidden sm:block" />
+      <div className="min-w-0 flex-1">
+        <p className="text-sm font-medium">{t("email.title")}</p>
+        <p className="text-xs text-muted-foreground">{t("email.body", { email: employeeEmail ?? t("email.noEmail") })}</p>
+        <p className="font-mono text-sm mt-1 break-all select-all">{address}</p>
+      </div>
+      <div className="flex gap-2 shrink-0">
+        <Button size="sm" variant="outline" onClick={copy}><Copy className="h-3.5 w-3.5 mr-1.5" /> {t("email.copy")}</Button>
+        <Button size="sm" variant="ghost" onClick={() => setConfirm(true)} title={t("email.regenerateHint")}>
+          <RefreshCw className="h-3.5 w-3.5 mr-1.5" /> {t("email.regenerate")}
+        </Button>
+      </div>
+      <Dialog open={confirm} onOpenChange={setConfirm}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader><DialogTitle>{t("email.regenerate")}</DialogTitle></DialogHeader>
+          <p className="text-sm text-muted-foreground">{t("email.regenerateHint")}</p>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button variant="outline" onClick={() => setConfirm(false)}>{t("claims.cancel")}</Button>
+            <Button disabled={regenerate.isPending} onClick={async () => { await regenerate.mutateAsync(); setConfirm(false); }}>
+              {t("email.regenerate")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
 function ClaimsTab({ context, employees, onEdit, onNew }: {
   context: ExpenseContext;
   employees: { id: string; name: string }[];
   onEdit: (c: ExpenseClaim) => void;
   onNew: () => void;
 }) {
+  const { t, money, date, claimDetail } = useExpenseFormat();
   const [filter, setFilter] = useState<ClaimFilter>("open");
   const [employeeFilter, setEmployeeFilter] = useState<string>(context.canApprove ? "all" : "mine");
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -104,6 +148,7 @@ function ClaimsTab({ context, employees, onEdit, onNew }: {
   const selectedClaims = claims.filter((c) => selected.has(c.id));
   const selectedTotal = selectedClaims.reduce((s, c) => s + Number(c.amount), 0);
   const mixedEmployees = new Set(selectedClaims.map((c) => c.employeeId)).size > 1;
+  const missingAmount = selectedClaims.some((c) => Number(c.amount) <= 0);
   const openTotal = claims.filter((c) => EDITABLE.includes(c.status)).reduce((s, c) => s + Number(c.amount), 0);
   const showEmployee = context.canApprove && employeeFilter !== "mine";
 
@@ -126,13 +171,17 @@ function ClaimsTab({ context, employees, onEdit, onNew }: {
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <FilterChips value={filter} onChange={setFilter} options={CLAIM_FILTERS} />
+        <FilterChips
+          value={filter}
+          onChange={setFilter}
+          options={CLAIM_FILTERS.map((f) => ({ value: f.value, label: t(`claims.filters.${f.value}`) }))}
+        />
         {context.canApprove && (
           <Select value={employeeFilter} onValueChange={setEmployeeFilter}>
-            <SelectTrigger className="w-full sm:w-56" aria-label="Filtrar por empleado"><SelectValue /></SelectTrigger>
+            <SelectTrigger className="w-full sm:w-56" aria-label={t("claims.filterByEmployee")}><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Todos los empleados</SelectItem>
-              {context.employee && <SelectItem value="mine">Mis gastos</SelectItem>}
+              <SelectItem value="all">{t("claims.allEmployees")}</SelectItem>
+              {context.employee && <SelectItem value="mine">{t("claims.mine")}</SelectItem>}
               {employees.map((e) => <SelectItem key={e.id} value={e.id}>{e.name}</SelectItem>)}
             </SelectContent>
           </Select>
@@ -140,19 +189,18 @@ function ClaimsTab({ context, employees, onEdit, onNew }: {
       </div>
 
       {filter === "open" && claims.length > 0 && (
-        <p className="text-sm text-muted-foreground">
-          {claims.length} gasto(s) por enviar · {formatCurrency(openTotal)}. Selecciónalos y crea una nota de gasto para enviarlos a aprobación.
-        </p>
+        <p className="text-sm text-muted-foreground">{t("claims.openSummary", { count: claims.length, total: money(openTotal) })}</p>
       )}
 
       {selected.size > 0 && (
         <div className="sticky top-2 z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-2 rounded-lg border bg-background/95 backdrop-blur px-4 py-3 shadow-sm">
           <span className="text-sm">
-            <strong>{selected.size}</strong> seleccionado(s) · <strong className="tabular-nums">{formatCurrency(selectedTotal)}</strong>
-            {mixedEmployees && <span className="block text-xs text-destructive">Una nota solo puede incluir gastos de un empleado.</span>}
+            {t("claims.selected", { count: selected.size, total: money(selectedTotal) })}
+            {mixedEmployees && <span className="block text-xs text-destructive">{t("claims.mixed")}</span>}
+            {missingAmount && <span className="block text-xs text-destructive">{t("claims.missingAmount")}</span>}
           </span>
-          <Button size="sm" onClick={() => setReportDialog(true)} disabled={mixedEmployees}>
-            <Send className="h-4 w-4 mr-1.5" /> Crear nota de gasto
+          <Button size="sm" onClick={() => setReportDialog(true)} disabled={mixedEmployees || missingAmount}>
+            <Send className="h-4 w-4 mr-1.5" /> {t("claims.createReport")}
           </Button>
         </div>
       )}
@@ -164,10 +212,10 @@ function ClaimsTab({ context, employees, onEdit, onNew }: {
           <CardContent className="flex flex-col items-center gap-3 py-14 text-center">
             <Receipt className="h-10 w-10 text-muted-foreground/50" />
             <div>
-              <p className="font-medium">{filter === "open" ? "No tienes gastos pendientes de enviar" : "No hay gastos con este filtro"}</p>
-              <p className="text-sm text-muted-foreground mt-1">Fotografía un ticket o registra kilómetros y dietas en segundos.</p>
+              <p className="font-medium">{filter === "open" ? t("claims.emptyOpenTitle") : t("claims.emptyFilterTitle")}</p>
+              <p className="text-sm text-muted-foreground mt-1">{t("claims.emptyBody")}</p>
             </div>
-            <Button onClick={onNew}><Plus className="h-4 w-4 mr-1.5" /> Nuevo gasto</Button>
+            <Button onClick={onNew}><Plus className="h-4 w-4 mr-1.5" /> {t("newClaim")}</Button>
           </CardContent>
         </Card>
       ) : (
@@ -176,12 +224,12 @@ function ClaimsTab({ context, employees, onEdit, onNew }: {
             <thead className="bg-muted/50 text-xs text-muted-foreground">
               <tr>
                 <th className="w-10 px-3 py-2.5" />
-                <th className="px-3 py-2.5 text-left font-medium">Fecha</th>
-                <th className="px-3 py-2.5 text-left font-medium">Concepto</th>
-                {showEmployee && <th className="px-3 py-2.5 text-left font-medium hidden md:table-cell">Empleado</th>}
-                <th className="px-3 py-2.5 text-left font-medium hidden lg:table-cell">Proyecto</th>
-                <th className="px-3 py-2.5 text-right font-medium">Importe</th>
-                <th className="px-3 py-2.5 text-left font-medium">Estado</th>
+                <th className="px-3 py-2.5 text-left font-medium">{t("claims.cols.date")}</th>
+                <th className="px-3 py-2.5 text-left font-medium">{t("claims.cols.concept")}</th>
+                {showEmployee && <th className="px-3 py-2.5 text-left font-medium hidden md:table-cell">{t("claims.cols.employee")}</th>}
+                <th className="px-3 py-2.5 text-left font-medium hidden lg:table-cell">{t("claims.cols.project")}</th>
+                <th className="px-3 py-2.5 text-right font-medium">{t("claims.cols.amount")}</th>
+                <th className="px-3 py-2.5 text-left font-medium">{t("claims.cols.status")}</th>
                 <th className="px-3 py-2.5 w-24" />
               </tr>
             </thead>
@@ -194,27 +242,28 @@ function ClaimsTab({ context, employees, onEdit, onNew }: {
                       {editable && (
                         <input
                           type="checkbox"
-                          aria-label="Seleccionar gasto"
+                          aria-label={t("claims.select")}
                           checked={selected.has(c.id)}
                           onChange={() => toggle(c.id)}
                           className="h-4 w-4 accent-primary"
                         />
                       )}
                     </td>
-                    <td className="px-3 py-2.5 whitespace-nowrap tabular-nums">{formatDate(c.date)}</td>
+                    <td className="px-3 py-2.5 whitespace-nowrap tabular-nums">{date(c.date)}</td>
                     <td className="px-3 py-2.5 min-w-[180px]">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">{CATEGORY_LABELS[c.category]}</span>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-medium">{t(`categories.${c.category}`)}</span>
                         {c.receiptUrl && (
-                          <a href={c.receiptUrl} target="_blank" rel="noreferrer" title="Ver justificante" className="text-muted-foreground hover:text-primary">
+                          <a href={c.receiptUrl} target="_blank" rel="noreferrer" title={t("claims.viewReceipt")} className="text-muted-foreground hover:text-primary">
                             <Paperclip className="h-3.5 w-3.5" />
                           </a>
                         )}
                         <WarningIcons claim={c} />
+                        {c.source !== "MANUAL" && <Badge variant="outline" className="text-[10px]">{t(`source.${c.source}`)}</Badge>}
                       </div>
                       <div className="text-xs text-muted-foreground truncate max-w-[280px]">{claimDetail(c)}</div>
                       {c.status === "REJECTED" && c.rejectionReason && (
-                        <div className="text-xs text-destructive">Rechazado: {c.rejectionReason}</div>
+                        <div className="text-xs text-destructive">{t("claims.rejected", { reason: c.rejectionReason })}</div>
                       )}
                     </td>
                     {showEmployee && (
@@ -231,17 +280,21 @@ function ClaimsTab({ context, employees, onEdit, onNew }: {
                       ) : <span className="text-muted-foreground">—</span>}
                     </td>
                     <td className="px-3 py-2.5 text-right font-medium tabular-nums whitespace-nowrap">
-                      {formatCurrency(Number(c.amount))}
-                      {c.paidWithCompanyCard && <div className="text-[10px] font-normal text-muted-foreground">Tarjeta empresa</div>}
+                      {Number(c.amount) > 0 ? money(c.amount) : <span className="text-amber-600 dark:text-amber-400">—</span>}
+                      {c.paidWithCompanyCard && (
+                        <div className="text-[10px] font-normal text-muted-foreground">
+                          {t("claims.companyCard")}{c.card ? ` ·${c.card.last4}` : ""}
+                        </div>
+                      )}
                     </td>
                     <td className="px-3 py-2.5">
-                      <Badge variant={STATUS_VARIANT[c.status]}>{STATUS_LABELS[c.status]}</Badge>
+                      <Badge variant={STATUS_VARIANT[c.status]}>{t(`status.${c.status}`)}</Badge>
                       {c.report && <div className="text-[10px] text-muted-foreground mt-0.5 font-mono">{c.report.number}</div>}
                     </td>
                     <td className="px-3 py-2.5">
                       {editable && (
                         <div className="flex justify-end gap-1">
-                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(c)} aria-label="Editar gasto">
+                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(c)} aria-label={t("claims.edit")}>
                             <Pencil className="h-4 w-4" />
                           </Button>
                           <Button
@@ -250,7 +303,7 @@ function ClaimsTab({ context, employees, onEdit, onNew }: {
                             className="h-8 w-8 text-muted-foreground hover:text-destructive"
                             onClick={() => del.mutate(c.id)}
                             disabled={del.isPending}
-                            aria-label="Eliminar gasto"
+                            aria-label={t("claims.delete")}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -267,27 +320,25 @@ function ClaimsTab({ context, employees, onEdit, onNew }: {
 
       <Dialog open={reportDialog} onOpenChange={setReportDialog}>
         <DialogContent className="max-w-md">
-          <DialogHeader><DialogTitle>Enviar nota de gasto</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>{t("claims.sendTitle")}</DialogTitle></DialogHeader>
           <div className="space-y-3">
-            <p className="text-sm text-muted-foreground">
-              {selected.size} gasto(s) por {formatCurrency(selectedTotal)} irán a aprobación. Mientras esté pendiente puedes retirarla.
-            </p>
+            <p className="text-sm text-muted-foreground">{t("claims.sendBody", { count: selected.size, total: money(selectedTotal) })}</p>
             {selectedClaims.some((c) => warningsOf(c).length > 0) && (
               <p className="flex items-start gap-1.5 text-sm text-amber-600 dark:text-amber-400">
                 <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
-                Algunos gastos tienen avisos de política. Quien apruebe los verá.
+                {t("claims.sendWarnings")}
               </p>
             )}
             <div className="space-y-1.5">
-              <Label htmlFor="report-title">Título (opcional)</Label>
-              <Input id="report-title" value={reportTitle} onChange={(e) => setReportTitle(e.target.value)} placeholder="Viaje a Madrid, feria Alimentaria..." />
+              <Label htmlFor="report-title">{t("claims.reportTitle")}</Label>
+              <Input id="report-title" value={reportTitle} onChange={(e) => setReportTitle(e.target.value)} placeholder={t("claims.reportTitlePlaceholder")} />
             </div>
           </div>
           <DialogFooter className="gap-2 sm:gap-0">
-            <Button variant="outline" onClick={() => setReportDialog(false)}>Cancelar</Button>
+            <Button variant="outline" onClick={() => setReportDialog(false)}>{t("claims.cancel")}</Button>
             <Button onClick={sendReport} disabled={createReport.isPending}>
               {createReport.isPending && <Loader2 className="h-4 w-4 animate-spin mr-1.5" />}
-              Enviar a aprobación
+              {t("claims.send")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -297,19 +348,20 @@ function ClaimsTab({ context, employees, onEdit, onNew }: {
 }
 
 function ReportsTab({ context, onOpen }: { context: ExpenseContext; onOpen: (id: string) => void }) {
-  const [status, setStatus] = useState(context.canApprove ? "PENDING" : "all");
+  const { t, money, date } = useExpenseFormat();
+  const [status, setStatus] = useState<string>(context.canApprove ? "PENDING" : "all");
   const { data: reports = [], isLoading } = useExpenseReports(status === "all" ? undefined : { status });
 
   return (
     <div className="space-y-4">
-      <FilterChips value={status} onChange={setStatus} options={REPORT_FILTERS} />
+      <FilterChips value={status} onChange={setStatus} options={REPORT_FILTERS.map((f) => ({ value: f, label: t(`reports.filters.${f}`) }))} />
       {isLoading ? (
         <div className="flex justify-center py-16"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
       ) : reports.length === 0 ? (
         <Card>
           <CardContent className="py-14 text-center">
-            <p className="font-medium">{status === "PENDING" ? "No hay notas pendientes de aprobar" : "No hay notas de gasto con este filtro"}</p>
-            <p className="text-sm text-muted-foreground mt-1">Las notas se crean agrupando gastos desde la pestaña de gastos.</p>
+            <p className="font-medium">{status === "PENDING" ? t("reports.emptyPending") : t("reports.emptyFilter")}</p>
+            <p className="text-sm text-muted-foreground mt-1">{t("reports.emptyBody")}</p>
           </CardContent>
         </Card>
       ) : (
@@ -327,20 +379,24 @@ function ReportsTab({ context, onOpen }: { context: ExpenseContext; onOpen: (id:
                   <span className="font-medium truncate">{r.title}</span>
                 </div>
                 <div className="text-xs text-muted-foreground mt-0.5">
-                  {r.employee.firstName} {r.employee.lastName} · {formatDate(r.submittedAt)} · {r._count?.claims ?? 0} gasto(s)
-                  {r.payroll && r.status === "APPROVED" ? ` · en nómina ${r.payroll.month}/${r.payroll.year}` : ""}
+                  {t("reports.meta", {
+                    employee: `${r.employee.firstName} ${r.employee.lastName}`,
+                    date: date(r.submittedAt),
+                    count: r._count?.claims ?? 0,
+                  })}
+                  {r.payroll && r.status === "APPROVED" ? t("reports.inPayroll", { month: r.payroll.month, year: r.payroll.year }) : ""}
                 </div>
               </div>
               {(r.warningsCount ?? 0) > 0 && r.status === "PENDING" && (
-                <span className="hidden sm:inline-flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400" title="Avisos de política">
+                <span className="hidden sm:inline-flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400" title={t("reports.policyWarnings")}>
                   <AlertTriangle className="h-3.5 w-3.5" /> {r.warningsCount}
                 </span>
               )}
               <div className="text-right shrink-0">
                 <div className="font-semibold tabular-nums">
-                  {formatCurrency(Number(r.status === "PENDING" || r.status === "REJECTED" ? r.total : r.approvedTotal))}
+                  {money(r.status === "PENDING" || r.status === "REJECTED" ? r.total : r.approvedTotal)}
                 </div>
-                <Badge variant={STATUS_VARIANT[r.status]} className="mt-0.5">{STATUS_LABELS[r.status]}</Badge>
+                <Badge variant={STATUS_VARIANT[r.status]} className="mt-0.5">{t(`status.${r.status}`)}</Badge>
               </div>
               <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
             </button>
@@ -352,13 +408,14 @@ function ReportsTab({ context, onOpen }: { context: ExpenseContext; onOpen: (id:
 }
 
 export function ExpensesView() {
+  const { t } = useExpenseFormat();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { data: context, isLoading } = useExpenseContext();
   const canApprove = !!context?.canApprove;
 
-  const { data: employeesData } = useQuery<{ data: { id: string; firstName: string; lastName: string }[] }>({
+  const { data: employeesData } = useQuery<{ data: { id: string; firstName: string; lastName: string; email: string | null }[] }>({
     queryKey: ["employees", { status: "ACTIVE", limit: 200 }],
     queryFn: () => api.get("/employees", { params: { status: "ACTIVE", limit: 200 } }).then((r) => r.data),
     enabled: canApprove,
@@ -367,6 +424,7 @@ export function ExpensesView() {
     () => (employeesData?.data ?? []).map((e) => ({ id: e.id, name: `${e.firstName} ${e.lastName}`.trim() })),
     [employeesData],
   );
+  const { data: me } = useUser();
   const { data: pendingReports = [] } = useExpenseReports({ status: "PENDING" }, canApprove);
 
   const [tab, setTab] = useState("claims");
@@ -415,14 +473,12 @@ export function ExpensesView() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">{canApprove ? "Gastos de empleados" : "Mis gastos"}</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Tickets, kilometraje y dietas. Al aprobarse se contabilizan y se reembolsan en nómina o por transferencia.
-          </p>
+          <h1 className="text-2xl font-bold">{canApprove ? t("title") : t("titleMine")}</h1>
+          <p className="text-muted-foreground text-sm mt-1">{t("subtitle")}</p>
         </div>
         {!cannotRegister && (
           <Button onClick={openNew} className="shrink-0">
-            <Plus className="h-4 w-4 mr-1.5" /> Nuevo gasto
+            <Plus className="h-4 w-4 mr-1.5" /> {t("newClaim")}
           </Button>
         )}
       </div>
@@ -431,17 +487,13 @@ export function ExpensesView() {
         <Card>
           <CardContent className="py-14 text-center space-y-2">
             <Receipt className="h-10 w-10 text-muted-foreground/50 mx-auto" />
-            <p className="font-medium">
-              {canApprove ? "Aún no tienes empleados" : "Tu usuario no está vinculado a ningún empleado"}
-            </p>
+            <p className="font-medium">{canApprove ? t("noEmployees.titleAdmin") : t("noEmployees.titleEmployee")}</p>
             <p className="text-sm text-muted-foreground max-w-md mx-auto">
-              {canApprove
-                ? "Los gastos se registran por empleado. Da de alta a tu equipo (y a ti con tu email si también tienes gastos) para empezar."
-                : "Pide a administración que te dé de alta como empleado con el mismo email con el que accedes."}
+              {canApprove ? t("noEmployees.bodyAdmin") : t("noEmployees.bodyEmployee")}
             </p>
             {canApprove && (
               <Button asChild variant="outline" className="mt-2">
-                <LocaleLink href="/empleados">Ir a empleados</LocaleLink>
+                <LocaleLink href="/empleados">{t("noEmployees.cta")}</LocaleLink>
               </Button>
             )}
           </CardContent>
@@ -450,18 +502,20 @@ export function ExpensesView() {
         <Tabs value={tab} onValueChange={setTab}>
           <div className="overflow-x-auto">
             <TabsList>
-              <TabsTrigger value="claims">{canApprove ? "Gastos" : "Mis gastos"}</TabsTrigger>
+              <TabsTrigger value="claims">{canApprove ? t("tabs.claims") : t("tabs.claimsMine")}</TabsTrigger>
               <TabsTrigger value="reports" className="gap-1.5">
-                {canApprove ? "Notas de gasto" : "Mis notas"}
+                {canApprove ? t("tabs.reports") : t("tabs.reportsMine")}
                 {canApprove && pendingReports.length > 0 && (
                   <span className="rounded-full bg-amber-500 px-1.5 text-[10px] font-semibold text-white tabular-nums">{pendingReports.length}</span>
                 )}
               </TabsTrigger>
-              {canApprove && <TabsTrigger value="analytics">Análisis</TabsTrigger>}
-              {canApprove && <TabsTrigger value="settings">Configuración</TabsTrigger>}
+              {canApprove && <TabsTrigger value="cards">{t("tabs.cards")}</TabsTrigger>}
+              {canApprove && <TabsTrigger value="analytics">{t("tabs.analytics")}</TabsTrigger>}
+              {canApprove && <TabsTrigger value="settings">{t("tabs.settings")}</TabsTrigger>}
             </TabsList>
           </div>
-          <TabsContent value="claims">
+          <TabsContent value="claims" className="space-y-4">
+            {context.employee && <EmailAddressCard employeeEmail={me?.email ?? null} />}
             <ClaimsTab
               context={context}
               employees={employees}
@@ -472,6 +526,11 @@ export function ExpensesView() {
           <TabsContent value="reports">
             <ReportsTab context={context} onOpen={setOpenReport} />
           </TabsContent>
+          {canApprove && (
+            <TabsContent value="cards">
+              <ExpenseCards employees={employees} />
+            </TabsContent>
+          )}
           {canApprove && (
             <TabsContent value="analytics">
               <ExpenseAnalytics />

@@ -13,6 +13,8 @@ export interface QuarterRange {
   deadline: Date;
 }
 
+const AI_TIMEOUT_MS = 25_000;
+
 function quarterRange(year: number, q: number): QuarterRange {
   const startMonth = (q - 1) * 3;
   const from = new Date(year, startMonth, 1);
@@ -392,7 +394,7 @@ export class FiscalService {
     return expense;
   }
 
-  async analyzeExpense(file: Express.Multer.File): Promise<{
+  async analyzeExpense(file: Express.Multer.File, companyId?: string): Promise<{
     attachmentUrl: string | null;
     documentType: "GASTO" | "FACTURA_VENTA" | "ALBARAN" | "PROVEEDOR" | "OTRO";
     aiProvider: string;
@@ -433,13 +435,23 @@ export class FiscalService {
 
     const isImage = file.mimetype.startsWith("image/");
     const isPdf = file.mimetype === "application/pdf";
+    const company = companyId
+      ? await this.prisma.company.findUnique({ where: { id: companyId }, select: { name: true, legalName: true, cif: true, vatNumber: true } })
+      : null;
+    const companyName = company?.legalName || company?.name || "";
+    const companyNif = (company?.cif || company?.vatNumber || "").trim();
+    const companyContext = company
+      ? `
+La empresa que usa la aplicación es "${companyName}"${companyNif ? ` con NIF ${companyNif}` : ""}. Clasifica el documento desde su punto de vista.
+`
+      : "";
     let extracted: Record<string, any> = {};
     let documentType: "GASTO" | "FACTURA_VENTA" | "ALBARAN" | "PROVEEDOR" | "OTRO" = "GASTO";
     let aiProvider = "none";
 
     const EXTRACTION_PROMPT = `Lee este documento y extrae los datos. Responde ÚNICAMENTE con JSON válido, sin texto adicional ni markdown.
 IMPORTANTE: Solo incluye campos que estén claramente visibles en el documento. NO inventes datos.
-
+${companyContext}
 {
   "documentType": "GASTO" | "FACTURA_VENTA" | "ALBARAN" | "PROVEEDOR" | "OTRO",
   "date": "YYYY-MM-DD",
@@ -454,8 +466,8 @@ IMPORTANTE: Solo incluye campos que estén claramente visibles en el documento. 
   "category": "SERVICIOS" | "SOFTWARE" | "MARKETING" | "OFICINA" | "TRANSPORTE" | "FORMACION" | "OTROS"
 }
 
-- GASTO: recibo, ticket o factura de proveedor (la empresa paga)
-- FACTURA_VENTA: factura emitida a un cliente (la empresa cobra)
+- GASTO: ticket, factura simplificada, recibo o factura emitida por OTRA empresa (gasolinera, restaurante, hotel, proveedor...). Es el caso más habitual.
+- FACTURA_VENTA: solo si el EMISOR del documento es la propia empresa que usa la aplicación (la empresa cobra)
 - ALBARAN: albarán o nota de entrega
 - Si el documento está en inglés u otro idioma, extrae igualmente los datos
 - Omite los campos que no puedas leer con certeza`;
@@ -463,82 +475,50 @@ IMPORTANTE: Solo incluye campos que estén claramente visibles en el documento. 
     const mistralKey    = this.config.get<string>("MISTRAL_API_KEY");
     const geminiKey     = this.config.get<string>("GEMINI_API_KEY");
     const openrouterKey = this.config.get<string>("OPENROUTER_API_KEY");
+    // Modelos configurables: los proveedores retiran modelos y antes la cascada entera quedaba sin IA
+    const openrouterModel = this.config.get<string>("OPENROUTER_MODEL") || "google/gemma-4-31b-it:free";
+    const geminiModel     = this.config.get<string>("GEMINI_MODEL") || "gemini-3.5-flash";
+    const geminiFallbackModel = this.config.get<string>("GEMINI_FALLBACK_MODEL") || "gemini-flash-lite-latest";
+    const nvidiaModel     = this.config.get<string>("NVIDIA_MODEL") || "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning";
+    const claudeModel     = this.config.get<string>("CLAUDE_MODEL") || "claude-haiku-5-5";
+    const mistralModel    = this.config.get<string>("MISTRAL_MODEL") || "pixtral-12b-2409";
 
     console.log(`[analyzeExpense] file=${file.originalname} mime=${file.mimetype} size=${file.size}`);
     console.log(`[analyzeExpense] keys: openrouter=${!!openrouterKey} gemini=${!!geminiKey} claude=${!!claudeKey} mistral=${!!mistralKey} nvidia=${!!nvidiaKey}`);
 
-    // OpenRouter — primario (modelos gratis con visión, sin restricción geográfica)
-    if (aiProvider === "none" && openrouterKey && isImage) {
-      try {
-        console.log("[analyzeExpense] Trying OpenRouter...");
-        const base64 = file.buffer.toString("base64");
-        const orRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${openrouterKey}`,
-            "Content-Type": "application/json",
-            "HTTP-Referer": "https://saas-erp.app",
-          },
-          body: JSON.stringify({
-            model: "meta-llama/llama-3.2-11b-vision-instruct:free",
-            messages: [{
-              role: "user",
-              content: [
-                { type: "image_url", image_url: { url: `data:${file.mimetype};base64,${base64}` } },
-                { type: "text", text: EXTRACTION_PROMPT },
-              ],
-            }],
-            max_tokens: 1024,
-            temperature: 0.1,
-          }),
-        });
-        if (orRes.ok) {
-          const orData = await orRes.json() as any;
-          const text = orData.choices?.[0]?.message?.content ?? "";
-          console.log("[analyzeExpense] OpenRouter raw:", text.substring(0, 400));
-          const jsonMatch = text.match(/\{[\s\S]*\}/);
-          if (jsonMatch) {
-            const parsed = JSON.parse(jsonMatch[0]);
-            if (parsed.supplier || parsed.invoiceRef || parsed.subtotal || parsed.date) {
-              documentType = parsed.documentType ?? "GASTO";
-              delete parsed.documentType;
-              extracted = parsed;
-              aiProvider = "openrouter";
-              console.log("[analyzeExpense] OpenRouter success:", documentType, Object.keys(extracted));
-            }
-          } else {
-            console.warn("[analyzeExpense] OpenRouter no JSON:", text.substring(0, 200));
-          }
-        } else {
-          console.warn(`[analyzeExpense] OpenRouter HTTP ${orRes.status}:`, (await orRes.text()).substring(0, 200));
-        }
-      } catch (e) {
-        console.warn("[analyzeExpense] OpenRouter exception:", e);
-      }
-    }
-
-    // Gemini 2.0 Flash — segundo (gratis, imagen + PDF, sin restricción geográfica)
+    // 1. Gemini Flash — rápido, barato, imagen + PDF
     if (aiProvider === "none" && geminiKey && (isImage || isPdf)) {
       try {
-        console.log("[analyzeExpense] Trying Gemini 2.0 Flash...");
+        console.log(`[analyzeExpense] Trying Gemini ${geminiModel}...`);
         const base64 = file.buffer.toString("base64");
-        const geminiRes = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`,
+        // Los Gemini 3.x razonan por defecto y agotan maxOutputTokens antes del JSON: se desactiva el razonamiento
+        const callGemini = (model: string, thinking: boolean) => fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            signal: AbortSignal.timeout(AI_TIMEOUT_MS),
             body: JSON.stringify({
               contents: [{ parts: [
                 { inline_data: { mime_type: file.mimetype, data: base64 } },
                 { text: EXTRACTION_PROMPT },
               ]}],
-              generationConfig: { temperature: 0.1, maxOutputTokens: 1024 },
+              generationConfig: {
+                temperature: 0.1,
+                maxOutputTokens: 2048,
+                ...(thinking && { thinkingConfig: { thinkingBudget: 0 } }),
+              },
             }),
           },
         );
+        let geminiRes = await callGemini(geminiModel, true).catch(() => null);
+        if (!geminiRes || !geminiRes.ok) {
+          console.warn(`[analyzeExpense] Gemini ${geminiModel} falló (${geminiRes?.status ?? "timeout"}), probando ${geminiFallbackModel}`);
+          geminiRes = await callGemini(geminiFallbackModel, false);
+        }
         if (geminiRes.ok) {
           const geminiData = await geminiRes.json() as any;
-          const text = geminiData.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+          const text = (geminiData.candidates?.[0]?.content?.parts ?? []).map((p: any) => p.text ?? "").join("");
           console.log("[analyzeExpense] Gemini raw:", text.substring(0, 400));
           const jsonMatch = text.match(/\{[\s\S]*\}/);
           if (jsonMatch) {
@@ -563,120 +543,20 @@ IMPORTANTE: Solo incluye campos que estén claramente visibles en el documento. 
       }
     }
 
-    // NVIDIA NIM para imágenes
-    if (nvidiaKey && isImage) {
-      try {
-        const base64 = file.buffer.toString("base64");
-        const mimeType = file.mimetype;
-        console.log("[analyzeExpense] Trying NVIDIA NIM...");
-        const nimRes = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${nvidiaKey}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
-            messages: [{
-              role: "user",
-              content: [
-                { type: "image_url", image_url: { url: `data:${mimeType};base64,${base64}` } },
-                { type: "text", text: EXTRACTION_PROMPT },
-              ],
-            }],
-            max_tokens: 800,
-            temperature: 0.1,
-          }),
-        });
-
-        if (nimRes.ok) {
-          const nimData = await nimRes.json() as any;
-          const text = nimData.choices?.[0]?.message?.content ?? "";
-          console.log("[analyzeExpense] NVIDIA raw response:", text.substring(0, 300));
-          const jsonMatch = text.match(/\{[\s\S]*\}/);
-          if (jsonMatch) {
-            const parsed = JSON.parse(jsonMatch[0]);
-            documentType = parsed.documentType ?? "GASTO";
-            delete parsed.documentType;
-            extracted = parsed;
-            aiProvider = "nvidia-nim";
-            console.log("[analyzeExpense] NVIDIA success, type:", documentType);
-          } else {
-            console.warn("[analyzeExpense] NVIDIA: no JSON found in response:", text.substring(0, 200));
-          }
-        } else {
-          const errText = await nimRes.text();
-          console.warn(`[analyzeExpense] NVIDIA NIM HTTP ${nimRes.status}:`, errText.substring(0, 300));
-        }
-      } catch (e) {
-        console.warn("[analyzeExpense] NVIDIA NIM exception:", e);
-      }
-    }
-
-    // Claude — primario para imágenes y PDFs (soporta ambos nativamente)
-    if (aiProvider === "none" && claudeKey && (isImage || isPdf)) {
-      try {
-        console.log("[analyzeExpense] Trying Claude...");
-        const mediaType = isPdf ? "application/pdf" : (file.mimetype as "image/jpeg" | "image/png" | "image/webp" | "image/gif");
-        const base64 = file.buffer.toString("base64");
-        const claudeRes = await fetch("https://api.anthropic.com/v1/messages", {
-          method: "POST",
-          headers: {
-            "x-api-key": claudeKey,
-            "anthropic-version": "2023-06-01",
-            "anthropic-beta": "pdfs-2024-09-25",
-            "content-type": "application/json",
-          },
-          body: JSON.stringify({
-            model: "claude-haiku-4-5-20251001",
-            max_tokens: 1024,
-            messages: [{
-              role: "user",
-              content: [
-                { type: isPdf ? "document" : "image", source: { type: "base64", media_type: mediaType, data: base64 } },
-                { type: "text", text: EXTRACTION_PROMPT },
-              ],
-            }],
-          }),
-        });
-
-        if (claudeRes.ok) {
-          const claudeData = await claudeRes.json() as any;
-          const text = claudeData.content?.[0]?.text ?? "";
-          console.log("[analyzeExpense] Claude raw:", text.substring(0, 400));
-          const jsonMatch = text.match(/\{[\s\S]*\}/);
-          if (jsonMatch) {
-            const parsed = JSON.parse(jsonMatch[0]);
-            documentType = parsed.documentType ?? "GASTO";
-            delete parsed.documentType;
-            extracted = parsed;
-            aiProvider = "claude";
-            console.log("[analyzeExpense] Claude success, type:", documentType, "fields:", Object.keys(extracted));
-          } else {
-            console.warn("[analyzeExpense] Claude: no JSON in response:", text.substring(0, 200));
-          }
-        } else {
-          const errText = await claudeRes.text();
-          console.warn(`[analyzeExpense] Claude HTTP ${claudeRes.status}:`, errText.substring(0, 300));
-        }
-      } catch (e) {
-        console.warn("[analyzeExpense] Claude exception:", e);
-      }
-    }
-
-    // Mistral Pixtral — solo imágenes (no soporta PDFs)
+    // 2. Mistral Pixtral — solo imágenes
     if (aiProvider === "none" && mistralKey && isImage) {
       try {
         console.log("[analyzeExpense] Trying Mistral Pixtral...");
         const base64 = file.buffer.toString("base64");
         const mistralRes = await fetch("https://api.mistral.ai/v1/chat/completions", {
           method: "POST",
+          signal: AbortSignal.timeout(AI_TIMEOUT_MS),
           headers: {
             Authorization: `Bearer ${mistralKey}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            model: "pixtral-12b-2409",
+            model: mistralModel,
             messages: [{
               role: "user",
               content: [
@@ -713,6 +593,166 @@ IMPORTANTE: Solo incluye campos que estén claramente visibles en el documento. 
       } catch (e) {
         console.warn("[analyzeExpense] Mistral exception:", e);
       }
+    }
+
+    // 3. Claude Haiku — imágenes y PDFs
+    if (aiProvider === "none" && claudeKey && (isImage || isPdf)) {
+      try {
+        console.log("[analyzeExpense] Trying Claude...");
+        const mediaType = isPdf ? "application/pdf" : (file.mimetype as "image/jpeg" | "image/png" | "image/webp" | "image/gif");
+        const base64 = file.buffer.toString("base64");
+        const claudeRes = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          signal: AbortSignal.timeout(AI_TIMEOUT_MS),
+          headers: {
+            "x-api-key": claudeKey,
+            "anthropic-version": "2023-06-01",
+            "anthropic-beta": "pdfs-2024-09-25",
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            model: claudeModel,
+            max_tokens: 1024,
+            messages: [{
+              role: "user",
+              content: [
+                { type: isPdf ? "document" : "image", source: { type: "base64", media_type: mediaType, data: base64 } },
+                { type: "text", text: EXTRACTION_PROMPT },
+              ],
+            }],
+          }),
+        });
+
+        if (claudeRes.ok) {
+          const claudeData = await claudeRes.json() as any;
+          const text = claudeData.content?.[0]?.text ?? "";
+          console.log("[analyzeExpense] Claude raw:", text.substring(0, 400));
+          const jsonMatch = text.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            const parsed = JSON.parse(jsonMatch[0]);
+            documentType = parsed.documentType ?? "GASTO";
+            delete parsed.documentType;
+            extracted = parsed;
+            aiProvider = "claude";
+            console.log("[analyzeExpense] Claude success, type:", documentType, "fields:", Object.keys(extracted));
+          } else {
+            console.warn("[analyzeExpense] Claude: no JSON in response:", text.substring(0, 200));
+          }
+        } else {
+          const errText = await claudeRes.text();
+          console.warn(`[analyzeExpense] Claude HTTP ${claudeRes.status}:`, errText.substring(0, 300));
+        }
+      } catch (e) {
+        console.warn("[analyzeExpense] Claude exception:", e);
+      }
+    }
+
+    // 4. OpenRouter — modelos gratuitos con visión (límites de uso estrictos)
+    if (aiProvider === "none" && openrouterKey && isImage) {
+      try {
+        console.log("[analyzeExpense] Trying OpenRouter...");
+        const base64 = file.buffer.toString("base64");
+        const orRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+          method: "POST",
+          signal: AbortSignal.timeout(AI_TIMEOUT_MS),
+          headers: {
+            Authorization: `Bearer ${openrouterKey}`,
+            "Content-Type": "application/json",
+            "HTTP-Referer": "https://saas-erp.app",
+          },
+          body: JSON.stringify({
+            model: openrouterModel,
+            messages: [{
+              role: "user",
+              content: [
+                { type: "image_url", image_url: { url: `data:${file.mimetype};base64,${base64}` } },
+                { type: "text", text: EXTRACTION_PROMPT },
+              ],
+            }],
+            max_tokens: 1024,
+            temperature: 0.1,
+          }),
+        });
+        if (orRes.ok) {
+          const orData = await orRes.json() as any;
+          const text = orData.choices?.[0]?.message?.content ?? "";
+          console.log("[analyzeExpense] OpenRouter raw:", text.substring(0, 400));
+          const jsonMatch = text.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            const parsed = JSON.parse(jsonMatch[0]);
+            if (parsed.supplier || parsed.invoiceRef || parsed.subtotal || parsed.date) {
+              documentType = parsed.documentType ?? "GASTO";
+              delete parsed.documentType;
+              extracted = parsed;
+              aiProvider = "openrouter";
+              console.log("[analyzeExpense] OpenRouter success:", documentType, Object.keys(extracted));
+            }
+          } else {
+            console.warn("[analyzeExpense] OpenRouter no JSON:", text.substring(0, 200));
+          }
+        } else {
+          console.warn(`[analyzeExpense] OpenRouter HTTP ${orRes.status}:`, (await orRes.text()).substring(0, 200));
+        }
+      } catch (e) {
+        console.warn("[analyzeExpense] OpenRouter exception:", e);
+      }
+    }
+
+    // 5. NVIDIA NIM — gratuito con cupo limitado
+    if (aiProvider === "none" && nvidiaKey && isImage) {
+      try {
+        const base64 = file.buffer.toString("base64");
+        const mimeType = file.mimetype;
+        console.log("[analyzeExpense] Trying NVIDIA NIM...");
+        const nimRes = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
+          method: "POST",
+          signal: AbortSignal.timeout(AI_TIMEOUT_MS),
+          headers: {
+            Authorization: `Bearer ${nvidiaKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: nvidiaModel,
+            messages: [{
+              role: "user",
+              content: [
+                { type: "image_url", image_url: { url: `data:${mimeType};base64,${base64}` } },
+                { type: "text", text: EXTRACTION_PROMPT },
+              ],
+            }],
+            max_tokens: 800,
+            temperature: 0.1,
+          }),
+        });
+
+        if (nimRes.ok) {
+          const nimData = await nimRes.json() as any;
+          const text = nimData.choices?.[0]?.message?.content ?? "";
+          console.log("[analyzeExpense] NVIDIA raw response:", text.substring(0, 300));
+          const jsonMatch = text.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            const parsed = JSON.parse(jsonMatch[0]);
+            documentType = parsed.documentType ?? "GASTO";
+            delete parsed.documentType;
+            extracted = parsed;
+            aiProvider = "nvidia-nim";
+            console.log("[analyzeExpense] NVIDIA success, type:", documentType);
+          } else {
+            console.warn("[analyzeExpense] NVIDIA: no JSON found in response:", text.substring(0, 200));
+          }
+        } else {
+          const errText = await nimRes.text();
+          console.warn(`[analyzeExpense] NVIDIA NIM HTTP ${nimRes.status}:`, errText.substring(0, 300));
+        }
+      } catch (e) {
+        console.warn("[analyzeExpense] NVIDIA NIM exception:", e);
+      }
+    }
+
+    // Red de seguridad: un documento emitido por otro NIF nunca es una factura de venta de esta empresa
+    const normNif = (v: unknown) => String(v ?? "").toUpperCase().replace(/[^A-Z0-9]/g, "").replace(/^ES/, "");
+    if (documentType === "FACTURA_VENTA" && companyNif && extracted.supplierNif && normNif(extracted.supplierNif) !== normNif(companyNif)) {
+      documentType = "GASTO";
     }
 
     console.log(`[analyzeExpense] Final provider: ${aiProvider}, fields: ${Object.keys(extracted).join(",")}`);

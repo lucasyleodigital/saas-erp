@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import {
   useVehicles,
   useVehicle,
@@ -11,7 +12,7 @@ import {
   useUpdateMaintenance,
   useDeleteMaintenance,
   getExpiryStatus,
-  MAINTENANCE_LABELS,
+  MAINTENANCE_TYPES,
   type Vehicle,
   type VehicleMaintenance,
 } from "@/hooks/use-fleet";
@@ -78,11 +79,12 @@ const EMPTY_MAINTENANCE = {
 const needsAttention = (s: string) => s === "warn" || s === "expired";
 
 function ExpiryBadge({ dateStr, label }: { dateStr: string | null; label: string }) {
+  const locale = useLocale();
   const status = getExpiryStatus(dateStr);
   if (status === "none") return <span className="text-muted-foreground text-xs">—</span>;
 
   const d = new Date(dateStr!);
-  const fmtd = d.toLocaleDateString("es-ES", { day: "2-digit", month: "2-digit", year: "numeric" });
+  const fmtd = d.toLocaleDateString(locale, { day: "2-digit", month: "2-digit", year: "numeric" });
 
   if (status === "expired") {
     return (
@@ -119,6 +121,8 @@ function VehicleForm({
   onClose: () => void;
   isPending: boolean;
 }) {
+  const t = useTranslations("fleet.form");
+  const tc = t;
   const [form, setForm] = useState(initial);
   function set(k: keyof typeof form, v: any) {
     setForm((p) => ({ ...p, [k]: v }));
@@ -128,63 +132,63 @@ function VehicleForm({
     <div className="space-y-4 py-1">
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1.5 col-span-2 sm:col-span-1">
-          <Label htmlFor="v-mat">Matrícula *</Label>
+          <Label htmlFor="v-mat">{t("plate")}</Label>
           <Input id="v-mat" value={form.matricula} onChange={(e) => set("matricula", e.target.value.toUpperCase())} placeholder="1234ABC" />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="v-marca">Marca</Label>
+          <Label htmlFor="v-marca">{t("brand")}</Label>
           <Input id="v-marca" value={form.marca} onChange={(e) => set("marca", e.target.value)} placeholder="Mercedes" />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="v-modelo">Modelo</Label>
+          <Label htmlFor="v-modelo">{t("model")}</Label>
           <Input id="v-modelo" value={form.modelo} onChange={(e) => set("modelo", e.target.value)} placeholder="Sprinter 519" />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="v-anio">Año</Label>
+          <Label htmlFor="v-anio">{t("year")}</Label>
           <Input id="v-anio" type="number" value={form.anio} onChange={(e) => set("anio", e.target.value)} placeholder="2020" min="1980" max="2030" />
         </div>
       </div>
 
       <hr className="border-border" />
-      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Datos del transportista (para DeCA)</p>
+      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t("carrierSection")}</p>
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1.5">
-          <Label htmlFor="v-tnom">Nombre / razón social</Label>
+          <Label htmlFor="v-tnom">{t("carrierName")}</Label>
           <Input id="v-tnom" value={form.transportistaNombre} onChange={(e) => set("transportistaNombre", e.target.value)} placeholder="Transportes Ejemplo SL" />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="v-tnif">NIF / CIF</Label>
+          <Label htmlFor="v-tnif">{t("carrierNif")}</Label>
           <Input id="v-tnif" value={form.transportistaNif} onChange={(e) => set("transportistaNif", e.target.value)} placeholder="B12345678" />
         </div>
       </div>
 
       <hr className="border-border" />
-      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Documentación</p>
+      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t("documentsSection")}</p>
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1.5">
-          <Label htmlFor="v-itv">Caducidad ITV</Label>
+          <Label htmlFor="v-itv">{t("itvExpiry")}</Label>
           <Input id="v-itv" type="date" value={form.itvDate} onChange={(e) => set("itvDate", e.target.value)} />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="v-seg">Caducidad seguro</Label>
+          <Label htmlFor="v-seg">{t("insuranceExpiry")}</Label>
           <Input id="v-seg" type="date" value={form.seguroDate} onChange={(e) => set("seguroDate", e.target.value)} />
         </div>
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="v-notas">Notas</Label>
-        <Input id="v-notas" value={form.notas} onChange={(e) => set("notas", e.target.value)} placeholder="Observaciones..." />
+        <Label htmlFor="v-notas">{t("notes")}</Label>
+        <Input id="v-notas" value={form.notas} onChange={(e) => set("notas", e.target.value)} placeholder={t("notesPlaceholder")} />
       </div>
 
       <DialogFooter className="gap-2 pt-2">
-        <Button variant="outline" onClick={onClose}>Cancelar</Button>
+        <Button variant="outline" onClick={onClose}>{tc("cancel")}</Button>
         <Button
           disabled={!form.matricula.trim() || isPending}
           onClick={() => onSubmit(form)}
           className="gap-2"
         >
           {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-          Guardar
+          {tc("save")}
         </Button>
       </DialogFooter>
     </div>
@@ -202,6 +206,8 @@ function MaintenanceForm({
   onClose: () => void;
   isPending: boolean;
 }) {
+  const t = useTranslations("fleet");
+  const tc = useTranslations("fleet.form");
   const [form, setForm] = useState(initial);
   function set(k: keyof typeof form, v: any) {
     setForm((p) => ({ ...p, [k]: v }));
@@ -211,51 +217,51 @@ function MaintenanceForm({
     <div className="space-y-4 py-1">
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1.5 col-span-2 sm:col-span-1">
-          <Label>Tipo *</Label>
+          <Label>{t("form.type")}</Label>
           <Select value={form.tipo} onValueChange={(v) => set("tipo", v)}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
-              {Object.entries(MAINTENANCE_LABELS).map(([k, v]) => (
-                <SelectItem key={k} value={k}>{v}</SelectItem>
+              {MAINTENANCE_TYPES.map((k) => (
+                <SelectItem key={k} value={k}>{t(`maintenanceTypes.${k}`)}</SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
         <div className="space-y-1.5 col-span-2 sm:col-span-1">
-          <Label htmlFor="m-fecha">Fecha *</Label>
+          <Label htmlFor="m-fecha">{t("form.date")}</Label>
           <Input id="m-fecha" type="date" value={form.fecha} onChange={(e) => set("fecha", e.target.value)} />
         </div>
         <div className="space-y-1.5 col-span-2">
-          <Label htmlFor="m-desc">Descripción</Label>
-          <Input id="m-desc" value={form.descripcion} onChange={(e) => set("descripcion", e.target.value)} placeholder="Cambio de aceite + filtros" />
+          <Label htmlFor="m-desc">{t("form.description")}</Label>
+          <Input id="m-desc" value={form.descripcion} onChange={(e) => set("descripcion", e.target.value)} placeholder={t("form.descriptionPlaceholder")} />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="m-km">Kilómetros</Label>
+          <Label htmlFor="m-km">{t("form.km")}</Label>
           <Input id="m-km" type="number" value={form.km} onChange={(e) => set("km", e.target.value)} placeholder="125000" min="0" />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="m-coste">Coste (€)</Label>
+          <Label htmlFor="m-coste">{t("form.cost")}</Label>
           <Input id="m-coste" type="number" value={form.coste} onChange={(e) => set("coste", e.target.value)} placeholder="320.00" min="0" step="0.01" />
         </div>
         <div className="space-y-1.5 col-span-2 sm:col-span-1">
-          <Label htmlFor="m-prov">Taller / proveedor</Label>
-          <Input id="m-prov" value={form.proveedor} onChange={(e) => set("proveedor", e.target.value)} placeholder="Taller García" />
+          <Label htmlFor="m-prov">{t("form.workshop")}</Label>
+          <Input id="m-prov" value={form.proveedor} onChange={(e) => set("proveedor", e.target.value)} placeholder={t("form.workshopPlaceholder")} />
         </div>
         <div className="space-y-1.5 col-span-2 sm:col-span-1">
-          <Label htmlFor="m-prox">Próxima revisión</Label>
+          <Label htmlFor="m-prox">{t("form.nextService")}</Label>
           <Input id="m-prox" type="date" value={form.proximaRevision} onChange={(e) => set("proximaRevision", e.target.value)} />
         </div>
       </div>
 
       <DialogFooter className="gap-2 pt-2">
-        <Button variant="outline" onClick={onClose}>Cancelar</Button>
+        <Button variant="outline" onClick={onClose}>{tc("cancel")}</Button>
         <Button
           disabled={!form.fecha || isPending}
           onClick={() => onSubmit(form)}
           className="gap-2"
         >
           {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-          Guardar
+          {tc("save")}
         </Button>
       </DialogFooter>
     </div>
@@ -263,6 +269,8 @@ function MaintenanceForm({
 }
 
 export default function FlotaPage() {
+  const t = useTranslations("fleet");
+  const locale = useLocale();
   const [search, setSearch] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [vehicleDialog, setVehicleDialog] = useState<"create" | Vehicle | null>(null);
@@ -331,12 +339,12 @@ export default function FlotaPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Flota</h1>
-          <p className="text-sm text-muted-foreground">Vehículos y mantenimientos</p>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
         </div>
         <Button onClick={() => setVehicleDialog("create")} className="gap-2">
           <Plus className="h-4 w-4" />
-          Nuevo vehículo
+          {t("newVehicle")}
         </Button>
       </div>
 
@@ -346,7 +354,7 @@ export default function FlotaPage() {
           <CardContent className="py-3 px-4">
             <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400 text-sm font-medium">
               <AlertTriangle className="h-4 w-4 shrink-0" />
-              {alerts.length} vehículo{alerts.length > 1 ? "s" : ""} con ITV o seguro caducado / próximo a caducar
+              {t("alert", { count: alerts.length })}
             </div>
           </CardContent>
         </Card>
@@ -358,7 +366,7 @@ export default function FlotaPage() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Buscar matrícula, marca..."
+              placeholder={t("searchPlaceholder")}
               className="pl-9"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -372,9 +380,9 @@ export default function FlotaPage() {
           ) : vehicles.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <Truck className="h-8 w-8 mx-auto mb-2 opacity-30" />
-              <p className="text-sm">Sin vehículos</p>
+              <p className="text-sm">{t("noVehicles")}</p>
               <Button variant="link" size="sm" onClick={() => setVehicleDialog("create")}>
-                Añadir el primero
+                {t("addFirst")}
               </Button>
             </div>
           ) : (
@@ -397,7 +405,7 @@ export default function FlotaPage() {
                       <Truck className="h-4 w-4 text-muted-foreground shrink-0" />
                       <span className="font-mono font-semibold text-sm">{v.matricula}</span>
                       {hasAlert && <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />}
-                      {!v.isActive && <Badge variant="secondary" className="text-xs">Inactivo</Badge>}
+                      {!v.isActive && <Badge variant="secondary" className="text-xs">{t("inactive")}</Badge>}
                     </div>
                     <ChevronRight className={cn("h-4 w-4 text-muted-foreground transition-transform", selectedId === v.id && "rotate-90")} />
                   </div>
@@ -407,8 +415,8 @@ export default function FlotaPage() {
                     </p>
                   )}
                   <div className="mt-1.5 ml-6 flex flex-col gap-0.5">
-                    {v.itvDate && <ExpiryBadge dateStr={v.itvDate} label="ITV" />}
-                    {v.seguroDate && <ExpiryBadge dateStr={v.seguroDate} label="Seguro" />}
+                    {v.itvDate && <ExpiryBadge dateStr={v.itvDate} label={t("itv")} />}
+                    {v.seguroDate && <ExpiryBadge dateStr={v.seguroDate} label={t("insurance")} />}
                   </div>
                 </button>
               );
@@ -425,7 +433,7 @@ export default function FlotaPage() {
                   <div>
                     <CardTitle className="font-mono text-xl">{selectedVehicle.matricula}</CardTitle>
                     <p className="text-sm text-muted-foreground mt-0.5">
-                      {[selectedVehicle.marca, selectedVehicle.modelo, selectedVehicle.anio].filter(Boolean).join(" · ") || "Sin datos de vehículo"}
+                      {[selectedVehicle.marca, selectedVehicle.modelo, selectedVehicle.anio].filter(Boolean).join(" · ") || t("noVehicleData")}
                     </p>
                   </div>
                   <div className="flex gap-2">
@@ -436,14 +444,14 @@ export default function FlotaPage() {
                       onClick={() => setVehicleDialog(selectedVehicle)}
                     >
                       <Pencil className="h-3.5 w-3.5" />
-                      Editar
+                      {t("edit")}
                     </Button>
                     <Button
                       size="sm"
                       variant="ghost"
                       className="gap-1.5 text-destructive hover:text-destructive"
                       onClick={async () => {
-                        if (!confirm(`¿Eliminar el vehículo ${selectedVehicle.matricula}?`)) return;
+                        if (!confirm(t("deleteConfirm", { plate: selectedVehicle.matricula }))) return;
                         await deleteVehicle.mutateAsync(selectedVehicle.id);
                         setSelectedId(null);
                       }}
@@ -457,20 +465,20 @@ export default function FlotaPage() {
                 <div className="grid grid-cols-2 gap-x-4 gap-y-2">
                   {selectedVehicle.transportistaNombre && (
                     <>
-                      <span className="text-muted-foreground">Transportista</span>
+                      <span className="text-muted-foreground">{t("carrier")}</span>
                       <span>{selectedVehicle.transportistaNombre}</span>
                     </>
                   )}
                   {selectedVehicle.transportistaNif && (
                     <>
-                      <span className="text-muted-foreground">NIF transportista</span>
+                      <span className="text-muted-foreground">{t("carrierNif")}</span>
                       <span className="font-mono">{selectedVehicle.transportistaNif}</span>
                     </>
                   )}
-                  <span className="text-muted-foreground">ITV</span>
-                  <ExpiryBadge dateStr={selectedVehicle.itvDate} label="ITV" />
-                  <span className="text-muted-foreground">Seguro</span>
-                  <ExpiryBadge dateStr={selectedVehicle.seguroDate} label="Seguro" />
+                  <span className="text-muted-foreground">{t("itv")}</span>
+                  <ExpiryBadge dateStr={selectedVehicle.itvDate} label={t("itv")} />
+                  <span className="text-muted-foreground">{t("insurance")}</span>
+                  <ExpiryBadge dateStr={selectedVehicle.seguroDate} label={t("insurance")} />
                 </div>
                 {selectedVehicle.notas && (
                   <p className="text-muted-foreground italic text-xs">{selectedVehicle.notas}</p>
@@ -484,7 +492,7 @@ export default function FlotaPage() {
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm flex items-center gap-2">
                     <Wrench className="h-4 w-4" />
-                    Historial de mantenimientos
+                    {t("maintenanceHistory")}
                     {(selectedVehicle._count?.maintenances ?? selectedVehicle.maintenances?.length ?? 0) > 0 && (
                       <Badge variant="secondary">
                         {selectedVehicle.maintenances?.length ?? selectedVehicle._count?.maintenances}
@@ -498,13 +506,13 @@ export default function FlotaPage() {
                     onClick={() => setMaintenanceDialog({ vehicleId: selectedVehicle.id })}
                   >
                     <Plus className="h-3.5 w-3.5" />
-                    Registrar
+                    {t("register")}
                   </Button>
                 </div>
               </CardHeader>
               <CardContent className="p-0">
                 {!selectedVehicle.maintenances?.length ? (
-                  <p className="text-sm text-muted-foreground text-center py-6">Sin registros de mantenimiento</p>
+                  <p className="text-sm text-muted-foreground text-center py-6">{t("noMaintenance")}</p>
                 ) : (
                   <div className="divide-y divide-border">
                     {selectedVehicle.maintenances.map((m) => (
@@ -512,21 +520,21 @@ export default function FlotaPage() {
                         <div className="space-y-0.5">
                           <div className="flex items-center gap-2">
                             <Badge variant="outline" className="text-xs font-normal">
-                              {MAINTENANCE_LABELS[m.tipo]}
+                              {t(`maintenanceTypes.${m.tipo}`)}
                             </Badge>
                             <span className="text-muted-foreground text-xs flex items-center gap-1">
                               <Calendar className="h-3 w-3" />
-                              {formatDate(m.fecha)}
+                              {formatDate(m.fecha, locale)}
                             </span>
                           </div>
                           {m.descripcion && <p className="text-muted-foreground">{m.descripcion}</p>}
                           <div className="flex gap-3 text-xs text-muted-foreground">
-                            {m.km && <span>{m.km.toLocaleString("es-ES")} km</span>}
-                            {m.coste && <span>{Number(m.coste).toLocaleString("es-ES", { style: "currency", currency: "EUR" })}</span>}
+                            {m.km && <span>{m.km.toLocaleString(locale)} km</span>}
+                            {m.coste && <span>{Number(m.coste).toLocaleString(locale, { style: "currency", currency: "EUR" })}</span>}
                             {m.proveedor && <span>{m.proveedor}</span>}
                             {m.proximaRevision && (
                               <span className="text-amber-600 dark:text-amber-400">
-                                Próx: {formatDate(m.proximaRevision)}
+                                {t("next", { date: formatDate(m.proximaRevision, locale) })}
                               </span>
                             )}
                           </div>
@@ -545,7 +553,7 @@ export default function FlotaPage() {
                             variant="ghost"
                             className="h-7 w-7 text-destructive hover:text-destructive"
                             onClick={async () => {
-                              if (!confirm("¿Eliminar este registro?")) return;
+                              if (!confirm(t("deleteMaintenanceConfirm"))) return;
                               await deleteMaintenance.mutateAsync({ vehicleId: selectedVehicle.id, id: m.id });
                             }}
                           >
@@ -565,7 +573,7 @@ export default function FlotaPage() {
           <div className="flex-1 hidden lg:flex items-center justify-center text-muted-foreground">
             <div className="text-center">
               <Truck className="h-10 w-10 mx-auto mb-3 opacity-20" />
-              <p className="text-sm">Selecciona un vehículo para ver el detalle</p>
+              <p className="text-sm">{t("selectVehicle")}</p>
             </div>
           </div>
         )}
@@ -577,7 +585,7 @@ export default function FlotaPage() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Truck className="h-5 w-5 text-primary" />
-              {vehicleDialog === "create" ? "Nuevo vehículo" : `Editar ${(vehicleDialog as Vehicle)?.matricula}`}
+              {vehicleDialog === "create" ? t("newVehicle") : t("editVehicle", { plate: (vehicleDialog as Vehicle)?.matricula ?? "" })}
             </DialogTitle>
           </DialogHeader>
           <VehicleForm
@@ -611,7 +619,7 @@ export default function FlotaPage() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Wrench className="h-5 w-5 text-primary" />
-              {maintenanceDialog?.maintenance ? "Editar mantenimiento" : "Registrar mantenimiento"}
+              {maintenanceDialog?.maintenance ? t("editMaintenance") : t("registerMaintenance")}
             </DialogTitle>
           </DialogHeader>
           <MaintenanceForm
