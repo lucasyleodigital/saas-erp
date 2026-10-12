@@ -16,7 +16,7 @@ export default function TerminosPage() {
 
       <main className="flex-1 container mx-auto px-4 py-12 max-w-3xl">
         <h1 className="text-3xl font-bold mb-2">Términos y Condiciones de Uso</h1>
-        <p className="text-sm text-muted-foreground mb-10">Última actualización: agosto de 2026</p>
+        <p className="text-sm text-muted-foreground mb-10">Última actualización: octubre de 2026</p>
 
         <div className="space-y-8 text-sm leading-relaxed text-muted-foreground">
 
@@ -133,7 +133,7 @@ export default function TerminosPage() {
               <li><strong className="text-foreground">Datos tratados:</strong> datos identificativos de clientes, empleados y proveedores del Cliente (nombre, email, telefono, NIF/CIF, direccion, datos bancarios, datos laborales y de nomina).</li>
               <li><strong className="text-foreground">Finalidad:</strong> prestacion del servicio SaaS de gestion empresarial contratado (facturacion, CRM, contabilidad, nominas, control horario).</li>
               <li><strong className="text-foreground">Duracion:</strong> mientras dure la relacion contractual. Tras la baja, los datos se conservaran bloqueados durante el plazo legal (5 anos para datos fiscales) y despues se eliminaran.</li>
-              <li><strong className="text-foreground">Subencargados:</strong> YouWhole utiliza los siguientes subencargados: Supabase Inc. (base de datos, UE), Vercel Inc. (hosting frontend, UE), Railway Corp. (hosting backend, UE), Resend Inc. (envio de emails, UE), Stripe Inc. (pagos, UE). El Cliente autoriza expresamente estos subencargados.</li>
+              <li><strong className="text-foreground">Subencargados:</strong> YouWhole utiliza los siguientes subencargados: Supabase Inc. (base de datos, UE), Vercel Inc. (hosting frontend, UE), Railway Corp. (hosting backend, UE), Resend Inc. (envio de emails, UE), Stripe Inc. (pagos, UE); para la lectura automatica de tickets y facturas con inteligencia artificial, Google LLC (Gemini), Mistral AI (Francia, UE), Anthropic PBC (Claude), OpenRouter Inc. y NVIDIA Corporation (estos cuatro ultimos y Google pueden tratar los datos en EE. UU.); y Cloudflare Inc. (recepcion de tickets por email, EE. UU.). A estos proveedores de IA solo se envia el documento que el usuario sube o reenvia para extraer sus datos. El Cliente autoriza expresamente estos subencargados.</li>
               <li><strong className="text-foreground">Medidas de seguridad:</strong> cifrado en transito (TLS 1.3) y en reposo, control de acceso basado en roles, aislamiento de datos por empresa (tenant isolation), backups automaticos, registro de auditoria, validacion y sanitizacion de inputs.</li>
               <li><strong className="text-foreground">Obligaciones de YouWhole:</strong> tratar los datos solo segun instrucciones del Cliente; garantizar la confidencialidad; asistir al Cliente en el ejercicio de derechos ARCO; notificar brechas de seguridad en un maximo de 72 horas; devolver o eliminar los datos al finalizar el servicio.</li>
               <li><strong className="text-foreground">Obligaciones del Cliente:</strong> garantizar que tiene base legal para tratar los datos que introduce en la plataforma; informar a sus empleados y clientes sobre el tratamiento; no introducir datos de categorias especiales (salud, religion, orientacion sexual) salvo los estrictamente necesarios para nominas.</li>

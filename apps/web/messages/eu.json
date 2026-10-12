@@ -3904,7 +3904,7 @@
     },
     "email": {
       "title": "Birbidali zure tiketak posta elektronikoz",
-      "body": "Bidali edo birbidali tiketaren argazkia edo PDFa {email} helbidetik helbide honetara, eta hemen agertuko da zirriborro gisa.",
+      "body": "Bidali edo birbidali tiketaren argazkia edo PDFa {email} helbidetik helbide honetara: IA batek irakurtzen du eta hemen agertuko da zirriborro gisa, berrikus dezazun.",
       "copy": "Kopiatu",
       "copied": "Helbidea kopiatuta",
       "regenerate": "Aldatu helbidea",

@@ -483,7 +483,7 @@ ${companyContext}
     const claudeModel     = this.config.get<string>("CLAUDE_MODEL") || "claude-haiku-5-5";
     const mistralModel    = this.config.get<string>("MISTRAL_MODEL") || "pixtral-12b-2409";
 
-    console.log(`[analyzeExpense] file=${file.originalname} mime=${file.mimetype} size=${file.size}`);
+    console.log(`[analyzeExpense] mime=${file.mimetype} size=${file.size}`);
     console.log(`[analyzeExpense] keys: openrouter=${!!openrouterKey} gemini=${!!geminiKey} claude=${!!claudeKey} mistral=${!!mistralKey} nvidia=${!!nvidiaKey}`);
 
     // 1. Gemini Flash — rápido, barato, imagen + PDF
@@ -519,7 +519,7 @@ ${companyContext}
         if (geminiRes.ok) {
           const geminiData = await geminiRes.json() as any;
           const text = (geminiData.candidates?.[0]?.content?.parts ?? []).map((p: any) => p.text ?? "").join("");
-          console.log("[analyzeExpense] Gemini raw:", text.substring(0, 400));
+          console.log(`[analyzeExpense] Gemini respuesta (${text.length} caracteres)`);
           const jsonMatch = text.match(/\{[\s\S]*\}/);
           if (jsonMatch) {
             const parsed = JSON.parse(jsonMatch[0]);
@@ -531,7 +531,7 @@ ${companyContext}
               console.log("[analyzeExpense] Gemini success:", documentType, Object.keys(extracted));
             }
           } else {
-            console.warn("[analyzeExpense] Gemini no JSON:", text.substring(0, 200));
+            console.warn(`[analyzeExpense] Gemini sin JSON (${text.length} caracteres)`);
           }
         } else if (geminiRes.status === 429) {
           console.warn("[analyzeExpense] Gemini 429: rate limit (15 req/min free tier) — intentar más tarde");
@@ -572,7 +572,7 @@ ${companyContext}
         if (mistralRes.ok) {
           const mistralData = await mistralRes.json() as any;
           const text = mistralData.choices?.[0]?.message?.content ?? "";
-          console.log("[analyzeExpense] Mistral raw:", text.substring(0, 300));
+          console.log(`[analyzeExpense] Mistral respuesta (${text.length} caracteres)`);
           const jsonMatch = text.match(/\{[\s\S]*\}/);
           if (jsonMatch) {
             const parsed = JSON.parse(jsonMatch[0]);
@@ -626,7 +626,7 @@ ${companyContext}
         if (claudeRes.ok) {
           const claudeData = await claudeRes.json() as any;
           const text = claudeData.content?.[0]?.text ?? "";
-          console.log("[analyzeExpense] Claude raw:", text.substring(0, 400));
+          console.log(`[analyzeExpense] Claude respuesta (${text.length} caracteres)`);
           const jsonMatch = text.match(/\{[\s\S]*\}/);
           if (jsonMatch) {
             const parsed = JSON.parse(jsonMatch[0]);
@@ -636,7 +636,7 @@ ${companyContext}
             aiProvider = "claude";
             console.log("[analyzeExpense] Claude success, type:", documentType, "fields:", Object.keys(extracted));
           } else {
-            console.warn("[analyzeExpense] Claude: no JSON in response:", text.substring(0, 200));
+            console.warn(`[analyzeExpense] Claude sin JSON (${text.length} caracteres)`);
           }
         } else {
           const errText = await claudeRes.text();
@@ -676,7 +676,7 @@ ${companyContext}
         if (orRes.ok) {
           const orData = await orRes.json() as any;
           const text = orData.choices?.[0]?.message?.content ?? "";
-          console.log("[analyzeExpense] OpenRouter raw:", text.substring(0, 400));
+          console.log(`[analyzeExpense] OpenRouter respuesta (${text.length} caracteres)`);
           const jsonMatch = text.match(/\{[\s\S]*\}/);
           if (jsonMatch) {
             const parsed = JSON.parse(jsonMatch[0]);
@@ -688,7 +688,7 @@ ${companyContext}
               console.log("[analyzeExpense] OpenRouter success:", documentType, Object.keys(extracted));
             }
           } else {
-            console.warn("[analyzeExpense] OpenRouter no JSON:", text.substring(0, 200));
+            console.warn(`[analyzeExpense] OpenRouter sin JSON (${text.length} caracteres)`);
           }
         } else {
           console.warn(`[analyzeExpense] OpenRouter HTTP ${orRes.status}:`, (await orRes.text()).substring(0, 200));
@@ -728,7 +728,7 @@ ${companyContext}
         if (nimRes.ok) {
           const nimData = await nimRes.json() as any;
           const text = nimData.choices?.[0]?.message?.content ?? "";
-          console.log("[analyzeExpense] NVIDIA raw response:", text.substring(0, 300));
+          console.log(`[analyzeExpense] NVIDIA respuesta (${text.length} caracteres)`);
           const jsonMatch = text.match(/\{[\s\S]*\}/);
           if (jsonMatch) {
             const parsed = JSON.parse(jsonMatch[0]);
@@ -738,7 +738,7 @@ ${companyContext}
             aiProvider = "nvidia-nim";
             console.log("[analyzeExpense] NVIDIA success, type:", documentType);
           } else {
-            console.warn("[analyzeExpense] NVIDIA: no JSON found in response:", text.substring(0, 200));
+            console.warn(`[analyzeExpense] NVIDIA sin JSON (${text.length} caracteres)`);
           }
         } else {
           const errText = await nimRes.text();

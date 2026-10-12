@@ -3970,7 +3970,7 @@
     },
     "email": {
       "title": "Reenvia els teus tiquets per correu",
-      "body": "Envia o reenvia la foto o el PDF del tiquet des de {email} a aquesta adreça i apareixerà aquí com a esborrany.",
+      "body": "Envia o reenvia la foto o el PDF del tiquet des de {email} a aquesta adreça: una IA el llegeix i apareixerà aquí com a esborrany perquè el revisis.",
       "copy": "Copiar",
       "copied": "Adreça copiada",
       "regenerate": "Canviar l'adreça",

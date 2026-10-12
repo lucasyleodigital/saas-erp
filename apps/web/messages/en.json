@@ -3959,7 +3959,7 @@
     },
     "email": {
       "title": "Forward your receipts by email",
-      "body": "Send or forward the receipt photo or PDF from {email} to this address and it will appear here as a draft.",
+      "body": "Send or forward the receipt photo or PDF from {email} to this address: an AI reads it and it appears here as a draft for you to check.",
       "copy": "Copy",
       "copied": "Address copied",
       "regenerate": "Change address",

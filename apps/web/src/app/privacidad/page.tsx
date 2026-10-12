@@ -16,7 +16,7 @@ export default function PrivacidadPage() {
 
       <main className="flex-1 container mx-auto px-4 py-12 max-w-3xl">
         <h1 className="text-3xl font-bold mb-2">Política de Privacidad</h1>
-        <p className="text-sm text-muted-foreground mb-10">Última actualización: agosto de 2026</p>
+        <p className="text-sm text-muted-foreground mb-10">Última actualización: octubre de 2026</p>
 
         <div className="space-y-8 text-sm leading-relaxed text-muted-foreground">
 
@@ -88,7 +88,8 @@ export default function PrivacidadPage() {
               <li><strong className="text-foreground">Supabase / PostgreSQL</strong> — base de datos alojada en la UE.</li>
               <li><strong className="text-foreground">Vercel / Railway</strong> — infraestructura de alojamiento.</li>
               <li><strong className="text-foreground">Resend</strong> — servicio de envío de emails transaccionales.</li>
-              <li><strong className="text-foreground">OpenRouter, Google (Gemini), NVIDIA, Anthropic (Claude) y Mistral AI</strong> — procesamiento de imágenes mediante inteligencia artificial cuando usas la función opcional «Escanear documento con IA» para extraer datos de tickets y facturas; solo se envía el documento que subes voluntariamente para ese fin.</li>
+              <li><strong className="text-foreground">Google (Gemini), Mistral AI, Anthropic (Claude), OpenRouter y NVIDIA</strong> — lectura de tickets y facturas mediante inteligencia artificial para extraer sus datos (comercio, NIF, fecha, importes) cuando subes un documento en «Escanear documento», en Gastos o en Gastos y dietas, o cuando un empleado reenvía un ticket a su dirección de correo de gastos. Solo se envía ese documento. Mistral AI trata los datos en la UE; Google, Anthropic, OpenRouter y NVIDIA pueden hacerlo en EE. UU.</li>
+              <li><strong className="text-foreground">Cloudflare, Inc.</strong> — recepción y enrutado de los correos con tickets enviados a las direcciones @recibos.youwhole.com (EE. UU.).</li>
               <li><strong className="text-foreground">Administraciones públicas</strong> — cuando lo exija la normativa.</li>
             </ul>
             <p className="mt-2">No cedemos datos a terceros con fines publicitarios.</p>

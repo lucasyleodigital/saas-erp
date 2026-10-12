@@ -3971,7 +3971,7 @@
     },
     "email": {
       "title": "Reenvía tus tickets por email",
-      "body": "Envía o reenvía la foto o el PDF del ticket desde {email} a esta dirección y aparecerá aquí como borrador.",
+      "body": "Envía o reenvía la foto o el PDF del ticket desde {email} a esta dirección: una IA lo lee y aparecerá aquí como borrador para que lo revises.",
       "copy": "Copiar",
       "copied": "Dirección copiada",
       "regenerate": "Cambiar dirección",

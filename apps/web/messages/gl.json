@@ -3831,7 +3831,7 @@
     },
     "email": {
       "title": "Reenvía os teus tíckets por correo",
-      "body": "Envía ou reenvía a foto ou o PDF do tícket desde {email} a este enderezo e aparecerá aquí como borrador.",
+      "body": "Envía ou reenvía a foto ou o PDF do tícket desde {email} a este enderezo: unha IA leo e aparecerá aquí como borrador para que o revises.",
       "copy": "Copiar",
       "copied": "Enderezo copiado",
       "regenerate": "Cambiar o enderezo",

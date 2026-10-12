@@ -1,6 +1,8 @@
 name = "youwhole-recibos"
 main = "src/index.js"
+account_id = "e6b41931d80f57e17de8de39743e35f0"
 compatibility_date = "2026-09-01"
+workers_dev = false
 
 [vars]
 API_URL = "https://saasapi-production-b5f3.up.railway.app/api/v1"
