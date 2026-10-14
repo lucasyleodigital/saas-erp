@@ -3,6 +3,7 @@ import {
   Param, Body, Query, UseGuards, Req, Res, HttpCode,
 } from "@nestjs/common";
 import { Response } from "express";
+import { PlanFeatureGuard, RequiresFeature } from "../plans/requires-feature";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { PayrollService } from "./payroll.service";
 import { ForbiddenException } from "@nestjs/common";
@@ -17,7 +18,8 @@ function requireAdminOrOwner(role: string) {
 }
 
 @Controller("payrolls")
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PlanFeatureGuard)
+@RequiresFeature("hasPayroll")
 export class PayrollController {
   constructor(private readonly service: PayrollService) {}
 

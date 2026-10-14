@@ -48,9 +48,19 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useUnreadCount } from "@/hooks/use-notifications";
 import { useUser } from "@/hooks/use-user";
+import { FEATURE_MIN_PLAN, usePlanUsage, type PlanFeature } from "@/hooks/use-plan";
+import { PLAN_NAMES } from "@/components/billing/plan-gate";
 import { CompanySwitcher } from "./company-switcher";
 
 const LOCALES = ["es", "ca", "eu", "gl", "en"];
+
+// Secciones que dependen del plan: al admin se le marca el plan necesario, al empleado se le ocultan
+const GATED: Record<string, PlanFeature> = {
+  "/nominas": "hasPayroll",
+  "/gastos": "hasExpenseClaims",
+  "/flota": "hasFleet",
+  "/contabilidad": "hasAccounting",
+};
 
 export function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
@@ -58,7 +68,12 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
   const [scannerOpen, setScannerOpen] = useState(false);
   const { data: unreadCount } = useUnreadCount();
   const { data: currentUser } = useUser();
+  const { data: planUsage } = usePlanUsage();
   const t = useTranslations("nav");
+  const lockedFeature = (href: string): PlanFeature | null => {
+    const feature = GATED[href];
+    return feature && planUsage && !planUsage.limits[feature] ? feature : null;
+  };
 
   // Extract locale from URL path (e.g. /es/dashboard → "es")
   const segments = pathname.split("/");
@@ -84,7 +99,9 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
   ];
 
   // Nav items defined inside component to use translations
-  const navItems = isEmployee ? employeeNavItems : [
+  const navItems = isEmployee
+    ? employeeNavItems.map((g) => ({ ...g, items: g.items.filter((i) => !lockedFeature(i.href)) }))
+    : [
     {
       group: t("groupMain"),
       items: [
@@ -218,6 +235,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
                 (item.href !== "/dashboard" && pathWithoutLocale.startsWith(item.href));
               const Icon = item.icon;
               const localizedHref = `/${locale}${item.href}`;
+              const locked = lockedFeature(item.href);
               return (
                 <Link
                   key={item.href}
@@ -245,6 +263,11 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
                       </motion.span>
                     )}
                   </AnimatePresence>
+                  {locked && !collapsed && (
+                    <span className="rounded border border-sidebar-foreground/20 px-1.5 text-[10px] font-medium leading-4 text-sidebar-foreground/50">
+                      {PLAN_NAMES[FEATURE_MIN_PLAN[locked]]}
+                    </span>
+                  )}
                   {item.href === "/notificaciones" && (unreadCount ?? 0) > 0 && (
                     <span className={cn(
                       "flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold px-1",

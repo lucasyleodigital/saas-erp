@@ -2,6 +2,8 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { UpgradeRequired } from "@/components/billing/plan-gate";
+import { usePlanFeature } from "@/hooks/use-plan";
 import {
   useFiscalCalendar, useAnnualSummary, useM303, useM130, useM111, useM202,
   useFiscalPeriods, useMarkFiled, useExpenses, useCreateExpense, useDeleteExpense,
@@ -504,13 +506,15 @@ export function FiscalView() {
   const [activeTab, setActiveTab] = useState<"dashboard" | "m303" | "m130" | "m111" | "m202" | "gastos">("dashboard");
   const [m202Period, setM202Period] = useState(1);
 
-  const { data: m111 } = useM111(year, quarter);
-  const { data: m202 } = useM202(year, m202Period);
+  const hasAccounting = usePlanFeature("hasAccounting");
+  const hasFull = usePlanFeature("hasFullAccounting");
+  const { data: m111 } = useM111(year, quarter, hasFull === true);
+  const { data: m202 } = useM202(year, m202Period, hasFull === true);
   const { data: calendar } = useFiscalCalendar(year);
   const { data: annual } = useAnnualSummary(year);
-  const { data: m303 } = useM303(year, quarter);
-  const { data: m130 } = useM130(year, quarter);
-  const { data: periods } = useFiscalPeriods(year);
+  const { data: m303 } = useM303(year, quarter, hasAccounting === true);
+  const { data: m130 } = useM130(year, quarter, hasAccounting === true);
+  const { data: periods } = useFiscalPeriods(year, hasAccounting === true);
   const { data: expenses } = useExpenses({ year, quarter });
   const markFiled = useMarkFiled();
   const deleteExpense = useDeleteExpense();
@@ -678,6 +682,13 @@ export function FiscalView() {
       )}
 
       {/* ── MODELO 303 ── */}
+      {hasAccounting === false && (activeTab === "m303" || activeTab === "m130") && (
+        <UpgradeRequired feature="hasAccounting" compact />
+      )}
+      {hasFull === false && (activeTab === "m111" || activeTab === "m202") && (
+        <UpgradeRequired feature="hasFullAccounting" compact />
+      )}
+
       {activeTab === "m303" && m303 && (
         <div className="space-y-4">
           <div className="grid grid-cols-3 gap-3">

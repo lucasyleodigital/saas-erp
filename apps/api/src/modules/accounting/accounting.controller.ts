@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards } from "@nestjs/common";
 import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
+import { PlanFeatureGuard, RequiresFeature } from "../plans/requires-feature";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
 import { AccountingService } from "./accounting.service";
@@ -10,7 +11,8 @@ import type { JwtPayload } from "@saas/types";
 
 @ApiTags("Accounting")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PlanFeatureGuard)
+@RequiresFeature("hasAccounting")
 @Controller("accounting")
 export class AccountingController {
   constructor(
@@ -20,7 +22,6 @@ export class AccountingController {
 
   @Get("profit-loss")
   async getProfitAndLoss(@CurrentUser() user: JwtPayload, @Query("year") year: string) {
-    await this.plans.requireFeature(user.companyId, "hasAccounting");
     return this.service.getProfitAndLoss(user.companyId, Number(year) || new Date().getFullYear());
   }
 
@@ -41,16 +42,19 @@ export class AccountingController {
   }
 
   @Get("modelo-347")
+  @RequiresFeature("hasFullAccounting")
   getModelo347(@CurrentUser() user: JwtPayload, @Query("year") year: string) {
     return this.service.getModelo347(user.companyId, Number(year) || new Date().getFullYear());
   }
 
   @Get("retenciones")
+  @RequiresFeature("hasFullAccounting")
   getRetenciones(@CurrentUser() user: JwtPayload, @Query("year") year: string) {
     return this.service.getRetencionesReport(user.companyId, Number(year) || new Date().getFullYear());
   }
 
   @Get("libro-facturas")
+  @RequiresFeature("hasFullAccounting")
   getLibroFacturas(@CurrentUser() user: JwtPayload, @Query("year") year: string, @Query("type") type: string) {
     return this.service.getLibroFacturas(user.companyId, Number(year) || new Date().getFullYear(), type === "recibidas" ? "recibidas" : "emitidas");
   }

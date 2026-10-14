@@ -127,6 +127,7 @@ export interface ExpenseContext {
   canApprove: boolean;
   settings: ExpenseSettings;
   legal: { mileageRate: number; perDiem: Record<PerDiemType, number> };
+  plan: { hasExpenseClaims: boolean; hasExpenseAdvanced: boolean; hasFleet: boolean };
 }
 
 export interface ExpenseAnalytics {

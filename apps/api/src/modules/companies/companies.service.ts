@@ -7,6 +7,7 @@ import {
 } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
 import { EmailService } from "../email/email.service";
+import { PlansService } from "../plans/plans.service";
 import { ConfigService } from "@nestjs/config";
 
 @Injectable()
@@ -15,6 +16,7 @@ export class CompaniesService {
     private prisma: PrismaService,
     private email: EmailService,
     private config: ConfigService,
+    private plans: PlansService,
   ) {}
 
   async findAllForUser(userId: string) {
@@ -98,8 +100,13 @@ export class CompaniesService {
     email: string,
     role: string,
   ) {
-    // Check plan limit
-    const memberCount = await this.prisma.userCompany.count({ where: { companyId } });
+    // Los usuarios con rol EMPLOYEE solo acceden al portal del empleado: los limita maxEmployees, no maxUsers
+    if (role !== "EMPLOYEE") {
+      const pendingInvites = await this.prisma.invitation.count({
+        where: { companyId, acceptedAt: null, expiresAt: { gt: new Date() }, role: { not: "EMPLOYEE" as any } },
+      });
+      await this.plans.checkLimit(companyId, "maxUsers", (await this.plans.countUsers(companyId)) + pendingInvites);
+    }
     const company = await this.prisma.company.findUnique({ where: { id: companyId } });
     if (!company) throw new NotFoundException("Empresa no encontrada");
 

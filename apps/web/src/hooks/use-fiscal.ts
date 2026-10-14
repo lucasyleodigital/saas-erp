@@ -16,29 +16,33 @@ export function useAnnualSummary(year: number) {
   });
 }
 
-export function useM303(year: number, quarter: number) {
+export function useM303(year: number, quarter: number, enabled = true) {
   return useQuery({
+    enabled,
     queryKey: ["fiscal", "m303", year, quarter],
     queryFn: () => api.get("/fiscal/m303", { params: { year, quarter } }).then((r) => r.data),
   });
 }
 
-export function useM130(year: number, quarter: number) {
+export function useM130(year: number, quarter: number, enabled = true) {
   return useQuery({
+    enabled,
     queryKey: ["fiscal", "m130", year, quarter],
     queryFn: () => api.get("/fiscal/m130", { params: { year, quarter } }).then((r) => r.data),
   });
 }
 
-export function useM111(year: number, quarter: number) {
+export function useM111(year: number, quarter: number, enabled = true) {
   return useQuery({
+    enabled,
     queryKey: ["fiscal", "m111", year, quarter],
     queryFn: () => api.get("/fiscal/m111", { params: { year, quarter } }).then((r) => r.data),
   });
 }
 
-export function useFiscalPeriods(year: number) {
+export function useFiscalPeriods(year: number, enabled = true) {
   return useQuery({
+    enabled,
     queryKey: ["fiscal", "periods", year],
     queryFn: () => api.get("/fiscal/periods", { params: { year } }).then((r) => r.data),
   });
@@ -57,8 +61,9 @@ export function useMarkFiled() {
   });
 }
 
-export function useM202(year: number, period: number) {
+export function useM202(year: number, period: number, enabled = true) {
   return useQuery({
+    enabled,
     queryKey: ["fiscal", "m202", year, period],
     queryFn: () => api.get("/fiscal/m202", { params: { year, period } }).then((r) => r.data),
   });

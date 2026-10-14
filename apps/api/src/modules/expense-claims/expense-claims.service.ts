@@ -9,6 +9,7 @@ import { PrismaService } from "../../database/prisma.service";
 import { AccountingService } from "../accounting/accounting.service";
 import { NotificationsService } from "../notifications/notifications.service";
 import { PayrollService } from "../payroll/payroll.service";
+import { PlansService } from "../plans/plans.service";
 import { FiscalService } from "../fiscal/fiscal.service";
 import { ConfigService } from "@nestjs/config";
 import { randomBytes, timingSafeEqual } from "crypto";
@@ -131,6 +132,7 @@ export class ExpenseClaimsService {
     private payroll: PayrollService,
     private fiscal: FiscalService,
     private config: ConfigService,
+    private plans: PlansService,
   ) {}
 
   // ─── Contexto del usuario ─────────────────────────────────────────────────
@@ -149,8 +151,12 @@ export class ExpenseClaimsService {
 
   async me(u: JwtPayload) {
     const { employee, canApprove } = await this.context(u);
-    const settings = await this.getSettings(u.companyId);
-    return { employee, canApprove, settings, legal: { mileageRate: LEGAL_MILEAGE_RATE, perDiem: LEGAL_PER_DIEM } };
+    const [settings, limits] = await Promise.all([this.getSettings(u.companyId), this.plans.getLimits(u.companyId)]);
+    return {
+      employee, canApprove, settings,
+      legal: { mileageRate: LEGAL_MILEAGE_RATE, perDiem: LEGAL_PER_DIEM },
+      plan: { hasExpenseClaims: limits.hasExpenseClaims, hasExpenseAdvanced: limits.hasExpenseAdvanced, hasFleet: limits.hasFleet },
+    };
   }
 
   // ─── Configuración y políticas ────────────────────────────────────────────
@@ -1385,6 +1391,15 @@ export class ExpenseClaimsService {
       select: { id: true, companyId: true, email: true },
     });
     if (!employee) return { status: "unknown_recipient", created: 0 };
+
+    if (!(await this.plans.hasFeature(employee.companyId, "hasExpenseAdvanced"))) {
+      await this.notifyEmployee(employee.companyId, employee.email, {
+        title: "Ticket por email no disponible",
+        body: "El plan de tu empresa no incluye la recepción de tickets por email. Súbelo desde Gastos y dietas.",
+        data: { type: "EXPENSE_EMAIL", link: "/gastos" },
+      });
+      return { status: "plan_not_included", created: 0 };
+    }
 
     const senders = [extractAddress(body.from), extractAddress(body.headerFrom)].filter(Boolean);
     const employeeEmail = (employee.email ?? "").toLowerCase();

@@ -1,22 +1,37 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 
+export type PlanKey = "FREE" | "STARTER" | "PRO" | "ENTERPRISE";
+
+export interface PlanLimitsData {
+  maxUsers: number;
+  maxEmployees: number;
+  maxClients: number;
+  maxInvoicesPerMonth: number;
+  maxQuotesPerMonth: number;
+  maxProducts: number;
+  maxAutomations: number;
+  canSendEmails: boolean;
+  hasAccounting: boolean;
+  hasFullAccounting: boolean;
+  hasVeriFactu: boolean;
+  hasApiAccess: boolean;
+  hasPayroll: boolean;
+  hasExpenseClaims: boolean;
+  hasExpenseAdvanced: boolean;
+  hasFleet: boolean;
+}
+
+export type PlanFeature = {
+  [K in keyof PlanLimitsData]: PlanLimitsData[K] extends boolean ? K : never;
+}[keyof PlanLimitsData];
+
 export interface PlanUsage {
-  plan: "FREE" | "STARTER" | "PRO" | "ENTERPRISE";
-  limits: {
-    maxUsers: number;
-    maxClients: number;
-    maxInvoicesPerMonth: number;
-    maxQuotesPerMonth: number;
-    maxProducts: number;
-    maxAutomations: number;
-    canSendEmails: boolean;
-    hasAccounting: boolean;
-    hasVeriFactu: boolean;
-    hasApiAccess: boolean;
-  };
+  plan: PlanKey;
+  limits: PlanLimitsData;
   usage: {
     users: number;
+    employees: number;
     clients: number;
     invoicesThisMonth: number;
     quotesThisMonth: number;
@@ -24,6 +39,19 @@ export interface PlanUsage {
     automations: number;
   };
 }
+
+// Plan mínimo que incluye cada función (debe coincidir con PLAN_LIMITS en @saas/types)
+export const FEATURE_MIN_PLAN: Record<PlanFeature, PlanKey> = {
+  canSendEmails: "STARTER",
+  hasAccounting: "STARTER",
+  hasExpenseClaims: "STARTER",
+  hasVeriFactu: "FREE",
+  hasFullAccounting: "PRO",
+  hasApiAccess: "PRO",
+  hasPayroll: "PRO",
+  hasExpenseAdvanced: "PRO",
+  hasFleet: "PRO",
+};
 
 export function usePlanUsage() {
   return useQuery<PlanUsage>({
@@ -33,19 +61,8 @@ export function usePlanUsage() {
   });
 }
 
-/** Returns true if the given feature is allowed under the current plan */
-export function useFeatureAllowed(feature: keyof PlanUsage["limits"]) {
+/** true/false según el plan; undefined mientras carga (para no lanzar peticiones que el plan no permite) */
+export function usePlanFeature(feature: PlanFeature): boolean | undefined {
   const { data } = usePlanUsage();
-  if (!data) return true; // optimistic while loading
-  return Boolean(data.limits[feature]);
-}
-
-/** Returns true if user can still create more of a countable resource (-1 = unlimited) */
-export function useCanCreate(resource: keyof PlanUsage["usage"], limitKey: keyof PlanUsage["limits"]) {
-  const { data } = usePlanUsage();
-  if (!data) return true;
-  const limit = data.limits[limitKey] as number;
-  if (limit === -1) return true;
-  const used = data.usage[resource] as number;
-  return used < limit;
+  return data ? Boolean(data.limits[feature]) : undefined;
 }

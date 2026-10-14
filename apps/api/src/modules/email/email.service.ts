@@ -273,9 +273,22 @@ export class EmailService {
       ENTERPRISE: "Enterprise",
     };
     const planFeatures: Record<string, string[]> = {
-      STARTER: ["Facturas ilimitadas", "VeriFactu incluido", "Hasta 3 usuarios", "Soporte por email"],
-      PRO: ["Todo lo de Starter", "Hasta 10 usuarios", "Informes avanzados", "Soporte prioritario"],
-      ENTERPRISE: ["Todo lo de Pro", "Usuarios ilimitados", "Integraciones API", "Soporte dedicado"],
+      STARTER: [
+        "Clientes, facturas y productos ilimitados",
+        "Hasta 3 usuarios y 3 empleados",
+        "Envío de facturas y presupuestos por email",
+        "Contabilidad básica con modelos 303 y 130",
+        "Notas de gasto de empleados: tickets, kilometraje y dietas",
+      ],
+      PRO: [
+        "Todo lo de Starter",
+        "Hasta 10 usuarios y 10 empleados",
+        "Nóminas y contabilidad completa (111, 190, 202 y 347)",
+        "Tickets por email y tarjetas de empresa",
+        "Flota de vehículos y DeCA",
+        "API, webhooks y soporte prioritario",
+      ],
+      ENTERPRISE: ["Todo lo de Pro", "Usuarios y empleados ilimitados", "Soporte dedicado", "Onboarding personalizado"],
     };
     const features = planFeatures[plan] ?? [];
     const label = planLabel[plan] ?? plan;

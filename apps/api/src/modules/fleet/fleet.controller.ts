@@ -13,13 +13,15 @@ import {
 } from "@nestjs/common";
 import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
 import { FleetService } from "./fleet.service";
+import { PlanFeatureGuard, RequiresFeature } from "../plans/requires-feature";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
 import type { JwtPayload } from "@saas/types";
 
 @ApiTags("Fleet")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PlanFeatureGuard)
+@RequiresFeature("hasFleet")
 @Controller("fleet")
 export class FleetController {
   constructor(private fleetService: FleetService) {}

@@ -52,11 +52,12 @@ export function getExpiryStatus(dateStr: string | null): "ok" | "warn" | "expire
   return "ok";
 }
 
-export function useVehicles(params?: Record<string, any>) {
+export function useVehicles(params?: Record<string, any>, enabled = true) {
   return useQuery<Vehicle[]>({
     queryKey: ["fleet", params],
     queryFn: () => api.get("/fleet", { params }).then((r) => r.data),
     staleTime: 30_000,
+    enabled,
   });
 }
 

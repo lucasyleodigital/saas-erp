@@ -14,12 +14,12 @@ const QA: { q: string; a: string; keywords: string[] }[] = [
   // -- Plan y precios --
   {
     q: "Que incluye el plan gratuito?",
-    a: "El plan Gratuito incluye hasta 5 clientes, 10 facturas al mes, 1 usuario y 1 GB de almacenamiento. Perfecto para empezar sin compromiso.",
+    a: "El plan Gratuito incluye 1 usuario, hasta 5 clientes, 10 facturas y 5 presupuestos al mes, VeriFactu, CRM, inventario y registro de gastos con escaner IA. Perfecto para empezar sin compromiso.",
     keywords: ["gratis", "gratuito", "free", "plan", "precio", "coste", "cuesta"],
   },
   {
     q: "Cuanto cuesta YouWhole?",
-    a: "Tenemos 4 planes:\n- Gratuito: 0 EUR/mes para siempre (5 clientes, 10 facturas)\n- Starter: 29 EUR/mes (3 usuarios, ilimitado)\n- Pro: 79 EUR/mes (10 usuarios, soporte prioritario)\n- Enterprise: personalizado (usuarios ilimitados)\n\nPuedes empezar gratis sin tarjeta y hacer upgrade cuando quieras.",
+    a: "Tenemos 4 planes:\n- Gratuito: 0 EUR/mes para siempre (5 clientes, 10 facturas)\n- Starter: 29 EUR/mes (3 usuarios, facturas ilimitadas, modelos 303 y 130, notas de gasto)\n- Pro: 79 EUR/mes (10 usuarios, nominas, contabilidad completa, flota y DeCA, soporte prioritario)\n- Enterprise: personalizado (usuarios ilimitados)\n\nPuedes empezar gratis sin tarjeta y hacer upgrade cuando quieras.",
     keywords: ["precio", "cuesta", "plan", "tarifa", "pagar", "suscripcion", "starter", "pro", "enterprise"],
   },
   {
@@ -91,7 +91,7 @@ const QA: { q: string; a: string; keywords: string[] }[] = [
   // -- Nominas y RRHH --
   {
     q: "Puedo gestionar nominas con YouWhole?",
-    a: "Si. En Nominas puedes gestionar empleados, contratos y nominas mensuales. El sistema calcula automaticamente las retenciones de IRPF y Seguridad Social. Tambien incluye control horario con registro de horas por proyecto y empleado.",
+    a: "Si. En Nominas puedes gestionar empleados, contratos y nominas mensuales. El sistema calcula automaticamente las retenciones de IRPF y Seguridad Social. Tambien incluye control horario con registro de horas por proyecto y empleado. Las nominas estan en el plan Pro; el control horario, desde el Starter.",
     keywords: ["nomina", "empleado", "rrhh", "contrato", "seguridad social", "horario"],
   },
   // -- Importar / Exportar --

@@ -2,6 +2,7 @@ import { Controller, Get, Post, Patch, Delete, Query, Body, Param, UseGuards, Us
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
 import { FiscalService } from "./fiscal.service";
+import { PlanFeatureGuard, RequiresFeature } from "../plans/requires-feature";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
 import type { JwtPayload } from "@saas/types";
@@ -10,7 +11,7 @@ import { UpdateExpenseDto } from "./dto/update-expense.dto";
 
 @ApiTags("Fiscal")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PlanFeatureGuard)
 @Controller("fiscal")
 export class FiscalController {
   constructor(private fiscal: FiscalService) {}
@@ -26,6 +27,7 @@ export class FiscalController {
   }
 
   @Get("m303")
+  @RequiresFeature("hasAccounting")
   getM303(@CurrentUser() u: JwtPayload, @Query("year") year: string, @Query("quarter") quarter: string) {
     const y = Number(year) || new Date().getFullYear();
     const q = Number(quarter) || Math.floor(new Date().getMonth() / 3) + 1;
@@ -33,6 +35,7 @@ export class FiscalController {
   }
 
   @Get("m130")
+  @RequiresFeature("hasAccounting")
   getM130(@CurrentUser() u: JwtPayload, @Query("year") year: string, @Query("quarter") quarter: string) {
     const y = Number(year) || new Date().getFullYear();
     const q = Number(quarter) || Math.floor(new Date().getMonth() / 3) + 1;
@@ -40,11 +43,13 @@ export class FiscalController {
   }
 
   @Get("periods")
+  @RequiresFeature("hasAccounting")
   getPeriods(@CurrentUser() u: JwtPayload, @Query("year") year: string) {
     return this.fiscal.getFiscalPeriods(u.companyId, Number(year) || new Date().getFullYear());
   }
 
   @Post("periods/:year/:quarter/file")
+  @RequiresFeature("hasAccounting")
   markFiled(
     @CurrentUser() u: JwtPayload,
     @Param("year") year: string,
@@ -55,6 +60,7 @@ export class FiscalController {
   }
 
   @Get("m111")
+  @RequiresFeature("hasFullAccounting")
   getM111(@CurrentUser() u: JwtPayload, @Query("year") year: string, @Query("quarter") quarter: string) {
     const y = Number(year) || new Date().getFullYear();
     const q = Number(quarter) || Math.floor(new Date().getMonth() / 3) + 1;
@@ -62,6 +68,7 @@ export class FiscalController {
   }
 
   @Get("m202")
+  @RequiresFeature("hasFullAccounting")
   getM202(@CurrentUser() u: JwtPayload, @Query("year") year: string, @Query("period") period: string) {
     const y = Number(year) || new Date().getFullYear();
     const p = Number(period) || 1;

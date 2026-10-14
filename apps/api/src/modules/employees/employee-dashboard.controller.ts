@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Body, Query, UseGuards, ForbiddenException } from "@nestjs/common";
 import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
+import { PlanFeatureGuard, RequiresFeature } from "../plans/requires-feature";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
 import { PrismaService } from "../../database/prisma.service";
@@ -11,7 +12,7 @@ import type { JwtPayload } from "@saas/types";
 
 @ApiTags("Employee Dashboard")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PlanFeatureGuard)
 @Controller("my")
 export class EmployeeDashboardController {
   constructor(
@@ -129,6 +130,7 @@ export class EmployeeDashboardController {
   }
 
   @Get("payslips")
+  @RequiresFeature("hasPayroll")
   async getPayslips(@CurrentUser() u: JwtPayload) {
     const emp = await this.getEmployeeId(u);
     return this.prisma.payroll.findMany({

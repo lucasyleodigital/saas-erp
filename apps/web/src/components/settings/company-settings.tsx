@@ -1,5 +1,7 @@
 "use client";
 
+import { usePlanFeature } from "@/hooks/use-plan";
+import { UpgradeRequired } from "@/components/billing/plan-gate";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -494,7 +496,7 @@ export function CompanySettings() {
       </Card>
 
       {/* Decafly / DeCA config */}
-      <DecaflySettings />
+      <DecaflySection />
 
       {/* Plan card */}
       <Card>
@@ -520,6 +522,13 @@ export function CompanySettings() {
       <TeamSection currentRole={currentUser?.role ?? "EMPLOYEE"} />
     </div>
   );
+}
+
+// DeCA forma parte de Flota (plan Pro)
+function DecaflySection() {
+  const hasFleet = usePlanFeature("hasFleet");
+  if (hasFleet === undefined) return null;
+  return hasFleet ? <DecaflySettings /> : <UpgradeRequired feature="hasFleet" compact />;
 }
 
 // ─── Decafly / DeCA settings ─────────────────────────────────────────────────

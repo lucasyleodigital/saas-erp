@@ -14,13 +14,14 @@ import {
 } from "@nestjs/common";
 import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
 import { DeliveryNotesService } from "./delivery-notes.service";
+import { PlanFeatureGuard, RequiresFeature } from "../plans/requires-feature";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
 import type { JwtPayload } from "@saas/types";
 
 @ApiTags("DeliveryNotes")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PlanFeatureGuard)
 @Controller("delivery-notes")
 export class DeliveryNotesController {
   constructor(private deliveryNotesService: DeliveryNotesService) {}
@@ -80,6 +81,7 @@ export class DeliveryNotesController {
   }
 
   @Post(":id/deca")
+  @RequiresFeature("hasFleet")
   @HttpCode(HttpStatus.CREATED)
   generateDeca(
     @CurrentUser() u: JwtPayload,
@@ -90,6 +92,7 @@ export class DeliveryNotesController {
   }
 
   @Post(":id/deca/anular")
+  @RequiresFeature("hasFleet")
   @HttpCode(HttpStatus.OK)
   anularDeca(@CurrentUser() u: JwtPayload, @Param("id") id: string) {
     return this.deliveryNotesService.anularDeca(u.companyId, id);

@@ -2477,11 +2477,13 @@
           "description": "Para probar sen compromiso",
           "cta": "Plan actual",
           "features": [
-            "5 clientes",
-            "10 facturas / mes",
             "1 usuario",
+            "5 clientes e 50 produtos",
+            "10 facturas e 5 orzamentos ao mes",
             "VeriFactu incluído",
-            "Panel básico"
+            "CRM, pedidos, albarás e inventario",
+            "Rexistro de gastos con escáner IA",
+            "Calendario fiscal"
           ]
         },
         "starter": {
@@ -2489,15 +2491,14 @@
           "description": "Para autónomos e micropemes",
           "cta": "Comezar Starter",
           "features": [
-            "Clientes ilimitados",
-            "Facturas ilimitadas",
-            "3 usuarios",
-            "VeriFactu incluído",
-            "CRM + Pipeline",
-            "Contabilidade básica",
-            "Control horario (3 empregados)",
+            "Todo o do Gratuíto, sen límite de clientes, facturas nin produtos",
+            "3 usuarios e 3 empregados",
+            "Envío de facturas e orzamentos por email",
+            "Contabilidade básica: libro diario e conta de resultados",
+            "Modelos 303 e 130",
+            "Notas de gasto de empregados: tíckets, quilometraxe e axudas de custo",
+            "Control horario de empregados",
             "3 automatizacións",
-            "Copia de seguridade descargable",
             "Soporte por email"
           ]
         },
@@ -2507,15 +2508,14 @@
           "cta": "Comezar Pro",
           "badge": "Popular",
           "features": [
-            "Todo do Starter",
-            "10 usuarios",
-            "Contabilidade completa (Modelo 130/303/347)",
-            "Nóminas e RRHH",
-            "Control horario (10 empregados + GPS)",
-            "Portal empregado con fichaxe",
+            "Todo o do Starter",
+            "10 usuarios e 10 empregados",
+            "Nóminas con recibo no portal do empregado",
+            "Contabilidade completa: modelos 111, 190, 202 e 347 e libro de facturas",
+            "Gastos avanzados: tíckets por email e tarxetas de empresa",
+            "Frota de vehículos e DeCA de transporte",
             "Automatizacións ilimitadas",
-            "API e Webhooks",
-            "Auditoría completa",
+            "API e webhooks",
             "Soporte prioritario"
           ]
         },
@@ -4201,6 +4201,22 @@
       "title": "Combustible, peaxes e gastos",
       "summary": "Este ano {year} · Total {total}",
       "empty": "Sen gastos aprobados. Ao rexistrar un gasto en <link>Gastos e dietas</link>, asocia o vehículo para velo aquí."
+    }
+  },
+  "planGate": {
+    "title": "Dispoñible desde o plan {plan}",
+    "cta": "Ver plans",
+    "askAdmin": "Pide á administración que mellore o plan da empresa.",
+    "features": {
+      "hasAccounting": "Contabilidade: libro diario, IVE, modelos 303 e 130 e conta de resultados.",
+      "hasFullAccounting": "Contabilidade completa: libro de facturas, modelos 347, 111, 190 e 202.",
+      "hasPayroll": "Nóminas, remesas SEPA e portal do empregado.",
+      "hasFleet": "Frota de vehículos, mantementos e DeCA.",
+      "hasExpenseClaims": "Gastos e dietas: notas de gasto, quilometraxe e dietas.",
+      "hasExpenseAdvanced": "Tíckets por correo e conciliación de tarxetas da empresa.",
+      "hasApiAccess": "API e webhooks.",
+      "canSendEmails": "Envío de correos.",
+      "hasVeriFactu": "VeriFactu."
     }
   }
 }

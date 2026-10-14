@@ -11,6 +11,7 @@ import {
   getDNStatusConfig,
 } from "@/hooks/use-delivery-notes";
 import { useVehicles } from "@/hooks/use-fleet";
+import { usePlanFeature } from "@/hooks/use-plan";
 import { useLocale } from "@/hooks/use-locale";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -73,7 +74,8 @@ export function DeliveryNoteDetailView({ id }: { id: string }) {
     origen: "",
     pesoKg: "",
   });
-  const { data: fleetVehicles = [] } = useVehicles({ activeOnly: "true" });
+  const hasFleet = usePlanFeature("hasFleet") === true;
+  const { data: fleetVehicles = [] } = useVehicles({ activeOnly: "true" }, hasFleet);
   function setDeca(k: keyof typeof decaForm, v: string) {
     setDecaForm((p) => ({ ...p, [k]: v }));
   }
@@ -145,7 +147,7 @@ export function DeliveryNoteDetailView({ id }: { id: string }) {
         </div>
 
         <div className="flex items-center gap-2">
-          {(!note.decaflyId || note.decaflyEstado === "anulado") && note.status !== "CANCELLED" && (
+          {hasFleet && (!note.decaflyId || note.decaflyEstado === "anulado") && note.status !== "CANCELLED" && (
             <Button
               size="sm"
               variant="outline"
@@ -423,7 +425,7 @@ export function DeliveryNoteDetailView({ id }: { id: string }) {
                 </a>
               )}
             </div>
-            {note.decaflyEstado === "vigente" && (
+            {hasFleet && note.decaflyEstado === "vigente" && (
               <Button
                 variant="destructive"
                 size="sm"

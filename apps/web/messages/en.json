@@ -2617,11 +2617,13 @@
           "description": "Try it with no commitment",
           "cta": "Current plan",
           "features": [
-            "5 clients",
-            "10 invoices / month",
             "1 user",
+            "5 clients and 50 products",
+            "10 invoices and 5 quotes per month",
             "VeriFactu included",
-            "Basic dashboard"
+            "CRM, orders, delivery notes and inventory",
+            "Expense tracking with AI receipt scanner",
+            "Tax calendar"
           ]
         },
         "starter": {
@@ -2629,15 +2631,14 @@
           "description": "For freelancers and micro-businesses",
           "cta": "Start with Starter",
           "features": [
-            "Unlimited clients",
-            "Unlimited invoices",
-            "3 users",
-            "VeriFactu included",
-            "CRM + Pipeline",
-            "Basic accounting",
-            "Time tracking (3 employees)",
+            "Everything in Free, with unlimited clients, invoices and products",
+            "3 users and 3 employees",
+            "Send invoices and quotes by email",
+            "Basic accounting: journal and profit and loss",
+            "Tax forms 303 and 130",
+            "Employee expense claims: receipts, mileage and per diems",
+            "Employee time tracking",
             "3 automations",
-            "Downloadable backups",
             "Email support"
           ]
         },
@@ -2648,14 +2649,13 @@
           "badge": "Most popular",
           "features": [
             "Everything in Starter",
-            "10 users",
-            "Full accounting (tax forms 130/303/347)",
-            "Payroll & HR",
-            "Time tracking (10 employees + GPS)",
-            "Employee self-service portal",
+            "10 users and 10 employees",
+            "Payroll with payslips in the employee portal",
+            "Full accounting: forms 111, 190, 202 and 347 and invoice register",
+            "Advanced expenses: receipts by email and company cards",
+            "Vehicle fleet and transport DeCA",
             "Unlimited automations",
             "API and webhooks",
-            "Full audit trail",
             "Priority support"
           ]
         },
@@ -4329,6 +4329,22 @@
       "title": "Fuel, tolls and expenses",
       "summary": "This year {year} · Total {total}",
       "empty": "No approved expenses. When recording an expense in <link>Expenses</link>, link the vehicle to see it here."
+    }
+  },
+  "planGate": {
+    "title": "Available from the {plan} plan",
+    "cta": "See plans",
+    "askAdmin": "Ask your administrator to upgrade the company plan.",
+    "features": {
+      "hasAccounting": "Accounting: journal, VAT, forms 303 and 130 and profit and loss.",
+      "hasFullAccounting": "Full accounting: invoice ledger, forms 347, 111, 190 and 202.",
+      "hasPayroll": "Payroll, SEPA batches and employee portal.",
+      "hasFleet": "Vehicle fleet, maintenance and DeCA.",
+      "hasExpenseClaims": "Expenses: expense reports, mileage and per diems.",
+      "hasExpenseAdvanced": "Receipts by email and company card reconciliation.",
+      "hasApiAccess": "API and webhooks.",
+      "canSendEmails": "Sending emails.",
+      "hasVeriFactu": "VeriFactu."
     }
   }
 }

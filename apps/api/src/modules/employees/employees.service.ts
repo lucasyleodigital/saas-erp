@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException, ConflictException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
 import { EmailService } from "../email/email.service";
+import { PlansService } from "../plans/plans.service";
 import * as bcrypt from "bcryptjs";
 
 function esc(s: string | null | undefined): string {
@@ -12,6 +13,7 @@ export class EmployeesService {
   constructor(
     private prisma: PrismaService,
     private email: EmailService,
+    private plans: PlansService,
   ) {}
 
   // ─── Employees ─────────────────────────────────────────────
@@ -63,6 +65,7 @@ export class EmployeesService {
     if (!dto.firstName || !dto.lastName) throw new BadRequestException("Nombre y apellidos obligatorios");
     if (!dto.startDate) throw new BadRequestException("Fecha de alta obligatoria");
     if (dto.salary === undefined || dto.salary === null) throw new BadRequestException("Salario obligatorio");
+    await this.plans.checkLimit(companyId, "maxEmployees", await this.plans.countEmployees(companyId));
 
     return this.prisma.employee.create({
       data: {

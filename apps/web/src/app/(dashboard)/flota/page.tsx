@@ -37,6 +37,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { formatDate, cn } from "@/lib/utils";
 import { VehicleExpensesCard } from "@/components/expenses/vehicle-expenses-card";
+import { PlanGate } from "@/components/billing/plan-gate";
 import {
   Plus,
   Truck,
@@ -269,6 +270,14 @@ function MaintenanceForm({
 }
 
 export default function FlotaPage() {
+  return (
+    <PlanGate feature="hasFleet">
+      <FlotaContent />
+    </PlanGate>
+  );
+}
+
+function FlotaContent() {
   const t = useTranslations("fleet");
   const locale = useLocale();
   const [search, setSearch] = useState("");

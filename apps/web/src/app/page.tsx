@@ -92,7 +92,7 @@ const JSONLD_SOFTWARE = {
       name: "Plan Gratuito",
       price: "0",
       priceCurrency: "EUR",
-      description: "5 clientes, 10 facturas/mes, 1 usuario, VeriFactu incluido.",
+      description: "1 usuario, 5 clientes, 10 facturas y 5 presupuestos al mes, VeriFactu, CRM, inventario y registro de gastos con escaner IA.",
     },
     {
       "@type": "Offer",
@@ -100,7 +100,7 @@ const JSONLD_SOFTWARE = {
       price: "29",
       priceCurrency: "EUR",
       priceSpecification: { "@type": "UnitPriceSpecification", billingIncrement: 1, unitCode: "MON" },
-      description: "3 usuarios, clientes y facturas ilimitadas, CRM, contabilidad basica, control horario.",
+      description: "3 usuarios y 3 empleados, clientes y facturas ilimitados, envio por email, contabilidad basica con modelos 303 y 130, notas de gasto de empleados (tickets, kilometraje y dietas), control horario.",
     },
     {
       "@type": "Offer",
@@ -108,7 +108,7 @@ const JSONLD_SOFTWARE = {
       price: "79",
       priceCurrency: "EUR",
       priceSpecification: { "@type": "UnitPriceSpecification", billingIncrement: 1, unitCode: "MON" },
-      description: "10 usuarios, nominas, portal empleado, automatizaciones ilimitadas, API, soporte prioritario.",
+      description: "10 usuarios y 10 empleados, nominas, contabilidad completa (111, 190, 202, 347), tickets por email y tarjetas de empresa, flota de vehiculos y DeCA, automatizaciones ilimitadas, API, soporte prioritario.",
     },
     {
       "@type": "Offer",

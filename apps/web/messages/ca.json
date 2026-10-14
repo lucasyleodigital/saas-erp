@@ -2616,11 +2616,13 @@
           "description": "Per provar sense compromís",
           "cta": "Pla actual",
           "features": [
-            "5 clients",
-            "10 factures / mes",
             "1 usuari",
+            "5 clients i 50 productes",
+            "10 factures i 5 pressupostos al mes",
             "VeriFactu inclòs",
-            "Tauler bàsic"
+            "CRM, comandes, albarans i inventari",
+            "Registre de despeses amb escàner IA",
+            "Calendari fiscal"
           ]
         },
         "starter": {
@@ -2628,16 +2630,15 @@
           "description": "Per a autònoms i micropimes",
           "cta": "Començar Starter",
           "features": [
-            "Clients il·limitats",
-            "Factures il·limitades",
-            "3 usuaris",
-            "VeriFactu inclòs",
-            "CRM + Pipeline",
-            "Comptabilitat bàsica",
-            "Control horari (3 empleats)",
+            "Tot el del Gratuït, sense límit de clients, factures ni productes",
+            "3 usuaris i 3 empleats",
+            "Enviament de factures i pressupostos per correu",
+            "Comptabilitat bàsica: llibre diari i compte de resultats",
+            "Models 303 i 130",
+            "Notes de despesa d'empleats: tiquets, quilometratge i dietes",
+            "Control horari d'empleats",
             "3 automatitzacions",
-            "Còpia de seguretat descarregable",
-            "Suport per email"
+            "Suport per correu"
           ]
         },
         "pro": {
@@ -2646,15 +2647,14 @@
           "cta": "Començar Pro",
           "badge": "Popular",
           "features": [
-            "Tot de l'Starter",
-            "10 usuaris",
-            "Comptabilitat completa (Model 130/303/347)",
-            "Nòmines i RRHH",
-            "Control horari (10 empleats + GPS)",
-            "Portal de l'empleat amb fitxatge",
+            "Tot el de l'Starter",
+            "10 usuaris i 10 empleats",
+            "Nòmines amb rebut al portal de l'empleat",
+            "Comptabilitat completa: models 111, 190, 202 i 347 i llibre de factures",
+            "Despeses avançades: tiquets per correu i targetes d'empresa",
+            "Flota de vehicles i DeCA de transport",
             "Automatitzacions il·limitades",
-            "API i Webhooks",
-            "Auditoria completa",
+            "API i webhooks",
             "Suport prioritari"
           ]
         },
@@ -4340,6 +4340,22 @@
       "title": "Combustible, peatges i despeses",
       "summary": "Aquest any {year} · Total {total}",
       "empty": "Sense despeses aprovades. En registrar una despesa a <link>Despeses i dietes</link>, associa el vehicle per veure-la aquí."
+    }
+  },
+  "planGate": {
+    "title": "Disponible des del pla {plan}",
+    "cta": "Veure plans",
+    "askAdmin": "Demana a administració que millori el pla de l'empresa.",
+    "features": {
+      "hasAccounting": "Comptabilitat: llibre diari, IVA, models 303 i 130 i compte de resultats.",
+      "hasFullAccounting": "Comptabilitat completa: llibre de factures, models 347, 111, 190 i 202.",
+      "hasPayroll": "Nòmines, remeses SEPA i portal de l'empleat.",
+      "hasFleet": "Flota de vehicles, manteniments i DeCA.",
+      "hasExpenseClaims": "Despeses i dietes: notes de despesa, quilometratge i dietes.",
+      "hasExpenseAdvanced": "Tiquets per correu i conciliació de targetes d'empresa.",
+      "hasApiAccess": "API i webhooks.",
+      "canSendEmails": "Enviament de correus.",
+      "hasVeriFactu": "VeriFactu."
     }
   }
 }

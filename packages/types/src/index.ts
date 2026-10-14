@@ -165,6 +165,7 @@ export interface VerifactuInvoiceData {
 export interface PlanLimits {
   // -1 = unlimited
   maxUsers: number;
+  maxEmployees: number;
   maxClients: number;
   maxInvoicesPerMonth: number;
   maxQuotesPerMonth: number;
@@ -172,50 +173,56 @@ export interface PlanLimits {
   maxAutomations: number;
   // Feature flags
   canSendEmails: boolean;
-  hasAccounting: boolean;
+  hasAccounting: boolean;        // libro diario, IVA, 303/130, cuenta de resultados
+  hasFullAccounting: boolean;    // 347, 111/190, 202, retenciones, libros oficiales
   hasVeriFactu: boolean;
   hasApiAccess: boolean;
+  hasPayroll: boolean;           // nóminas, SEPA, portal del empleado
+  hasExpenseClaims: boolean;     // notas de gasto, kilometraje, dietas
+  hasExpenseAdvanced: boolean;   // tickets por email y conciliación de tarjetas
+  hasFleet: boolean;             // flota de vehículos y DeCA
 }
 
 export const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
   FREE: {
     maxUsers: 1,
-    maxClients: 25,
+    maxEmployees: 0,
+    maxClients: 5,
     maxInvoicesPerMonth: 10,
     maxQuotesPerMonth: 5,
     maxProducts: 50,
     maxAutomations: 0,
     canSendEmails: false,
     hasAccounting: false,
-    hasVeriFactu: false,
+    hasFullAccounting: false,
+    hasVeriFactu: true,
     hasApiAccess: false,
+    hasPayroll: false,
+    hasExpenseClaims: false,
+    hasExpenseAdvanced: false,
+    hasFleet: false,
   },
   STARTER: {
     maxUsers: 3,
-    maxClients: 200,
-    maxInvoicesPerMonth: -1,
-    maxQuotesPerMonth: -1,
-    maxProducts: 500,
-    maxAutomations: 3,
-    canSendEmails: true,
-    hasAccounting: false,
-    hasVeriFactu: true,
-    hasApiAccess: false,
-  },
-  PRO: {
-    maxUsers: 10,
+    maxEmployees: 3,
     maxClients: -1,
     maxInvoicesPerMonth: -1,
     maxQuotesPerMonth: -1,
     maxProducts: -1,
-    maxAutomations: 20,
+    maxAutomations: 3,
     canSendEmails: true,
     hasAccounting: true,
+    hasFullAccounting: false,
     hasVeriFactu: true,
     hasApiAccess: false,
+    hasPayroll: false,
+    hasExpenseClaims: true,
+    hasExpenseAdvanced: false,
+    hasFleet: false,
   },
-  ENTERPRISE: {
-    maxUsers: -1,
+  PRO: {
+    maxUsers: 10,
+    maxEmployees: 10,
     maxClients: -1,
     maxInvoicesPerMonth: -1,
     maxQuotesPerMonth: -1,
@@ -223,8 +230,31 @@ export const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
     maxAutomations: -1,
     canSendEmails: true,
     hasAccounting: true,
+    hasFullAccounting: true,
     hasVeriFactu: true,
     hasApiAccess: true,
+    hasPayroll: true,
+    hasExpenseClaims: true,
+    hasExpenseAdvanced: true,
+    hasFleet: true,
+  },
+  ENTERPRISE: {
+    maxUsers: -1,
+    maxEmployees: -1,
+    maxClients: -1,
+    maxInvoicesPerMonth: -1,
+    maxQuotesPerMonth: -1,
+    maxProducts: -1,
+    maxAutomations: -1,
+    canSendEmails: true,
+    hasAccounting: true,
+    hasFullAccounting: true,
+    hasVeriFactu: true,
+    hasApiAccess: true,
+    hasPayroll: true,
+    hasExpenseClaims: true,
+    hasExpenseAdvanced: true,
+    hasFleet: true,
   },
 };
 

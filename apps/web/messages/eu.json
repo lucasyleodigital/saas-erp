@@ -2562,11 +2562,13 @@
           "description": "Konpromisorik gabe probatzeko",
           "cta": "Egungo plana",
           "features": [
-            "5 bezero",
-            "10 faktura / hilean",
             "Erabiltzaile 1",
+            "5 bezero eta 50 produktu",
+            "10 faktura eta 5 aurrekontu hilean",
             "VeriFactu barne",
-            "Oinarrizko panela"
+            "CRMa, eskaerak, albaranak eta inbentarioa",
+            "Gastuen erregistroa IA eskanerrarekin",
+            "Egutegi fiskala"
           ]
         },
         "starter": {
@@ -2574,16 +2576,15 @@
           "description": "Autonomo eta mikroenpresentzat",
           "cta": "Hasi Starter",
           "features": [
-            "Bezero mugagabeak",
-            "Faktura mugagabeak",
-            "3 erabiltzaile",
-            "VeriFactu barne",
-            "CRM + Pipelinea",
-            "Oinarrizko kontabilitatea",
-            "Ordutegi-kontrola (3 langile)",
+            "Doakoaren guztia, bezero, faktura eta produktu mugarik gabe",
+            "3 erabiltzaile eta 3 langile",
+            "Fakturak eta aurrekontuak posta elektronikoz bidaltzea",
+            "Oinarrizko kontabilitatea: egunkari-liburua eta emaitzen kontua",
+            "303 eta 130 ereduak",
+            "Langileen gastu-oharrak: tiketak, kilometrajea eta dietak",
+            "Langileen ordutegi-kontrola",
             "3 automatizazio",
-            "Deskargagarria den babeskopia",
-            "Email bidezko laguntza"
+            "Laguntza posta elektronikoz"
           ]
         },
         "pro": {
@@ -2593,14 +2594,13 @@
           "badge": "Ohikoena",
           "features": [
             "Starterreko guztia",
-            "10 erabiltzaile",
-            "Kontabilitate osoa (130/303/347 ereduak)",
-            "Nominak eta giza baliabideak",
-            "Ordutegi-kontrola (10 langile + GPS)",
-            "Fitxaketarekin langile-ataria",
+            "10 erabiltzaile eta 10 langile",
+            "Nominak, ordainagiria langilearen atarian",
+            "Kontabilitate osoa: 111, 190, 202 eta 347 ereduak eta fakturen liburua",
+            "Gastu aurreratuak: tiketak posta bidez eta enpresa-txartelak",
+            "Ibilgailu-flota eta garraioko DeCA",
             "Automatizazio mugagabeak",
-            "API eta Webhooks",
-            "Auditoretza osoa",
+            "APIa eta webhookak",
             "Lehentasunezko laguntza"
           ]
         },
@@ -4274,6 +4274,22 @@
       "title": "Erregaia, bidesariak eta gastuak",
       "summary": "Aurten {year} · Guztira {total}",
       "empty": "Ez dago onartutako gasturik. <link>Gastuak eta dietak</link> atalean gastu bat erregistratzean, lotu ibilgailua hemen ikusteko."
+    }
+  },
+  "planGate": {
+    "title": "{plan} planetik aurrera eskuragarri",
+    "cta": "Ikusi planak",
+    "askAdmin": "Eskatu administrazioari enpresaren plana hobetzeko.",
+    "features": {
+      "hasAccounting": "Kontabilitatea: egunkaria, BEZa, 303 eta 130 ereduak eta emaitzen kontua.",
+      "hasFullAccounting": "Kontabilitate osoa: fakturen liburua, 347, 111, 190 eta 202 ereduak.",
+      "hasPayroll": "Nominak, SEPA igorpenak eta langilearen ataria.",
+      "hasFleet": "Ibilgailuen flota, mantentze-lanak eta DeCA.",
+      "hasExpenseClaims": "Gastuak eta dietak: gastu-oharrak, kilometrajea eta dietak.",
+      "hasExpenseAdvanced": "Tiketak posta bidez eta enpresako txartelen bateratzea.",
+      "hasApiAccess": "APIa eta webhookak.",
+      "canSendEmails": "Posta elektronikoak bidaltzea.",
+      "hasVeriFactu": "VeriFactu."
     }
   }
 }

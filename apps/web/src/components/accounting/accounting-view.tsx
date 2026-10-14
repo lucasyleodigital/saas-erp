@@ -24,6 +24,8 @@ import { cn, formatCurrency } from "@/lib/utils";
 import { Plus, Trash2, Loader2, BookOpen, Receipt, TrendingUp, Calculator, FileText, Users as UsersIcon, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { UpgradeRequired } from "@/components/billing/plan-gate";
+import { usePlanFeature } from "@/hooks/use-plan";
 
 // ---- Journal entry dialog ----
 const entrySchema = z.object({
@@ -192,10 +194,11 @@ export function AccountingView() {
   const syncExpenses = useSyncExpenses();
   const deleteAccount = useDeleteAccount();
 
-  const { data: libro, isLoading: libroLoading } = useLibroFacturas(year);
+  const hasFull = usePlanFeature("hasFullAccounting");
+  const { data: libro, isLoading: libroLoading } = useLibroFacturas(year, hasFull === true);
   const { data: modelo130, isLoading: m130Loading } = useModelo130(year);
-  const { data: modelo347, isLoading: m347Loading } = useModelo347(year);
-  const { data: retenciones, isLoading: retLoading } = useRetenciones(year);
+  const { data: modelo347, isLoading: m347Loading } = useModelo347(year, hasFull === true);
+  const { data: retenciones, isLoading: retLoading } = useRetenciones(year, hasFull === true);
 
   const accounts: any[] = accountsData ?? [];
   const entries: any[] = journalData?.data ?? [];
@@ -542,7 +545,11 @@ export function AccountingView() {
       )}
 
       {/* Libro Facturas tab */}
-      {tab === "libro" && (
+      {hasFull === false && (tab === "libro" || tab === "modelo347" || tab === "retenciones") && (
+        <UpgradeRequired feature="hasFullAccounting" compact />
+      )}
+
+      {tab === "libro" && hasFull !== false && (
         <div className="space-y-4">
           <Card>
             <CardHeader><CardTitle className="text-base">{t("libro.issued")}</CardTitle></CardHeader>
@@ -688,7 +695,7 @@ export function AccountingView() {
       )}
 
       {/* Modelo 347 tab */}
-      {tab === "modelo347" && (
+      {tab === "modelo347" && hasFull !== false && (
         <div className="space-y-4">
           <Card className="border-blue-500/30 bg-blue-500/5">
             <CardContent className="p-5">
@@ -762,7 +769,7 @@ export function AccountingView() {
       )}
 
       {/* Retenciones IRPF tab */}
-      {tab === "retenciones" && (
+      {tab === "retenciones" && hasFull !== false && (
         <div className="space-y-4">
           <Card className="border-red-500/30 bg-red-500/5">
             <CardContent className="p-5">

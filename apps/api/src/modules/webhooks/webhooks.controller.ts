@@ -1,6 +1,7 @@
 import { Controller, Get, Put, Body, UseGuards } from "@nestjs/common";
 import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
 import { WebhooksService } from "./webhooks.service";
+import { PlanFeatureGuard, RequiresFeature } from "../plans/requires-feature";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
 import { SaveEndpointsDto } from "./dto/save-endpoints.dto";
@@ -8,7 +9,8 @@ import type { JwtPayload } from "@saas/types";
 
 @ApiTags("Webhooks")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PlanFeatureGuard)
+@RequiresFeature("hasApiAccess")
 @Controller("webhooks")
 export class WebhooksController {
   constructor(private svc: WebhooksService) {}

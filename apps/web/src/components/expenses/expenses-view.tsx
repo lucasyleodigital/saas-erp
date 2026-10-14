@@ -36,6 +36,7 @@ import { ExpenseSettingsPanel } from "./expense-settings";
 import { ExpenseCards } from "./expense-cards";
 import { useUser } from "@/hooks/use-user";
 import { useExpenseFormat } from "./use-expense-format";
+import { UpgradeRequired } from "@/components/billing/plan-gate";
 
 type ClaimFilter = "open" | "PENDING" | "APPROVED" | "REIMBURSED" | "all";
 const CLAIM_FILTERS: { value: ClaimFilter; status?: string; unreported?: boolean }[] = [
@@ -413,7 +414,9 @@ export function ExpensesView() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { data: context, isLoading } = useExpenseContext();
-  const canApprove = !!context?.canApprove;
+  const included = !!context?.plan.hasExpenseClaims;
+  const advanced = !!context?.plan.hasExpenseAdvanced;
+  const canApprove = included && !!context?.canApprove;
 
   const { data: employeesData } = useQuery<{ data: { id: string; firstName: string; lastName: string; email: string | null }[] }>({
     queryKey: ["employees", { status: "ACTIVE", limit: 200 }],
@@ -459,6 +462,18 @@ export function ExpensesView() {
 
   if (isLoading || !context) {
     return <div className="flex justify-center py-24"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
+  }
+
+  if (!included) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold">{context.canApprove ? t("title") : t("titleMine")}</h1>
+          <p className="text-muted-foreground text-sm mt-1">{t("subtitle")}</p>
+        </div>
+        <UpgradeRequired feature="hasExpenseClaims" />
+      </div>
+    );
   }
 
   const cannotRegister = !context.employee && (!canApprove || employees.length === 0);
@@ -515,7 +530,7 @@ export function ExpensesView() {
             </TabsList>
           </div>
           <TabsContent value="claims" className="space-y-4">
-            {context.employee && <EmailAddressCard employeeEmail={me?.email ?? null} />}
+            {context.employee && advanced && <EmailAddressCard employeeEmail={me?.email ?? null} />}
             <ClaimsTab
               context={context}
               employees={employees}
@@ -528,7 +543,7 @@ export function ExpensesView() {
           </TabsContent>
           {canApprove && (
             <TabsContent value="cards">
-              <ExpenseCards employees={employees} />
+              {advanced ? <ExpenseCards employees={employees} /> : <UpgradeRequired feature="hasExpenseAdvanced" compact />}
             </TabsContent>
           )}
           {canApprove && (

@@ -55,8 +55,9 @@ export function useAccounts() {
   });
 }
 
-export function useLibroFacturas(year: number) {
+export function useLibroFacturas(year: number, enabled = true) {
   return useQuery({
+    enabled,
     queryKey: ["accounting", "libro-facturas", year],
     queryFn: () => api.get("/accounting/libro-facturas", { params: { year } }).then((r) => r.data),
   });
@@ -69,15 +70,17 @@ export function useModelo130(year: number) {
   });
 }
 
-export function useModelo347(year: number) {
+export function useModelo347(year: number, enabled = true) {
   return useQuery({
+    enabled,
     queryKey: ["accounting", "modelo-347", year],
     queryFn: () => api.get("/accounting/modelo-347", { params: { year } }).then((r) => r.data),
   });
 }
 
-export function useRetenciones(year: number) {
+export function useRetenciones(year: number, enabled = true) {
   return useQuery({
+    enabled,
     queryKey: ["accounting", "retenciones", year],
     queryFn: () => api.get("/accounting/retenciones", { params: { year } }).then((r) => r.data),
   });

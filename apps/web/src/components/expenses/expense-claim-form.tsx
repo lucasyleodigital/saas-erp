@@ -161,8 +161,8 @@ export function ExpenseClaimForm({
   const create = useCreateExpenseClaim();
   const update = useUpdateExpenseClaim();
   const { data: projectsData } = useProjects({});
-  const { data: vehicles = [] } = useVehicles({ activeOnly: "true" });
-  const { data: allCards = [] } = useCompanyCards();
+  const { data: vehicles = [] } = useVehicles({ activeOnly: "true" }, context.plan.hasFleet);
+  const { data: allCards = [] } = useCompanyCards(context.plan.hasExpenseAdvanced);
   const projects: { id: string; name: string }[] = Array.isArray(projectsData) ? projectsData : projectsData?.data ?? [];
 
   const set = <K extends keyof FormState>(k: K, v: FormState[K]) => setForm((f) => ({ ...f, [k]: v }));
