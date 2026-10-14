@@ -9,9 +9,21 @@ export class CreateExpenseDto {
   @MaxLength(500)
   description!: string;
 
+  // Proveedor existente; si no llega (escáner de documentos), se busca o crea con supplier/supplierNif
+  @IsOptional()
   @IsString()
   @MinLength(1)
-  supplierId!: string;
+  supplierId?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  supplier?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  supplierNif?: string;
 
   @IsOptional()
   @IsString()

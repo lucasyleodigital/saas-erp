@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PrismaService } from "../../database/prisma.service";
 import { AccountingService } from "../accounting/accounting.service";
@@ -348,11 +348,40 @@ export class FiscalService {
     return { data, total };
   }
 
+  /** Proveedor del gasto: por id, o por NIF/nombre (escáner), creándolo si no existe */
+  private async resolveExpenseSupplier(companyId: string, data: CreateExpenseDto) {
+    if (data.supplierId) {
+      const found = await this.prisma.supplier.findFirst({ where: { id: data.supplierId, companyId } });
+      if (!found) throw new NotFoundException("Proveedor no encontrado");
+      return found;
+    }
+
+    const name = data.supplier?.trim();
+    const nif = data.supplierNif?.replace(/[\s-]/g, "").toUpperCase() || undefined;
+    if (!name && !nif) throw new BadRequestException("Indica el proveedor del gasto");
+
+    if (nif) {
+      const byNif = await this.prisma.supplier.findFirst({
+        where: { companyId, cifNif: { equals: nif, mode: "insensitive" } },
+      });
+      if (byNif) return byNif;
+    }
+    if (name) {
+      const byName = await this.prisma.supplier.findFirst({
+        where: { companyId, name: { equals: name, mode: "insensitive" } },
+      });
+      if (byName) {
+        if (nif && !byName.cifNif) {
+          return this.prisma.supplier.update({ where: { id: byName.id }, data: { cifNif: nif } });
+        }
+        return byName;
+      }
+    }
+    return this.prisma.supplier.create({ data: { companyId, name: name || nif!, cifNif: nif ?? null } });
+  }
+
   async createExpense(companyId: string, data: CreateExpenseDto) {
-    const supplierRecord = await this.prisma.supplier.findFirst({
-      where: { id: data.supplierId, companyId },
-    });
-    if (!supplierRecord) throw new NotFoundException("Proveedor no encontrado");
+    const supplierRecord = await this.resolveExpenseSupplier(companyId, data);
 
     const subtotal = Number(data.subtotal);
     const vatRate = Number(data.vatRate ?? 21);

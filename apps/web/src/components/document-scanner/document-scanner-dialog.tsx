@@ -100,14 +100,13 @@ export function DocumentScannerDialog({ open, onOpenChange }: { open: boolean; o
         await createExpense.mutateAsync({
           date: ex.date ?? new Date().toISOString().split("T")[0],
           description: ex.description ?? "",
-          supplier: ex.supplier ?? "",
-          supplierNif: ex.supplierNif ?? "",
-          invoiceRef: ex.invoiceRef ?? "",
-          subtotal: ex.subtotal ? String(ex.subtotal) : "",
-          vatRate: ex.vatRate !== undefined ? String(ex.vatRate) : "21",
-          withholdingRate: "",
+          supplier: ex.supplier || undefined,
+          supplierNif: ex.supplierNif || undefined,
+          invoiceRef: ex.invoiceRef || undefined,
+          subtotal: Number(ex.subtotal) || 0,
+          vatRate: ex.vatRate !== undefined ? Number(ex.vatRate) : 21,
           category: ex.category ?? "OTROS",
-          attachmentUrl: result.attachmentUrl ?? "",
+          attachmentUrl: result.attachmentUrl || undefined,
         });
         toast.success("Gasto registrado correctamente");
         onOpenChange(false);
