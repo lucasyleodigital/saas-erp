@@ -99,7 +99,8 @@ export function DocumentScannerDialog({ open, onOpenChange }: { open: boolean; o
       if (result.documentType === "GASTO") {
         await createExpense.mutateAsync({
           date: ex.date ?? new Date().toISOString().split("T")[0],
-          description: ex.description ?? "",
+          // La API exige descripción; la IA no siempre la extrae
+          description: ex.description?.trim() || (ex.supplier ? `Ticket ${ex.supplier}` : "Gasto escaneado"),
           supplier: ex.supplier || undefined,
           supplierNif: ex.supplierNif || undefined,
           invoiceRef: ex.invoiceRef || undefined,

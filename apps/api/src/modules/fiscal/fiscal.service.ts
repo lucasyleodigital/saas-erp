@@ -357,7 +357,7 @@ export class FiscalService {
     }
 
     const name = data.supplier?.trim();
-    const nif = data.supplierNif?.replace(/[\s-]/g, "").toUpperCase() || undefined;
+    const nif = data.supplierNif?.replace(/[\s.-]/g, "").toUpperCase() || undefined;
     if (!name && !nif) throw new BadRequestException("Indica el proveedor del gasto");
 
     if (nif) {
@@ -365,6 +365,13 @@ export class FiscalService {
         where: { companyId, cifNif: { equals: nif, mode: "insensitive" } },
       });
       if (byNif) return byNif;
+      // NIF guardado con guiones o espacios ("B-12345678"): comparar normalizado para no duplicar
+      const withNif = await this.prisma.supplier.findMany({
+        where: { companyId, cifNif: { not: null } },
+        select: { id: true, cifNif: true },
+      });
+      const sameNif = withNif.find((s) => s.cifNif!.replace(/[\s.-]/g, "").toUpperCase() === nif);
+      if (sameNif) return this.prisma.supplier.findFirstOrThrow({ where: { id: sameNif.id, companyId } });
     }
     if (name) {
       const byName = await this.prisma.supplier.findFirst({
