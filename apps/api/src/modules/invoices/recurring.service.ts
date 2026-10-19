@@ -1,5 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { Cron, CronExpression } from "@nestjs/schedule";
+import { nextFreeInvoiceNumber } from "./invoice-number";
 import { PrismaService } from "../../database/prisma.service";
 
 type Interval = "WEEKLY" | "BIWEEKLY" | "MONTHLY" | "QUARTERLY" | "YEARLY";
@@ -57,7 +58,7 @@ export class RecurringService {
 
         if (!series) continue;
 
-        const number = `${series.prefix}${String(series.nextNumber).padStart(4, "0")}`;
+        const { number, nextNumber } = await nextFreeInvoiceNumber(this.prisma, tpl.companyId, series);
         const dueOffset = tpl.dueDate
           ? Math.round((tpl.dueDate.getTime() - tpl.issueDate.getTime()) / 86400000)
           : 30;
@@ -102,7 +103,7 @@ export class RecurringService {
           }),
           this.prisma.invoiceSeries.update({
             where: { id: series.id },
-            data: { nextNumber: { increment: 1 } },
+            data: { nextNumber },
           }),
         ]);
 

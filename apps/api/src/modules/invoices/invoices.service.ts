@@ -4,6 +4,7 @@ import {
   BadRequestException,
 } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
+import { nextFreeInvoiceNumber } from "./invoice-number";
 import { PlansService } from "../plans/plans.service";
 import { AutomationsService } from "../automations/automations.service";
 import { EmailService } from "../email/email.service";
@@ -109,7 +110,7 @@ export class InvoicesService {
 
     if (!series) throw new BadRequestException("Serie de factura no encontrada");
 
-    const number = `${series.prefix}${String(series.nextNumber).padStart(4, "0")}`;
+    const { number, nextNumber } = await nextFreeInvoiceNumber(this.prisma, companyId, series);
 
     const subtotal = dto.items.reduce(
       (sum, item) => sum + item.quantity * item.unitPrice * (1 - (item.discount ?? 0) / 100),
@@ -219,7 +220,7 @@ export class InvoicesService {
       }),
       this.prisma.invoiceSeries.update({
         where: { id: series.id },
-        data: { nextNumber: { increment: 1 } },
+        data: { nextNumber },
       }),
     ]);
 
@@ -437,7 +438,7 @@ export class InvoicesService {
       : await this.prisma.invoiceSeries.findFirst({ where: { companyId, isDefault: true } });
 
     if (!series) throw new BadRequestException("Serie no encontrada");
-    const number = `${series.prefix}${String(series.nextNumber).padStart(4, "0")}`;
+    const { number, nextNumber } = await nextFreeInvoiceNumber(this.prisma, companyId, series);
 
     const srcIssue = new Date(src.issueDate);
     const srcDue = src.dueDate ? new Date(src.dueDate) : null;
@@ -488,7 +489,7 @@ export class InvoicesService {
       }),
       this.prisma.invoiceSeries.update({
         where: { id: series.id },
-        data: { nextNumber: { increment: 1 } },
+        data: { nextNumber },
       }),
     ]);
     return invoice;

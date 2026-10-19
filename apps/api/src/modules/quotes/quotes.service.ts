@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
+import { nextFreeInvoiceNumber } from "../invoices/invoice-number";
 import { PrismaService } from "../../database/prisma.service";
 import { PlansService } from "../plans/plans.service";
 import { AutomationsService } from "../automations/automations.service";
@@ -147,7 +148,7 @@ export class QuotesService {
     });
     if (!series) throw new NotFoundException("Serie de facturas no encontrada");
 
-    const number = `${series.prefix}${String(series.nextNumber).padStart(4, "0")}`;
+    const { number, nextNumber } = await nextFreeInvoiceNumber(this.prisma, companyId, series);
 
     const company = await this.prisma.company.findUnique({ where: { id: companyId }, select: { settings: true } });
     const settings = (company?.settings as any) ?? {};
@@ -202,7 +203,7 @@ export class QuotesService {
       }),
       this.prisma.invoiceSeries.update({
         where: { id: series.id },
-        data: { nextNumber: { increment: 1 } },
+        data: { nextNumber },
       }),
       this.prisma.quote.update({
         where: { id },
