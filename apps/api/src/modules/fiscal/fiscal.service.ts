@@ -455,7 +455,9 @@ export class FiscalService {
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${supabaseKey}`,
+            // Las claves nuevas (sb_secret_...) van en apikey; las antiguas (JWT) además en Authorization
+            apikey: supabaseKey,
+            ...(supabaseKey.startsWith("eyJ") && { Authorization: `Bearer ${supabaseKey}` }),
             "Content-Type": file.mimetype,
             "x-upsert": "true",
           },
