@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { MarketingNav } from "@/components/marketing/nav";
 import { MarketingFooter } from "@/components/marketing/footer";
+import { SatelliteFaq } from "@/components/marketing/pages/satellite-faq";
 
 const STEP_KEYS = ["s1", "s2", "s3"] as const;
 
@@ -131,6 +132,9 @@ export function SageContent() {
             </Link>
           </div>
         </section>
+
+        {/* Preguntas frecuentes */}
+        <SatelliteFaq namespace="sage" />
 
         {/* CTA */}
         <section className="py-24 bg-primary/5 border-t">

@@ -3134,6 +3134,31 @@
           }
         },
         "cta": "Create a free account"
+      },
+      "faq": {
+        "title": "Frequently asked questions about YouWhole and Holded",
+        "items": {
+          "q1": {
+            "q": "Is YouWhole a free alternative to Holded?",
+            "a": "Yes. YouWhole has a free plan that never expires, with 1 user, 5 clients, 10 invoices a month and VeriFactu included. Holded offers a 14-day trial. If you need more, Starter costs €29 a month and Pro €79 a month, VAT included."
+          },
+          "q2": {
+            "q": "Can I move my data from Holded to YouWhole?",
+            "a": "Yes. Export your clients, products and invoices from Holded to Excel or CSV and load them with the YouWhole importer, which also accepts suppliers."
+          },
+          "q3": {
+            "q": "Does YouWhole comply with VeriFactu like Holded?",
+            "a": "Both are adapted to VeriFactu. In YouWhole every invoice generates its record with a digital fingerprint and QR code on all plans, including the free one. It becomes mandatory on 1 January 2027 for companies and on 1 July 2027 for the self-employed."
+          },
+          "q4": {
+            "q": "Is payroll included in the price?",
+            "a": "In YouWhole payroll is included in the Pro plan (€79 a month with VAT, up to 10 employees), with payslips in the employee portal. In Holded payroll is an optional add-on at €5 per employee per month plus VAT."
+          },
+          "q5": {
+            "q": "Is there a minimum contract?",
+            "a": "No. Neither YouWhole nor Holded has a minimum term: you pay monthly and cancel whenever you want."
+          }
+        }
       }
     },
     "sage": {
@@ -3258,6 +3283,31 @@
         "title": "Try YouWhole free, with no expiry date",
         "subtitle": "No card. No commitment. VeriFactu included.",
         "cta": "Create a free account"
+      },
+      "faq": {
+        "title": "Frequently asked questions about YouWhole and Sage",
+        "items": {
+          "q1": {
+            "q": "What is the difference between YouWhole and Sage Active?",
+            "a": "Sage Active is Sage's cloud software for the self-employed and micro-businesses, and payroll comes in a separate product, Sage NominaPlus. YouWhole brings invoicing, accounting, forms 303 and 130, payroll and employee expenses together in a single subscription."
+          },
+          "q2": {
+            "q": "Is there a free alternative to Sage for the self-employed?",
+            "a": "YouWhole has a free plan that never expires: 1 user, 5 clients and 10 invoices a month, with VeriFactu included. Sage Active offers a one-month trial."
+          },
+          "q3": {
+            "q": "Can I prepare forms 303 and 130 with YouWhole?",
+            "a": "Yes, from the Starter plan (€29 a month with VAT). YouWhole calculates them from your invoices and expenses so you can file them every quarter."
+          },
+          "q4": {
+            "q": "How do I move my data from Sage to YouWhole?",
+            "a": "Export your clients, products and invoices from Sage to Excel or CSV and load them with the YouWhole importer, which also accepts suppliers."
+          },
+          "q5": {
+            "q": "Is YouWhole adapted to VeriFactu?",
+            "a": "Yes, on all plans, including the free one: every invoice generates its record with a digital fingerprint and QR code. It becomes mandatory on 1 January 2027 for companies and on 1 July 2027 for the self-employed."
+          }
+        }
       }
     },
     "modelo130": {

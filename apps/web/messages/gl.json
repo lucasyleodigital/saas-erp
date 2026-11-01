@@ -3006,6 +3006,31 @@
           }
         },
         "cta": "Crear conta gratis"
+      },
+      "faq": {
+        "title": "Preguntas frecuentes sobre YouWhole e Holded",
+        "items": {
+          "q1": {
+            "q": "YouWhole é unha alternativa gratuíta a Holded?",
+            "a": "Si. YouWhole ten un plan gratuíto que non caduca, con 1 usuario, 5 clientes e 10 facturas ao mes e VeriFactu incluído. Holded ofrece unha proba de 14 días. Se precisas máis, Starter custa 29 € ao mes e Pro 79 € ao mes, co IVE incluído."
+          },
+          "q2": {
+            "q": "Podo pasar os meus datos de Holded a YouWhole?",
+            "a": "Si. Exporta desde Holded os teus clientes, produtos e facturas en Excel ou CSV e cárgaos co importador de YouWhole, que tamén acepta provedores."
+          },
+          "q3": {
+            "q": "YouWhole cumpre VeriFactu igual que Holded?",
+            "a": "Os dous están adaptados a VeriFactu. En YouWhole cada factura xera o seu rexistro con pegada dixital e código QR en todos os plans, tamén no gratuíto. Será obrigatorio desde o 1 de xaneiro de 2027 para sociedades e desde o 1 de xullo de 2027 para autónomos."
+          },
+          "q4": {
+            "q": "As nóminas están incluídas no prezo?",
+            "a": "En YouWhole as nóminas están incluídas no plan Pro (79 € ao mes con IVE, ata 10 empregados), co recibo no portal do empregado. En Holded as nóminas son un módulo opcional de 5 € por empregado ao mes máis IVE."
+          },
+          "q5": {
+            "q": "Hai permanencia?",
+            "a": "Non. Nin YouWhole nin Holded teñen permanencia: pagas cada mes e cancelas cando queiras."
+          }
+        }
       }
     },
     "sage": {
@@ -3130,6 +3155,31 @@
         "title": "Proba YouWhole gratis, sen data de caducidade",
         "subtitle": "Sen tarxeta. Sen permanencia. Con VeriFactu incluído.",
         "cta": "Crear conta gratis"
+      },
+      "faq": {
+        "title": "Preguntas frecuentes sobre YouWhole e Sage",
+        "items": {
+          "q1": {
+            "q": "Que diferenza hai entre YouWhole e Sage Active?",
+            "a": "Sage Active é o programa na nube de Sage para autónomos e microempresas, e as nóminas ofréceas noutro produto, Sage NominaPlus. YouWhole reúne facturación, contabilidade, modelos 303 e 130, nóminas e gastos de empregados nunha soa subscrición."
+          },
+          "q2": {
+            "q": "Hai unha alternativa a Sage gratis para autónomos?",
+            "a": "YouWhole ten un plan gratuíto que non caduca: 1 usuario, 5 clientes e 10 facturas ao mes, con VeriFactu incluído. Sage Active ofrece un mes de proba."
+          },
+          "q3": {
+            "q": "Podo preparar os modelos 303 e 130 con YouWhole?",
+            "a": "Si, desde o plan Starter (29 € ao mes con IVE). YouWhole calcúlaos coas túas facturas e gastos para que os presentes cada trimestre."
+          },
+          "q4": {
+            "q": "Como paso os meus datos de Sage a YouWhole?",
+            "a": "Exporta desde Sage os teus clientes, produtos e facturas en Excel ou CSV e cárgaos co importador de YouWhole, que tamén acepta provedores."
+          },
+          "q5": {
+            "q": "YouWhole está adaptado a VeriFactu?",
+            "a": "Si, en todos os plans, tamén no gratuíto: cada factura xera o seu rexistro con pegada dixital e código QR. Será obrigatorio desde o 1 de xaneiro de 2027 para sociedades e desde o 1 de xullo de 2027 para autónomos."
+          }
+        }
       }
     },
     "modelo130": {

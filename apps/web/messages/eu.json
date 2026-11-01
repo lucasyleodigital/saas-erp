@@ -3079,6 +3079,31 @@
           }
         },
         "cta": "Sortu kontua doan"
+      },
+      "faq": {
+        "title": "YouWhole eta Holdedi buruzko ohiko galderak",
+        "items": {
+          "q1": {
+            "q": "YouWhole Holdeden doako alternatiba bat da?",
+            "a": "Bai. YouWholek iraungitzen ez den doako plana du: erabiltzaile 1, 5 bezero eta hilean 10 faktura, VeriFactu barne. Holdedek 14 eguneko proba eskaintzen du. Gehiago behar baduzu, Starterrek hilean 29 € balio du eta Prok hilean 79 €, BEZa barne."
+          },
+          "q2": {
+            "q": "Nire datuak Holdedetik YouWholera pasa ditzaket?",
+            "a": "Bai. Esportatu Holdedetik zure bezeroak, produktuak eta fakturak Excel edo CSV formatuan eta kargatu itzazu YouWholeren inportatzailearekin; hornitzaileak ere onartzen ditu."
+          },
+          "q3": {
+            "q": "YouWholek Holdedek bezala betetzen du VeriFactu?",
+            "a": "Biak VeriFacturako egokituta daude. YouWholen faktura bakoitzak bere erregistroa sortzen du hatz-marka digitalarekin eta QR kodearekin plan guztietan, doakoan ere bai. 2027ko urtarrilaren 1etik derrigorrezkoa izango da sozietateentzat eta 2027ko uztailaren 1etik autonomoentzat."
+          },
+          "q4": {
+            "q": "Nominak prezioan sartuta daude?",
+            "a": "YouWholen nominak Pro planean sartuta daude (hilean 79 € BEZarekin, 10 langile arte), ordainagiria langilearen atarian. Holdeden nominak aukerako modulu bat dira: 5 € langile bakoitzeko hilean gehi BEZa."
+          },
+          "q5": {
+            "q": "Iraunaldirik ba al dago?",
+            "a": "Ez. Ez YouWholek ez Holdedek ez dute iraunaldirik: hilero ordaintzen duzu eta nahi duzunean bertan behera uzten duzu."
+          }
+        }
       }
     },
     "sage": {
@@ -3203,6 +3228,31 @@
         "title": "Probatu YouWhole doan, iraungitze-datarik gabe",
         "subtitle": "Txartelik gabe. Iraunkortasunik gabe. VeriFactu barne.",
         "cta": "Sortu kontua doan"
+      },
+      "faq": {
+        "title": "YouWhole eta Sageri buruzko ohiko galderak",
+        "items": {
+          "q1": {
+            "q": "Zer desberdintasun dago YouWhole eta Sage Activeren artean?",
+            "a": "Sage Active Sageren hodeiko programa da autonomo eta mikroenpresentzat, eta nominak beste produktu batean eskaintzen ditu, Sage NominaPlusen. YouWholek fakturazioa, kontabilitatea, 303 eta 130 ereduak, nominak eta langileen gastuak harpidetza bakar batean biltzen ditu."
+          },
+          "q2": {
+            "q": "Ba al dago Sageren doako alternatibarik autonomoentzat?",
+            "a": "YouWholek iraungitzen ez den doako plana du: erabiltzaile 1, 5 bezero eta hilean 10 faktura, VeriFactu barne. Sage Activek hilabeteko proba eskaintzen du."
+          },
+          "q3": {
+            "q": "303 eta 130 ereduak presta ditzaket YouWholekin?",
+            "a": "Bai, Starter planetik aurrera (hilean 29 € BEZarekin). YouWholek zure faktura eta gastuekin kalkulatzen ditu, hiruhileko bakoitzean aurkez ditzazun."
+          },
+          "q4": {
+            "q": "Nola pasatzen ditut nire datuak Sagetik YouWholera?",
+            "a": "Esportatu Sagetik zure bezeroak, produktuak eta fakturak Excel edo CSV formatuan eta kargatu itzazu YouWholeren inportatzailearekin; hornitzaileak ere onartzen ditu."
+          },
+          "q5": {
+            "q": "YouWhole VeriFacturako egokituta dago?",
+            "a": "Bai, plan guztietan, doakoan ere bai: faktura bakoitzak bere erregistroa sortzen du hatz-marka digitalarekin eta QR kodearekin. 2027ko urtarrilaren 1etik derrigorrezkoa izango da sozietateentzat eta 2027ko uztailaren 1etik autonomoentzat."
+          }
+        }
       }
     },
     "modelo130": {
