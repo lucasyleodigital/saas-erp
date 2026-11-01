@@ -4,16 +4,17 @@ import { SageContent } from "@/components/marketing/pages/sage-content";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.com";
 
 export const metadata: Metadata = {
-  title: "Alternativa a Sage para Autónomos y Pymes — YouWhole",
+  title: { absolute: "Alternativa a Sage para autónomos: todo en una sola suscripción — YouWhole" },
   description:
-    "¿Sage es demasiado caro o complejo para tu negocio? YouWhole es la alternativa moderna: VeriFactu certificado, IRPF automático, sin instalación y desde 29 EUR/mes.",
+    "Compara YouWhole con Sage Active: plan gratuito para siempre, VeriFactu y nóminas en el mismo programa y precios con IVA. Datos de noviembre de 2026.",
   keywords: [
     "alternativa sage autónomos",
     "alternativa sage pymes",
     "sage vs youwhole",
     "alternativa sage 50",
     "software facturación alternativa sage",
-    "ERP barato alternativa sage",
+    "alternativa sage active",
+    "mejor alternativa a sage para autónomos",
   ],
   alternates: {
     canonical: `${APP_URL}/alternativa-sage-autonomos`,
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Alternativa a Sage para Autónomos — YouWhole",
+    title: "YouWhole vs Sage para autónomos",
     description: "Más sencillo y asequible que Sage. VeriFactu incluido, sin instalación, desde 29 EUR/mes.",
     url: `${APP_URL}/alternativa-sage-autonomos`,
   },

@@ -43,7 +43,7 @@ const JSONLD_FAQ = {
 };
 
 export const metadata: Metadata = {
-  title: "Modelo 130 Online para Autónomos — YouWhole",
+  title: { absolute: "Modelo 130 Online para Autónomos — YouWhole" },
   description:
     "Calcula y prepara el Modelo 130 de forma automática con YouWhole. Suma ingresos, gastos y retenciones del trimestre sin errores. Gratis para autónomos.",
   keywords: [

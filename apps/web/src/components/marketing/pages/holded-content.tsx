@@ -3,7 +3,6 @@ import { useTranslations } from "next-intl";
 import { MarketingNav } from "@/components/marketing/nav";
 import { MarketingFooter } from "@/components/marketing/footer";
 
-const ROW_KEYS = ["r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10"] as const;
 const STEP_KEYS = ["s1", "s2", "s3"] as const;
 
 export function HoldedContent() {
@@ -60,7 +59,7 @@ export function HoldedContent() {
                   </tr>
                 </thead>
                 <tbody className="divide-y">
-                  {ROW_KEYS.map((k) => {
+                  {Object.keys(t.raw("comparison.rows") as Record<string, unknown>).map((k) => {
                     const yw = t.raw(`comparison.rows.${k}.yw`) as boolean | string;
                     const other = t.raw(`comparison.rows.${k}.other`) as boolean | string;
                     const note = t(`comparison.rows.${k}.note`);
@@ -94,8 +93,25 @@ export function HoldedContent() {
           </div>
         </section>
 
-        {/* Migración */}
+
+        {/* Lo que incluye YouWhole */}
         <section className="py-20 bg-muted/30">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <h2 className="text-3xl font-bold text-center mb-4">{t("extras.title")}</h2>
+            <p className="text-muted-foreground text-center mb-10 max-w-xl mx-auto">{t("extras.subtitle")}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Object.keys(t.raw("extras.items") as Record<string, unknown>).map((k) => (
+                <div key={k} className="rounded-xl border bg-background p-6 space-y-2">
+                  <h3 className="font-semibold">{t(`extras.items.${k}.t`)}</h3>
+                  <p className="text-sm text-muted-foreground">{t(`extras.items.${k}.d`)}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Migración */}
+        <section className="py-20 bg-background">
           <div className="container mx-auto px-4 max-w-3xl text-center">
             <h2 className="text-3xl font-bold mb-4">{t("migration.title")}</h2>
             <p className="text-muted-foreground mb-8 max-w-xl mx-auto">{t("migration.subtitle")}</p>

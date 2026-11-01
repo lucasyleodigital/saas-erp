@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ContactoClient } from "./client";
 
 export const metadata: Metadata = {
-  title: "Contacto — YouWhole",
+  title: { absolute: "Contacto — YouWhole" },
   description:
     "Contacta con el equipo de YouWhole. Escríbenos por email, WhatsApp o usa el formulario. Respondemos en menos de 24 horas en días laborables.",
   robots: { index: true, follow: true },

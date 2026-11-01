@@ -1367,7 +1367,7 @@
   },
   "verifactu": {
     "title": "VeriFactu",
-    "subtitle": "Registro de facturas conforme a la normativa AEAT 2025",
+    "subtitle": "Registro de facturas conforme a la normativa VeriFactu de la AEAT",
     "generate": "Generar VeriFactu",
     "status": "Estado AEAT",
     "generated": "Generado",
@@ -2114,7 +2114,7 @@
     }
   },
   "verifactuView": {
-    "subtitle": "Registro de facturas conforme a la normativa AEAT 2025",
+    "subtitle": "Registro de facturas conforme a la normativa VeriFactu de la AEAT",
     "digitalCert": "Certificado digital",
     "totalRecords": "Total registros",
     "generated": "Generados",
@@ -2132,7 +2132,7 @@
     "certActive": "Certificado activo — {subject}",
     "certActiveDesc": "Valido hasta {date} - Las facturas se firman automaticamente",
     "regulation": "Normativa VeriFactu (AEAT)",
-    "regulationDesc": "Desde julio 2025 es obligatorio generar el registro VeriFactu para cada factura emitida. El codigo QR incluido en la factura permite a tus clientes verificarla en la AEAT.",
+    "regulationDesc": "VeriFactu será obligatorio desde el 1 de enero de 2027 para sociedades y desde el 1 de julio de 2027 para autónomos. El código QR de cada factura permite a tus clientes verificarla en la AEAT.",
     "recordHistory": "Historial de registros",
     "noRecords": "Sin registros VeriFactu",
     "noRecordsDesc": "Genera el primer registro desde el detalle de una factura enviada o pagada",
@@ -2318,7 +2318,7 @@
       "closeMenu": "Cerrar menú"
     },
     "hero": {
-      "badge": "VeriFactu certificado · Cumplimiento AEAT 2025",
+      "badge": "Adaptado a VeriFactu · Normativa AEAT",
       "titleLine1": "Todo en uno",
       "titleLine2": "para tu empresa",
       "subtitle": "Facturación con VeriFactu, IRPF automático, Modelo 130/303, CRM y contabilidad. Creado por autónomos para autónomos y pymes.",
@@ -2462,10 +2462,10 @@
       "cta": "Crear cuenta gratis — sin tarjeta"
     },
     "verifactu": {
-      "badge": "VeriFactu certificado",
+      "badge": "Adaptado a VeriFactu",
       "titleLine1": "Cumplimiento fiscal total",
       "titleLine2": "desde el primer día",
-      "subtitle": "La Ley VeriFactu (Ley Antifraude 11/2021) obliga a registrar cada factura en la AEAT desde 2025. Con YouWhole ocurre automáticamente — sin configuración, sin trabajo extra.",
+      "subtitle": "El Reglamento VeriFactu (RD 1007/2023) obligará a registrar cada factura con su huella digital: desde el 1 de enero de 2027 las sociedades y desde el 1 de julio de 2027 los autónomos. Con YouWhole ocurre automáticamente, sin configuración ni trabajo extra.",
       "flow": {
         "company": {
           "label": "Tu empresa",
@@ -2481,7 +2481,7 @@
         },
         "compliance": {
           "label": "Cumplimiento",
-          "sublabel": "100% legal garantizado"
+          "sublabel": "Conforme a la normativa"
         }
       },
       "points": {
@@ -2494,7 +2494,7 @@
           "desc": "Envío automático al sistema VERI*FACTU de la Agencia Tributaria con código QR de verificación incluido."
         },
         "xml": {
-          "title": "XML certificado",
+          "title": "XML según la especificación AEAT",
           "desc": "Generamos el XML según la especificación técnica oficial de AEAT con todos los campos obligatorios."
         },
         "validation": {
@@ -2578,7 +2578,7 @@
       "items": {
         "q1": {
           "q": "¿Qué es VeriFactu y por qué lo necesito?",
-          "a": "VeriFactu es el sistema de verificación de facturas de la Agencia Tributaria española. Desde 2025, toda empresa que use un software de facturación está obligada a usar sistemas certificados VeriFactu. YouWhole lo incluye de serie — no necesitas hacer nada extra para cumplir la ley."
+          "a": "VeriFactu es el sistema de la Agencia Tributaria para garantizar que las facturas no se alteran. Será obligatorio desde el 1 de enero de 2027 para sociedades y desde el 1 de julio de 2027 para autónomos. YouWhole está adaptado y lo incluye de serie en todos los planes: no necesitas hacer nada extra."
         },
         "q2": {
           "q": "¿Necesito tarjeta de crédito para empezar?",
@@ -2772,7 +2772,7 @@
         "subtitle": "Diseñado desde cero para la realidad del autónomo español: Hacienda, clientes, tiempo y dinero.",
         "items": {
           "f1": {
-            "title": "VeriFactu certificado AEAT",
+            "title": "Adaptado a VeriFactu",
             "desc": "Cumple con la obligación legal desde el primer día. Cada factura se registra automáticamente en la Agencia Tributaria."
           },
           "f2": {
@@ -2805,9 +2805,9 @@
         "colOther": "Otros ERPs",
         "rows": {
           "r1": {
-            "feat": "VeriFactu certificado AEAT",
+            "feat": "Adaptado a VeriFactu",
             "yw": "Incluido en todos los planes",
-            "other": "Solo en planes caros o no incluido"
+            "other": "Depende del programa y del plan"
           },
           "r2": {
             "feat": "IRPF automático",
@@ -2887,7 +2887,7 @@
         "items": {
           "m1": {
             "title": "Facturación con VeriFactu",
-            "desc": "Emite facturas certificadas AEAT. Incluye facturas recurrentes, multi-divisa y en varios idiomas (es, ca, eu, gl, en)."
+            "desc": "Emite facturas adaptadas a VeriFactu. Incluye facturas recurrentes, multi-divisa y en varios idiomas (es, ca, eu, gl, en)."
           },
           "m2": {
             "title": "Contabilidad PGC",
@@ -2947,13 +2947,13 @@
     },
     "verifactu": {
       "seo": {
-        "title": "Software VeriFactu Certificado AEAT — YouWhole",
-        "description": "Software certificado VeriFactu por la AEAT. Cumple la obligacion legal desde el primer dia, incluido en todos los planes, incluso el gratuito.",
-        "ogTitle": "Software VeriFactu Certificado AEAT — YouWhole",
+        "title": "Software adaptado a VeriFactu incluido en todos los planes — YouWhole",
+        "description": "Programa de facturación adaptado a VeriFactu (RD 1007/2023), incluido en todos los planes, también en el gratuito. Prepárate antes de 2027.",
+        "ogTitle": "Software adaptado a VeriFactu — YouWhole",
         "ogDescription": "Cumple con la obligación VeriFactu desde el primer día. Incluido en todos los planes de YouWhole."
       },
-      "badge": "Certificado AEAT",
-      "h1Line1": "Software VeriFactu certificado",
+      "badge": "Adaptado a VeriFactu",
+      "h1Line1": "Software adaptado a VeriFactu",
       "h1Highlight": "incluido en todos los planes",
       "subtitle": "YouWhole cumple con la obligación VeriFactu de la Agencia Tributaria desde el primer día. Sin configuración. Sin módulos extra. Sin coste adicional.",
       "cta": "Empezar gratis — VeriFactu incluido",
@@ -2963,7 +2963,7 @@
         "p1Strong": "integridad e inalterabilidad",
         "p1Post": "de todas las facturas emitidas por empresas y autónomos en España.",
         "p2Pre": "VeriFactu será obligatorio desde el 1 de enero de 2027 para sociedades y desde el 1 de julio de 2027 para autónomos (Real Decreto-ley 15/2025), pero ya puedes tener tu software",
-        "p2Strong": "certificado VeriFactu",
+        "p2Strong": "adaptado a VeriFactu",
         "p2Post": "hoy mismo para evitar sanciones de Hacienda de hasta 50.000 EUR y no tener que migrar de sistema en el último momento.",
         "p3": "Con YouWhole, cada factura que emites se registra automáticamente en la AEAT con su huella digital correspondiente. Tú no tienes que hacer nada extra — el sistema lo gestiona en segundo plano."
       },
@@ -2997,7 +2997,7 @@
           },
           "q3": {
             "q": "¿YouWhole está certificado por la AEAT?",
-            "a": "Sí. YouWhole está certificado para el envío de registros de facturación a la AEAT mediante el sistema VeriFactu. Cada factura emitida genera automáticamente el registro correspondiente y lo envía a Hacienda."
+            "a": "La AEAT no certifica ni homologa programas de facturación. La normativa exige que cada fabricante firme una declaración responsable de que su programa cumple el Reglamento VeriFactu (RD 1007/2023). YouWhole está adaptado: cada factura genera su registro con huella digital y código QR, y puede enviarse a la AEAT."
           },
           "q4": {
             "q": "¿Tengo que hacer algo especial para activar VeriFactu en YouWhole?",
@@ -3009,7 +3009,7 @@
           },
           "q6": {
             "q": "¿A qué autónomos afecta VeriFactu?",
-            "a": "Afecta a todos los autónomos y profesionales que emitan facturas en España, sin excepción por volumen de facturación ni sector de actividad. Su fecha límite es el 1 de julio de 2027, tres meses después que las sociedades."
+            "a": "Afecta a todos los autónomos y profesionales que emitan facturas en España, sin excepción por volumen de facturación ni sector de actividad. Su fecha límite es el 1 de julio de 2027, seis meses después que las sociedades."
           },
           "q7": {
             "q": "¿Cuánto cuesta un software VeriFactu?",
@@ -3025,250 +3025,250 @@
     },
     "holded": {
       "seo": {
-        "title": "Alternativa a Holded para Autónomos y Pymes — YouWhole",
-        "description": "Alternativa a Holded mas completa y asequible. VeriFactu certificado, IRPF automatico y Modelo 130/303 incluidos. Desde 29 EUR/mes.",
-        "ogTitle": "Alternativa a Holded — YouWhole",
-        "ogDescription": "Más completo que Holded para el mercado español. VeriFactu, IRPF, Modelo 130/303 y soporte nativo en español."
+        "title": "Alternativa a Holded con plan gratuito y nóminas incluidas — YouWhole",
+        "description": "Compara YouWhole y Holded: plan gratuito para siempre, facturas ilimitadas desde 29 € con IVA, VeriFactu y nóminas incluidas. Datos de noviembre de 2026.",
+        "ogTitle": "YouWhole vs Holded: comparativa con datos actualizados",
+        "ogDescription": "Plan gratuito, precios con IVA incluido y nóminas sin módulos aparte. Compara con datos de noviembre de 2026."
       },
-      "badge": "Comparativa honesta",
-      "h1Line1": "La alternativa a Holded que",
-      "h1Highlight": "sí cumple con Hacienda",
-      "subtitle": "YouWhole incluye VeriFactu certificado, IRPF automático y Modelo 130/303 de serie. Sin módulos extra. Sin sorpresas en la factura.",
+      "badge": "Comparativa con datos de noviembre de 2026",
+      "h1Line1": "La alternativa a Holded con",
+      "h1Highlight": "plan gratuito y nóminas incluidas",
+      "subtitle": "Holded y YouWhole incluyen VeriFactu. La diferencia está en lo demás: YouWhole tiene un plan gratuito para siempre, precios con IVA incluido y nóminas, inventario y gastos de empleados sin contratar módulos aparte.",
       "ctaPrimary": "Probar YouWhole gratis",
       "ctaSecondary": "Hablar con el equipo",
-      "trustLine": "Gratis para siempre · Sin tarjeta · Migración asistida desde Holded",
+      "trustLine": "Gratis para siempre · Sin tarjeta · Importador de clientes, productos y facturas",
       "comparison": {
         "title": "YouWhole vs Holded",
-        "subtitle": "Comparativa de características para autónomos y pymes españolas",
+        "subtitle": "Qué cambia entre los dos para un autónomo o una pyme",
         "colFeat": "Característica",
         "colOther": "Holded",
         "included": "Incluido",
         "no": "No",
         "yes": "Sí",
         "notAvailable": "No disponible",
-        "footnote": "Información basada en los planes publicados. Actualizado julio 2026.",
+        "footnote": "Datos de Holded consultados en holded.com/es/precios el 1 de noviembre de 2026. Los precios de Holded no incluyen IVA; los de YouWhole sí.",
         "rows": {
           "r1": {
-            "feat": "VeriFactu certificado AEAT",
+            "feat": "Plan gratuito permanente",
             "yw": true,
-            "other": false,
-            "note": "Holded no tiene VeriFactu nativo"
+            "other": "Prueba de 14 días",
+            "note": "En YouWhole, hasta 5 clientes y 10 facturas al mes, sin caducidad"
           },
           "r2": {
-            "feat": "IRPF automático para autónomos",
-            "yw": true,
-            "other": false,
-            "note": "En Holded es configuración manual"
+            "feat": "Precio de entrada",
+            "yw": "29 €/mes con IVA",
+            "other": "15 €/mes + IVA (Plus)",
+            "note": "Holded Básico: 29 € + IVA. Holded aplica un 50% de descuento los 3 primeros meses"
           },
           "r3": {
-            "feat": "Modelo 130/303 integrado",
-            "yw": true,
-            "other": false,
-            "note": "Holded requiere módulo contable extra"
+            "feat": "Facturas",
+            "yw": "Ilimitadas desde Starter",
+            "other": "De 250 a 10.000 al año",
+            "note": "En Holded son ilimitadas en el plan Premium (199 € + IVA)"
           },
           "r4": {
-            "feat": "Plan gratuito real",
+            "feat": "VeriFactu",
             "yw": true,
-            "other": false,
-            "note": "Holded no tiene plan gratuito permanente"
+            "other": true,
+            "note": "Los dos lo incluyen en todos los planes"
           },
           "r5": {
-            "feat": "Precio base mensual",
-            "yw": "29 EUR",
-            "other": "desde 49 EUR",
-            "note": ""
+            "feat": "Nóminas",
+            "yw": "Incluidas en Pro",
+            "other": "5 €/empleado/mes aparte",
+            "note": "En Holded es un módulo opcional"
           },
           "r6": {
-            "feat": "Soporte en español nativo",
-            "yw": true,
-            "other": true,
-            "note": ""
+            "feat": "Inventario y almacenes",
+            "yw": "Incluido",
+            "other": "25 €/mes aparte",
+            "note": "En Holded es un módulo opcional"
           },
           "r7": {
-            "feat": "Sin permanencia",
-            "yw": true,
-            "other": false,
-            "note": "Holded cobra anual por defecto"
+            "feat": "Usuarios",
+            "yw": "3 (Starter) · 10 (Pro)",
+            "other": "2 (Básico) · 4 (Estándar) · 7 (Avanzado)",
+            "note": ""
           },
           "r8": {
-            "feat": "Múltiples idiomas (ca, eu, gl)",
-            "yw": true,
-            "other": false,
-            "note": "YouWhole soporta 5 idiomas peninsulares"
+            "feat": "Permanencia",
+            "yw": "Sin permanencia",
+            "other": "Sin permanencia",
+            "note": "Los dos permiten pagar al mes y cancelar cuando quieras"
+          }
+        }
+      },
+      "extras": {
+        "title": "Lo que YouWhole incluye en la misma suscripción",
+        "subtitle": "Funciones pensadas para pymes y autónomos en España, sin contratar nada aparte.",
+        "items": {
+          "e1": {
+            "t": "Gastos de empleados",
+            "d": "Tickets con lectura automática, kilometraje y dietas, con aprobación y reembolso en la nómina."
           },
-          "r9": {
-            "feat": "Control horario empleados",
-            "yw": true,
-            "other": true,
-            "note": ""
+          "e2": {
+            "t": "Flota de vehículos y DeCA",
+            "d": "Vehículos, mantenimientos y el documento de control de transporte desde el propio albarán (plan Pro)."
           },
-          "r10": {
-            "feat": "Portal de empleado",
-            "yw": true,
-            "other": true,
-            "note": ""
+          "e3": {
+            "t": "Modelos 303 y 130",
+            "d": "Calculados con tus facturas y gastos para que los presentes cada trimestre."
+          },
+          "e4": {
+            "t": "En tu idioma",
+            "d": "La aplicación está en castellano, catalán, euskera, gallego e inglés."
+          },
+          "e5": {
+            "t": "Control horario",
+            "d": "Fichaje de empleados incluido desde el plan Starter."
+          },
+          "e6": {
+            "t": "CRM y proyectos",
+            "d": "Leads, pipeline y proyectos con su rentabilidad, junto a tus facturas."
           }
         }
       },
       "migration": {
-        "title": "Migra desde Holded sin perder tus datos",
-        "subtitle": "Importa tus clientes, facturas y productos desde Holded en minutos. Nuestro equipo te ayuda a hacer la transición sin interrupciones.",
+        "title": "Pasa tus datos de Holded a YouWhole",
+        "subtitle": "Exporta tus listados de Holded a Excel o CSV y cárgalos con el importador de YouWhole.",
         "steps": {
           "s1": {
             "t": "Exporta desde Holded",
-            "d": "Descarga tus datos en CSV o Excel desde el panel de Holded."
+            "d": "Descarga tus clientes, productos y facturas en Excel o CSV."
           },
           "s2": {
             "t": "Importa en YouWhole",
-            "d": "Usa nuestro importador para cargar clientes, productos y facturas."
+            "d": "El importador carga clientes, productos, proveedores y facturas desde esos archivos."
           },
           "s3": {
-            "t": "Listo para facturar",
-            "d": "Tu empresa operativa en YouWhole en menos de 1 hora."
+            "t": "Empieza a facturar",
+            "d": "Tus clientes y tu histórico, listos en tu nueva cuenta."
           }
         },
-        "cta": "Empezar migración gratis"
+        "cta": "Crear cuenta gratis"
       }
     },
     "sage": {
       "seo": {
-        "title": "Alternativa a Sage para Autónomos y Pymes — YouWhole",
-        "description": "Alternativa moderna a Sage: VeriFactu certificado, IRPF automatico, sin instalacion. Desde 29 EUR/mes, sin permanencia.",
-        "ogTitle": "Alternativa a Sage para Autónomos — YouWhole",
-        "ogDescription": "Más sencillo y asequible que Sage. VeriFactu incluido, sin instalación, desde 29 EUR/mes."
+        "title": "Alternativa a Sage para autónomos: todo en una sola suscripción — YouWhole",
+        "description": "Compara YouWhole con Sage Active: plan gratuito para siempre, VeriFactu y nóminas en el mismo programa y precios con IVA. Datos de noviembre de 2026.",
+        "ogTitle": "YouWhole vs Sage para autónomos",
+        "ogDescription": "Facturación, contabilidad, nóminas y gastos de empleados en una sola suscripción, con plan gratuito."
       },
-      "badge": "Comparativa honesta",
-      "h1Line1": "La alternativa a Sage que",
-      "h1Highlight": "no requiere instalación",
-      "subtitle": "YouWhole es 100% en la nube, incluye VeriFactu certificado y cuesta menos que Sage. Sin instalaciones, sin versiones desactualizadas, sin sorpresas.",
+      "badge": "Comparativa con datos de noviembre de 2026",
+      "h1Line1": "La alternativa a Sage con",
+      "h1Highlight": "todo en una sola suscripción",
+      "subtitle": "Sage ofrece la facturación y la contabilidad (Sage Active o Sage 50) y las nóminas (Sage NominaPlus) en productos distintos. En YouWhole van juntas, con un plan gratuito para empezar y precios con IVA incluido.",
       "ctaPrimary": "Probar YouWhole gratis",
       "ctaSecondary": "Hablar con el equipo",
-      "trustLine": "Gratis para siempre · Sin tarjeta · Migración asistida desde Sage",
+      "trustLine": "Gratis para siempre · Sin tarjeta · Importador de clientes, productos y facturas",
       "reasons": {
-        "title": "¿Por qué los autónomos abandonan Sage?",
-        "subtitle": "Sage lleva décadas en el mercado, pero fue diseñado para otra época. Estas son las quejas más habituales.",
+        "title": "Cuándo encaja mejor YouWhole",
+        "subtitle": "Sage es una opción consolidada. Estos son los casos en los que YouWhole puede encajarte mejor.",
         "items": {
           "r1": {
-            "t": "Instalación local",
-            "d": "Sage 50 requiere instalar software en cada ordenador. Si cambias de equipo o trabajas en remoto, tienes un problema."
+            "t": "Quieres todo en un solo programa",
+            "d": "Facturas, contabilidad, nóminas, control horario y gastos de empleados en la misma cuenta, sin combinar productos."
           },
           "r2": {
-            "t": "Sin VeriFactu nativo",
-            "d": "Cumplir con la normativa AEAT 2025 requiere un módulo adicional de pago que Sage no incluye por defecto."
+            "t": "Quieres empezar sin pagar",
+            "d": "El plan gratuito no caduca: hasta 5 clientes y 10 facturas al mes. Sage Active ofrece un mes de prueba."
           },
           "r3": {
-            "t": "Precio de licencias",
-            "d": "Las licencias anuales de Sage se acumulan. Para una pyme pequeña, el coste es difícil de justificar."
+            "t": "Tienes empleados que se desplazan",
+            "d": "Tickets con lectura automática, kilometraje y dietas, con aprobación y reembolso en la nómina."
           },
           "r4": {
-            "t": "Curva de aprendizaje alta",
-            "d": "Sage fue diseñado para contables profesionales. Un autónomo sin formación contable lo encuentra innecesariamente complejo."
+            "t": "Gestionas vehículos",
+            "d": "Flota, mantenimientos y DeCA de transporte desde el albarán, en el plan Pro."
           },
           "r5": {
-            "t": "Sin app móvil real",
-            "d": "Consultar una factura o registrar un gasto desde el móvil es prácticamente imposible con Sage 50."
+            "t": "Trabajas en catalán, euskera o gallego",
+            "d": "La aplicación está en castellano, catalán, euskera, gallego e inglés."
           },
           "r6": {
-            "t": "Actualizaciones de pago",
-            "d": "Cada nueva versión de Sage requiere pagar la actualización. Con YouWhole, las actualizaciones son automáticas e incluidas."
+            "t": "Prefieres precios con IVA incluido",
+            "d": "Lo que ves en la tarifa es lo que pagas: 29 € o 79 € al mes, sin permanencia."
           }
         }
       },
       "comparison": {
-        "title": "YouWhole vs Sage",
-        "subtitle": "Comparativa de características para autónomos y pymes",
+        "title": "YouWhole vs Sage Active",
+        "subtitle": "Frente a Sage Active, el programa en la nube de Sage para autónomos y microempresas",
         "colFeat": "Característica",
-        "colOther": "Sage",
+        "colOther": "Sage Active",
         "included": "Incluido",
         "no": "No",
         "yes": "Sí",
         "notAvailable": "No disponible",
-        "footnote": "Información basada en los planes publicados. Actualizado julio 2026.",
+        "footnote": "Datos de Sage consultados en sage.com/es-es el 1 de noviembre de 2026. Los precios de Sage no incluyen IVA; los de YouWhole sí.",
         "rows": {
           "r1": {
-            "feat": "VeriFactu certificado AEAT",
+            "feat": "Plan gratuito permanente",
             "yw": true,
-            "other": false,
-            "note": "Sage requiere módulo adicional de pago"
+            "other": "Prueba de un mes",
+            "note": "En YouWhole, hasta 5 clientes y 10 facturas al mes, sin caducidad"
           },
           "r2": {
-            "feat": "IRPF automático para autónomos",
-            "yw": true,
-            "other": false,
-            "note": "En Sage es configuración manual"
+            "feat": "Precio de entrada",
+            "yw": "29 €/mes con IVA",
+            "other": "25 €/mes + IVA",
+            "note": "Sage Active con contabilidad: 49 € + IVA. Sage aplica un 50% de descuento los 3 primeros meses"
           },
           "r3": {
-            "feat": "Basado en la nube (sin instalación)",
-            "yw": true,
-            "other": false,
-            "note": "Sage 50 requiere instalación local"
-          },
-          "r4": {
-            "feat": "Plan gratuito disponible",
-            "yw": true,
-            "other": false,
-            "note": "Sage no tiene plan gratuito"
-          },
-          "r5": {
-            "feat": "Precio base mensual",
-            "yw": "29 EUR",
-            "other": "desde 50 EUR",
-            "note": ""
-          },
-          "r6": {
-            "feat": "Actualizaciones automáticas",
-            "yw": true,
-            "other": false,
-            "note": "Sage requiere comprar nuevas versiones"
-          },
-          "r7": {
-            "feat": "Multi-idioma (ca, eu, gl)",
-            "yw": true,
-            "other": false,
-            "note": "YouWhole soporta 5 idiomas peninsulares"
-          },
-          "r8": {
-            "feat": "Soporte en español",
+            "feat": "En la nube, sin instalación",
             "yw": true,
             "other": true,
-            "note": ""
+            "note": "Sage 50 combina instalación local y nube"
           },
-          "r9": {
-            "feat": "Sin permanencia",
+          "r4": {
+            "feat": "VeriFactu",
             "yw": true,
-            "other": false,
-            "note": "Sage cobra licencias anuales"
+            "other": true,
+            "note": "Los dos lo incluyen"
           },
-          "r10": {
-            "feat": "Acceso desde móvil",
-            "yw": true,
-            "other": false,
-            "note": "Sage 50 no tiene app móvil nativa"
+          "r5": {
+            "feat": "Nóminas",
+            "yw": "Incluidas en Pro",
+            "other": "Producto aparte",
+            "note": "Sage las ofrece en Sage NominaPlus o Sage 200 Laboral"
+          },
+          "r6": {
+            "feat": "Contabilidad y modelos 303/130",
+            "yw": "Incluidos desde Starter",
+            "other": "Plan de 49 € + IVA",
+            "note": "El plan de entrada de Sage Active se centra en presupuestos y facturas"
+          },
+          "r7": {
+            "feat": "Permanencia",
+            "yw": "Sin permanencia",
+            "other": "Sin permanencia",
+            "note": "Los dos permiten cancelar cuando quieras"
           }
         }
       },
       "migration": {
-        "title": "Migra desde Sage sin perder tus datos",
-        "subtitle": "Exporta tus clientes, productos y facturas desde Sage e impórtalos en YouWhole en minutos.",
+        "title": "Pasa tus datos de Sage a YouWhole",
+        "subtitle": "Exporta tus listados de Sage a Excel o CSV y cárgalos con el importador de YouWhole.",
         "steps": {
           "s1": {
             "t": "Exporta desde Sage",
-            "d": "Exporta clientes, productos y facturas en CSV o Excel desde el panel de Sage."
+            "d": "Descarga tus clientes, productos y facturas en Excel o CSV."
           },
           "s2": {
             "t": "Importa en YouWhole",
-            "d": "Usa nuestro importador para cargar todos tus datos en minutos."
+            "d": "El importador carga clientes, productos, proveedores y facturas desde esos archivos."
           },
           "s3": {
-            "t": "Listo para facturar",
-            "d": "Tu empresa operativa en YouWhole con VeriFactu activado desde el primer día."
+            "t": "Empieza a facturar",
+            "d": "Tu empresa lista en YouWhole, con VeriFactu incluido."
           }
         },
-        "cta": "Empezar migración gratis"
+        "cta": "Crear cuenta gratis"
       },
       "finalCta": {
-        "title": "Deja Sage. Empieza gratis hoy.",
-        "subtitle": "Sin tarjeta. Sin permanencia. Con VeriFactu incluido desde el primer día.",
+        "title": "Prueba YouWhole gratis, sin fecha de caducidad",
+        "subtitle": "Sin tarjeta. Sin permanencia. Con VeriFactu incluido.",
         "cta": "Crear cuenta gratis"
       }
     },

@@ -4,17 +4,17 @@ import { VerifactuContent } from "@/components/marketing/pages/verifactu-content
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.com";
 
 export const metadata: Metadata = {
-  title: "Software VeriFactu Certificado AEAT — YouWhole",
+  title: { absolute: "Software adaptado a VeriFactu incluido en todos los planes — YouWhole" },
   description:
-    "YouWhole es un software de facturación certificado VeriFactu por la Agencia Tributaria. Cumple con la obligación legal desde el primer día. Incluido en todos los planes, incluso el gratuito.",
+    "Programa de facturación adaptado a VeriFactu (RD 1007/2023), incluido en todos los planes, también en el gratuito. Prepárate antes de 2027.",
   keywords: [
-    "software VeriFactu certificado",
+    "software adaptado a VeriFactu",
     "VeriFactu AEAT",
     "software facturación VeriFactu",
     "programa VeriFactu autónomos",
     "VeriFactu pymes España",
     "facturación electrónica VeriFactu",
-    "obligación VeriFactu 2025",
+    "obligación VeriFactu 2027",
   ],
   alternates: {
     canonical: `${APP_URL}/verifactu-software-certificado`,
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Software VeriFactu Certificado AEAT — YouWhole",
+    title: "Software adaptado a VeriFactu — YouWhole",
     description: "Cumple con la obligación VeriFactu desde el primer día. Incluido en todos los planes de YouWhole.",
     url: `${APP_URL}/verifactu-software-certificado`,
   },
@@ -43,7 +43,7 @@ const JSONLD_FAQ = {
       name: "¿Qué es VeriFactu?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "VeriFactu es el sistema de verificación de facturas de la Agencia Tributaria española (AEAT). Desde 2025, todo software de facturación usado por empresas y autónomos debe estar certificado VeriFactu para garantizar la integridad e inalterabilidad de las facturas emitidas.",
+        text: "VeriFactu es el sistema de verificación de facturas de la Agencia Tributaria española (AEAT). El software de facturación de empresas y autónomos debe garantizar la integridad e inalterabilidad de las facturas. Será obligatorio desde el 1 de enero de 2027 para sociedades y desde el 1 de julio de 2027 para autónomos.",
       },
     },
     {
@@ -59,7 +59,7 @@ const JSONLD_FAQ = {
       name: "¿YouWhole está certificado por la AEAT?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Sí. YouWhole está certificado para el envío de registros de facturación a la AEAT mediante el sistema VeriFactu. Cada factura emitida genera automáticamente el registro correspondiente y lo envía a Hacienda.",
+        text: "La AEAT no certifica ni homologa programas de facturación. La normativa exige que cada fabricante firme una declaración responsable de que su programa cumple el Reglamento VeriFactu (RD 1007/2023). YouWhole está adaptado: cada factura genera su registro con huella digital y código QR, y puede enviarse a la AEAT.",
       },
     },
     {

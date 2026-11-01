@@ -4,9 +4,9 @@ import { FacturacionPymesContent } from "@/components/marketing/pages/facturacio
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.com";
 
 export const metadata: Metadata = {
-  title: "Software de Facturación para Pymes — YouWhole",
+  title: { absolute: "Software de Facturación para Pymes — YouWhole" },
   description:
-    "Software de facturación para pymes españolas con VeriFactu certificado, contabilidad PGC, nóminas, CRM y gestión de proyectos. Todo en uno. Desde 29 EUR/mes sin permanencia.",
+    "Software de facturación para pymes españolas adaptado a VeriFactu, contabilidad PGC, nóminas, CRM y gestión de proyectos. Todo en uno. Desde 29 EUR/mes sin permanencia.",
   keywords: [
     "software facturación pymes",
     "programa facturación España",

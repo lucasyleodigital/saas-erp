@@ -5,7 +5,7 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.com";
 const SLUG = "software-almacen-inventario";
 
 export const metadata: Metadata = {
-  title: "Software de Almacén e Inventario para Pymes — YouWhole",
+  title: { absolute: "Software de Almacén e Inventario para Pymes — YouWhole" },
   description:
     "Controla tu stock en tiempo real, gestiona proveedores y genera pedidos automáticos. Integrado con facturación. Desde 29 EUR/mes.",
   keywords: [

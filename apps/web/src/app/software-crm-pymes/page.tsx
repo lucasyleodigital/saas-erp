@@ -5,7 +5,7 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.com";
 const SLUG = "software-crm-pymes";
 
 export const metadata: Metadata = {
-  title: "Software CRM para Pymes España — YouWhole",
+  title: { absolute: "Software CRM para Pymes España — YouWhole" },
   description:
     "CRM integrado con facturación para pymes. Clientes, leads, pipeline de ventas y presupuestos en una plataforma. Desde 29 EUR/mes.",
   keywords: [

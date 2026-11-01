@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     "ERP pymes España",
     "software facturacion autonomos",
     "facturacion electronica España",
-    "VeriFactu certificado",
+    "software VeriFactu",
     "Modelo 130 autonomos",
     "Modelo 303 IVA",
     "IRPF autonomos",

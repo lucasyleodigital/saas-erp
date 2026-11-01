@@ -5,7 +5,7 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.com";
 const SLUG = "software-nominas-pymes";
 
 export const metadata: Metadata = {
-  title: "Software de Nóminas para Pymes España — YouWhole",
+  title: { absolute: "Software de Nóminas para Pymes España — YouWhole" },
   description:
     "Genera nóminas automáticas con IRPF y Seguridad Social calculados. Integrado con control horario y contabilidad. Desde 29 EUR/mes.",
   keywords: [

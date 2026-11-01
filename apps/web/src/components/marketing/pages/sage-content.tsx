@@ -3,8 +3,6 @@ import { useTranslations } from "next-intl";
 import { MarketingNav } from "@/components/marketing/nav";
 import { MarketingFooter } from "@/components/marketing/footer";
 
-const REASON_KEYS = ["r1", "r2", "r3", "r4", "r5", "r6"] as const;
-const ROW_KEYS = ["r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10"] as const;
 const STEP_KEYS = ["s1", "s2", "s3"] as const;
 
 export function SageContent() {
@@ -52,7 +50,7 @@ export function SageContent() {
             <h2 className="text-3xl font-bold text-center mb-4">{t("reasons.title")}</h2>
             <p className="text-muted-foreground text-center mb-10 max-w-xl mx-auto">{t("reasons.subtitle")}</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {REASON_KEYS.map((k) => (
+              {Object.keys(t.raw("reasons.items") as Record<string, unknown>).map((k) => (
                 <div key={k} className="rounded-xl border bg-card p-5 space-y-2">
                   <h3 className="font-semibold">{t(`reasons.items.${k}.t`)}</h3>
                   <p className="text-sm text-muted-foreground">{t(`reasons.items.${k}.d`)}</p>
@@ -77,7 +75,7 @@ export function SageContent() {
                   </tr>
                 </thead>
                 <tbody className="divide-y">
-                  {ROW_KEYS.map((k) => {
+                  {Object.keys(t.raw("comparison.rows") as Record<string, unknown>).map((k) => {
                     const yw = t.raw(`comparison.rows.${k}.yw`) as boolean | string;
                     const other = t.raw(`comparison.rows.${k}.other`) as boolean | string;
                     const note = t(`comparison.rows.${k}.note`);

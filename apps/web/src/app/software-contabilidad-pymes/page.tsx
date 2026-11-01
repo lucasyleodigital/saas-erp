@@ -5,7 +5,7 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.com";
 const SLUG = "software-contabilidad-pymes";
 
 export const metadata: Metadata = {
-  title: "Software de Contabilidad para Pymes España — YouWhole",
+  title: { absolute: "Software de Contabilidad para Pymes España — YouWhole" },
   description:
     "Contabilidad automática según el PGC español. Asientos automáticos, balance y pérdidas y ganancias integrados con facturación. Sin conocimientos contables.",
   keywords: [

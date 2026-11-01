@@ -4,7 +4,7 @@ import Image from "next/image";
 import { MarketingFooter } from "@/components/marketing/footer";
 
 export const metadata: Metadata = {
-  title: "Centro de Ayuda — YouWhole",
+  title: { absolute: "Centro de Ayuda — YouWhole" },
   description:
     "Preguntas frecuentes y guías de uso de YouWhole: VeriFactu, facturación, importación de datos, suscripciones y más. Soporte en español.",
   robots: { index: true, follow: true },

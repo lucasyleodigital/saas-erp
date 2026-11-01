@@ -5,7 +5,7 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.com";
 const SLUG = "software-control-horario";
 
 export const metadata: Metadata = {
-  title: "Software de Control Horario para Empresas — YouWhole",
+  title: { absolute: "Software de Control Horario para Empresas — YouWhole" },
   description:
     "Control horario obligatorio para empresas españolas. Fichaje por GPS, QR o web. Integrado con nóminas y proyectos. Cumple el RD 8/2019. Desde 29 EUR/mes.",
   keywords: [

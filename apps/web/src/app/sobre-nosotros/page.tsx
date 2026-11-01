@@ -5,7 +5,7 @@ import { Lightbulb, Target, Handshake, TrendingUp } from "lucide-react";
 import { MarketingFooter } from "@/components/marketing/footer";
 
 export const metadata: Metadata = {
-  title: "Sobre nosotros — YouWhole",
+  title: { absolute: "Sobre nosotros — YouWhole" },
   description:
     "YouWhole es un proyecto de Lucas y Leo Digital, agencia de transformación digital en Barcelona. Creamos el ERP todo en uno que las pymes españolas merecen: simple, completo y honesto.",
   robots: { index: true, follow: true },

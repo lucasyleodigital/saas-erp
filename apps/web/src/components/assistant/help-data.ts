@@ -347,7 +347,7 @@ export const HELP_CATEGORIES: HelpCategory[] = [
     questions: [
       {
         q: "Que es VeriFactu?",
-        a: "VeriFactu es el sistema de verificacion de facturas de la Agencia Tributaria (AEAT). Desde 2025, todo software de facturacion debe cumplir con VeriFactu.\n\nYouWhole lo incluye de serie: cada factura genera un hash SHA256 en cadena, un registro inmutable y un codigo QR verificable.",
+        a: "VeriFactu es el sistema de verificacion de facturas de la Agencia Tributaria (AEAT). Sera obligatorio desde el 1 de enero de 2027 para sociedades y desde el 1 de julio de 2027 para autonomos.\n\nYouWhole lo incluye de serie: cada factura genera un hash SHA256 en cadena, un registro inmutable y un codigo QR verificable.",
       },
       {
         q: "Como funciona automaticamente?",

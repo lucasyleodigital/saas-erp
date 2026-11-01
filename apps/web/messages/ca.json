@@ -1366,7 +1366,7 @@
   },
   "verifactu": {
     "title": "VeriFactu",
-    "subtitle": "Registre de factures conforme a la normativa AEAT 2025",
+    "subtitle": "Registre de factures conforme a la normativa VeriFactu de l'AEAT",
     "generate": "Generar VeriFactu",
     "status": "Estat AEAT",
     "generated": "Generat",
@@ -2113,7 +2113,7 @@
     }
   },
   "verifactuView": {
-    "subtitle": "Registre de factures conforme a la normativa AEAT 2025",
+    "subtitle": "Registre de factures conforme a la normativa VeriFactu de l'AEAT",
     "digitalCert": "Certificat digital",
     "totalRecords": "Total registres",
     "generated": "Generats",
@@ -2131,7 +2131,7 @@
     "certActive": "Certificat actiu — {subject}",
     "certActiveDesc": "Valid fins {date} - Les factures es signen automaticament",
     "regulation": "Normativa VeriFactu (AEAT)",
-    "regulationDesc": "Des de juliol 2025 es obligatori generar el registre VeriFactu per a cada factura emesa. El codi QR inclos a la factura permet als teus clients verificar-la a l'AEAT.",
+    "regulationDesc": "VeriFactu serà obligatori a partir de l'1 de gener de 2027 per a societats i de l'1 de juliol de 2027 per a autònoms. El codi QR de cada factura permet als teus clients verificar-la a l'AEAT.",
     "recordHistory": "Historial de registres",
     "noRecords": "Sense registres VeriFactu",
     "noRecordsDesc": "Genera el primer registre des del detall d'una factura enviada o pagada",
@@ -2317,7 +2317,7 @@
       "closeMenu": "Tancar menú"
     },
     "hero": {
-      "badge": "VeriFactu certificat · Compliment AEAT 2025",
+      "badge": "Adaptat a VeriFactu · Normativa AEAT",
       "titleLine1": "Tot en un",
       "titleLine2": "per a la teva empresa",
       "subtitle": "Facturació amb VeriFactu, IRPF automàtic, Model 130/303, CRM i comptabilitat. Creat per autònoms per a autònoms i pimes.",
@@ -2461,10 +2461,10 @@
       "cta": "Crear compte gratis — sense targeta"
     },
     "verifactu": {
-      "badge": "VeriFactu certificat",
+      "badge": "Adaptat a VeriFactu",
       "titleLine1": "Compliment fiscal total",
       "titleLine2": "des del primer dia",
-      "subtitle": "La Llei VeriFactu (Llei Antifrau 11/2021) obliga a registrar cada factura a l'AEAT des de 2025. Amb YouWhole passa automàticament — sense configuració, sense feina extra.",
+      "subtitle": "El Reglament VeriFactu (RD 1007/2023) obligarà a registrar cada factura amb la seva empremta digital: a partir de l'1 de gener de 2027 les societats i de l'1 de juliol de 2027 els autònoms. Amb YouWhole passa automàticament, sense configuració ni feina extra.",
       "flow": {
         "company": {
           "label": "La teva empresa",
@@ -2480,7 +2480,7 @@
         },
         "compliance": {
           "label": "Compliment",
-          "sublabel": "100% legal garantit"
+          "sublabel": "Conforme a la normativa"
         }
       },
       "points": {
@@ -2493,7 +2493,7 @@
           "desc": "Enviament automàtic al sistema VERI*FACTU de l'Agència Tributària amb codi QR de verificació inclòs."
         },
         "xml": {
-          "title": "XML certificat",
+          "title": "XML segons l'especificació AEAT",
           "desc": "Generem l'XML segons l'especificació tècnica oficial de l'AEAT amb tots els camps obligatoris."
         },
         "validation": {
@@ -2577,7 +2577,7 @@
       "items": {
         "q1": {
           "q": "Què és VeriFactu i per què el necessito?",
-          "a": "VeriFactu és el sistema de verificació de factures de l'Agència Tributària espanyola. Des de 2025, tota empresa que utilitzi un programari de facturació està obligada a fer servir sistemes certificats VeriFactu. YouWhole l'inclou de sèrie — no cal fer res extra per complir la llei."
+          "a": "VeriFactu és el sistema de l'Agència Tributària per garantir que les factures no s'alteren. Serà obligatori a partir de l'1 de gener de 2027 per a societats i de l'1 de juliol de 2027 per a autònoms. YouWhole està adaptat i l'inclou de sèrie en tots els plans: no has de fer res més."
         },
         "q2": {
           "q": "Necessito targeta de crèdit per començar?",
@@ -2771,7 +2771,7 @@
         "subtitle": "Dissenyat des de zero per a la realitat de l'autònom espanyol: Hisenda, clients, temps i diners.",
         "items": {
           "f1": {
-            "title": "VeriFactu certificat AEAT",
+            "title": "Adaptat a VeriFactu",
             "desc": "Compleix amb l'obligació legal des del primer dia. Cada factura es registra automàticament a l'Agència Tributària."
           },
           "f2": {
@@ -2804,9 +2804,9 @@
         "colOther": "Altres ERP",
         "rows": {
           "r1": {
-            "feat": "VeriFactu certificat AEAT",
+            "feat": "Adaptat a VeriFactu",
             "yw": "Inclòs en tots els plans",
-            "other": "Només en plans cars o no inclòs"
+            "other": "Depèn del programa i del pla"
           },
           "r2": {
             "feat": "IRPF automàtic",
@@ -2886,7 +2886,7 @@
         "items": {
           "m1": {
             "title": "Facturació amb VeriFactu",
-            "desc": "Emet factures certificades AEAT. Inclou factures recurrents, multi-divisa i en diversos idiomes (es, ca, eu, gl, en)."
+            "desc": "Emet factures adaptades a VeriFactu. Inclou factures recurrents, multidivisa i en diversos idiomes (es, ca, eu, gl, en)."
           },
           "m2": {
             "title": "Comptabilitat PGC",
@@ -2946,13 +2946,13 @@
     },
     "verifactu": {
       "seo": {
-        "title": "Programari VeriFactu Certificat AEAT — YouWhole",
-        "description": "Programari certificat VeriFactu per l'AEAT. Compleix l'obligacio legal des del primer dia, inclos en tots els plans, fins i tot el gratuit.",
-        "ogTitle": "Programari VeriFactu Certificat AEAT — YouWhole",
+        "title": "Programari adaptat a VeriFactu inclòs en tots els plans — YouWhole",
+        "description": "Programa de facturació adaptat a VeriFactu (RD 1007/2023), inclòs en tots els plans, també en el gratuït. Prepara't abans del 2027.",
+        "ogTitle": "Programari adaptat a VeriFactu — YouWhole",
         "ogDescription": "Compleix amb l'obligació VeriFactu des del primer dia. Inclòs en tots els plans de YouWhole."
       },
-      "badge": "Certificat AEAT",
-      "h1Line1": "Programari VeriFactu certificat",
+      "badge": "Adaptat a VeriFactu",
+      "h1Line1": "Programari adaptat a VeriFactu",
       "h1Highlight": "inclòs en tots els plans",
       "subtitle": "YouWhole compleix amb l'obligació VeriFactu de l'Agència Tributària des del primer dia. Sense configuració. Sense mòduls extra. Sense cost addicional.",
       "cta": "Comença gratis — VeriFactu inclòs",
@@ -2962,7 +2962,7 @@
         "p1Strong": "integritat i inalterabilitat",
         "p1Post": "de totes les factures emeses per empreses i autònoms a Espanya.",
         "p2Pre": "VeriFactu serà obligatori des de l'1 de gener de 2027 per a societats i des de l'1 de juliol de 2027 per a autònoms (Reial decret llei 15/2025), però ja pots tenir el teu programari",
-        "p2Strong": "certificat VeriFactu",
+        "p2Strong": "adaptat a VeriFactu",
         "p2Post": "avui mateix per evitar sancions d'Hisenda de fins a 50.000 EUR i no haver de migrar de sistema en l'últim moment.",
         "p3": "Amb YouWhole, cada factura que emets es registra automàticament a l'AEAT amb la seva empremta digital corresponent. Tu no has de fer res extra — el sistema ho gestiona en segon pla."
       },
@@ -2995,8 +2995,8 @@
             "a": "Sí, a partir de les dates límit fixades per Hisenda. El Reglament de Facturació (RD 1007/2023) obliga tots els empresaris i professionals a Espanya a fer servir sistemes de facturació que compleixin amb VeriFactu. L'incompliment pot comportar sancions de fins a 50.000 EUR."
           },
           "q3": {
-            "q": "Està YouWhole certificat per l'AEAT?",
-            "a": "Sí. YouWhole està certificat per a l'enviament de registres de facturació a l'AEAT mitjançant el sistema VeriFactu. Cada factura emesa genera automàticament el registre corresponent i l'envia a Hisenda."
+            "q": "YouWhole està certificat per l'AEAT?",
+            "a": "L'AEAT no certifica ni homologa programes de facturació. La normativa exigeix que cada fabricant signi una declaració responsable que el seu programa compleix el Reglament VeriFactu (RD 1007/2023). YouWhole està adaptat: cada factura genera el seu registre amb empremta digital i codi QR, i es pot enviar a l'AEAT."
           },
           "q4": {
             "q": "He de fer alguna cosa especial per activar VeriFactu a YouWhole?",
@@ -3008,7 +3008,7 @@
           },
           "q6": {
             "q": "A quins autònoms afecta VeriFactu?",
-            "a": "Afecta tots els autònoms i professionals que emetin factures a Espanya, sense excepció per volum de facturació ni sector d'activitat. La seva data límit és l'1 de juliol de 2027, tres mesos després que les societats."
+            "a": "Afecta tots els autònoms i professionals que emetin factures a Espanya, sense excepció per volum de facturació ni sector d'activitat. La seva data límit és l'1 de juliol de 2027, sis mesos després que les societats."
           },
           "q7": {
             "q": "Quant costa un programari VeriFactu?",
@@ -3024,250 +3024,250 @@
     },
     "holded": {
       "seo": {
-        "title": "Alternativa a Holded per a Autònoms i Pimes — YouWhole",
-        "description": "Alternativa a Holded mes completa i assequible. VeriFactu certificat, IRPF automatic i Model 130/303 inclosos. Des de 29 EUR/mes.",
-        "ogTitle": "Alternativa a Holded — YouWhole",
-        "ogDescription": "Més complet que Holded per al mercat espanyol. VeriFactu, IRPF, Model 130/303 i suport natiu en català i castellà."
+        "title": "Alternativa a Holded amb pla gratuït i nòmines incloses — YouWhole",
+        "description": "Compara YouWhole i Holded: pla gratuït per sempre, factures il·limitades des de 29 € amb IVA, VeriFactu i nòmines incloses. Dades de novembre de 2026.",
+        "ogTitle": "YouWhole vs Holded: comparativa amb dades actualitzades",
+        "ogDescription": "Pla gratuït, preus amb IVA inclòs i nòmines sense mòduls a part. Compara amb dades de novembre de 2026."
       },
-      "badge": "Comparativa honesta",
-      "h1Line1": "L'alternativa a Holded que",
-      "h1Highlight": "sí que compleix amb Hisenda",
-      "subtitle": "YouWhole inclou VeriFactu certificat, IRPF automàtic i Model 130/303 de sèrie. Sense mòduls extra. Sense sorpreses a la factura.",
+      "badge": "Comparativa amb dades de novembre de 2026",
+      "h1Line1": "L'alternativa a Holded amb",
+      "h1Highlight": "pla gratuït i nòmines incloses",
+      "subtitle": "Holded i YouWhole inclouen VeriFactu. La diferència és en la resta: YouWhole té un pla gratuït per sempre, preus amb IVA inclòs i nòmines, inventari i despeses d'empleats sense contractar mòduls a part.",
       "ctaPrimary": "Provar YouWhole gratis",
       "ctaSecondary": "Parlar amb l'equip",
-      "trustLine": "Gratis per sempre · Sense targeta · Migració assistida des de Holded",
+      "trustLine": "Gratis per sempre · Sense targeta · Importador de clients, productes i factures",
       "comparison": {
         "title": "YouWhole vs Holded",
-        "subtitle": "Comparativa de característiques per a autònoms i pimes espanyoles",
+        "subtitle": "Què canvia entre tots dos per a un autònom o una pime",
         "colFeat": "Característica",
         "colOther": "Holded",
         "included": "Inclòs",
         "no": "No",
         "yes": "Sí",
         "notAvailable": "No disponible",
-        "footnote": "Informació basada en els plans publicats. Actualitzat juliol 2026.",
+        "footnote": "Dades de Holded consultades a holded.com/es/precios l'1 de novembre de 2026. Els preus de Holded no inclouen IVA; els de YouWhole sí.",
         "rows": {
           "r1": {
-            "feat": "VeriFactu certificat AEAT",
+            "feat": "Pla gratuït permanent",
             "yw": true,
-            "other": false,
-            "note": "Holded no té VeriFactu natiu"
+            "other": "Prova de 14 dies",
+            "note": "A YouWhole, fins a 5 clients i 10 factures al mes, sense caducitat"
           },
           "r2": {
-            "feat": "IRPF automàtic per a autònoms",
-            "yw": true,
-            "other": false,
-            "note": "A Holded és configuració manual"
+            "feat": "Preu d'entrada",
+            "yw": "29 €/mes amb IVA",
+            "other": "15 €/mes + IVA (Plus)",
+            "note": "Holded Bàsic: 29 € + IVA. Holded aplica un 50% de descompte els 3 primers mesos"
           },
           "r3": {
-            "feat": "Model 130/303 integrat",
-            "yw": true,
-            "other": false,
-            "note": "Holded requereix mòdul comptable extra"
+            "feat": "Factures",
+            "yw": "Il·limitades des de Starter",
+            "other": "De 250 a 10.000 l'any",
+            "note": "A Holded són il·limitades al pla Premium (199 € + IVA)"
           },
           "r4": {
-            "feat": "Pla gratuït real",
+            "feat": "VeriFactu",
             "yw": true,
-            "other": false,
-            "note": "Holded no té pla gratuït permanent"
+            "other": true,
+            "note": "Tots dos l'inclouen en tots els plans"
           },
           "r5": {
-            "feat": "Preu base mensual",
-            "yw": "29 EUR",
-            "other": "des de 49 EUR",
-            "note": ""
+            "feat": "Nòmines",
+            "yw": "Incloses a Pro",
+            "other": "5 €/empleat/mes a part",
+            "note": "A Holded és un mòdul opcional"
           },
           "r6": {
-            "feat": "Suport natiu en català/castellà",
-            "yw": true,
-            "other": true,
-            "note": ""
+            "feat": "Inventari i magatzems",
+            "yw": "Inclòs",
+            "other": "25 €/mes a part",
+            "note": "A Holded és un mòdul opcional"
           },
           "r7": {
-            "feat": "Sense permanència",
-            "yw": true,
-            "other": false,
-            "note": "Holded cobra anual per defecte"
+            "feat": "Usuaris",
+            "yw": "3 (Starter) · 10 (Pro)",
+            "other": "2 (Bàsic) · 4 (Estàndard) · 7 (Avançat)",
+            "note": ""
           },
           "r8": {
-            "feat": "Múltiples idiomes (ca, eu, gl)",
-            "yw": true,
-            "other": false,
-            "note": "YouWhole suporta 5 idiomes peninsulars"
+            "feat": "Permanència",
+            "yw": "Sense permanència",
+            "other": "Sense permanència",
+            "note": "Tots dos permeten pagar al mes i cancel·lar quan vulguis"
+          }
+        }
+      },
+      "extras": {
+        "title": "El que YouWhole inclou en la mateixa subscripció",
+        "subtitle": "Funcions pensades per a pimes i autònoms a Espanya, sense contractar res a part.",
+        "items": {
+          "e1": {
+            "t": "Despeses d'empleats",
+            "d": "Tiquets amb lectura automàtica, quilometratge i dietes, amb aprovació i reemborsament a la nòmina."
           },
-          "r9": {
-            "feat": "Control horari empleats",
-            "yw": true,
-            "other": true,
-            "note": ""
+          "e2": {
+            "t": "Flota de vehicles i DeCA",
+            "d": "Vehicles, manteniments i el document de control de transport des del mateix albarà (pla Pro)."
           },
-          "r10": {
-            "feat": "Portal d'empleat",
-            "yw": true,
-            "other": true,
-            "note": ""
+          "e3": {
+            "t": "Models 303 i 130",
+            "d": "Calculats amb les teves factures i despeses perquè els presentis cada trimestre."
+          },
+          "e4": {
+            "t": "En el teu idioma",
+            "d": "L'aplicació està en castellà, català, basc, gallec i anglès."
+          },
+          "e5": {
+            "t": "Control horari",
+            "d": "Fitxatge d'empleats inclòs des del pla Starter."
+          },
+          "e6": {
+            "t": "CRM i projectes",
+            "d": "Leads, pipeline i projectes amb la seva rendibilitat, al costat de les teves factures."
           }
         }
       },
       "migration": {
-        "title": "Migra des de Holded sense perdre les teves dades",
-        "subtitle": "Importa els teus clients, factures i productes des de Holded en minuts. El nostre equip t'ajuda a fer la transició sense interrupcions.",
+        "title": "Passa les teves dades de Holded a YouWhole",
+        "subtitle": "Exporta els teus llistats de Holded a Excel o CSV i carrega'ls amb l'importador de YouWhole.",
         "steps": {
           "s1": {
             "t": "Exporta des de Holded",
-            "d": "Descarrega les teves dades en CSV o Excel des del panell de Holded."
+            "d": "Descarrega els teus clients, productes i factures en Excel o CSV."
           },
           "s2": {
             "t": "Importa a YouWhole",
-            "d": "Utilitza el nostre importador per carregar clients, productes i factures."
+            "d": "L'importador carrega clients, productes, proveïdors i factures des d'aquests fitxers."
           },
           "s3": {
-            "t": "Preparat per facturar",
-            "d": "La teva empresa operativa a YouWhole en menys d'1 hora."
+            "t": "Comença a facturar",
+            "d": "Els teus clients i el teu històric, a punt al teu nou compte."
           }
         },
-        "cta": "Començar migració gratis"
+        "cta": "Crear compte gratis"
       }
     },
     "sage": {
       "seo": {
-        "title": "Alternativa a Sage per a Autònoms i Pimes — YouWhole",
-        "description": "Alternativa moderna a Sage: VeriFactu certificat, IRPF automatic, sense instal·lacio. Des de 29 EUR/mes, sense permanencia.",
-        "ogTitle": "Alternativa a Sage per a Autònoms — YouWhole",
-        "ogDescription": "Més senzill i assequible que Sage. VeriFactu inclòs, sense instal·lació, des de 29 EUR/mes."
+        "title": "Alternativa a Sage per a autònoms: tot en una sola subscripció — YouWhole",
+        "description": "Compara YouWhole amb Sage Active: pla gratuït per sempre, VeriFactu i nòmines al mateix programa i preus amb IVA. Dades de novembre de 2026.",
+        "ogTitle": "YouWhole vs Sage per a autònoms",
+        "ogDescription": "Facturació, comptabilitat, nòmines i despeses d'empleats en una sola subscripció, amb pla gratuït."
       },
-      "badge": "Comparativa honesta",
-      "h1Line1": "L'alternativa a Sage que",
-      "h1Highlight": "no requereix instal·lació",
-      "subtitle": "YouWhole és 100% al núvol, inclou VeriFactu certificat i costa menys que Sage. Sense instal·lacions, sense versions desactualitzades, sense sorpreses.",
+      "badge": "Comparativa amb dades de novembre de 2026",
+      "h1Line1": "L'alternativa a Sage amb",
+      "h1Highlight": "tot en una sola subscripció",
+      "subtitle": "Sage ofereix la facturació i la comptabilitat (Sage Active o Sage 50) i les nòmines (Sage NominaPlus) en productes diferents. A YouWhole van juntes, amb un pla gratuït per començar i preus amb IVA inclòs.",
       "ctaPrimary": "Provar YouWhole gratis",
       "ctaSecondary": "Parlar amb l'equip",
-      "trustLine": "Gratis per sempre · Sense targeta · Migració assistida des de Sage",
+      "trustLine": "Gratis per sempre · Sense targeta · Importador de clients, productes i factures",
       "reasons": {
-        "title": "Per què els autònoms abandonen Sage?",
-        "subtitle": "Sage porta dècades al mercat, però va ser dissenyat per a una altra època. Aquestes són les queixes més habituals.",
+        "title": "Quan encaixa millor YouWhole",
+        "subtitle": "Sage és una opció consolidada. Aquests són els casos en què YouWhole et pot encaixar millor.",
         "items": {
           "r1": {
-            "t": "Instal·lació local",
-            "d": "Sage 50 requereix instal·lar programari a cada ordinador. Si canvies d'equip o treballes en remot, tens un problema."
+            "t": "Vols tot en un sol programa",
+            "d": "Factures, comptabilitat, nòmines, control horari i despeses d'empleats al mateix compte, sense combinar productes."
           },
           "r2": {
-            "t": "Sense VeriFactu natiu",
-            "d": "Complir la normativa AEAT 2025 requereix un mòdul addicional de pagament que Sage no inclou per defecte."
+            "t": "Vols començar sense pagar",
+            "d": "El pla gratuït no caduca: fins a 5 clients i 10 factures al mes. Sage Active ofereix un mes de prova."
           },
           "r3": {
-            "t": "Preu de llicències",
-            "d": "Les llicències anuals de Sage s'acumulen. Per a una pime petita, el cost és difícil de justificar."
+            "t": "Tens empleats que es desplacen",
+            "d": "Tiquets amb lectura automàtica, quilometratge i dietes, amb aprovació i reemborsament a la nòmina."
           },
           "r4": {
-            "t": "Corba d'aprenentatge alta",
-            "d": "Sage va ser dissenyat per a comptables professionals. Un autònom sense formació comptable el troba innecessàriament complex."
+            "t": "Gestiones vehicles",
+            "d": "Flota, manteniments i DeCA de transport des de l'albarà, al pla Pro."
           },
           "r5": {
-            "t": "Sense app mòbil real",
-            "d": "Consultar una factura o registrar una despesa des del mòbil és pràcticament impossible amb Sage 50."
+            "t": "Treballes en català, basc o gallec",
+            "d": "L'aplicació està en castellà, català, basc, gallec i anglès."
           },
           "r6": {
-            "t": "Actualitzacions de pagament",
-            "d": "Cada nova versió de Sage requereix pagar l'actualització. Amb YouWhole, les actualitzacions són automàtiques i incloses."
+            "t": "Prefereixes preus amb IVA inclòs",
+            "d": "El que veus a la tarifa és el que pagues: 29 € o 79 € al mes, sense permanència."
           }
         }
       },
       "comparison": {
-        "title": "YouWhole vs Sage",
-        "subtitle": "Comparativa de característiques per a autònoms i pimes",
+        "title": "YouWhole vs Sage Active",
+        "subtitle": "Davant de Sage Active, el programa al núvol de Sage per a autònoms i microempreses",
         "colFeat": "Característica",
-        "colOther": "Sage",
+        "colOther": "Sage Active",
         "included": "Inclòs",
         "no": "No",
         "yes": "Sí",
         "notAvailable": "No disponible",
-        "footnote": "Informació basada en els plans publicats. Actualitzat juliol 2026.",
+        "footnote": "Dades de Sage consultades a sage.com/es-es l'1 de novembre de 2026. Els preus de Sage no inclouen IVA; els de YouWhole sí.",
         "rows": {
           "r1": {
-            "feat": "VeriFactu certificat AEAT",
+            "feat": "Pla gratuït permanent",
             "yw": true,
-            "other": false,
-            "note": "Sage requereix mòdul addicional de pagament"
+            "other": "Prova d'un mes",
+            "note": "A YouWhole, fins a 5 clients i 10 factures al mes, sense caducitat"
           },
           "r2": {
-            "feat": "IRPF automàtic per a autònoms",
-            "yw": true,
-            "other": false,
-            "note": "A Sage és configuració manual"
+            "feat": "Preu d'entrada",
+            "yw": "29 €/mes amb IVA",
+            "other": "25 €/mes + IVA",
+            "note": "Sage Active amb comptabilitat: 49 € + IVA. Sage aplica un 50% de descompte els 3 primers mesos"
           },
           "r3": {
-            "feat": "Basat al núvol (sense instal·lació)",
-            "yw": true,
-            "other": false,
-            "note": "Sage 50 requereix instal·lació local"
-          },
-          "r4": {
-            "feat": "Pla gratuït disponible",
-            "yw": true,
-            "other": false,
-            "note": "Sage no té pla gratuït"
-          },
-          "r5": {
-            "feat": "Preu base mensual",
-            "yw": "29 EUR",
-            "other": "des de 50 EUR",
-            "note": ""
-          },
-          "r6": {
-            "feat": "Actualitzacions automàtiques",
-            "yw": true,
-            "other": false,
-            "note": "Sage requereix comprar noves versions"
-          },
-          "r7": {
-            "feat": "Multi-idioma (ca, eu, gl)",
-            "yw": true,
-            "other": false,
-            "note": "YouWhole suporta 5 idiomes peninsulars"
-          },
-          "r8": {
-            "feat": "Suport en català/castellà",
+            "feat": "Al núvol, sense instal·lació",
             "yw": true,
             "other": true,
-            "note": ""
+            "note": "Sage 50 combina instal·lació local i núvol"
           },
-          "r9": {
-            "feat": "Sense permanència",
+          "r4": {
+            "feat": "VeriFactu",
             "yw": true,
-            "other": false,
-            "note": "Sage cobra llicències anuals"
+            "other": true,
+            "note": "Tots dos l'inclouen"
           },
-          "r10": {
-            "feat": "Accés des del mòbil",
-            "yw": true,
-            "other": false,
-            "note": "Sage 50 no té app mòbil nativa"
+          "r5": {
+            "feat": "Nòmines",
+            "yw": "Incloses a Pro",
+            "other": "Producte a part",
+            "note": "Sage les ofereix a Sage NominaPlus o Sage 200 Laboral"
+          },
+          "r6": {
+            "feat": "Comptabilitat i models 303/130",
+            "yw": "Inclosos des de Starter",
+            "other": "Pla de 49 € + IVA",
+            "note": "El pla d'entrada de Sage Active se centra en pressupostos i factures"
+          },
+          "r7": {
+            "feat": "Permanència",
+            "yw": "Sense permanència",
+            "other": "Sense permanència",
+            "note": "Tots dos permeten cancel·lar quan vulguis"
           }
         }
       },
       "migration": {
-        "title": "Migra des de Sage sense perdre les teves dades",
-        "subtitle": "Exporta els teus clients, productes i factures des de Sage i importa'ls a YouWhole en minuts.",
+        "title": "Passa les teves dades de Sage a YouWhole",
+        "subtitle": "Exporta els teus llistats de Sage a Excel o CSV i carrega'ls amb l'importador de YouWhole.",
         "steps": {
           "s1": {
             "t": "Exporta des de Sage",
-            "d": "Exporta clients, productes i factures en CSV o Excel des del panell de Sage."
+            "d": "Descarrega els teus clients, productes i factures en Excel o CSV."
           },
           "s2": {
             "t": "Importa a YouWhole",
-            "d": "Utilitza el nostre importador per carregar totes les teves dades en minuts."
+            "d": "L'importador carrega clients, productes, proveïdors i factures des d'aquests fitxers."
           },
           "s3": {
-            "t": "Preparat per facturar",
-            "d": "La teva empresa operativa a YouWhole amb VeriFactu activat des del primer dia."
+            "t": "Comença a facturar",
+            "d": "La teva empresa a punt a YouWhole, amb VeriFactu inclòs."
           }
         },
-        "cta": "Començar migració gratis"
+        "cta": "Crear compte gratis"
       },
       "finalCta": {
-        "title": "Deixa Sage. Comença gratis avui.",
-        "subtitle": "Sense targeta. Sense permanència. Amb VeriFactu inclòs des del primer dia.",
+        "title": "Prova YouWhole gratis, sense data de caducitat",
+        "subtitle": "Sense targeta. Sense permanència. Amb VeriFactu inclòs.",
         "cta": "Crear compte gratis"
       }
     },

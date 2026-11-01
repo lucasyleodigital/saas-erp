@@ -5,7 +5,7 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.com";
 const SLUG = "software-recursos-humanos-pymes";
 
 export const metadata: Metadata = {
-  title: "Software de Recursos Humanos para Pymes — YouWhole",
+  title: { absolute: "Software de Recursos Humanos para Pymes — YouWhole" },
   description:
     "Gestiona empleados, nóminas, contratos, vacaciones y control horario en una sola plataforma. Software RRHH para pymes. Desde 29 EUR/mes.",
   keywords: [

@@ -58,7 +58,7 @@ const JSONLD_SOFTWARE = {
   description:
     "ERP para autonomos y pymes: facturacion con VeriFactu, IRPF automatico, Modelo 130/303/347, CRM, contabilidad PGC, nominas, gastos y dietas de empleados, inventario, flota de vehiculos y DeCA.",
   featureList: [
-    "Facturacion electronica con VeriFactu certificado AEAT",
+    "Facturacion adaptada a VeriFactu",
     "CRM integrado con pipeline Kanban",
     "Contabilidad segun Plan General Contable espanol (PGC)",
     "Gestion de nominas y RRHH",
@@ -133,7 +133,7 @@ const JSONLD_FAQ = {
       name: "¿Qué es VeriFactu y por qué lo necesito?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "VeriFactu es el sistema de verificación de facturas de la Agencia Tributaria española. Desde 2025, toda empresa que use un software de facturación está obligada a usar sistemas certificados VeriFactu. YouWhole lo incluye de serie — no necesitas hacer nada extra para cumplir la ley.",
+        text: "VeriFactu es el sistema de la Agencia Tributaria para garantizar que las facturas no se alteran. Será obligatorio desde el 1 de enero de 2027 para sociedades y desde el 1 de julio de 2027 para autónomos. YouWhole está adaptado y lo incluye de serie en todos los planes: no necesitas hacer nada extra.",
       },
     },
     {

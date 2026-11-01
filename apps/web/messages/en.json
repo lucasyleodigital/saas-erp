@@ -1367,7 +1367,7 @@
   },
   "verifactu": {
     "title": "VeriFactu",
-    "subtitle": "Invoice registry compliant with AEAT regulations 2025",
+    "subtitle": "Invoice records compliant with the AEAT VeriFactu rules",
     "generate": "Generate VeriFactu",
     "status": "AEAT status",
     "generated": "Generated",
@@ -2114,7 +2114,7 @@
     }
   },
   "verifactuView": {
-    "subtitle": "Invoice registry compliant with AEAT regulations 2025",
+    "subtitle": "Invoice records compliant with the AEAT VeriFactu rules",
     "digitalCert": "Digital certificate",
     "totalRecords": "Total records",
     "generated": "Generated",
@@ -2132,7 +2132,7 @@
     "certActive": "Certificate active — {subject}",
     "certActiveDesc": "Valid until {date} - Invoices are signed automatically",
     "regulation": "VeriFactu regulation (AEAT)",
-    "regulationDesc": "Since July 2025 generating the VeriFactu record is mandatory for every issued invoice. The QR code included in the invoice allows your clients to verify it at AEAT.",
+    "regulationDesc": "VeriFactu becomes mandatory on 1 January 2027 for companies and on 1 July 2027 for freelancers. The QR code on each invoice lets your clients verify it with the AEAT.",
     "recordHistory": "Record history",
     "noRecords": "No VeriFactu records",
     "noRecordsDesc": "Generate the first record from a sent or paid invoice detail",
@@ -2318,7 +2318,7 @@
       "closeMenu": "Close menu"
     },
     "hero": {
-      "badge": "VeriFactu certified · AEAT 2025 compliant",
+      "badge": "VeriFactu-ready · AEAT rules",
       "titleLine1": "All-in-one",
       "titleLine2": "for your business",
       "subtitle": "VeriFactu invoicing, automatic withholding tax, tax forms 130/303, CRM and accounting. Built by freelancers, for freelancers and small businesses.",
@@ -2462,10 +2462,10 @@
       "cta": "Create a free account — no card required"
     },
     "verifactu": {
-      "badge": "VeriFactu certified",
+      "badge": "VeriFactu-ready",
       "titleLine1": "Full tax compliance",
       "titleLine2": "from day one",
-      "subtitle": "Spain's VeriFactu Law (Anti-Fraud Law 11/2021) requires every invoice to be registered with the AEAT starting in 2025. With YouWhole it happens automatically — no setup, no extra work.",
+      "subtitle": "The VeriFactu Regulation (RD 1007/2023) will require every invoice to be recorded with its digital fingerprint: from 1 January 2027 for companies and from 1 July 2027 for freelancers. With YouWhole it happens automatically, with no setup or extra work.",
       "flow": {
         "company": {
           "label": "Your business",
@@ -2481,7 +2481,7 @@
         },
         "compliance": {
           "label": "Compliance",
-          "sublabel": "100% legally guaranteed"
+          "sublabel": "Meets the rules"
         }
       },
       "points": {
@@ -2494,7 +2494,7 @@
           "desc": "Automatically submitted to the Spanish Tax Agency's VERI*FACTU system, including the verification QR code."
         },
         "xml": {
-          "title": "Certified XML",
+          "title": "XML to the AEAT specification",
           "desc": "We generate the XML according to the AEAT's official technical specification, with every mandatory field included."
         },
         "validation": {
@@ -2578,7 +2578,7 @@
       "items": {
         "q1": {
           "q": "What is VeriFactu and why do I need it?",
-          "a": "VeriFactu is the Spanish Tax Agency's invoice verification system. Since 2025, any business using invoicing software is required to use VeriFactu-certified systems. YouWhole includes it by default — there's nothing extra you need to do to comply with the law."
+          "a": "VeriFactu is the Spanish Tax Agency's system to make sure invoices are not altered. It becomes mandatory on 1 January 2027 for companies and on 1 July 2027 for freelancers. YouWhole is ready for it and includes it on every plan: you don't need to do anything extra."
         },
         "q2": {
           "q": "Do I need a credit card to start?",
@@ -2772,7 +2772,7 @@
         "subtitle": "Built from the ground up for the Spanish freelancer's reality: the tax office, clients, time, and money.",
         "items": {
           "f1": {
-            "title": "AEAT-certified VeriFactu",
+            "title": "VeriFactu-ready",
             "desc": "Meets the legal requirement from day one. Every invoice is automatically registered with the Spanish Tax Agency."
           },
           "f2": {
@@ -2805,9 +2805,9 @@
         "colOther": "Other ERPs",
         "rows": {
           "r1": {
-            "feat": "AEAT-certified VeriFactu",
+            "feat": "VeriFactu-ready",
             "yw": "Included in every plan",
-            "other": "Only on expensive plans, or not included"
+            "other": "Depends on the app and the plan"
           },
           "r2": {
             "feat": "Automatic withholding tax",
@@ -2887,7 +2887,7 @@
         "items": {
           "m1": {
             "title": "VeriFactu invoicing",
-            "desc": "Issue AEAT-certified invoices. Includes recurring invoices, multi-currency, and multiple languages (es, ca, eu, gl, en)."
+            "desc": "Issue VeriFactu-ready invoices. Includes recurring invoices, multi-currency and several languages (es, ca, eu, gl, en)."
           },
           "m2": {
             "title": "Spanish GAAP accounting",
@@ -2947,13 +2947,13 @@
     },
     "verifactu": {
       "seo": {
-        "title": "AEAT-Certified VeriFactu Software — YouWhole",
-        "description": "Invoicing software certified for VeriFactu by the Spanish Tax Agency. Meets the legal requirement from day one, included in every plan.",
-        "ogTitle": "AEAT-Certified VeriFactu Software — YouWhole",
+        "title": "VeriFactu-ready software included on every plan — YouWhole",
+        "description": "Invoicing software ready for VeriFactu (RD 1007/2023), included on every plan, even the free one. Get ready before 2027.",
+        "ogTitle": "VeriFactu-ready software — YouWhole",
         "ogDescription": "Meets the VeriFactu requirement from day one. Included in every YouWhole plan."
       },
-      "badge": "AEAT certified",
-      "h1Line1": "Certified VeriFactu software,",
+      "badge": "VeriFactu-ready",
+      "h1Line1": "VeriFactu-ready software",
       "h1Highlight": "included in every plan",
       "subtitle": "YouWhole meets the Spanish Tax Agency's VeriFactu requirement from day one. No setup. No extra modules. No added cost.",
       "cta": "Start for free — VeriFactu included",
@@ -2962,9 +2962,9 @@
         "p1Pre": "VeriFactu is the invoice verification system approved by the Spanish Tax Agency under the Invoicing Regulation (RD 1007/2023). Its goal is to guarantee the",
         "p1Strong": "integrity and immutability",
         "p1Post": "of every invoice issued by businesses and freelancers in Spain.",
-        "p2Pre": "Since 2025, any invoicing software you use must be",
-        "p2Strong": "VeriFactu certified",
-        "p2Post": "to operate legally. Using uncertified software can lead to tax office fines of up to €50,000.",
+        "p2Pre": "VeriFactu becomes mandatory on 1 January 2027 for companies and on 1 July 2027 for freelancers (Royal Decree-law 15/2025), but your software can be",
+        "p2Strong": "VeriFactu-ready",
+        "p2Post": "today, so you avoid tax fines of up to €50,000 and don't have to switch systems at the last minute.",
         "p3": "With YouWhole, every invoice you issue is automatically registered with the AEAT along with its digital fingerprint. There's nothing extra for you to do — the system handles it in the background."
       },
       "howItWorks": {
@@ -2989,7 +2989,7 @@
         "items": {
           "q1": {
             "q": "What is VeriFactu?",
-            "a": "VeriFactu is the Spanish Tax Agency's (AEAT) invoice verification system. Since 2025, any invoicing software used by businesses and freelancers must be VeriFactu certified to guarantee the integrity and immutability of issued invoices."
+            "a": "VeriFactu is the Spanish Tax Agency's (AEAT) invoice verification system. The invoicing software used by businesses and freelancers must guarantee that issued invoices are complete and cannot be altered. It becomes mandatory on 1 January 2027 for companies and on 1 July 2027 for freelancers."
           },
           "q2": {
             "q": "Is it mandatory to use VeriFactu-enabled software?",
@@ -2997,7 +2997,7 @@
           },
           "q3": {
             "q": "Is YouWhole certified by the AEAT?",
-            "a": "Yes. YouWhole is certified to submit invoicing records to the AEAT through the VeriFactu system. Every invoice issued automatically generates the corresponding record and sends it to the tax office."
+            "a": "The AEAT does not certify or approve invoicing software. The rules require each maker to sign a responsible declaration that their software meets the VeriFactu Regulation (RD 1007/2023). YouWhole is ready for it: every invoice generates its record with a digital fingerprint and QR code, and can be sent to the AEAT."
           },
           "q4": {
             "q": "Do I need to do anything special to activate VeriFactu in YouWhole?",
@@ -3013,250 +3013,250 @@
     },
     "holded": {
       "seo": {
-        "title": "Holded Alternative for Freelancers and SMEs — YouWhole",
-        "description": "A more complete, more affordable alternative to Holded. Certified VeriFactu, automatic withholding tax and tax forms 130/303. From 29 EUR/mo.",
-        "ogTitle": "Holded Alternative — YouWhole",
-        "ogDescription": "More complete than Holded for the Spanish market. VeriFactu, withholding tax, tax forms 130/303, and native support in English and Spanish."
+        "title": "Holded alternative with a free plan and payroll included — YouWhole",
+        "description": "Compare YouWhole and Holded: a free-forever plan, unlimited invoices from €29 VAT included, VeriFactu and payroll included. Data from November 2026.",
+        "ogTitle": "YouWhole vs Holded: comparison with up-to-date data",
+        "ogDescription": "Free plan, VAT-inclusive prices and payroll with no add-on modules. Compare with data from November 2026."
       },
-      "badge": "An honest comparison",
-      "h1Line1": "The Holded alternative that",
-      "h1Highlight": "actually meets tax office requirements",
-      "subtitle": "YouWhole includes certified VeriFactu, automatic withholding tax, and tax forms 130/303 out of the box. No extra modules. No surprises on the invoice.",
+      "badge": "Comparison with November 2026 data",
+      "h1Line1": "The Holded alternative with",
+      "h1Highlight": "a free plan and payroll included",
+      "subtitle": "Both Holded and YouWhole include VeriFactu. The difference is everything else: YouWhole has a free-forever plan, VAT-inclusive prices, and payroll, inventory and employee expenses without buying add-on modules.",
       "ctaPrimary": "Try YouWhole for free",
       "ctaSecondary": "Talk to the team",
-      "trustLine": "Free forever · No card · Assisted migration from Holded",
+      "trustLine": "Free forever · No card · Importer for clients, products and invoices",
       "comparison": {
         "title": "YouWhole vs Holded",
-        "subtitle": "A feature comparison for Spanish freelancers and SMEs",
+        "subtitle": "What changes between them for a freelancer or small business",
         "colFeat": "Feature",
         "colOther": "Holded",
         "included": "Included",
         "no": "No",
         "yes": "Yes",
         "notAvailable": "Not available",
-        "footnote": "Based on published plans. Updated July 2026.",
+        "footnote": "Holded data checked at holded.com/es/precios on 1 November 2026. Holded prices exclude VAT; YouWhole prices include it.",
         "rows": {
           "r1": {
-            "feat": "AEAT-certified VeriFactu",
+            "feat": "Free-forever plan",
             "yw": true,
-            "other": false,
-            "note": "Holded has no native VeriFactu"
+            "other": "14-day trial",
+            "note": "In YouWhole, up to 5 clients and 10 invoices a month, with no expiry"
           },
           "r2": {
-            "feat": "Automatic withholding tax for freelancers",
-            "yw": true,
-            "other": false,
-            "note": "Manual configuration in Holded"
+            "feat": "Entry price",
+            "yw": "€29/month incl. VAT",
+            "other": "€15/month + VAT (Plus)",
+            "note": "Holded Básico: €29 + VAT. Holded gives 50% off the first 3 months"
           },
           "r3": {
-            "feat": "Built-in tax forms 130/303",
-            "yw": true,
-            "other": false,
-            "note": "Holded requires an extra accounting module"
+            "feat": "Invoices",
+            "yw": "Unlimited from Starter",
+            "other": "250 to 10,000 a year",
+            "note": "Holded is unlimited on the Premium plan (€199 + VAT)"
           },
           "r4": {
-            "feat": "A real free plan",
+            "feat": "VeriFactu",
             "yw": true,
-            "other": false,
-            "note": "Holded has no permanent free plan"
+            "other": true,
+            "note": "Both include it on every plan"
           },
           "r5": {
-            "feat": "Starting monthly price",
-            "yw": "€29",
-            "other": "from €49",
-            "note": ""
+            "feat": "Payroll",
+            "yw": "Included in Pro",
+            "other": "€5/employee/month extra",
+            "note": "In Holded it is an optional module"
           },
           "r6": {
-            "feat": "Native support in English/Spanish",
-            "yw": true,
-            "other": true,
-            "note": ""
+            "feat": "Inventory and warehouses",
+            "yw": "Included",
+            "other": "€25/month extra",
+            "note": "In Holded it is an optional module"
           },
           "r7": {
-            "feat": "No lock-in contract",
-            "yw": true,
-            "other": false,
-            "note": "Holded bills annually by default"
+            "feat": "Users",
+            "yw": "3 (Starter) · 10 (Pro)",
+            "other": "2 (Básico) · 4 (Estándar) · 7 (Avanzado)",
+            "note": ""
           },
           "r8": {
-            "feat": "Multiple languages (ca, eu, gl)",
-            "yw": true,
-            "other": false,
-            "note": "YouWhole supports 5 Spanish regional languages"
+            "feat": "Commitment",
+            "yw": "No commitment",
+            "other": "No commitment",
+            "note": "Both let you pay monthly and cancel any time"
+          }
+        }
+      },
+      "extras": {
+        "title": "What YouWhole includes in the same subscription",
+        "subtitle": "Features built for small businesses and freelancers in Spain, with nothing to buy separately.",
+        "items": {
+          "e1": {
+            "t": "Employee expenses",
+            "d": "Receipts read automatically, mileage and per diems, with approval and reimbursement through payroll."
           },
-          "r9": {
-            "feat": "Employee time tracking",
-            "yw": true,
-            "other": true,
-            "note": ""
+          "e2": {
+            "t": "Vehicle fleet and DeCA",
+            "d": "Vehicles, maintenance and the transport control document straight from the delivery note (Pro plan)."
           },
-          "r10": {
-            "feat": "Employee portal",
-            "yw": true,
-            "other": true,
-            "note": ""
+          "e3": {
+            "t": "Tax forms 303 and 130",
+            "d": "Calculated from your invoices and expenses so you can file them every quarter."
+          },
+          "e4": {
+            "t": "In your language",
+            "d": "The app is available in Spanish, Catalan, Basque, Galician and English."
+          },
+          "e5": {
+            "t": "Time tracking",
+            "d": "Employee clock-in included from the Starter plan."
+          },
+          "e6": {
+            "t": "CRM and projects",
+            "d": "Leads, pipeline and projects with their profitability, next to your invoices."
           }
         }
       },
       "migration": {
-        "title": "Migrate from Holded without losing your data",
-        "subtitle": "Import your clients, invoices, and products from Holded in minutes. Our team helps you make the switch without interruptions.",
+        "title": "Move your data from Holded to YouWhole",
+        "subtitle": "Export your Holded lists to Excel or CSV and load them with the YouWhole importer.",
         "steps": {
           "s1": {
             "t": "Export from Holded",
-            "d": "Download your data as CSV or Excel from the Holded dashboard."
+            "d": "Download your clients, products and invoices as Excel or CSV."
           },
           "s2": {
             "t": "Import into YouWhole",
-            "d": "Use our importer to load clients, products, and invoices."
+            "d": "The importer loads clients, products, suppliers and invoices from those files."
           },
           "s3": {
-            "t": "Ready to invoice",
-            "d": "Your business up and running on YouWhole in under an hour."
+            "t": "Start invoicing",
+            "d": "Your clients and history, ready in your new account."
           }
         },
-        "cta": "Start free migration"
+        "cta": "Create a free account"
       }
     },
     "sage": {
       "seo": {
-        "title": "Sage Alternative for Freelancers and SMEs — YouWhole",
-        "description": "A modern alternative to Sage: certified VeriFactu, automatic withholding tax, no installation. From 29 EUR/month, no lock-in.",
-        "ogTitle": "Sage Alternative for Freelancers — YouWhole",
-        "ogDescription": "Simpler and more affordable than Sage. VeriFactu included, no installation, from €29/month."
+        "title": "Sage alternative for freelancers: everything in one subscription — YouWhole",
+        "description": "Compare YouWhole with Sage Active: a free-forever plan, VeriFactu and payroll in the same app, and VAT-inclusive prices. Data from November 2026.",
+        "ogTitle": "YouWhole vs Sage for freelancers",
+        "ogDescription": "Invoicing, accounting, payroll and employee expenses in one subscription, with a free plan."
       },
-      "badge": "An honest comparison",
-      "h1Line1": "The Sage alternative that",
-      "h1Highlight": "requires no installation",
-      "subtitle": "YouWhole is 100% cloud-based, includes certified VeriFactu, and costs less than Sage. No installs, no outdated versions, no surprises.",
+      "badge": "Comparison with November 2026 data",
+      "h1Line1": "The Sage alternative with",
+      "h1Highlight": "everything in one subscription",
+      "subtitle": "Sage sells invoicing and accounting (Sage Active or Sage 50) and payroll (Sage NominaPlus) as separate products. In YouWhole they come together, with a free plan to start and VAT-inclusive prices.",
       "ctaPrimary": "Try YouWhole for free",
       "ctaSecondary": "Talk to the team",
-      "trustLine": "Free forever · No card · Assisted migration from Sage",
+      "trustLine": "Free forever · No card · Importer for clients, products and invoices",
       "reasons": {
-        "title": "Why are freelancers leaving Sage?",
-        "subtitle": "Sage has been around for decades, but it was built for a different era. Here are the most common complaints.",
+        "title": "When YouWhole is the better fit",
+        "subtitle": "Sage is a well-established option. These are the cases where YouWhole may suit you better.",
         "items": {
           "r1": {
-            "t": "Local installation",
-            "d": "Sage 50 requires installing software on every computer. Switch devices or work remotely, and you've got a problem."
+            "t": "You want everything in one app",
+            "d": "Invoices, accounting, payroll, time tracking and employee expenses in the same account, without combining products."
           },
           "r2": {
-            "t": "No native VeriFactu",
-            "d": "Meeting the 2025 AEAT regulation requires a paid add-on module that Sage doesn't include by default."
+            "t": "You want to start without paying",
+            "d": "The free plan never expires: up to 5 clients and 10 invoices a month. Sage Active offers a one-month trial."
           },
           "r3": {
-            "t": "License costs",
-            "d": "Sage's annual licenses add up. For a small SME, the cost is hard to justify."
+            "t": "Your employees travel",
+            "d": "Receipts read automatically, mileage and per diems, with approval and reimbursement through payroll."
           },
           "r4": {
-            "t": "Steep learning curve",
-            "d": "Sage was designed for professional accountants. A freelancer with no accounting background finds it needlessly complex."
+            "t": "You manage vehicles",
+            "d": "Fleet, maintenance and transport DeCA from the delivery note, on the Pro plan."
           },
           "r5": {
-            "t": "No real mobile app",
-            "d": "Checking an invoice or logging an expense from your phone is practically impossible with Sage 50."
+            "t": "You work in Catalan, Basque or Galician",
+            "d": "The app is available in Spanish, Catalan, Basque, Galician and English."
           },
           "r6": {
-            "t": "Paid updates",
-            "d": "Every new Sage version requires paying for the upgrade. With YouWhole, updates are automatic and included."
+            "t": "You prefer VAT-inclusive prices",
+            "d": "What you see is what you pay: €29 or €79 a month, with no commitment."
           }
         }
       },
       "comparison": {
-        "title": "YouWhole vs Sage",
-        "subtitle": "A feature comparison for freelancers and SMEs",
+        "title": "YouWhole vs Sage Active",
+        "subtitle": "Against Sage Active, Sage's cloud app for freelancers and micro-businesses",
         "colFeat": "Feature",
-        "colOther": "Sage",
+        "colOther": "Sage Active",
         "included": "Included",
         "no": "No",
         "yes": "Yes",
         "notAvailable": "Not available",
-        "footnote": "Based on published plans. Updated July 2026.",
+        "footnote": "Sage data checked at sage.com/es-es on 1 November 2026. Sage prices exclude VAT; YouWhole prices include it.",
         "rows": {
           "r1": {
-            "feat": "AEAT-certified VeriFactu",
+            "feat": "Free-forever plan",
             "yw": true,
-            "other": false,
-            "note": "Sage requires a paid add-on module"
+            "other": "One-month trial",
+            "note": "In YouWhole, up to 5 clients and 10 invoices a month, with no expiry"
           },
           "r2": {
-            "feat": "Automatic withholding tax for freelancers",
-            "yw": true,
-            "other": false,
-            "note": "Manual configuration in Sage"
+            "feat": "Entry price",
+            "yw": "€29/month incl. VAT",
+            "other": "€25/month + VAT",
+            "note": "Sage Active with accounting: €49 + VAT. Sage gives 50% off the first 3 months"
           },
           "r3": {
-            "feat": "Cloud-based (no installation)",
-            "yw": true,
-            "other": false,
-            "note": "Sage 50 requires local installation"
-          },
-          "r4": {
-            "feat": "Free plan available",
-            "yw": true,
-            "other": false,
-            "note": "Sage has no free plan"
-          },
-          "r5": {
-            "feat": "Starting monthly price",
-            "yw": "€29",
-            "other": "from €50",
-            "note": ""
-          },
-          "r6": {
-            "feat": "Automatic updates",
-            "yw": true,
-            "other": false,
-            "note": "Sage requires purchasing new versions"
-          },
-          "r7": {
-            "feat": "Multi-language (ca, eu, gl)",
-            "yw": true,
-            "other": false,
-            "note": "YouWhole supports 5 Spanish regional languages"
-          },
-          "r8": {
-            "feat": "Support in English/Spanish",
+            "feat": "Cloud-based, no installation",
             "yw": true,
             "other": true,
-            "note": ""
+            "note": "Sage 50 combines local installation and cloud"
           },
-          "r9": {
-            "feat": "No lock-in contract",
+          "r4": {
+            "feat": "VeriFactu",
             "yw": true,
-            "other": false,
-            "note": "Sage bills annual licenses"
+            "other": true,
+            "note": "Both include it"
           },
-          "r10": {
-            "feat": "Mobile access",
-            "yw": true,
-            "other": false,
-            "note": "Sage 50 has no native mobile app"
+          "r5": {
+            "feat": "Payroll",
+            "yw": "Included in Pro",
+            "other": "Separate product",
+            "note": "Sage offers it in Sage NominaPlus or Sage 200 Laboral"
+          },
+          "r6": {
+            "feat": "Accounting and tax forms 303/130",
+            "yw": "Included from Starter",
+            "other": "€49 + VAT plan",
+            "note": "Sage Active's entry plan focuses on quotes and invoices"
+          },
+          "r7": {
+            "feat": "Commitment",
+            "yw": "No commitment",
+            "other": "No commitment",
+            "note": "Both let you cancel any time"
           }
         }
       },
       "migration": {
-        "title": "Migrate from Sage without losing your data",
-        "subtitle": "Export your clients, products, and invoices from Sage and import them into YouWhole in minutes.",
+        "title": "Move your data from Sage to YouWhole",
+        "subtitle": "Export your Sage lists to Excel or CSV and load them with the YouWhole importer.",
         "steps": {
           "s1": {
             "t": "Export from Sage",
-            "d": "Export clients, products, and invoices as CSV or Excel from the Sage dashboard."
+            "d": "Download your clients, products and invoices as Excel or CSV."
           },
           "s2": {
             "t": "Import into YouWhole",
-            "d": "Use our importer to load all your data in minutes."
+            "d": "The importer loads clients, products, suppliers and invoices from those files."
           },
           "s3": {
-            "t": "Ready to invoice",
-            "d": "Your business up and running on YouWhole with VeriFactu enabled from day one."
+            "t": "Start invoicing",
+            "d": "Your business ready in YouWhole, with VeriFactu included."
           }
         },
-        "cta": "Start free migration"
+        "cta": "Create a free account"
       },
       "finalCta": {
-        "title": "Leave Sage. Start for free today.",
-        "subtitle": "No card. No lock-in. VeriFactu included from day one.",
+        "title": "Try YouWhole free, with no expiry date",
+        "subtitle": "No card. No commitment. VeriFactu included.",
         "cta": "Create a free account"
       }
     },

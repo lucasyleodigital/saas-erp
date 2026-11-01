@@ -4,7 +4,6 @@ import { MarketingNav } from "@/components/marketing/nav";
 import { MarketingFooter } from "@/components/marketing/footer";
 
 const STEP_KEYS = ["s1", "s2", "s3"] as const;
-const FAQ_KEYS = ["q1", "q2", "q3", "q4"] as const;
 
 export function VerifactuContent() {
   const t = useTranslations("satellite.verifactu");
@@ -73,7 +72,7 @@ export function VerifactuContent() {
           <div className="container mx-auto px-4 max-w-2xl">
             <h2 className="text-3xl font-bold text-center mb-10">{t("faq.title")}</h2>
             <div className="space-y-6">
-              {FAQ_KEYS.map((k) => (
+              {Object.keys(t.raw("faq.items") as Record<string, unknown>).map((k) => (
                 <div key={k} className="rounded-xl border p-6">
                   <h3 className="font-semibold mb-2">{t(`faq.items.${k}.q`)}</h3>
                   <p className="text-sm text-muted-foreground">{t(`faq.items.${k}.a`)}</p>

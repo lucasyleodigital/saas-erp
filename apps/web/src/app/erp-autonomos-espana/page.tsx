@@ -4,7 +4,7 @@ import { ErpAutonomosContent } from "@/components/marketing/pages/erp-autonomos-
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.com";
 
 export const metadata: Metadata = {
-  title: "ERP para Autónomos en España — YouWhole",
+  title: { absolute: "ERP para Autónomos en España — YouWhole" },
   description:
     "El ERP diseñado por autónomos para autónomos. Facturación con VeriFactu, IRPF automático, Modelo 130/303, contabilidad PGC y CRM. Sin permanencia. Desde 29 EUR/mes.",
   keywords: [

@@ -1365,7 +1365,7 @@
   },
   "verifactu": {
     "title": "VeriFactu",
-    "subtitle": "Fakturen erregistroa AEAT 2025 araudiaren arabera",
+    "subtitle": "Fakturen erregistroa AEATen VeriFactu araudiaren arabera",
     "generate": "VeriFactu sortu",
     "status": "AEAT egoera",
     "generated": "Sortuta",
@@ -2059,7 +2059,7 @@
     }
   },
   "verifactuView": {
-    "subtitle": "AEAT 2025 araudi-faktura erregistroa",
+    "subtitle": "Fakturen erregistroa AEATen VeriFactu araudiaren arabera",
     "digitalCert": "Ziurtagiri digitala",
     "totalRecords": "Erregistro guztira",
     "generated": "Sortuak",
@@ -2077,7 +2077,7 @@
     "certActive": "Ziurtagiri aktiboa — {subject}",
     "certActiveDesc": "{date} arte baliozkoa - Fakturak automatikoki sinatzen dira",
     "regulation": "VeriFactu araudia (AEAT)",
-    "regulationDesc": "2025eko uztailetik derrigorrezkoa da jaulkitako faktura bakoitzeko VeriFactu erregistroa sortzea. Fakturan jasotako QR kodeak zure bezeroek AEATn egiaztatzea ahalbidetzen du.",
+    "regulationDesc": "VeriFactu derrigorrezkoa izango da 2027ko urtarrilaren 1etik sozietateentzat eta 2027ko uztailaren 1etik autonomoentzat. Faktura bakoitzaren QR kodeari esker, zure bezeroek AEATn egiazta dezakete.",
     "recordHistory": "Erregistro-historiala",
     "noRecords": "VeriFactu erregistrorik ez",
     "noRecordsDesc": "Sortu lehen erregistroa bidalitako edo ordaindutako faktura baten xehetasunetatik",
@@ -2263,7 +2263,7 @@
       "closeMenu": "Itxi menua"
     },
     "hero": {
-      "badge": "VeriFactu ziurtatua · AEAT 2025 betetzea",
+      "badge": "VeriFactura egokitua · AEAT araudia",
       "titleLine1": "Dena batean",
       "titleLine2": "zure enpresarentzat",
       "subtitle": "VeriFactu fakturazioa, IRPF automatikoa, 130/303 eredua, CRM eta kontabilitatea. Autonomoek autonomo eta ETEentzat sortua.",
@@ -2407,10 +2407,10 @@
       "cta": "Sortu doako kontua — txartelik gabe"
     },
     "verifactu": {
-      "badge": "VeriFactu ziurtatua",
+      "badge": "VeriFactura egokitua",
       "titleLine1": "Betetze fiskal osoa",
       "titleLine2": "lehen egunetik",
-      "subtitle": "VeriFactu Legeak (11/2021 Iruzur Aurkako Legea) 2025etik faktura bakoitza AEATen erregistratzera behartzen du. YouWholerekin automatikoki gertatzen da — konfiguraziorik gabe, lan gehigarririk gabe.",
+      "subtitle": "VeriFactu Erregelamenduak (1007/2023 EED) faktura bakoitza bere aztarna digitalarekin erregistratzera behartuko du: sozietateak 2027ko urtarrilaren 1etik eta autonomoak 2027ko uztailaren 1etik. YouWholerekin automatikoki gertatzen da, konfiguraziorik eta lan gehigarririk gabe.",
       "flow": {
         "company": {
           "label": "Zure enpresa",
@@ -2426,7 +2426,7 @@
         },
         "compliance": {
           "label": "Betetzea",
-          "sublabel": "%100 legez bermatua"
+          "sublabel": "Araudiaren arabera"
         }
       },
       "points": {
@@ -2439,7 +2439,7 @@
           "desc": "Zerga Agentziaren VERI*FACTU sistemara automatikoki bidaltzen da, egiaztapen QR kodearekin barne."
         },
         "xml": {
-          "title": "XML ziurtatua",
+          "title": "XML AEATen zehaztapenaren arabera",
           "desc": "AEATen espezifikazio tekniko ofizialaren araberako XML sortzen dugu, eremu behartsu guztiekin."
         },
         "validation": {
@@ -2523,7 +2523,7 @@
       "items": {
         "q1": {
           "q": "Zer da VeriFactu eta zergatik behar dut?",
-          "a": "VeriFactu Espainiako Zerga Agentziaren fakturen egiaztapen-sistema da. 2025etik aurrera, fakturazio-software bat erabiltzen duen enpresa orok VeriFactu ziurtatutako sistemak erabili behar ditu. YouWholek jatorriz dakar — ez duzu ezer gehigarririk egin behar legea betetzeko."
+          "a": "VeriFactu Zerga Agentziaren sistema da, fakturak aldatzen ez direla bermatzeko. Derrigorrezkoa izango da 2027ko urtarrilaren 1etik sozietateentzat eta 2027ko uztailaren 1etik autonomoentzat. YouWhole egokituta dago eta plan guztietan dakar: ez duzu ezer gehiago egin behar."
         },
         "q2": {
           "q": "Kreditu-txartela behar dut hasteko?",
@@ -2717,7 +2717,7 @@
         "subtitle": "Espainiako autonomoaren errealitaterako berariaz diseinatua: Ogasuna, bezeroak, denbora eta dirua.",
         "items": {
           "f1": {
-            "title": "AEAT ziurtatutako VeriFactu",
+            "title": "VeriFactura egokitua",
             "desc": "Bete lehen egunetik betebehar legala. Faktura bakoitza automatikoki erregistratzen da Zerga Agentzian."
           },
           "f2": {
@@ -2750,9 +2750,9 @@
         "colOther": "Beste ERPak",
         "rows": {
           "r1": {
-            "feat": "AEAT ziurtatutako VeriFactu",
+            "feat": "VeriFactura egokitua",
             "yw": "Plan guztietan barne",
-            "other": "Plan garestietan bakarrik edo barne gabe"
+            "other": "Programaren eta planaren araberakoa"
           },
           "r2": {
             "feat": "IRPF automatikoa",
@@ -2832,7 +2832,7 @@
         "items": {
           "m1": {
             "title": "VeriFactu fakturazioa",
-            "desc": "Igorri AEAT ziurtatutako fakturak. Faktura errepikakorrak, multi-dibisa eta hainbat hizkuntzatan (es, ca, eu, gl, en) barne."
+            "desc": "Igorri VeriFactura egokitutako fakturak. Faktura errepikakorrak, multi-dibisa eta hainbat hizkuntzatan (es, ca, eu, gl, en) barne."
           },
           "m2": {
             "title": "PGC kontabilitatea",
@@ -2892,13 +2892,13 @@
     },
     "verifactu": {
       "seo": {
-        "title": "AEAT Ziurtatutako VeriFactu Softwarea — YouWhole",
-        "description": "AEATek ziurtatutako VeriFactu softwarea. Bete betebehar legala lehen egunetik, plan guztietan barne, doakoa barne.",
-        "ogTitle": "AEAT Ziurtatutako VeriFactu Softwarea — YouWhole",
+        "title": "VeriFactura egokitutako softwarea plan guztietan — YouWhole",
+        "description": "VeriFactura (1007/2023 EED) egokitutako fakturazio-programa, plan guztietan barne, doakoan ere bai. Prestatu 2027 baino lehen.",
+        "ogTitle": "VeriFactura egokitutako softwarea — YouWhole",
         "ogDescription": "Bete VeriFactu betebeharra lehen egunetik. YouWholeren plan guztietan barne."
       },
-      "badge": "AEAT ziurtatua",
-      "h1Line1": "VeriFactu software ziurtatua,",
+      "badge": "VeriFactura egokitua",
+      "h1Line1": "VeriFactura egokitutako softwarea,",
       "h1Highlight": "plan guztietan barne",
       "subtitle": "YouWholek Zerga Agentziaren VeriFactu betebeharra lehen egunetik betetzen du. Konfiguraziorik gabe. Modulu gehigarririk gabe. Kosturik gabe.",
       "cta": "Hasi doan — VeriFactu barne",
@@ -2907,9 +2907,9 @@
         "p1Pre": "VeriFactu Espainiako Zerga Agentziak onartutako fakturen egiaztapen-sistema da, Fakturazio Erregelamenduaren (2023/1007 ED) baitan. Bere helburua",
         "p1Strong": "osotasuna eta aldaezintasuna",
         "p1Post": "bermatzea da, Espainian enpresek eta autonomoek igorritako faktura guztietan.",
-        "p2Pre": "2025etik aurrera, erabiltzen duzun edozein fakturazio-softwarek",
-        "p2Strong": "VeriFactu ziurtatua",
-        "p2Post": "izan behar du legez funtzionatzeko. Ziurtatu gabeko programa bat erabiltzeak 50.000 EUR arteko zehapenak ekar ditzake.",
+        "p2Pre": "VeriFactu derrigorrezkoa izango da 2027ko urtarrilaren 1etik sozietateentzat eta 2027ko uztailaren 1etik autonomoentzat (15/2025 Errege Lege-dekretua), baina gaur bertan izan dezakezu zure softwarea",
+        "p2Strong": "VeriFactura egokituta",
+        "p2Post": "Ogasunaren 50.000 EUR arteko zehapenak saihesteko eta azken unean sistemaz aldatu behar ez izateko.",
         "p3": "YouWholerekin, igortzen duzun faktura bakoitza automatikoki erregistratzen da AEATen bere hatz-marka digitalarekin. Zuk ez duzu ezer gehigarririk egin behar — sistemak atzeko planoan kudeatzen du."
       },
       "howItWorks": {
@@ -2934,15 +2934,15 @@
         "items": {
           "q1": {
             "q": "Zer da VeriFactu?",
-            "a": "VeriFactu Espainiako Zerga Agentziaren (AEAT) fakturen egiaztapen-sistema da. 2025etik aurrera, enpresek eta autonomoek erabilitako fakturazio-software guztiak VeriFactu ziurtatua izan behar du, igorritako fakturen osotasuna eta aldaezintasuna bermatzeko."
+            "a": "VeriFactu Espainiako Zerga Agentziaren (AEAT) fakturen egiaztapen-sistema da. Enpresek eta autonomoek erabiltzen duten fakturazio-softwareak igorritako fakturen osotasuna eta aldaezintasuna bermatu behar ditu. Derrigorrezkoa izango da 2027ko urtarrilaren 1etik sozietateentzat eta 2027ko uztailaren 1etik autonomoentzat."
           },
           "q2": {
             "q": "Nahitaezkoa al da VeriFactu duen software bat erabiltzea?",
             "a": "Bai. 2023an onartutako Fakturazio Erregelamenduak Espainiako enpresaburu eta profesional guztiak behartzen ditu VeriFactu betetzen duten fakturazio-sistemak erabiltzera. Ez betetzeak Ogasunaren zehapenak ekar ditzake."
           },
           "q3": {
-            "q": "Ziurtatuta al dago YouWhole AEATen aurrean?",
-            "a": "Bai. YouWhole ziurtatuta dago fakturazio-erregistroak AEATera VeriFactu sistemaren bidez bidaltzeko. Igorritako faktura bakoitzak automatikoki sortzen du dagokion erregistroa eta Ogasunera bidaltzen du."
+            "q": "AEATek ziurtatuta al dago YouWhole?",
+            "a": "AEATek ez ditu fakturazio-programak ziurtatzen ezta homologatzen ere. Araudiak eskatzen du fabrikatzaile bakoitzak erantzukizunpeko adierazpen bat sinatzea, bere programak VeriFactu Erregelamendua (1007/2023 EED) betetzen duela adieraziz. YouWhole egokituta dago: faktura bakoitzak bere erregistroa sortzen du aztarna digitalarekin eta QR kodearekin, eta AEATera bidal daiteke."
           },
           "q4": {
             "q": "Zerbait berezia egin behar dut VeriFactu aktibatzeko YouWholen?",
@@ -2958,251 +2958,251 @@
     },
     "holded": {
       "seo": {
-        "title": "Holdedren Alternatiba Autonomo eta ETEentzat — YouWhole",
-        "description": "Holdedren alternatiba osatuago eta merkeagoa. VeriFactu ziurtatua, IRPF automatikoa eta 130/303 eredua barne. 29 EUR/hilean hasita.",
-        "ogTitle": "Holdedren Alternatiba — YouWhole",
-        "ogDescription": "Holded baino osatuagoa Espainiako merkaturako. VeriFactu, IRPF, 130/303 eredua eta euskara/gaztelaniazko laguntza jatorrizkoa."
+        "title": "Holdedren alternatiba, doako planarekin eta nominak barne — YouWhole",
+        "description": "Konparatu YouWhole eta Holded: betiko doako plana, faktura mugagabeak 29 €-tik BEZa barne, VeriFactu eta nominak barne. 2026ko azaroko datuak.",
+        "ogTitle": "YouWhole vs Holded: datu eguneratuekin konparazioa",
+        "ogDescription": "Doako plana, prezioak BEZa barne eta nominak modulu gehigarririk gabe. Konparatu 2026ko azaroko datuekin."
       },
-      "badge": "Konparaketa zintzoa",
-      "h1Line1": "Ogasunarekin benetan betetzen duen",
-      "h1Highlight": "Holdedren alternatiba",
-      "subtitle": "YouWholek AEAT ziurtatutako VeriFactu, IRPF automatikoa eta 130/303 eredua ditu jatorrizko. Modulu gehigarririk gabe. Fakturan ezustekorik gabe.",
+      "badge": "2026ko azaroko datuekin egindako konparazioa",
+      "h1Line1": "Holdedren alternatiba,",
+      "h1Highlight": "doako planarekin eta nominak barne",
+      "subtitle": "Holdedek eta YouWholek VeriFactu dute. Aldea gainerakoan dago: YouWholek betiko doako plana du, prezioak BEZa barne, eta nominak, inbentarioa eta langileen gastuak modulu gehigarririk kontratatu gabe.",
       "ctaPrimary": "Probatu YouWhole doan",
       "ctaSecondary": "Hitz egin taldearekin",
-      "trustLine": "Doan betiko · Txartelik gabe · Holdedetik migrazio lagundua",
+      "trustLine": "Doan betiko · Txartelik gabe · Bezero, produktu eta fakturen inportatzailea",
       "comparison": {
         "title": "YouWhole vs Holded",
-        "subtitle": "Espainiako autonomo eta ETEentzako ezaugarrien konparaketa",
+        "subtitle": "Zer aldatzen den bien artean autonomo edo ETE batentzat",
         "colFeat": "Ezaugarria",
         "colOther": "Holded",
         "included": "Barne",
         "no": "Ez",
         "yes": "Bai",
-        "notAvailable": "Ez erabilgarri",
-        "footnote": "Argitaratutako planetan oinarritutako informazioa. 2026ko uztailean eguneratua.",
+        "notAvailable": "Ez dago eskuragarri",
+        "footnote": "Holdedren datuak holded.com/es/precios orrian kontsultatu dira 2026ko azaroaren 1ean. Holdedren prezioek ez dute BEZa barne; YouWholerenek bai.",
         "rows": {
           "r1": {
-            "feat": "AEAT ziurtatutako VeriFactu",
+            "feat": "Betiko doako plana",
             "yw": true,
-            "other": false,
-            "note": "Holdedek ez du VeriFactu jatorrizkorik"
+            "other": "14 eguneko proba",
+            "note": "YouWholen, 5 bezero eta hilean 10 faktura arte, iraungitzerik gabe"
           },
           "r2": {
-            "feat": "IRPF automatikoa autonomoentzat",
-            "yw": true,
-            "other": false,
-            "note": "Holdeden eskuzko konfigurazioa da"
+            "feat": "Sarrerako prezioa",
+            "yw": "29 €/hilean BEZa barne",
+            "other": "15 €/hilean + BEZa (Plus)",
+            "note": "Holded Básico: 29 € + BEZa. Holdedek %50eko deskontua ematen du lehen 3 hilabeteetan"
           },
           "r3": {
-            "feat": "130/303 eredua integratuta",
-            "yw": true,
-            "other": false,
-            "note": "Holdedek kontabilitate-modulu gehigarria behar du"
+            "feat": "Fakturak",
+            "yw": "Mugagabeak Starter-etik",
+            "other": "250etik 10.000ra urtean",
+            "note": "Holdeden mugagabeak dira Premium planean (199 € + BEZa)"
           },
           "r4": {
-            "feat": "Benetako doako plana",
+            "feat": "VeriFactu",
             "yw": true,
-            "other": false,
-            "note": "Holdedek ez du iraunkorki doako planik"
+            "other": true,
+            "note": "Biek dute plan guztietan"
           },
           "r5": {
-            "feat": "Oinarrizko hileroko prezioa",
-            "yw": "29 EUR",
-            "other": "49 EUR-tik hasita",
-            "note": ""
+            "feat": "Nominak",
+            "yw": "Pro planean barne",
+            "other": "5 €/langile/hilean aparte",
+            "note": "Holdeden aukerako modulua da"
           },
           "r6": {
-            "feat": "Euskara/gaztelaniazko laguntza jatorrizkoa",
-            "yw": true,
-            "other": true,
-            "note": ""
+            "feat": "Inbentarioa eta biltegiak",
+            "yw": "Barne",
+            "other": "25 €/hilean aparte",
+            "note": "Holdeden aukerako modulua da"
           },
           "r7": {
-            "feat": "Iraunkortasunik gabe",
-            "yw": true,
-            "other": false,
-            "note": "Holdedek urtekoa kobratzen du lehenetsita"
+            "feat": "Erabiltzaileak",
+            "yw": "3 (Starter) · 10 (Pro)",
+            "other": "2 (Básico) · 4 (Estándar) · 7 (Avanzado)",
+            "note": ""
           },
           "r8": {
-            "feat": "Hizkuntza anitz (ca, eu, gl)",
-            "yw": true,
-            "other": false,
-            "note": "YouWholek 5 hizkuntza penintsular onartzen ditu"
+            "feat": "Iraunkortasuna",
+            "yw": "Iraunkortasunik gabe",
+            "other": "Iraunkortasunik gabe",
+            "note": "Biek uzten dute hilero ordaintzen eta nahi duzunean bertan behera uzten"
+          }
+        }
+      },
+      "extras": {
+        "title": "YouWholek harpidetza berean barne hartzen duena",
+        "subtitle": "Espainiako ETE eta autonomoentzat pentsatutako funtzioak, ezer gehigarririk kontratatu gabe.",
+        "items": {
+          "e1": {
+            "t": "Langileen gastuak",
+            "d": "Tiketak irakurketa automatikoarekin, kilometrajea eta dietak, onarpenarekin eta nominan itzulketarekin."
           },
-          "r9": {
-            "feat": "Langileen ordutegi-kontrola",
-            "yw": true,
-            "other": true,
-            "note": ""
+          "e2": {
+            "t": "Ibilgailu-flota eta DeCA",
+            "d": "Ibilgailuak, mantentze-lanak eta garraioaren kontrol-dokumentua albaranetik bertatik (Pro plana)."
           },
-          "r10": {
-            "feat": "Langile ataria",
-            "yw": true,
-            "other": true,
-            "note": ""
+          "e3": {
+            "t": "303 eta 130 ereduak",
+            "d": "Zure faktura eta gastuekin kalkulatuta, hiruhileko bakoitzean aurkez ditzazun."
+          },
+          "e4": {
+            "t": "Zure hizkuntzan",
+            "d": "Aplikazioa gazteleraz, katalanez, euskaraz, galegoz eta ingelesez dago."
+          },
+          "e5": {
+            "t": "Ordutegi-kontrola",
+            "d": "Langileen fitxaketa Starter planetik barne."
+          },
+          "e6": {
+            "t": "CRM eta proiektuak",
+            "d": "Leadak, pipelinea eta proiektuak beren errentagarritasunarekin, zure fakturen ondoan."
           }
         }
       },
       "migration": {
-        "title": "Migratu Holdedetik zure datuak galdu gabe",
-        "subtitle": "Inportatu zure bezeroak, fakturak eta produktuak Holdedetik minutu gutxitan. Gure taldeak trantsizioa etenik gabe egiten laguntzen dizu.",
+        "title": "Eraman zure datuak Holdedetik YouWholera",
+        "subtitle": "Esportatu Holdedeko zerrendak Excel edo CSV formatura eta kargatu YouWholeren inportatzailearekin.",
         "steps": {
           "s1": {
             "t": "Esportatu Holdedetik",
-            "d": "Deskargatu zure datuak CSV edo Excel formatuan Holdeden panelatik."
+            "d": "Deskargatu zure bezeroak, produktuak eta fakturak Excel edo CSV formatuan."
           },
           "s2": {
             "t": "Inportatu YouWholen",
-            "d": "Erabili gure inportatzailea bezeroak, produktuak eta fakturak kargatzeko."
+            "d": "Inportatzaileak bezeroak, produktuak, hornitzaileak eta fakturak kargatzen ditu fitxategi horietatik."
           },
           "s3": {
-            "t": "Fakturatzeko prest",
-            "d": "Zure enpresa YouWholen martxan ordu 1 baino gutxiagoan."
+            "t": "Hasi fakturatzen",
+            "d": "Zure bezeroak eta historikoa, prest zure kontu berrian."
           }
         },
-        "cta": "Hasi doako migrazioa"
+        "cta": "Sortu kontua doan"
       }
     },
     "sage": {
       "seo": {
-        "title": "Sageren Alternatiba Autonomo eta ETEentzat — YouWhole",
-        "description": "Sageren alternatiba modernoa: VeriFactu ziurtatua, IRPF automatikoa, instalaziorik gabe. 29 EUR/hilean hasita, iraunkortasunik gabe.",
-        "ogTitle": "Sageren Alternatiba Autonomoentzat — YouWhole",
-        "ogDescription": "Sage baino errazagoa eta merkeagoa. VeriFactu barne, instalaziorik gabe, 29 EUR/hilean hasita."
+        "title": "Sageren alternatiba autonomoentzat: dena harpidetza bakarrean — YouWhole",
+        "description": "Konparatu YouWhole eta Sage Active: betiko doako plana, VeriFactu eta nominak programa berean, eta prezioak BEZa barne. 2026ko azaroko datuak.",
+        "ogTitle": "YouWhole vs Sage autonomoentzat",
+        "ogDescription": "Fakturazioa, kontabilitatea, nominak eta langileen gastuak harpidetza bakarrean, doako planarekin."
       },
-      "badge": "Konparaketa zintzoa",
-      "h1Line1": "Instalaziorik behar ez duen",
-      "h1Highlight": "Sageren alternatiba",
-      "subtitle": "YouWhole %100 hodeian dago, AEAT ziurtatutako VeriFactu du eta Sage baino gutxiago kostatzen da. Instalaziorik gabe, bertsio zaharkiturik gabe, ezustekorik gabe.",
+      "badge": "2026ko azaroko datuekin egindako konparazioa",
+      "h1Line1": "Sageren alternatiba,",
+      "h1Highlight": "dena harpidetza bakarrean",
+      "subtitle": "Sagek fakturazioa eta kontabilitatea (Sage Active edo Sage 50) eta nominak (Sage NominaPlus) produktu desberdinetan eskaintzen ditu. YouWholen batera doaz, hasteko doako planarekin eta prezioak BEZa barne.",
       "ctaPrimary": "Probatu YouWhole doan",
       "ctaSecondary": "Hitz egin taldearekin",
-      "trustLine": "Doan betiko · Txartelik gabe · Sagetik migrazio lagundua",
+      "trustLine": "Doan betiko · Txartelik gabe · Bezero, produktu eta fakturen inportatzailea",
       "reasons": {
-        "title": "Zergatik uzten dute autonomoek Sage?",
-        "subtitle": "Sagek hamarkadak daramatza merkatuan, baina beste garai baterako diseinatua izan zen. Hauek dira kexa ohikoenak.",
+        "title": "Noiz egokitzen da hobeto YouWhole",
+        "subtitle": "Sage aukera sendoa da. Hauek dira YouWhole hobeto egoki dakizukeen kasuak.",
         "items": {
           "r1": {
-            "t": "Instalazio lokala",
-            "d": "Sage 50ek ordenagailu bakoitzean softwarea instalatzea eskatzen du. Ekipoz aldatzen baduzu edo urrutitik lan egiten baduzu, arazoa duzu."
+            "t": "Dena programa bakarrean nahi duzu",
+            "d": "Fakturak, kontabilitatea, nominak, ordutegi-kontrola eta langileen gastuak kontu berean, produktuak konbinatu gabe."
           },
           "r2": {
-            "t": "VeriFactu jatorrizkorik gabe",
-            "d": "2025eko AEAT araudia betetzeak Sagek lehenetsita ez duen modulu gehigarri ordaindua eskatzen du."
+            "t": "Ordaindu gabe hasi nahi duzu",
+            "d": "Doako plana ez da iraungitzen: 5 bezero eta hilean 10 faktura arte. Sage Activek hilabeteko proba eskaintzen du."
           },
           "r3": {
-            "t": "Lizentzia-prezioa",
-            "d": "Sageren urteko lizentziak metatzen dira. ETE txiki batentzat, kostua zaila da justifikatzea."
+            "t": "Lekualdatzen diren langileak dituzu",
+            "d": "Tiketak irakurketa automatikoarekin, kilometrajea eta dietak, onarpenarekin eta nominan itzulketarekin."
           },
           "r4": {
-            "t": "Ikaskuntza-kurba garaia",
-            "d": "Sage kontularitza profesionalentzat diseinatua izan zen. Kontabilitate-prestakuntzarik gabeko autonomo batentzat behar baino konplexuagoa da."
+            "t": "Ibilgailuak kudeatzen dituzu",
+            "d": "Flota, mantentze-lanak eta garraioko DeCA albaranetik, Pro planean."
           },
           "r5": {
-            "t": "Benetako app mugikorrik gabe",
-            "d": "Mugikorretik faktura bat kontsultatzea edo gastu bat erregistratzea ia ezinezkoa da Sage 50ekin."
+            "t": "Katalanez, euskaraz edo galegoz lan egiten duzu",
+            "d": "Aplikazioa gazteleraz, katalanez, euskaraz, galegoz eta ingelesez dago."
           },
           "r6": {
-            "t": "Ordaindutako eguneratzeak",
-            "d": "Sageren bertsio berri bakoitzak eguneraketa ordaintzea eskatzen du. YouWholerekin, eguneratzeak automatikoak dira eta barne daude."
+            "t": "BEZa barne duten prezioak nahiago dituzu",
+            "d": "Tarifan ikusten duzuna da ordaintzen duzuna: 29 € edo 79 € hilean, iraunkortasunik gabe."
           }
         }
       },
       "comparison": {
-        "title": "YouWhole vs Sage",
-        "subtitle": "Autonomo eta ETEentzako ezaugarrien konparaketa",
+        "title": "YouWhole vs Sage Active",
+        "subtitle": "Sage Activeren aurrean, Sageren hodeiko programa autonomo eta mikroenpresentzat",
         "colFeat": "Ezaugarria",
-        "colOther": "Sage",
+        "colOther": "Sage Active",
         "included": "Barne",
         "no": "Ez",
         "yes": "Bai",
-        "notAvailable": "Ez erabilgarri",
-        "footnote": "Argitaratutako planetan oinarritutako informazioa. 2026ko uztailean eguneratua.",
+        "notAvailable": "Ez dago eskuragarri",
+        "footnote": "Sageren datuak sage.com/es-es orrian kontsultatu dira 2026ko azaroaren 1ean. Sageren prezioek ez dute BEZa barne; YouWholerenek bai.",
         "rows": {
           "r1": {
-            "feat": "AEAT ziurtatutako VeriFactu",
+            "feat": "Betiko doako plana",
             "yw": true,
-            "other": false,
-            "note": "Sagek modulu gehigarri ordaindua eskatzen du"
+            "other": "Hilabeteko proba",
+            "note": "YouWholen, 5 bezero eta hilean 10 faktura arte, iraungitzerik gabe"
           },
           "r2": {
-            "feat": "IRPF automatikoa autonomoentzat",
-            "yw": true,
-            "other": false,
-            "note": "Sagen eskuzko konfigurazioa da"
+            "feat": "Sarrerako prezioa",
+            "yw": "29 €/hilean BEZa barne",
+            "other": "25 €/hilean + BEZa",
+            "note": "Sage Active kontabilitatearekin: 49 € + BEZa. Sagek %50eko deskontua ematen du lehen 3 hilabeteetan"
           },
           "r3": {
-            "feat": "Hodeian oinarritua (instalaziorik gabe)",
-            "yw": true,
-            "other": false,
-            "note": "Sage 50ek instalazio lokala eskatzen du"
-          },
-          "r4": {
-            "feat": "Doako plana erabilgarri",
-            "yw": true,
-            "other": false,
-            "note": "Sagek ez du doako planik"
-          },
-          "r5": {
-            "feat": "Oinarrizko hileroko prezioa",
-            "yw": "29 EUR",
-            "other": "50 EUR-tik hasita",
-            "note": ""
-          },
-          "r6": {
-            "feat": "Eguneraketa automatikoak",
-            "yw": true,
-            "other": false,
-            "note": "Sagek bertsio berriak erostea eskatzen du"
-          },
-          "r7": {
-            "feat": "Hizkuntza anitz (ca, eu, gl)",
-            "yw": true,
-            "other": false,
-            "note": "YouWholek 5 hizkuntza penintsular onartzen ditu"
-          },
-          "r8": {
-            "feat": "Euskara/gaztelaniazko laguntza",
+            "feat": "Hodeian, instalaziorik gabe",
             "yw": true,
             "other": true,
-            "note": ""
+            "note": "Sage 50ek tokiko instalazioa eta hodeia konbinatzen ditu"
           },
-          "r9": {
-            "feat": "Iraunkortasunik gabe",
+          "r4": {
+            "feat": "VeriFactu",
             "yw": true,
-            "other": false,
-            "note": "Sagek urteko lizentziak kobratzen ditu"
+            "other": true,
+            "note": "Biek dute"
           },
-          "r10": {
-            "feat": "Mugikorretik sarbidea",
-            "yw": true,
-            "other": false,
-            "note": "Sage 50ek ez du app mugikor jatorrizkorik"
+          "r5": {
+            "feat": "Nominak",
+            "yw": "Pro planean barne",
+            "other": "Aparteko produktua",
+            "note": "Sagek Sage NominaPlus edo Sage 200 Laboral produktuetan eskaintzen ditu"
+          },
+          "r6": {
+            "feat": "Kontabilitatea eta 303/130 ereduak",
+            "yw": "Starter-etik barne",
+            "other": "49 € + BEZeko plana",
+            "note": "Sage Activeren sarrerako plana aurrekontu eta fakturetan zentratzen da"
+          },
+          "r7": {
+            "feat": "Iraunkortasuna",
+            "yw": "Iraunkortasunik gabe",
+            "other": "Iraunkortasunik gabe",
+            "note": "Biek uzten dute nahi duzunean bertan behera uzten"
           }
         }
       },
       "migration": {
-        "title": "Migratu Sagetik zure datuak galdu gabe",
-        "subtitle": "Esportatu zure bezeroak, produktuak eta fakturak Sagetik eta inportatu YouWholen minutu gutxitan.",
+        "title": "Eraman zure datuak Sagetik YouWholera",
+        "subtitle": "Esportatu Sageko zerrendak Excel edo CSV formatura eta kargatu YouWholeren inportatzailearekin.",
         "steps": {
           "s1": {
             "t": "Esportatu Sagetik",
-            "d": "Esportatu bezeroak, produktuak eta fakturak CSV edo Excel formatuan Sageren panelatik."
+            "d": "Deskargatu zure bezeroak, produktuak eta fakturak Excel edo CSV formatuan."
           },
           "s2": {
             "t": "Inportatu YouWholen",
-            "d": "Erabili gure inportatzailea zure datu guztiak minutu gutxitan kargatzeko."
+            "d": "Inportatzaileak bezeroak, produktuak, hornitzaileak eta fakturak kargatzen ditu fitxategi horietatik."
           },
           "s3": {
-            "t": "Fakturatzeko prest",
-            "d": "Zure enpresa YouWholen martxan, VeriFactu aktibatuta lehen egunetik."
+            "t": "Hasi fakturatzen",
+            "d": "Zure enpresa prest YouWholen, VeriFactu barne."
           }
         },
-        "cta": "Hasi doako migrazioa"
+        "cta": "Sortu kontua doan"
       },
       "finalCta": {
-        "title": "Utzi Sage. Hasi doan gaur.",
-        "subtitle": "Txartelik gabe. Iraunkortasunik gabe. VeriFactu barne lehen egunetik.",
-        "cta": "Sortu doako kontua"
+        "title": "Probatu YouWhole doan, iraungitze-datarik gabe",
+        "subtitle": "Txartelik gabe. Iraunkortasunik gabe. VeriFactu barne.",
+        "cta": "Sortu kontua doan"
       }
     },
     "modelo130": {
