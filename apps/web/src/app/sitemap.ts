@@ -58,6 +58,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Legales
     { url: `${APP_URL}/privacidad`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${APP_URL}/aviso-legal`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${APP_URL}/declaracion-responsable-verifactu`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${APP_URL}/terminos`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${APP_URL}/cookies`, lastModified: now, changeFrequency: "yearly", priority: 0.2 },
   ];

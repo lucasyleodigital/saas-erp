@@ -275,6 +275,7 @@ model Company {
   accounts       Account[]
   journalEntries JournalEntry[]
   verifactuRecords VerifactuRecord[]
+  verifactuSender VerifactuSender?
   auditLogs      AuditLog[]
   notifications  Notification[]
   warehouses     Warehouse[]
@@ -700,7 +701,7 @@ model Invoice {
   items        InvoiceItem[]
   taxes        InvoiceTax[]
   payments     Payment[]
-  verifactu    VerifactuRecord?
+  verifactuRecords VerifactuRecord[]
 
   @@unique([companyId, number])
   @@index([companyId, status])
@@ -803,28 +804,66 @@ model Payment {
 // VERIFACTU
 // ============================================================
 
+enum VerifactuKind {
+  ALTA
+  ANULACION
+}
+
+// Una factura puede tener varios registros: el alta, sus subsanaciones y la anulación.
+// chain = 1 son registros anteriores a la cadena VERI*FACTU actual (no se envían ni se encadenan).
 model VerifactuRecord {
-  id           String          @id @default(uuid())
-  companyId    String
-  invoiceId    String          @unique
-  xml          String          @db.Text
-  hash         String
-  previousHash String?
-  signature    String?
-  status       VerifactuStatus @default(GENERATED)
-  aeatResponse String?
-  qrCode       String?
-  sentAt       DateTime?
-  acceptedAt   DateTime?
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
+  id             String          @id @default(uuid())
+  companyId      String
+  invoiceId      String
+  kind           VerifactuKind   @default(ALTA)
+  chain          Int             @default(1)
+  seq            Int?
+  xml            String          @db.Text
+  hash           String
+  previousHash   String?
+  signature      String?
+  status         VerifactuStatus @default(GENERATED)
+  aeatResponse   String?
+  qrCode         String?
+  issuerNif      String?
+  numSerie       String?
+  fechaExpedicion String?
+  fechaHoraHuso  String?
+  estadoRegistro String?
+  errorCode      String?
+  lastError      String?
+  csv            String?
+  attempts       Int             @default(0)
+  nextAttemptAt  DateTime?
+  sentAt         DateTime?
+  acceptedAt     DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
 
   company      Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
   invoice      Invoice         @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
   events       VerifactuEvent[]
 
+  @@unique([companyId, chain, seq])
   @@index([companyId])
+  @@index([invoiceId])
+  @@index([companyId, status])
   @@map("verifactu_records")
+}
+
+// Estado del envío VERI*FACTU de cada empresa: activación y control de flujo de la AEAT.
+model VerifactuSender {
+  companyId    String    @id
+  enabled      Boolean   @default(false)
+  activatedAt  DateTime?
+  firstSentAt  DateTime?
+  waitSeconds  Int       @default(60)
+  lastSentAt   DateTime?
+  updatedAt    DateTime  @updatedAt
+
+  company      Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@map("verifactu_senders")
 }
 
 model VerifactuEvent {

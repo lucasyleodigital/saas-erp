@@ -1,4 +1,6 @@
-import PDFDocument from "pdfkit";
+// pdfkit es CommonJS sin export default: con "import PDFDocument from" el constructor llega undefined
+import PDFDocument = require("pdfkit");
+import * as QRCode from "qrcode";
 
 const DEFAULT_COLOR = "#4f46e5";
 
@@ -174,7 +176,17 @@ function fmtDate(d: Date | string, lang = "es") {
   return new Date(d).toLocaleDateString(locale, { day: "2-digit", month: "2-digit", year: "numeric" });
 }
 
+// QR tributario de VERI*FACTU: arriba y centrado en la primera página, entre 30 y 40 mm, corrección M,
+// con «QR tributario:» encima y «VERI*FACTU» debajo (especificación del QR de la AEAT, apartado 3)
+const QR_SIZE = 100; // puntos ≈ 35 mm
+const QR_BLOCK = 140;
+
 export async function generateInvoicePdf(invoice: any): Promise<Buffer> {
+  const qrUrl: string | null = invoice.verifactu?.qrCode ?? null;
+  const qrPng = qrUrl
+    ? await QRCode.toBuffer(qrUrl, { errorCorrectionLevel: "M", margin: 1, width: 400 })
+    : null;
+
   return new Promise((resolve, reject) => {
     const co = invoice.company ?? {};
     const cl = invoice.client ?? {};
@@ -207,12 +219,20 @@ export async function generateInvoicePdf(invoice: any): Promise<Buffer> {
     doc.on("end", () => resolve(Buffer.concat(chunks)));
     doc.on("error", reject);
 
+    const top = qrPng ? QR_BLOCK : 0;
+    if (qrPng) {
+      const qrX = (595.28 - QR_SIZE) / 2;
+      doc.fontSize(9).fillColor("#111827").text("QR tributario:", 50, 30, { width: 495, align: "center" });
+      doc.image(qrPng, qrX, 44, { width: QR_SIZE, height: QR_SIZE });
+      doc.fontSize(9).fillColor("#111827").text("VERI*FACTU", 50, 48 + QR_SIZE, { width: 495, align: "center" });
+    }
+
     // Header
-    doc.fontSize(20).fillColor(primary).text(t.invoice, 350, 50, { align: "right" });
-    doc.fontSize(10).fillColor("#6b7280").text(invoice.number, 350, 74, { align: "right" });
-    doc.fontSize(12).fillColor("#111827").text(co.legalName ?? co.name ?? "", 50, 50);
+    doc.fontSize(20).fillColor(primary).text(t.invoice, 350, top + 50, { align: "right" });
+    doc.fontSize(10).fillColor("#6b7280").text(invoice.number, 350, top + 74, { align: "right" });
+    doc.fontSize(12).fillColor("#111827").text(co.legalName ?? co.name ?? "", 50, top + 50);
     doc.fontSize(8).fillColor("#6b7280");
-    let yPos = 66;
+    let yPos = top + 66;
     if (co.cif) { doc.text(`CIF: ${co.cif}`, 50, yPos); yPos += 12; }
     const addr = [co.address, co.postalCode, co.city, co.province].filter(Boolean).join(", ");
     if (addr) { doc.text(addr, 50, yPos); yPos += 12; }
@@ -224,11 +244,11 @@ export async function generateInvoicePdf(invoice: any): Promise<Buffer> {
     const statusColors: Record<string, string> = { DRAFT: "#6b7280", SENT: "#2563eb", PAID: "#059669", PARTIAL: "#d97706", OVERDUE: "#dc2626", CANCELLED: "#6b7280" };
     const statusText = statusLabels[invoice.status] ?? invoice.status;
     const statusColor = statusColors[invoice.status] ?? "#6b7280";
-    doc.roundedRect(430, 88, 80, 18, 3).fill(statusColor);
-    doc.fontSize(8).fillColor("#ffffff").text(statusText, 430, 92, { width: 80, align: "center" });
+    doc.roundedRect(430, top + 88, 80, 18, 3).fill(statusColor);
+    doc.fontSize(8).fillColor("#ffffff").text(statusText, 430, top + 92, { width: 80, align: "center" });
 
     // Client + dates box
-    const boxY = 130;
+    const boxY = top + 130;
     doc.roundedRect(50, boxY, 495, 70, 4).fill("#f9fafb");
     doc.fontSize(7).fillColor("#9ca3af").text(t.billTo, 60, boxY + 10);
     doc.fontSize(11).fillColor("#111827").text(cl.name ?? "", 60, boxY + 22);

@@ -93,7 +93,7 @@ export function middleware(request: NextRequest) {
   // A locale-prefixed home route (e.g. /en, /ca) must still go through intlMiddleware —
   // otherwise next-intl can't resolve the request locale for server-side translations
   // (getMessages/useTranslations), even though the URL segment is correct.
-  const NO_LOCALE_PATHS = ["/", "/auth/callback", "/privacidad", "/aviso-legal", "/terminos", "/cookies", "/ayuda", "/sobre-nosotros", "/contacto", ...SATELLITE_PATHS];
+  const NO_LOCALE_PATHS = ["/", "/auth/callback", "/privacidad", "/aviso-legal", "/terminos", "/cookies", "/ayuda", "/sobre-nosotros", "/contacto", "/declaracion-responsable-verifactu", ...SATELLITE_PATHS];
   if (!localeMatch && (NO_LOCALE_PATHS.includes(pathname) || pathname.startsWith("/fichar"))) {
     return NextResponse.next();
   }

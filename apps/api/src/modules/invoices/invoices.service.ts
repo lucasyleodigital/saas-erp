@@ -1,5 +1,6 @@
 import {
   Injectable,
+  Logger,
   NotFoundException,
   BadRequestException,
 } from "@nestjs/common";
@@ -16,6 +17,8 @@ import type { PaginationParams } from "@saas/types";
 
 @Injectable()
 export class InvoicesService {
+  private readonly logger = new Logger(InvoicesService.name);
+
   constructor(
     private prisma: PrismaService,
     private plans: PlansService,
@@ -89,11 +92,44 @@ export class InvoicesService {
         taxes: { include: { tax: true } },
         payments: { orderBy: { paidAt: "desc" } },
         series: { select: { prefix: true } },
-        verifactu: true,
+        verifactuRecords: { where: { chain: 2 }, orderBy: { seq: "desc" }, take: 1 },
       },
     });
     if (!invoice) throw new NotFoundException("Factura no encontrada");
-    return invoice;
+    const { verifactuRecords, ...rest } = invoice;
+    // El certificado cifrado no sale nunca hacia el navegador
+    const { verifactuCert: _cert, ...settings } = (rest.company?.settings ?? {}) as Record<string, unknown>;
+    return {
+      ...rest,
+      company: rest.company && { ...rest.company, settings },
+      verifactu: verifactuRecords[0] ?? null,
+    };
+  }
+
+  private static readonly ISSUED = ["SENT", "PAID", "PARTIAL", "OVERDUE"];
+
+  /** Reglas de VERI*FACTU para un cambio de estado. Devuelve si la factura se está emitiendo. */
+  private async checkVerifactuTransition(companyId: string, id: string, from: string, to: string) {
+    if (from === to) return false;
+    const registered = from !== "DRAFT" && (await this.verifactu.hasRecords(companyId, id));
+    if (registered && to === "DRAFT") {
+      throw new BadRequestException("Esta factura ya está registrada en VERI*FACTU y no puede volver a borrador. Cancélala y emite una nueva.");
+    }
+    if (registered && from === "CANCELLED") {
+      throw new BadRequestException("Esta factura está anulada en VERI*FACTU y no puede reactivarse. Emite una nueva.");
+    }
+    const issuing = from === "DRAFT" && InvoicesService.ISSUED.includes(to);
+    if (issuing) await this.verifactu.assertCanIssue(companyId, id);
+    return issuing;
+  }
+
+  private async afterVerifactuTransition(companyId: string, id: string, issuing: boolean, to: string) {
+    try {
+      if (issuing) await this.verifactu.onInvoiceIssued(companyId, id);
+      if (to === "CANCELLED") await this.verifactu.onInvoiceCancelled(companyId, id);
+    } catch (err: any) {
+      this.logger.error(`[VeriFactu] Factura ${id}: ${err?.message ?? err}`);
+    }
   }
 
   async create(companyId: string, dto: CreateInvoiceDto, userId?: string) {
@@ -327,14 +363,13 @@ export class InvoicesService {
   }
 
   async updateStatus(companyId: string, id: string, status: string) {
-    await this.findOne(companyId, id);
+    const invoice = await this.findOne(companyId, id);
+    const issuing = await this.checkVerifactuTransition(companyId, id, invoice.status, status);
     const updated = await this.prisma.invoice.update({
       where: { id },
       data: { status: status as any },
     });
-    if (status === "SENT" || status === "PAID") {
-      this.verifactu.generateForInvoice(companyId, id, true).catch(() => {});
-    }
+    await this.afterVerifactuTransition(companyId, id, issuing, status);
     return updated;
   }
 
@@ -342,6 +377,7 @@ export class InvoicesService {
     const invoice = await this.findOne(companyId, id);
     const newPaid = Number(invoice.paidAmount) + amount;
     const newStatus = newPaid >= Number(invoice.total) ? "PAID" : "PARTIAL";
+    const issuing = await this.checkVerifactuTransition(companyId, id, invoice.status, newStatus);
 
     const [payment] = await this.prisma.$transaction([
       this.prisma.payment.create({
@@ -377,8 +413,8 @@ export class InvoicesService {
         total:         String(invoice.total),
         currency:      invoice.currency,
       }).catch(() => {});
-      this.verifactu.generateForInvoice(companyId, id, true).catch(() => {});
     }
+    await this.afterVerifactuTransition(companyId, id, issuing, newStatus);
 
     return payment;
   }
@@ -499,11 +535,18 @@ export class InvoicesService {
     const valid = ["DRAFT", "SENT", "PAID", "CANCELLED"];
     if (!valid.includes(status)) throw new BadRequestException("Estado no valido");
 
-    const result = await this.prisma.invoice.updateMany({
-      where: { id: { in: ids }, companyId },
-      data: { status: status as any },
-    });
-    return { updated: result.count };
+    // Una a una, para aplicar las reglas de VERI*FACTU de cada factura
+    let updated = 0;
+    const errors: { id: string; message: string }[] = [];
+    for (const id of ids) {
+      try {
+        await this.updateStatus(companyId, id, status);
+        updated++;
+      } catch (err: any) {
+        errors.push({ id, message: err?.message ?? String(err) });
+      }
+    }
+    return { updated, errors };
   }
 
   async setRecurring(companyId: string, id: string, isRecurring: boolean, interval?: string) {
@@ -522,9 +565,17 @@ export class InvoicesService {
   }
 
   async sendByEmail(companyId: string, id: string) {
-    const invoice = await this.findOne(companyId, id);
+    let invoice = await this.findOne(companyId, id);
     const clientEmail = invoice.client?.email;
     if (!clientEmail) throw new BadRequestException("El cliente no tiene email registrado");
+
+    // Se emite antes de generar el PDF para que salga con su QR de VERI*FACTU
+    if (invoice.status === "DRAFT") {
+      const issuing = await this.checkVerifactuTransition(companyId, id, "DRAFT", "SENT");
+      await this.prisma.invoice.update({ where: { id }, data: { status: "SENT" } });
+      await this.afterVerifactuTransition(companyId, id, issuing, "SENT");
+      invoice = await this.findOne(companyId, id);
+    }
 
     const { generateInvoicePdf } = await import("./invoice-pdf.generator");
     const pdfBuffer = await generateInvoicePdf(invoice);
@@ -537,10 +588,6 @@ export class InvoicesService {
       invoice.company?.name ?? "",
       pdfBuffer,
     );
-    if (invoice.status === "DRAFT") {
-      await this.prisma.invoice.update({ where: { id }, data: { status: "SENT" } });
-    }
-    this.verifactu.generateForInvoice(companyId, id, true).catch(() => {});
     return { sent: true, to: clientEmail };
   }
 

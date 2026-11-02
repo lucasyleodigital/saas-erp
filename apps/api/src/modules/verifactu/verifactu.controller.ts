@@ -1,5 +1,5 @@
 import {
-  Controller, Post, Get, Delete, Param, Body,
+  Controller, Post, Get, Delete, Param, Body, ForbiddenException,
   UseGuards, UseInterceptors, UploadedFile, BadRequestException,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
@@ -8,6 +8,12 @@ import { VerifactuService } from "./verifactu.service";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
 import type { JwtPayload } from "@saas/types";
+
+function requireAdmin(user: JwtPayload) {
+  if (!["OWNER", "ADMIN", "SUPER_ADMIN"].includes(user.role as string)) {
+    throw new ForbiddenException("Solo el propietario o un administrador puede cambiar la configuración de VERI*FACTU");
+  }
+}
 
 @ApiTags("VeriFactu")
 @ApiBearerAuth()
@@ -21,14 +27,37 @@ export class VerifactuController {
     return this.verifactuService.getAll(user.companyId);
   }
 
-  @Post("invoices/:invoiceId/generate")
-  generate(@CurrentUser() user: JwtPayload, @Param("invoiceId") invoiceId: string) {
-    return this.verifactuService.generateForInvoice(user.companyId, invoiceId);
-  }
-
   @Get("invoices/:invoiceId/status")
   getStatus(@CurrentUser() user: JwtPayload, @Param("invoiceId") invoiceId: string) {
     return this.verifactuService.getStatus(user.companyId, invoiceId);
+  }
+
+  // ── Activación ───────────────────────────────────────────────────────────
+
+  @Get("settings")
+  getSettings(@CurrentUser() user: JwtPayload) {
+    return this.verifactuService.getSettings(user.companyId);
+  }
+
+  @Post("settings")
+  setEnabled(@CurrentUser() user: JwtPayload, @Body("enabled") enabled: boolean) {
+    requireAdmin(user);
+    if (typeof enabled !== "boolean") throw new BadRequestException("Indica si VERI*FACTU queda activado o no");
+    return this.verifactuService.setEnabled(user.companyId, enabled);
+  }
+
+  // ── Registros ────────────────────────────────────────────────────────────
+
+  @Post("records/:id/resubmit")
+  resubmit(@CurrentUser() user: JwtPayload, @Param("id") id: string) {
+    requireAdmin(user);
+    return this.verifactuService.resubmit(user.companyId, id);
+  }
+
+  @Post("retry")
+  retryNow(@CurrentUser() user: JwtPayload) {
+    requireAdmin(user);
+    return this.verifactuService.retryNow(user.companyId);
   }
 
   // ── Certificate ──────────────────────────────────────────────────────────
@@ -55,6 +84,7 @@ export class VerifactuController {
     @UploadedFile() file: Express.Multer.File,
     @Body("password") password: string,
   ) {
+    requireAdmin(user);
     if (!file) throw new BadRequestException("No se ha adjuntado ningún certificado");
     if (!password) throw new BadRequestException("La contraseña del certificado es obligatoria");
     return this.verifactuService.saveCertificate(user.companyId, file.buffer, password);
@@ -62,13 +92,7 @@ export class VerifactuController {
 
   @Delete("certificate")
   deleteCertificate(@CurrentUser() user: JwtPayload) {
+    requireAdmin(user);
     return this.verifactuService.deleteCertificate(user.companyId);
-  }
-
-  // ── Send to AEAT ──────────────────────────────────────────────────────────
-
-  @Post("records/:id/send")
-  sendToAeat(@CurrentUser() user: JwtPayload, @Param("id") id: string) {
-    return this.verifactuService.sendToAeat(user.companyId, id);
   }
 }

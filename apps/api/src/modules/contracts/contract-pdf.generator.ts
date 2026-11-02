@@ -1,4 +1,5 @@
-import PDFDocument from "pdfkit";
+// pdfkit es CommonJS sin export default: con "import PDFDocument from" el constructor llega undefined
+import PDFDocument = require("pdfkit");
 import type { ContractDocument } from "./contract-content";
 
 export async function generateContractPdf(doc: ContractDocument): Promise<Buffer> {

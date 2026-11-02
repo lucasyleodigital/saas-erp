@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useInvoice, useUpdateInvoiceStatus, useRegisterPayment, useDeletePayment, useSendInvoiceEmail } from "@/hooks/use-invoices";
-import { useGenerateVerifactu } from "@/hooks/use-verifactu";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,9 +31,9 @@ export function InvoiceDetail({ id }: { id: string }) {
   const registerPayment = useRegisterPayment();
   const deletePayment = useDeletePayment();
   const sendEmail = useSendInvoiceEmail();
-  const generateVerifactu = useGenerateVerifactu();
   const t = useTranslations("invoices");
   const tCommon = useTranslations("common");
+  const tVf = useTranslations("verifactuView");
   const [partialOpen, setPartialOpen] = useState(false);
   const [partialAmount, setPartialAmount] = useState("");
   const [editOpen, setEditOpen] = useState(false);
@@ -371,14 +370,22 @@ export function InvoiceDetail({ id }: { id: string }) {
             <CardContent className="space-y-3">
               {invoice.verifactu ? (
                 <div className="space-y-3">
-                  <Badge variant={"success" as any} className="w-full justify-center">
-                    {t("detail.verifactuGenerated")}
+                  <Badge
+                    variant={(invoice.verifactu.status === "ACCEPTED" ? "success" : invoice.verifactu.status === "REJECTED" ? "destructive" : "info") as any}
+                    className="w-full justify-center"
+                  >
+                    {invoice.verifactu.kind === "ANULACION" ? `${tVf("kind.ANULACION")} · ` : ""}
+                    {tVf(`statusLabels.${invoice.verifactu.status}`)}
                   </Badge>
                   <div className="text-xs space-y-1.5">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">{tCommon("status")}</span>
-                      <span className="font-medium">{invoice.verifactu.status}</span>
-                    </div>
+                    {invoice.verifactu.lastError && (
+                      <p className="text-muted-foreground">{invoice.verifactu.lastError}</p>
+                    )}
+                    {invoice.verifactu.status === "REJECTED" && (
+                      <Link href="/verifactu" className="block text-primary hover:underline">
+                        {t("detail.verifactuFixRejected")}
+                      </Link>
+                    )}
                     {invoice.verifactu.hash && (
                       <div>
                         <p className="text-muted-foreground mb-0.5">Hash</p>
@@ -416,28 +423,9 @@ export function InvoiceDetail({ id }: { id: string }) {
                   </div>
                 </div>
               ) : (
-                <div className="space-y-2">
-                  <p className="text-xs text-muted-foreground">
-                    {t("detail.verifactuHint")}
-                  </p>
-                  {["SENT", "PAID"].includes(invoice.status) && (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="w-full gap-2 text-xs"
-                      disabled={generateVerifactu.isPending}
-                      onClick={() => generateVerifactu.mutate(id)}
-                    >
-                      <Shield className="h-3 w-3" />
-                      {generateVerifactu.isPending ? tCommon("generating") : t("detail.generateVerifactu")}
-                    </Button>
-                  )}
-                  {invoice.status === "DRAFT" && (
-                    <p className="text-xs text-amber-600 bg-amber-50 dark:bg-amber-950/20 rounded p-2">
-                      {t("detail.sendFirstForVerifactu")}
-                    </p>
-                  )}
-                </div>
+                <p className="text-xs text-muted-foreground">
+                  {invoice.status === "DRAFT" ? t("detail.verifactuOnIssue") : t("detail.verifactuHint")}
+                </p>
               )}
             </CardContent>
           </Card>

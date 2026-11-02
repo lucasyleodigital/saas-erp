@@ -70,6 +70,7 @@ export function MarketingFooter() {
         { href: "/privacidad", label: t("columns.legal.privacy") },
         { href: "/terminos", label: t("columns.legal.terms") },
         { href: "/cookies", label: t("columns.legal.cookies") },
+        { href: "/declaracion-responsable-verifactu", label: t("columns.legal.verifactu") },
       ],
     },
     {

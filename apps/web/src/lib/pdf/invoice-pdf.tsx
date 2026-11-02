@@ -46,8 +46,10 @@ function createStyles(primary: string) {
     bankTxt:     { fontSize: 8.5, color: "#1e3a5f", marginBottom: 1 },
     termsBox:    { marginBottom: 16, padding: 12 },
     termsTxt:    { fontSize: 8, color: "#6b7280" },
-    qrImg:       { width: 52, height: 52, marginLeft: 10 },
-    qrLbl:       { fontSize: 6, color: "#9ca3af", textAlign: "right", marginTop: 2 },
+    // QR tributario: arriba y centrado, entre 30 y 40 mm, con textos del tamaño del resto de la factura
+    qrBlock:     { alignItems: "center", marginBottom: 16 },
+    qrImg:       { width: 99, height: 99, marginVertical: 4 },
+    qrLbl:       { fontSize: 9, color: "#111827", textAlign: "center" },
     footer:      { position: "absolute", bottom: 15, left: 50, right: 50, flexDirection: "row", alignItems: "flex-start", fontSize: 7.5, color: "#9ca3af", borderTopWidth: 1, borderTopColor: "#e5e7eb", borderTopStyle: "solid", paddingTop: 8 },
     footerTxt:   { flex: 1 },
   });
@@ -61,7 +63,7 @@ const fmt = (n: number, cur = "EUR") =>
 const fmtDate = (d: string | Date) =>
   new Date(d).toLocaleDateString("es-ES", { day: "2-digit", month: "2-digit", year: "numeric" });
 
-export function InvoicePdf({ invoice, qrCodeDataUrl, verifactuHash }: { invoice: any; qrCodeDataUrl?: string; verifactuHash?: string }) {
+export function InvoicePdf({ invoice, qrCodeDataUrl }: { invoice: any; qrCodeDataUrl?: string }) {
   const co       = invoice.company ?? {};
   const cl       = invoice.client  ?? {};
   const rawItems = invoice.items ?? [];
@@ -91,6 +93,14 @@ export function InvoicePdf({ invoice, qrCodeDataUrl, verifactuHash }: { invoice:
   return (
     <Document>
       <Page size="A4" style={s.page}>
+
+        {qrCodeDataUrl && (
+          <View style={s.qrBlock}>
+            <Text style={s.qrLbl}>QR tributario:</Text>
+            <Image src={qrCodeDataUrl} style={s.qrImg} />
+            <Text style={s.qrLbl}>VERI*FACTU</Text>
+          </View>
+        )}
 
         {/* Header */}
         <View style={s.header}>
@@ -221,7 +231,7 @@ export function InvoicePdf({ invoice, qrCodeDataUrl, verifactuHash }: { invoice:
           )}
         </View>
 
-        {/* Footer — left: company info · right: VeriFactu QR (when present) */}
+        {/* Footer */}
         <View style={s.footer} fixed>
           <Text style={s.footerTxt}>
             {settings.invoiceFooter
@@ -233,17 +243,6 @@ export function InvoicePdf({ invoice, qrCodeDataUrl, verifactuHash }: { invoice:
                   co.email,
                 ].filter(Boolean).join(" · ")}
           </Text>
-          {qrCodeDataUrl && (
-            <View style={{ alignItems: "flex-end" }}>
-              <Image src={qrCodeDataUrl} style={s.qrImg} />
-              <Text style={s.qrLbl}>Verificable en la AEAT</Text>
-              {verifactuHash && (
-                <Text style={s.qrLbl}>
-                  Hash: {verifactuHash.slice(0, 8)}...{verifactuHash.slice(-6)}
-                </Text>
-              )}
-            </View>
-          )}
         </View>
 
       </Page>
