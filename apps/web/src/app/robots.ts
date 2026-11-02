@@ -36,6 +36,8 @@ const APP_ROUTES = [
   "/billing",
   "/verifactu",
   "/contratos",
+  "/flota",
+  "/gastos",
   "/api/",
   "/portal/",
   "/fichar/",
@@ -50,13 +52,19 @@ const localeAppRoutes = APP_ROUTES.flatMap((route) =>
   LOCALES.map((locale) => `/${locale}${route}`),
 );
 
+// Disallow matches by prefix: "/verifactu" would also block the landing
+// "/verifactu-software-certificado". Routes without a trailing slash are
+// limited to the exact path ("$") and its subpaths ("/").
+const toRules = (route: string) =>
+  route.endsWith("/") ? [route] : [`${route}$`, `${route}/`];
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
         userAgent: "*",
         allow: "/",
-        disallow: [...APP_ROUTES, ...localeAppRoutes],
+        disallow: [...APP_ROUTES, ...localeAppRoutes].flatMap(toRules),
       },
     ],
     sitemap: `${APP_URL}/sitemap.xml`,
