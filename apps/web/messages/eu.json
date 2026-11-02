@@ -1678,7 +1678,7 @@
       "netPay": "Jasotzeko garbia",
       "companyCost": "Enpresaren kostua",
       "grossSalary": "Soldata gordina",
-      "ssEmployer": "GS enpresaren kotizazioa ({rate})",
+      "ssEmployer": "GS enpresaren kotizazioa ({rate}, lan-istripuen kotizaziorik gabe)",
       "totalCompanyCost": "Enpresaren kostu osoa",
       "taxableAllowances": "PFEZaren menpeko dietak eta kilometrajea",
       "expenseReimbursement": "Gastuen itzulketa (ez soldata, salbuetsia)"
@@ -3493,8 +3493,8 @@
             "desc": "Esportatu lanaldi-erregistroa langile, proiektu edo dataka. Lan-ikuskaritzetarako baliozkoa."
           },
           "i4": {
-            "title": "Gorabeheren alertak",
-            "desc": "Abisu automatikoa langile bat fitxatu ez duenean edo baimenik gabeko aparteko ordurik dagoenean."
+            "title": "Fitxaketa-abisuak",
+            "desc": "Ordutegi-kontroleko panelean abisua agertzen da gaur fitxatu ez duten langileekin (astelehenetik ostiralera), eta 8 ordu gainditzen dituen fitxaketa bakoitzean aparteko orduak markatzen dira."
           }
         }
       },

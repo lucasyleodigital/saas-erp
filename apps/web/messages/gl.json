@@ -1670,7 +1670,7 @@
       "netPay": "Liquido a percibir",
       "companyCost": "Custo empresa",
       "grossSalary": "Salario bruto",
-      "ssEmployer": "Cotizacion SS empresa ({rate})",
+      "ssEmployer": "Cotizacion SS empresa ({rate}, sen AT/EP)",
       "totalCompanyCost": "Custo total empresa",
       "taxableAllowances": "Dietas e quilometraxe suxeitos a IRPF",
       "expenseReimbursement": "Reembolso de gastos (non salarial, exento)"
@@ -3420,8 +3420,8 @@
             "desc": "Exporta o rexistro de xornada por empregado, proxecto ou data. Válido para inspeccións laborais."
           },
           "i4": {
-            "title": "Alertas de incidencias",
-            "desc": "Aviso automático cando un empregado non fichou ou cando hai horas extra non autorizadas."
+            "title": "Avisos de fichaxe",
+            "desc": "Aviso no panel de control horario cos empregados que non ficharon hoxe (de luns a venres), e horas extra sinaladas en cada fichaxe que pasa de 8 horas."
           }
         }
       },

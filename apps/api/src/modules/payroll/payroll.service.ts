@@ -6,90 +6,36 @@ import {
 import { PrismaService } from "../../database/prisma.service";
 import { AccountingService } from "../accounting/accounting.service";
 
-// Spain 2024 IRPF brackets (state + avg autonomous community)
-const IRPF_BRACKETS = [
-  { limit: 12450,    rate: 0.19 },
-  { limit: 20200,    rate: 0.24 },
-  { limit: 35200,    rate: 0.30 },
-  { limit: 60000,    rate: 0.37 },
-  { limit: 300000,   rate: 0.45 },
-  { limit: Infinity, rate: 0.47 },
-];
-const PERSONAL_MINIMUM = 5550;  // mínimo personal 2024
-const SS_EMPLOYEE_RATE = 0.0647; // 6.47%
-const SS_EMPLOYER_RATE = 0.3048; // 30.48%
-const MIN_IRPF_RATE = 2;         // retención mínima 2%
+import { computePayroll, computeSocialSecurity, isTemporaryContract, round2, PayrollEmployeeContext, ContractType } from "./payroll.calc";
 
-function calculateIRPFRate(annualGross: number): number {
-  const annualSS = annualGross * SS_EMPLOYEE_RATE;
-  const taxableBase = Math.max(0, annualGross - annualSS - PERSONAL_MINIMUM);
-  if (taxableBase <= 0) return MIN_IRPF_RATE;
-
-  let tax = 0;
-  let prev = 0;
-  for (const bracket of IRPF_BRACKETS) {
-    if (taxableBase <= prev) break;
-    const inBracket = Math.min(taxableBase - prev, bracket.limit - prev);
-    tax += inBracket * bracket.rate;
-    prev = bracket.limit;
-  }
-  const effectiveRate = (tax / annualGross) * 100;
-  return Math.max(MIN_IRPF_RATE, Math.round(effectiveRate * 100) / 100);
+interface EmployeePayrollFields {
+  contractType: ContractType;
+  ssContributionGroup: string | null;
+  workingHours: unknown;
+  startDate: Date;
+  endDate: Date | null;
 }
 
-function round2(n: number): number {
-  return Math.round(n * 100) / 100;
+const EMPLOYEE_PAYROLL_SELECT = {
+  contractType: true, ssContributionGroup: true, workingHours: true, startDate: true, endDate: true,
+} as const;
+
+const FULL_TIME_WEEKLY_HOURS = 40;
+
+function employeeContext(emp: EmployeePayrollFields): PayrollEmployeeContext {
+  const oneYearAfterStart = new Date(emp.startDate);
+  oneYearAfterStart.setFullYear(oneYearAfterStart.getFullYear() + 1);
+  return {
+    contractType: emp.contractType,
+    contributionGroup: emp.ssContributionGroup,
+    partTime: Number(emp.workingHours) < FULL_TIME_WEEKLY_HOURS,
+    shortContract: isTemporaryContract(emp.contractType) && !!emp.endDate && emp.endDate < oneYearAfterStart,
+  };
 }
 
 @Injectable()
 export class PayrollService {
   constructor(private prisma: PrismaService, private accounting: AccountingService) {}
-
-  private computePayroll(monthlySalary: number, overrides?: {
-    overtimePay?: number;
-    bonuses?: number;
-    otherDeductions?: number;
-    irpfRate?: number;
-    expenseReimbursement?: number;
-    taxableAllowances?: number;
-  }) {
-    const baseSalary = round2(monthlySalary);
-    const overtimePay = round2(overrides?.overtimePay ?? 0);
-    const bonuses = round2(overrides?.bonuses ?? 0);
-    const taxableAllowances = round2(overrides?.taxableAllowances ?? 0);
-    const expenseReimbursement = round2(overrides?.expenseReimbursement ?? 0);
-    const grossSalary = round2(baseSalary + overtimePay + bonuses + taxableAllowances);
-
-    const annualGross = grossSalary * 12;
-    const irpfRate = overrides?.irpfRate !== undefined
-      ? overrides.irpfRate
-      : round2(calculateIRPFRate(annualGross));
-
-    const ssEmployee = round2(grossSalary * SS_EMPLOYEE_RATE);
-    const ssEmployer = round2(grossSalary * SS_EMPLOYER_RATE);
-    const irpfAmount = round2(grossSalary * (irpfRate / 100));
-    const otherDeductions = round2(overrides?.otherDeductions ?? 0);
-    const netSalary = round2(grossSalary - ssEmployee - irpfAmount - otherDeductions + expenseReimbursement);
-    const totalCost = round2(grossSalary + ssEmployer);
-
-    return {
-      baseSalary,
-      overtimePay,
-      bonuses,
-      taxableAllowances,
-      expenseReimbursement,
-      grossSalary,
-      ssEmployeeRate: SS_EMPLOYEE_RATE,
-      ssEmployerRate: SS_EMPLOYER_RATE,
-      ssEmployee,
-      ssEmployer,
-      irpfRate,
-      irpfAmount,
-      otherDeductions,
-      netSalary,
-      totalCost,
-    };
-  }
 
   async findAll(companyId: string, year: number, month: number) {
     return this.prisma.payroll.findMany({
@@ -115,7 +61,8 @@ export class PayrollService {
           select: {
             id: true, firstName: true, lastName: true, email: true, phone: true,
             nif: true, socialSecurityNumber: true, position: true, department: true,
-            contractType: true, startDate: true, bankAccount: true, bankHolder: true,
+            contractType: true, startDate: true, endDate: true, bankAccount: true, bankHolder: true,
+            ssContributionGroup: true, workingHours: true,
           },
         },
         company: {
@@ -124,12 +71,24 @@ export class PayrollService {
       },
     });
     if (!payroll) throw new NotFoundException("Nómina no encontrada");
-    return payroll;
+
+    // Desglose de cotizaciones para la nómina imprimible. Si no cuadra con los importes guardados
+    // (nómina de otro ejercicio o datos del empleado cambiados después) no se devuelve.
+    const ss = computeSocialSecurity({
+      ...employeeContext(payroll.employee),
+      ordinaryPay: Number(payroll.baseSalary) + Number(payroll.bonuses) + Number(payroll.taxableAllowances),
+      overtimePay: Number(payroll.overtimePay),
+    });
+    const matches =
+      Math.abs(ss.ssEmployee - Number(payroll.ssEmployee)) < 0.005 &&
+      Math.abs(ss.ssEmployer - Number(payroll.ssEmployer)) < 0.005;
+    return { ...payroll, ssBreakdown: matches ? ss : null };
   }
 
   async generateMonthlyPayrolls(companyId: string, year: number, month: number) {
     const employees = await this.prisma.employee.findMany({
-      where: { companyId, status: "ACTIVE" },
+      // Los autónomos no cobran por nómina
+      where: { companyId, status: "ACTIVE", contractType: { not: "AUTONOMO" } },
     });
     if (!employees.length) return [];
 
@@ -140,7 +99,8 @@ export class PayrollService {
       });
       if (exists) continue;
 
-      const computed = this.computePayroll(Number(emp.salary));
+      // emp.salary es el bruto anual; 12 nóminas con las pagas extra prorrateadas
+      const computed = computePayroll(Number(emp.salary) / 12, employeeContext(emp));
       const payroll = await this.prisma.payroll.create({
         data: { companyId, employeeId: emp.id, year, month, ...computed, status: "DRAFT" },
       });
@@ -174,7 +134,10 @@ export class PayrollService {
       Math.abs(Number(payroll.expenseReimbursement) - expenseReimbursement) < 0.005;
     if (unchanged) return payroll;
 
-    const computed = this.computePayroll(Number(payroll.baseSalary), {
+    const employee = await this.prisma.employee.findUniqueOrThrow({
+      where: { id: payroll.employeeId }, select: EMPLOYEE_PAYROLL_SELECT,
+    });
+    const computed = computePayroll(Number(payroll.baseSalary), employeeContext(employee), {
       overtimePay: Number(payroll.overtimePay),
       bonuses: Number(payroll.bonuses),
       otherDeductions: Number(payroll.otherDeductions),
@@ -195,11 +158,13 @@ export class PayrollService {
     irpfRate?: number;
     notes?: string;
   }) {
-    const payroll = await this.prisma.payroll.findFirst({ where: { id, companyId } });
+    const payroll = await this.prisma.payroll.findFirst({
+      where: { id, companyId }, include: { employee: { select: EMPLOYEE_PAYROLL_SELECT } },
+    });
     if (!payroll) throw new NotFoundException("Nómina no encontrada");
     if (payroll.status === "PAID") throw new ConflictException("La nómina ya está pagada");
 
-    const computed = this.computePayroll(Number(payroll.baseSalary), {
+    const computed = computePayroll(Number(payroll.baseSalary), employeeContext(payroll.employee), {
       overtimePay: dto.overtimePay,
       bonuses: dto.bonuses,
       otherDeductions: dto.otherDeductions,

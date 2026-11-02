@@ -1,7 +1,7 @@
 "use client";
 
 import { use } from "react";
-import { usePayroll, MONTHS_ES } from "@/hooks/use-payroll";
+import { usePayroll, MONTHS_ES, type SocialSecurityLine } from "@/hooks/use-payroll";
 import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
 
@@ -24,24 +24,15 @@ function antigüedad(startDate?: string | null): string {
   if (!startDate) return "—";
   return new Date(startDate).toLocaleDateString("es-ES", { day: "2-digit", month: "2-digit", year: "numeric" }).replace(/\//g, ".");
 }
-function computeSS(grossSalary: number, ssEmployeeRate: number) {
-  // Prorrata pagas extras (2 pagas / 12 meses)
-  const prorrata = grossSalary * (2 / 12);
-  const baseCotizacion = grossSalary + prorrata;
-
-  // Desglose cotización empleado (suma total = ssEmployeeRate)
-  const ccRate    = 4.70;  // contingencias comunes
-  const atRate    = 1.55;  // accidentes trabajo / desempleo
-  const fpRate    = 0.10;  // formación profesional
-  const meiRate   = 0.12;  // mecanismo equidad intergeneracional
-
-  const ccAmt   = baseCotizacion * ccRate  / 100;
-  const atAmt   = baseCotizacion * atRate  / 100;
-  const fpAmt   = baseCotizacion * fpRate  / 100;
-  const meiAmt  = baseCotizacion * meiRate / 100;
-
-  return { prorrata, baseCotizacion, ccRate, atRate, fpRate, meiRate, ccAmt, atAmt, fpAmt, meiAmt };
-}
+const SS_CONCEPTS: Record<SocialSecurityLine["concept"], string> = {
+  common: "Contingencias comunes",
+  mei: "MEI",
+  unemployment: "Desempleo",
+  fogasa: "FOGASA",
+  training: "Formación profesional",
+  overtime: "Horas extraordinarias",
+  solidarity: "Solidaridad",
+};
 
 // ── Componentes ────────────────────────────────────────────────────────────────
 function TdLabel({ children, cls = "" }: { children: React.ReactNode; cls?: string }) {
@@ -77,10 +68,9 @@ export default function PrintPayslipPage({ params }: { params: Promise<{ id: str
   const reimbursement = Number(p.expenseReimbursement ?? 0);
   const netSalary   = Number(p.netSalary);
   const ssEmployer  = Number(p.ssEmployer);
-  const ssEmployeeRate = Number(p.ssEmployeeRate) * 100;
 
   const totalDeducciones = ssEmployee + irpfAmt + otherDed;
-  const ss = computeSS(grossSalary, ssEmployeeRate);
+  const ss = p.ssBreakdown ?? null;
 
   // Horas estándar mes
   const workingDays = 22;
@@ -249,11 +239,16 @@ export default function PrintPayslipPage({ params }: { params: Promise<{ id: str
         {/* ── CUADRO COTIZACIONES SS ── */}
         <div className="mt-4 border-t border-gray-600 pt-2">
           <div className="flex gap-8">
-            {/* Columna izq: composición base */}
+            {/* Columna izq: bases (salario anual / 12, pagas extra prorrateadas) */}
             <div className="space-y-[3px] min-w-[200px]">
               <p>Remuneración T.&nbsp;&nbsp;<span className="font-mono">{fmtN(grossSalary)}</span></p>
-              <p>Prorrata Pagas&nbsp;&nbsp;&nbsp;<span className="font-mono">{fmtN(ss.prorrata)}</span></p>
-              <p className="border-t border-gray-400 pt-1 font-bold">Total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="font-mono">{fmtN(ss.baseCotizacion)}</span></p>
+              <p className="text-[10px] text-gray-600">Pagas extra prorrateadas</p>
+              {ss && (
+                <>
+                  <p className="border-t border-gray-400 pt-1">Base C.C.&nbsp;&nbsp;&nbsp;<span className="font-mono">{fmtN(ss.commonBase)}</span></p>
+                  <p>Base desempleo/FP&nbsp;&nbsp;<span className="font-mono">{fmtN(ss.professionalBase)}</span></p>
+                </>
+              )}
             </div>
             {/* Columna dcha: desglose cotizaciones */}
             <div className="flex-1">
@@ -261,42 +256,39 @@ export default function PrintPayslipPage({ params }: { params: Promise<{ id: str
                 <thead>
                   <tr className="border-b border-gray-400">
                     <th className="text-left py-1 px-1 font-bold">Concepto</th>
-                    <th className="text-right py-1 px-1 font-bold">Importe</th>
-                    <th className="text-right py-1 px-1 font-bold">%</th>
-                    <th className="text-right py-1 px-1 font-bold">EUR</th>
+                    <th className="text-right py-1 px-1 font-bold">Base</th>
+                    <th className="text-right py-1 px-1 font-bold">% Trab.</th>
+                    <th className="text-right py-1 px-1 font-bold">Trabajador</th>
+                    <th className="text-right py-1 px-1 font-bold">% Emp.</th>
+                    <th className="text-right py-1 px-1 font-bold">Empresa</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td className="px-1 py-[2px]">Base C.C.</td>
-                    <TdVal>{fmtN(ss.baseCotizacion)}</TdVal>
-                    <TdVal>{ss.ccRate.toFixed(2)}</TdVal>
-                    <TdVal>{fmtN(ss.ccAmt)}</TdVal>
-                  </tr>
-                  <tr>
-                    <td className="px-1 py-[2px]">Desempleo / AT</td>
-                    <TdVal>{fmtN(ss.baseCotizacion)}</TdVal>
-                    <TdVal>{ss.atRate.toFixed(2)}</TdVal>
-                    <TdVal>{fmtN(ss.atAmt)}</TdVal>
-                  </tr>
-                  <tr>
-                    <td className="px-1 py-[2px]">B.Hrs.Extr</td>
-                    <TdVal>0,00</TdVal>
-                    <TdVal>4,85</TdVal>
-                    <TdVal>0,00</TdVal>
-                  </tr>
-                  <tr>
-                    <td className="px-1 py-[2px]">MEI + FP</td>
-                    <TdVal>{fmtN(ss.baseCotizacion)}</TdVal>
-                    <TdVal>{(ss.meiRate + ss.fpRate).toFixed(2)}</TdVal>
-                    <TdVal>{fmtN(ss.meiAmt + ss.fpAmt)}</TdVal>
-                  </tr>
+                  {ss ? ss.lines.map((l, i) => (
+                    <tr key={i}>
+                      <td className="px-1 py-[2px]">{SS_CONCEPTS[l.concept]}</td>
+                      <TdVal>{fmtN(l.base)}</TdVal>
+                      <TdVal>{fmtN(l.employeeRate)}</TdVal>
+                      <TdVal>{fmtN(l.employee)}</TdVal>
+                      <TdVal>{fmtN(l.employerRate)}</TdVal>
+                      <TdVal>{fmtN(l.employer)}</TdVal>
+                    </tr>
+                  )) : (
+                    <tr>
+                      <td className="px-1 py-[2px] text-gray-600" colSpan={6}>Desglose no disponible para esta nómina.</td>
+                    </tr>
+                  )}
                   <tr className="border-t border-gray-400 font-bold">
-                    <td className="px-1 py-[2px]" colSpan={3}>Total aportación mensual empresa a SS</td>
+                    <td className="px-1 py-[2px]" colSpan={3}>Total aportación mensual a SS</td>
+                    <TdVal>{fmtN(ssEmployee)}</TdVal>
+                    <td />
                     <TdVal>{fmtN(ssEmployer)}</TdVal>
                   </tr>
                 </tbody>
               </table>
+              <p className="mt-1 text-[10px] text-gray-600">
+                La aportación de la empresa no incluye AT/EP (accidentes de trabajo y enfermedades profesionales), cuyo tipo depende de la actividad.
+              </p>
             </div>
           </div>
         </div>

@@ -1679,7 +1679,7 @@
       "netPay": "Liquid a percebre",
       "companyCost": "Cost empresa",
       "grossSalary": "Salari brut",
-      "ssEmployer": "Cotitzacio SS empresa ({rate})",
+      "ssEmployer": "Cotitzacio SS empresa ({rate}, sense AT/EP)",
       "totalCompanyCost": "Cost total empresa",
       "taxableAllowances": "Dietes i quilometratge subjectes a IRPF",
       "expenseReimbursement": "Reemborsament de despeses (no salarial, exempt)"
@@ -3559,8 +3559,8 @@
             "desc": "Exporta el registre de jornada per empleat, projecte o data. Vàlid per a inspeccions laborals."
           },
           "i4": {
-            "title": "Alertes d'incidències",
-            "desc": "Avís automàtic quan un empleat no ha fitxat o quan hi ha hores extra no autoritzades."
+            "title": "Avisos de fitxatge",
+            "desc": "Avís al panell de control horari amb els empleats que no han fitxat avui (de dilluns a divendres), i hores extra assenyalades a cada fitxatge que passa de 8 hores."
           }
         }
       },

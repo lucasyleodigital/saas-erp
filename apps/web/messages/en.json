@@ -1680,7 +1680,7 @@
       "netPay": "Net pay",
       "companyCost": "Company cost",
       "grossSalary": "Gross salary",
-      "ssEmployer": "SS employer contribution ({rate})",
+      "ssEmployer": "SS employer contribution ({rate}, excl. work accident cover)",
       "totalCompanyCost": "Total company cost",
       "taxableAllowances": "Taxable allowances and mileage",
       "expenseReimbursement": "Expense reimbursement (non-salary, tax-exempt)"
@@ -3548,8 +3548,8 @@
             "desc": "Export time records by employee, project, or date. Valid for labor inspections."
           },
           "i4": {
-            "title": "Incident alerts",
-            "desc": "Automatic notification when an employee hasn't clocked in, or when there's unauthorized overtime."
+            "title": "Clock-in alerts",
+            "desc": "A notice in the time-tracking panel lists employees who haven't clocked in today (Monday to Friday), and any shift longer than 8 hours is flagged as overtime."
           }
         }
       },

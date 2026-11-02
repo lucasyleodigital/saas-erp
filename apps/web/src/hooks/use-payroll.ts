@@ -3,6 +3,21 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 
+export interface SocialSecurityLine {
+  concept: "common" | "mei" | "unemployment" | "fogasa" | "training" | "overtime" | "solidarity";
+  base: number;
+  employeeRate: number;
+  employerRate: number;
+  employee: number;
+  employer: number;
+}
+
+export interface SocialSecurityBreakdown {
+  commonBase: number;
+  professionalBase: number;
+  lines: SocialSecurityLine[];
+}
+
 export interface Payroll {
   id: string;
   companyId: string;
@@ -29,6 +44,8 @@ export interface Payroll {
   notes: string | null;
   createdAt: string;
   updatedAt: string;
+  // Solo en el detalle; null si no cuadra con los importes guardados (nóminas de otros ejercicios)
+  ssBreakdown?: SocialSecurityBreakdown | null;
   employee?: {
     id: string;
     firstName: string;
