@@ -5,14 +5,16 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.com";
 const SLUG = "software-nominas-pymes";
 
 export const metadata: Metadata = {
-  title: { absolute: "Software de Nóminas para Pymes España — YouWhole" },
+  title: { absolute: "Programa de nóminas para pymes con gastos y fichajes — YouWhole" },
   description:
-    "Genera nóminas automáticas con IRPF y Seguridad Social calculados. Integrado con control horario y contabilidad. Desde 29 EUR/mes.",
+    "Genera las nóminas del mes con IRPF y Seguridad Social calculados, reembolsa notas de gasto en la nómina y paga con remesa SEPA. Plan Pro, 79 €/mes con IVA.",
   keywords: [
+    "programa de nóminas para pymes",
     "software nóminas pymes España",
     "programa nóminas autónomos",
     "nóminas online España",
-    "nóminas IRPF automático",
+    "remesa SEPA nóminas",
+    "modelo 111 nóminas",
     "gestión nóminas pymes",
     "software RRHH nóminas",
     "nóminas Seguridad Social",
@@ -29,8 +31,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Software Nóminas Pymes — YouWhole",
-    description: "Nóminas automáticas con IRPF y SS calculados. Integrado con control horario y contabilidad.",
+    title: "Programa de nóminas para pymes — YouWhole",
+    description: "Nóminas del mes en un clic, junto a tu facturación, tus gastos de empleados y los modelos 111 y 190.",
     url: `${APP_URL}/${SLUG}`,
   },
 };

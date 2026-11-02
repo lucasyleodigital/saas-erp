@@ -3295,7 +3295,7 @@
         "items": {
           "f1": {
             "title": "Nóminas automáticas",
-            "desc": "Xera nóminas mensuais con retencións IRPF, Seguridade Social e deducións calculadas automaticamente segundo o contrato."
+            "desc": "Xera as nóminas do mes coa retención de IRPF e a Seguridade Social calculadas a partir do salario de cada empregado."
           },
           "f2": {
             "title": "Control horario con GPS",
@@ -3328,8 +3328,8 @@
             "desc": "Todos os empregados deben fichar entrada e saída. YouWhole rexistra e almacena cada fichaxe con timestamp e GPS."
           },
           "c2": {
-            "title": "Nóminas conformes ao convenio",
-            "desc": "Xera nóminas con todos os conceptos laborais: salario base, complementos, IRPF e cotizacións á SS."
+            "title": "Nóminas con IRPF e Seguridade Social",
+            "desc": "Xera as nóminas do mes con salario base, horas extra, plus, retención de IRPF e cotizacións, e revisa cada unha antes de aprobala."
           },
           "c3": {
             "title": "Exportación para o asesor",
@@ -3384,7 +3384,7 @@
         "items": {
           "i1": {
             "title": "Horas → Nóminas",
-            "desc": "As horas rexistradas alimentan directamente o cálculo de nóminas. As horas extra calcúlanse soas."
+            "desc": "Co rexistro de horas de cada empregado á man, engades as horas extra á súa nómina do mes antes de aprobala."
           },
           "i2": {
             "title": "Horas → Proxectos",
@@ -3674,73 +3674,102 @@
     },
     "nominas": {
       "seo": {
-        "title": "Software de Nóminas para Pemes España — YouWhole",
-        "description": "Xera nominas automaticas con IRPF e Seguridade Social calculados. Integrado con control horario e contabilidade. Desde 29 EUR/mes.",
-        "ogTitle": "Software Nóminas Pemes — YouWhole",
-        "ogDescription": "Nóminas automáticas con IRPF e SS calculados. Integrado con control horario e contabilidade."
+        "title": "Programa de nóminas para pemes con gastos e fichaxes — YouWhole",
+        "description": "Xera as nóminas do mes co IRPF e a Seguridade Social calculados, reembolsa notas de gasto na nómina e paga con remesa SEPA. Plan Pro, 79 €/mes con IVE.",
+        "ogTitle": "Programa de nóminas para pemes — YouWhole",
+        "ogDescription": "Nóminas do mes nun clic, xunto á túa facturación, aos gastos de empregados e aos modelos 111 e 190."
       },
-      "badge": "Nóminas integradas con RRHH",
-      "h1Line1": "Software de nóminas para pemes",
-      "h1Highlight": "sen erros de cálculo",
-      "subtitle": "YouWhole calcula automaticamente o IRPF e a Seguridade Social de cada empregado. Xera nóminas en segundos, integradas co control horario e a contabilidade.",
-      "ctaPrimary": "Probar gratis",
-      "ctaSecondary": "Solicitar demo",
-      "trustLine": "Sen permanencia · IRPF e SS automáticos · Soporte en galego",
+      "badge": "Incluído no plan Pro",
+      "h1Line1": "Programa de nóminas para pemes",
+      "h1Highlight": "xunto á túa facturación e aos teus gastos",
+      "subtitle": "YouWhole prepara as nóminas de todos os teus empregados nun clic, co IRPF e a Seguridade Social calculados, e únaas aos gastos de empregados, ao control horario e aos modelos 111 e 190.",
+      "ctaPrimary": "Comezar gratis",
+      "ctaSecondary": "Falar co equipo",
+      "trustLine": "Plan Pro, 79 €/mes con IVE · Ata 10 empregados · Sen permanencia",
       "features": {
-        "title": "Nóminas sen complicacións",
-        "subtitle": "Deseñado para xestores que precisan procesar nóminas rápido, sen ser expertos en dereito laboral.",
+        "title": "Que fai YouWhole coas túas nóminas",
+        "subtitle": "Pensado para pequenas empresas que queren preparar e pagar as nóminas sen saír do programa co que facturan.",
         "items": {
           "f1": {
-            "title": "Cálculo automático de IRPF",
-            "desc": "YouWhole calcula a retención IRPF de cada empregado segundo a súa situación persoal e o tramo que lle corresponde."
+            "title": "Nóminas do mes nun clic",
+            "desc": "Xera a nómina de cada empregado activo a partir do seu salario. Antes de aprobala podes engadir horas extra, plus e deducións."
           },
           "f2": {
-            "title": "Seguridade Social",
-            "desc": "Cotizacións á Seguridade Social calculadas automaticamente por continxencias comúns, desemprego e formación."
+            "title": "IRPF e Seguridade Social calculados",
+            "desc": "Propón unha retención de IRPF segundo o salario anual e calcula a cotización do traballador e da empresa. Podes fixar o tipo de IRPF de cada empregado."
           },
           "f3": {
-            "title": "Nómina mensual en segundos",
-            "desc": "Cos datos do contrato e as horas traballadas, a nómina de cada empregado xérase nun clic."
+            "title": "Notas de gasto na nómina",
+            "desc": "Os gastos aprobados de quilometraxe, axudas de custo e tíckets súmanse á nómina: a parte exenta como reembolso e o exceso como retribución."
           },
           "f4": {
-            "title": "Integrado con control horario",
-            "desc": "As horas rexistradas alimentan directamente a nómina. As horas extra calcúlanse e aplícanse automaticamente."
+            "title": "Remesa SEPA para pagar",
+            "desc": "Descarga o ficheiro SEPA coas transferencias de todas as nóminas do mes e súbeo ao teu banco."
           },
           "f5": {
-            "title": "Portal do empregado",
-            "desc": "Cada empregado accede ás súas nóminas históricas desde a súa conta. Sen imprimir, sen enviar por email."
+            "title": "Recibo para cada empregado",
+            "desc": "Cada empregado ve as súas nóminas desde a súa conta, e podes imprimir ou gardar o recibo en PDF."
           },
           "f6": {
-            "title": "Exportación para xestor laboral",
-            "desc": "Exporta todas as nóminas en formato estándar para que o teu xestor laboral as valide antes de presentalas á SS."
+            "title": "Modelos 111 e 190",
+            "desc": "As retencións das nóminas aprobadas súmanse aos datos do modelo 111 de cada trimestre e do 190 anual."
           }
         }
       },
       "howItWorks": {
-        "title": "Como funciona o proceso de nóminas",
+        "title": "Como funciona cada mes",
         "steps": {
           "s1": {
-            "t": "Configuras o contrato",
-            "d": "Introduces o salario bruto, tipo de contrato, IRPF aplicable e datos da SS do empregado."
+            "t": "Dás de alta aos teus empregados",
+            "d": "Co seu salario bruto mensual, NIF, número da Seguridade Social e conta bancaria."
           },
           "s2": {
-            "t": "Empregado ficha as súas horas",
-            "d": "O control horario rexistra automaticamente as horas traballadas cada día do mes."
+            "t": "Xeras as nóminas",
+            "d": "YouWhole crea un borrador por empregado co bruto, as retencións e o neto."
           },
           "s3": {
-            "t": "Xeras a nómina",
-            "d": "Cun clic, YouWhole calcula a nómina completa: bruto, deducións, IRPF, SS e neto."
+            "t": "Revisas e aprobas",
+            "d": "Engades horas extra, plus ou deducións e aprobas cada nómina."
           },
           "s4": {
-            "t": "Empregado consúltaa",
-            "d": "O empregado accede á súa nómina desde o portal. Ti expórtala para o xestor laboral."
+            "t": "Pagas",
+            "d": "Descargas a remesa SEPA, marcas as nóminas como pagadas e cada empregado ve o seu recibo."
+          }
+        }
+      },
+      "limits": {
+        "title": "O que YouWhole non fai",
+        "text": "YouWhole non presenta os seguros sociais no Sistema RED, non comunica contratos en Contrat@ e non aplica as táboas dos convenios colectivos. Se traballas cunha xestoría laboral, pode revisar as nóminas antes de que as pagues."
+      },
+      "faq": {
+        "title": "Preguntas frecuentes sobre as nóminas en YouWhole",
+        "items": {
+          "q1": {
+            "q": "Canto custa o programa de nóminas?",
+            "a": "As nóminas están no plan Pro: 79 € ao mes co IVE incluído, ata 10 empregados e sen permanencia. Para máis empregados está o plan Enterprise."
+          },
+          "q2": {
+            "q": "Como calcula YouWhole o IRPF?",
+            "a": "Propón unha retención a partir do salario anual do empregado. Podes cambiala en cada nómina polo tipo que che indique a túa xestoría ou o que resulte dos datos do modelo 145 do traballador."
+          },
+          "q3": {
+            "q": "YouWhole presenta os seguros sociais?",
+            "a": "Non. YouWhole calcula as nóminas, prepara a remesa de pagamento e os datos dos modelos 111 e 190, pero a presentación das cotizacións no Sistema RED faina a empresa ou a súa xestoría."
+          },
+          "q4": {
+            "q": "Podo pagar os gastos dos empregados na nómina?",
+            "a": "Si. As notas de gasto aprobadas con reembolso en nómina engádense á do mes: a parte exenta non tributa e o exceso súmase como retribución."
+          },
+          "q5": {
+            "q": "Os empregados poden ver as súas nóminas?",
+            "a": "Si. Cada empregado entra coa súa conta e consulta os seus recibos. Tamén podes imprimilos ou gardalos en PDF."
           }
         }
       },
       "finalCta": {
-        "title": "Nóminas listas en minutos cada mes",
-        "subtitle": "Gratis para sempre. Sen tarxeta. IRPF e SS calculados automaticamente.",
-        "cta": "Comezar gratis agora"
+        "title": "Prepara as nóminas do mes en minutos",
+        "subtitle": "Comeza co plan gratuíto e pasa a Pro cando contrates o teu primeiro empregado. Sen permanencia.",
+        "cta": "Crear conta gratis"
       }
     }
   },

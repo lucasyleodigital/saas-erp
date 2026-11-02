@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { MarketingNav } from "@/components/marketing/nav";
 import { MarketingFooter } from "@/components/marketing/footer";
+import { SatelliteFaq } from "@/components/marketing/pages/satellite-faq";
 
 const FEATURE_KEYS = ["f1", "f2", "f3", "f4", "f5", "f6"] as const;
 const STEP_KEYS = ["s1", "s2", "s3", "s4"] as const;
@@ -78,6 +79,19 @@ export function NominasContent() {
             </div>
           </div>
         </section>
+
+        {/* Límites */}
+        <section className="py-16 bg-background">
+          <div className="container mx-auto px-4 max-w-3xl">
+            <div className="rounded-xl border p-6">
+              <h2 className="text-xl font-bold mb-2">{t("limits.title")}</h2>
+              <p className="text-muted-foreground">{t("limits.text")}</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Preguntas frecuentes */}
+        <SatelliteFaq namespace="nominas" />
 
         {/* CTA */}
         <section className="py-24 bg-primary/5 border-t">

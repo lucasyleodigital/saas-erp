@@ -3423,7 +3423,7 @@
         "items": {
           "f1": {
             "title": "Automatic payroll",
-            "desc": "Generate monthly payroll with withholding tax, Social Security, and deductions automatically calculated based on the contract."
+            "desc": "Generate monthly payroll with IRPF withholding and Social Security calculated from each employee's salary."
           },
           "f2": {
             "title": "GPS time tracking",
@@ -3456,8 +3456,8 @@
             "desc": "Every employee must clock in and out. YouWhole logs and stores each entry with a timestamp and GPS location."
           },
           "c2": {
-            "title": "Payroll compliant with collective agreements",
-            "desc": "Generate payslips with every labor concept: base salary, supplements, withholding tax, and Social Security contributions."
+            "title": "Payroll with IRPF and Social Security",
+            "desc": "Generate monthly payslips with base salary, overtime, bonuses, IRPF withholding and contributions, and review each one before approving it."
           },
           "c3": {
             "title": "Export for your advisor",
@@ -3512,7 +3512,7 @@
         "items": {
           "i1": {
             "title": "Hours → Payroll",
-            "desc": "Logged hours feed directly into payroll calculations. Overtime is calculated automatically."
+            "desc": "With each employee's time records at hand, you add overtime to their monthly payslip before approving it."
           },
           "i2": {
             "title": "Hours → Projects",
@@ -3802,73 +3802,102 @@
     },
     "nominas": {
       "seo": {
-        "title": "Payroll Software for SMEs in Spain — YouWhole",
-        "description": "Generate automatic payroll with withholding tax and Social Security calculated. Integrated with time tracking. From 29 EUR/month.",
-        "ogTitle": "Payroll Software for SMEs — YouWhole",
-        "ogDescription": "Automatic payroll with withholding tax and Social Security calculated. Integrated with time tracking and accounting."
+        "title": "Payroll software for small businesses with expenses and time tracking — YouWhole",
+        "description": "Run the monthly payroll with income tax withholding and Social Security calculated, reimburse expense claims through payroll and pay with a SEPA batch. Pro plan, €79/month with VAT.",
+        "ogTitle": "Payroll software for small businesses — YouWhole",
+        "ogDescription": "Monthly payroll in one click, alongside your invoicing, employee expenses and forms 111 and 190."
       },
-      "badge": "Payroll integrated with HR",
-      "h1Line1": "Payroll software for SMEs",
-      "h1Highlight": "with zero calculation errors",
-      "subtitle": "YouWhole automatically calculates each employee's withholding tax and Social Security contributions. Generate payroll in seconds, integrated with time tracking and accounting.",
-      "ctaPrimary": "Try it for free",
-      "ctaSecondary": "Request a demo",
-      "trustLine": "No lock-in · Automatic tax and Social Security · Support in English",
+      "badge": "Included in the Pro plan",
+      "h1Line1": "Payroll software for small businesses,",
+      "h1Highlight": "alongside your invoicing and expenses",
+      "subtitle": "YouWhole prepares payslips for all your employees in one click, with income tax withholding (IRPF) and Social Security calculated, and links them to employee expenses, time tracking and forms 111 and 190.",
+      "ctaPrimary": "Start for free",
+      "ctaSecondary": "Talk to the team",
+      "trustLine": "Pro plan, €79/month with VAT · Up to 10 employees · No minimum term",
       "features": {
-        "title": "Payroll without complications",
-        "subtitle": "Built for managers who need to process payroll fast, without being labor-law experts.",
+        "title": "What YouWhole does with your payroll",
+        "subtitle": "Built for small businesses that want to prepare and pay payroll without leaving the software they invoice with.",
         "items": {
           "f1": {
-            "title": "Automatic withholding-tax calculation",
-            "desc": "YouWhole calculates each employee's withholding tax based on their personal situation and applicable bracket."
+            "title": "Monthly payroll in one click",
+            "desc": "Creates a payslip for each active employee from their salary. Before approving it you can add overtime, bonuses and deductions."
           },
           "f2": {
-            "title": "Social Security",
-            "desc": "Social Security contributions automatically calculated for common contingencies, unemployment, and training."
+            "title": "IRPF and Social Security calculated",
+            "desc": "Suggests an IRPF withholding rate based on annual salary and calculates employee and employer contributions. You can set the IRPF rate for each employee."
           },
           "f3": {
-            "title": "Monthly payroll in seconds",
-            "desc": "With the contract data and worked hours, each employee's payslip is generated with one click."
+            "title": "Expense claims in payroll",
+            "desc": "Approved mileage, per diem and receipt expenses are added to the payslip: the exempt part as a reimbursement and any excess as pay."
           },
           "f4": {
-            "title": "Integrated with time tracking",
-            "desc": "Logged hours feed directly into payroll. Overtime is calculated and applied automatically."
+            "title": "SEPA batch for payment",
+            "desc": "Download the SEPA file with the transfers for every payslip of the month and upload it to your bank."
           },
           "f5": {
-            "title": "Employee portal",
-            "desc": "Every employee accesses their payslip history from their own account. No printing, no emailing."
+            "title": "A payslip for every employee",
+            "desc": "Each employee sees their payslips from their own account, and you can print or save them as PDF."
           },
           "f6": {
-            "title": "Export for labor advisor",
-            "desc": "Export all payroll in a standard format so your labor advisor can validate it before filing with Social Security."
+            "title": "Forms 111 and 190",
+            "desc": "Withholdings from approved payslips feed the data for the quarterly form 111 and the annual form 190."
           }
         }
       },
       "howItWorks": {
-        "title": "How the payroll process works",
+        "title": "How it works each month",
         "steps": {
           "s1": {
-            "t": "You set up the contract",
-            "d": "Enter the gross salary, contract type, applicable withholding tax, and the employee's Social Security data."
+            "t": "Add your employees",
+            "d": "With their gross monthly salary, tax ID, Social Security number and bank account."
           },
           "s2": {
-            "t": "The employee clocks their hours",
-            "d": "Time tracking automatically logs the hours worked each day of the month."
+            "t": "Generate the payroll",
+            "d": "YouWhole creates a draft per employee with gross pay, withholdings and net pay."
           },
           "s3": {
-            "t": "You generate the payslip",
-            "d": "With one click, YouWhole calculates the full payslip: gross, deductions, withholding tax, Social Security, and net."
+            "t": "Review and approve",
+            "d": "Add overtime, bonuses or deductions and approve each payslip."
           },
           "s4": {
-            "t": "The employee checks it",
-            "d": "The employee accesses their payslip from the portal. You export it for the labor advisor."
+            "t": "Pay",
+            "d": "Download the SEPA batch, mark the payslips as paid and each employee sees their payslip."
+          }
+        }
+      },
+      "limits": {
+        "title": "What YouWhole does not do",
+        "text": "YouWhole does not file Social Security contributions through the RED System, does not register contracts in Contrat@ and does not apply collective agreement pay scales. If you work with a payroll advisor, they can review the payslips before you pay them."
+      },
+      "faq": {
+        "title": "Frequently asked questions about payroll in YouWhole",
+        "items": {
+          "q1": {
+            "q": "How much does the payroll software cost?",
+            "a": "Payroll is part of the Pro plan: €79 a month with VAT included, up to 10 employees and no minimum term. The Enterprise plan covers more employees."
+          },
+          "q2": {
+            "q": "How does YouWhole calculate IRPF?",
+            "a": "It suggests a withholding rate from the employee's annual salary. You can change it on each payslip to the rate your advisor gives you or the one resulting from the employee's form 145."
+          },
+          "q3": {
+            "q": "Does YouWhole file Social Security contributions?",
+            "a": "No. YouWhole calculates payroll and prepares the payment batch and the data for forms 111 and 190, but contributions are filed through the RED System by the company or its advisor."
+          },
+          "q4": {
+            "q": "Can I pay employee expenses through payroll?",
+            "a": "Yes. Approved expense claims set to be reimbursed through payroll are added to that month's payslip: the exempt part is tax-free and any excess is added as pay."
+          },
+          "q5": {
+            "q": "Can employees see their payslips?",
+            "a": "Yes. Each employee signs in with their own account and checks their payslips. You can also print them or save them as PDF."
           }
         }
       },
       "finalCta": {
-        "title": "Payroll ready in minutes every month",
-        "subtitle": "Free forever. No card. Withholding tax and Social Security calculated automatically.",
-        "cta": "Start for free now"
+        "title": "Prepare the monthly payroll in minutes",
+        "subtitle": "Start on the free plan and move to Pro when you hire your first employee. No minimum term.",
+        "cta": "Create a free account"
       }
     }
   },

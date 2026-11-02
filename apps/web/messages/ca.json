@@ -3434,7 +3434,7 @@
         "items": {
           "f1": {
             "title": "Nòmines automàtiques",
-            "desc": "Genera nòmines mensuals amb retencions IRPF, Seguretat Social i deduccions calculades automàticament segons el contracte."
+            "desc": "Genera les nòmines del mes amb la retenció d'IRPF i la Seguretat Social calculades a partir del salari de cada empleat."
           },
           "f2": {
             "title": "Control horari amb GPS",
@@ -3467,8 +3467,8 @@
             "desc": "Tots els empleats han de fitxar entrada i sortida. YouWhole registra i emmagatzema cada fitxatge amb marca horària i GPS."
           },
           "c2": {
-            "title": "Nòmines conformes al conveni",
-            "desc": "Genera nòmines amb tots els conceptes laborals: salari base, complements, IRPF i cotitzacions a la SS."
+            "title": "Nòmines amb IRPF i Seguretat Social",
+            "desc": "Genera les nòmines del mes amb salari base, hores extra, plusos, retenció d'IRPF i cotitzacions, i revisa cadascuna abans d'aprovar-la."
           },
           "c3": {
             "title": "Exportació per a l'assessor",
@@ -3523,7 +3523,7 @@
         "items": {
           "i1": {
             "title": "Hores → Nòmines",
-            "desc": "Les hores registrades alimenten directament el càlcul de nòmines. Les hores extra es calculen soles."
+            "desc": "Amb el registre d'hores de cada empleat a mà, afegeixes les hores extra a la seva nòmina del mes abans d'aprovar-la."
           },
           "i2": {
             "title": "Hores → Projectes",
@@ -3813,73 +3813,102 @@
     },
     "nominas": {
       "seo": {
-        "title": "Programari de Nòmines per a Pimes Espanya — YouWhole",
-        "description": "Genera nomines automatiques amb IRPF i Seguretat Social calculats. Integrat amb control horari i comptabilitat. Des de 29 EUR/mes.",
-        "ogTitle": "Programari Nòmines Pimes — YouWhole",
-        "ogDescription": "Nòmines automàtiques amb IRPF i SS calculats. Integrat amb control horari i comptabilitat."
+        "title": "Programa de nòmines per a pimes amb despeses i fitxatges — YouWhole",
+        "description": "Genera les nòmines del mes amb IRPF i Seguretat Social calculats, reemborsa notes de despesa a la nòmina i paga amb remesa SEPA. Pla Pro, 79 €/mes amb IVA.",
+        "ogTitle": "Programa de nòmines per a pimes — YouWhole",
+        "ogDescription": "Nòmines del mes en un clic, juntament amb la teva facturació, les despeses d'empleats i els models 111 i 190."
       },
-      "badge": "Nòmines integrades amb RRHH",
-      "h1Line1": "Programari de nòmines per a pimes",
-      "h1Highlight": "sense errors de càlcul",
-      "subtitle": "YouWhole calcula automàticament l'IRPF i la Seguretat Social de cada empleat. Genera nòmines en segons, integrades amb el control horari i la comptabilitat.",
-      "ctaPrimary": "Provar gratis",
-      "ctaSecondary": "Sol·licitar demo",
-      "trustLine": "Sense permanència · IRPF i SS automàtics · Suport en català",
+      "badge": "Inclòs en el pla Pro",
+      "h1Line1": "Programa de nòmines per a pimes",
+      "h1Highlight": "juntament amb la teva facturació i les teves despeses",
+      "subtitle": "YouWhole prepara les nòmines de tots els teus empleats en un clic, amb l'IRPF i la Seguretat Social calculats, i les uneix a les despeses d'empleats, el control horari i els models 111 i 190.",
+      "ctaPrimary": "Començar gratis",
+      "ctaSecondary": "Parlar amb l'equip",
+      "trustLine": "Pla Pro, 79 €/mes amb IVA · Fins a 10 empleats · Sense permanència",
       "features": {
-        "title": "Nòmines sense complicacions",
-        "subtitle": "Dissenyat per a gestors que necessiten processar nòmines ràpid, sense ser experts en dret laboral.",
+        "title": "Què fa YouWhole amb les teves nòmines",
+        "subtitle": "Pensat per a petites empreses que volen preparar i pagar les nòmines sense sortir del programa amb què facturen.",
         "items": {
           "f1": {
-            "title": "Càlcul automàtic d'IRPF",
-            "desc": "YouWhole calcula la retenció IRPF de cada empleat segons la seva situació personal i el tram que li correspon."
+            "title": "Nòmines del mes en un clic",
+            "desc": "Genera la nòmina de cada empleat actiu a partir del seu salari. Abans d'aprovar-la pots afegir hores extra, plusos i deduccions."
           },
           "f2": {
-            "title": "Seguretat Social",
-            "desc": "Cotitzacions a la Seguretat Social calculades automàticament per contingències comunes, atur i formació."
+            "title": "IRPF i Seguretat Social calculats",
+            "desc": "Proposa una retenció d'IRPF segons el salari anual i calcula la cotització del treballador i de l'empresa. Pots fixar el tipus d'IRPF de cada empleat."
           },
           "f3": {
-            "title": "Nòmina mensual en segons",
-            "desc": "Amb les dades del contracte i les hores treballades, la nòmina de cada empleat es genera en un clic."
+            "title": "Notes de despesa a la nòmina",
+            "desc": "Les despeses aprovades de quilometratge, dietes i tiquets se sumen a la nòmina: la part exempta com a reemborsament i l'excés com a retribució."
           },
           "f4": {
-            "title": "Integrat amb control horari",
-            "desc": "Les hores registrades alimenten directament la nòmina. Les hores extra es calculen i apliquen automàticament."
+            "title": "Remesa SEPA per pagar",
+            "desc": "Descarrega el fitxer SEPA amb les transferències de totes les nòmines del mes i puja'l al teu banc."
           },
           "f5": {
-            "title": "Portal de l'empleat",
-            "desc": "Cada empleat accedeix a les seves nòmines històriques des del seu compte. Sense imprimir, sense enviar per email."
+            "title": "Rebut per a cada empleat",
+            "desc": "Cada empleat veu les seves nòmines des del seu compte, i pots imprimir o desar el rebut en PDF."
           },
           "f6": {
-            "title": "Exportació per a gestor laboral",
-            "desc": "Exporta totes les nòmines en format estàndard perquè el teu gestor laboral les validi abans de presentar-les a la SS."
+            "title": "Models 111 i 190",
+            "desc": "Les retencions de les nòmines aprovades se sumen a les dades del model 111 de cada trimestre i del 190 anual."
           }
         }
       },
       "howItWorks": {
-        "title": "Com funciona el procés de nòmines",
+        "title": "Com funciona cada mes",
         "steps": {
           "s1": {
-            "t": "Configures el contracte",
-            "d": "Introdueixes el salari brut, tipus de contracte, IRPF aplicable i dades de la SS de l'empleat."
+            "t": "Dones d'alta els teus empleats",
+            "d": "Amb el seu salari brut mensual, NIF, número de la Seguretat Social i compte bancari."
           },
           "s2": {
-            "t": "L'empleat fitxa les seves hores",
-            "d": "El control horari registra automàticament les hores treballades cada dia del mes."
+            "t": "Generes les nòmines",
+            "d": "YouWhole crea un esborrany per empleat amb el brut, les retencions i el net."
           },
           "s3": {
-            "t": "Generes la nòmina",
-            "d": "Amb un clic, YouWhole calcula la nòmina completa: brut, deduccions, IRPF, SS i net."
+            "t": "Revises i aproves",
+            "d": "Afegeixes hores extra, plusos o deduccions i aproves cada nòmina."
           },
           "s4": {
-            "t": "L'empleat la consulta",
-            "d": "L'empleat accedeix a la seva nòmina des del portal. Tu l'exportes per al gestor laboral."
+            "t": "Pagues",
+            "d": "Descarregues la remesa SEPA, marques les nòmines com a pagades i cada empleat veu el seu rebut."
+          }
+        }
+      },
+      "limits": {
+        "title": "El que YouWhole no fa",
+        "text": "YouWhole no presenta les assegurances socials al Sistema RED, no comunica contractes a Contrat@ i no aplica les taules dels convenis col·lectius. Si treballes amb una gestoria laboral, pot revisar les nòmines abans que les paguis."
+      },
+      "faq": {
+        "title": "Preguntes freqüents sobre les nòmines a YouWhole",
+        "items": {
+          "q1": {
+            "q": "Quant costa el programa de nòmines?",
+            "a": "Les nòmines són al pla Pro: 79 € al mes amb IVA inclòs, fins a 10 empleats i sense permanència. Per a més empleats hi ha el pla Enterprise."
+          },
+          "q2": {
+            "q": "Com calcula YouWhole l'IRPF?",
+            "a": "Proposa una retenció a partir del salari anual de l'empleat. Pots canviar-la a cada nòmina pel tipus que t'indiqui la teva gestoria o el que resulti de les dades del model 145 del treballador."
+          },
+          "q3": {
+            "q": "YouWhole presenta les assegurances socials?",
+            "a": "No. YouWhole calcula les nòmines, prepara la remesa de pagament i les dades dels models 111 i 190, però la presentació de les cotitzacions al Sistema RED la fa l'empresa o la seva gestoria."
+          },
+          "q4": {
+            "q": "Puc pagar les despeses dels empleats a la nòmina?",
+            "a": "Sí. Les notes de despesa aprovades amb reemborsament en nòmina s'afegeixen a la del mes: la part exempta no tributa i l'excés se suma com a retribució."
+          },
+          "q5": {
+            "q": "Els empleats poden veure les seves nòmines?",
+            "a": "Sí. Cada empleat entra amb el seu compte i consulta els seus rebuts. També pots imprimir-los o desar-los en PDF."
           }
         }
       },
       "finalCta": {
-        "title": "Nòmines llestes en minuts cada mes",
-        "subtitle": "Gratis per sempre. Sense targeta. IRPF i SS calculats automàticament.",
-        "cta": "Començar gratis ara"
+        "title": "Prepara les nòmines del mes en minuts",
+        "subtitle": "Comença amb el pla gratuït i passa a Pro quan contractis el teu primer empleat. Sense permanència.",
+        "cta": "Crear compte gratis"
       }
     }
   },

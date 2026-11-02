@@ -3368,7 +3368,7 @@
         "items": {
           "f1": {
             "title": "Nomina automatikoak",
-            "desc": "Sortu hileroko nominak, kontratuaren arabera automatikoki kalkulatutako IRPF, Gizarte Segurantza eta kenkariekin."
+            "desc": "Sortu hileko nominak PFEZ atxikipena eta Gizarte Segurantza langile bakoitzaren soldatatik kalkulatuta."
           },
           "f2": {
             "title": "GPS bidezko ordutegi-kontrola",
@@ -3401,8 +3401,8 @@
             "desc": "Langile guztiek sarrera eta irteera fitxatu behar dute. YouWholek fitxaketa bakoitza denbora-zigiluarekin eta GPSekin erregistratzen eta gordetzen du."
           },
           "c2": {
-            "title": "Hitzarmenaren araberako nominak",
-            "desc": "Sortu nominak lan-kontzeptu guztiekin: oinarrizko soldata, osagarriak, IRPF eta GSaren kotizazioak."
+            "title": "Nominak PFEZarekin eta Gizarte Segurantzarekin",
+            "desc": "Sortu hileko nominak oinarrizko soldata, aparteko ordu, osagarri, PFEZ atxikipen eta kotizazioekin, eta berrikusi bakoitza onartu aurretik."
           },
           "c3": {
             "title": "Aholkularirako esportazioa",
@@ -3457,7 +3457,7 @@
         "items": {
           "i1": {
             "title": "Orduak → Nominak",
-            "desc": "Erregistratutako orduek zuzenean elikatzen dute nominaren kalkulua. Aparteko orduak berez kalkulatzen dira."
+            "desc": "Langile bakoitzaren ordu-erregistroa eskura duzula, aparteko orduak hileko nominari gehitzen dizkiozu onartu aurretik."
           },
           "i2": {
             "title": "Orduak → Proiektuak",
@@ -3747,73 +3747,102 @@
     },
     "nominas": {
       "seo": {
-        "title": "ETEentzako Nomina Softwarea Espainian — YouWhole",
-        "description": "Sortu nomina automatikoak IRPF eta Gizarte Segurantza kalkulatuekin. Ordutegi-kontrolarekin integratua. 29 EUR/hilean hasita.",
-        "ogTitle": "ETEentzako Nomina Softwarea — YouWhole",
-        "ogDescription": "Nomina automatikoak IRPF eta GS kalkulatuekin. Ordutegi-kontrola eta kontabilitatearekin integratua."
+        "title": "Nominen programa ETEentzat, gastu eta fitxaketekin — YouWhole",
+        "description": "Sortu hileko nominak PFEZa eta Gizarte Segurantza kalkulatuta, itzuli gastu-oharrak nominan eta ordaindu SEPA igorpenarekin. Pro plana, hilean 79 € BEZarekin.",
+        "ogTitle": "Nominen programa ETEentzat — YouWhole",
+        "ogDescription": "Hileko nominak klik batean, zure fakturazioarekin, langileen gastuekin eta 111 eta 190 ereduekin batera."
       },
-      "badge": "Giza baliabideekin integratutako nominak",
-      "h1Line1": "Kalkulu-errorerik gabeko",
-      "h1Highlight": "ETEentzako nomina softwarea",
-      "subtitle": "YouWholek automatikoki kalkulatzen ditu langile bakoitzaren IRPFa eta Gizarte Segurantza. Sortu nominak segundotan, ordutegi-kontrola eta kontabilitatearekin integratuta.",
-      "ctaPrimary": "Probatu doan",
-      "ctaSecondary": "Eskatu demo bat",
-      "trustLine": "Iraunkortasunik gabe · IRPF eta GS automatikoak · Euskarazko laguntza",
+      "badge": "Pro planean sartuta",
+      "h1Line1": "Nominen programa ETEentzat,",
+      "h1Highlight": "zure fakturazio eta gastuekin batera",
+      "subtitle": "YouWholek zure langile guztien nominak prestatzen ditu klik batean, PFEZa eta Gizarte Segurantza kalkulatuta, eta langileen gastuekin, ordutegi-kontrolarekin eta 111 eta 190 ereduekin lotzen ditu.",
+      "ctaPrimary": "Hasi doan",
+      "ctaSecondary": "Hitz egin taldearekin",
+      "trustLine": "Pro plana, hilean 79 € BEZarekin · 10 langile arte · Iraunaldirik gabe",
       "features": {
-        "title": "Nominak konplikaziorik gabe",
-        "subtitle": "Lan-zuzenbidean adituak izan gabe nominak azkar prozesatu behar dituzten kudeatzaileentzat diseinatua.",
+        "title": "Zer egiten du YouWholek zure nominekin",
+        "subtitle": "Fakturatzeko erabiltzen duten programatik irten gabe nominak prestatu eta ordaindu nahi dituzten enpresa txikientzat pentsatua.",
         "items": {
           "f1": {
-            "title": "IRPF kalkulu automatikoa",
-            "desc": "YouWholek langile bakoitzaren IRPF atxikipena kalkulatzen du bere egoera pertsonalaren eta dagokion tartearen arabera."
+            "title": "Hileko nominak klik batean",
+            "desc": "Langile aktibo bakoitzaren nomina sortzen du bere soldatatik abiatuta. Onartu aurretik aparteko orduak, osagarriak eta kenkariak gehi ditzakezu."
           },
           "f2": {
-            "title": "Gizarte Segurantza",
-            "desc": "Gizarte Segurantzako kotizazioak automatikoki kalkulatuak, kontingentzia arruntak, langabezia eta prestakuntza kontuan hartuta."
+            "title": "PFEZa eta Gizarte Segurantza kalkulatuta",
+            "desc": "PFEZ atxikipen bat proposatzen du urteko soldataren arabera eta langilearen eta enpresaren kotizazioa kalkulatzen du. Langile bakoitzaren PFEZ tasa finka dezakezu."
           },
           "f3": {
-            "title": "Hileroko nomina segundotan",
-            "desc": "Kontratuaren datuekin eta lan egindako orduekin, langile bakoitzaren nomina klik batean sortzen da."
+            "title": "Gastu-oharrak nominan",
+            "desc": "Onartutako kilometraje, dieta eta tiket gastuak nominari gehitzen zaizkio: zati salbuetsia itzulketa gisa eta gainerakoa ordainsari gisa."
           },
           "f4": {
-            "title": "Ordutegi-kontrolarekin integratua",
-            "desc": "Erregistratutako orduek zuzenean elikatzen dute nomina. Aparteko orduak automatikoki kalkulatzen eta aplikatzen dira."
+            "title": "SEPA igorpena ordaintzeko",
+            "desc": "Deskargatu hileko nomina guztien transferentziak dituen SEPA fitxategia eta igo ezazu zure bankura."
           },
           "f5": {
-            "title": "Langile ataria",
-            "desc": "Langile bakoitzak bere kontutik atzitzen du bere nomina historikoa. Inprimatu gabe, emailez bidali gabe."
+            "title": "Ordainagiria langile bakoitzarentzat",
+            "desc": "Langile bakoitzak bere nominak ikusten ditu bere kontutik, eta ordainagiria inprimatu edo PDFn gorde dezakezu."
           },
           "f6": {
-            "title": "Lan-kudeatzailerako esportazioa",
-            "desc": "Esportatu nomina guztiak formatu estandarrean, zure lan-kudeatzaileak GSri aurkeztu aurretik balida ditzan."
+            "title": "111 eta 190 ereduak",
+            "desc": "Onartutako nominen atxikipenak hiruhileko bakoitzeko 111 ereduaren eta urteko 190aren datuei gehitzen zaizkie."
           }
         }
       },
       "howItWorks": {
-        "title": "Nola funtzionatzen du nomina-prozesuak",
+        "title": "Nola funtzionatzen duen hilero",
         "steps": {
           "s1": {
-            "t": "Kontratua konfiguratzen duzu",
-            "d": "Soldata gordina, kontratu mota, aplikagarri den IRPFa eta langilearen GS datuak sartzen dituzu."
+            "t": "Zure langileak altan ematen dituzu",
+            "d": "Hileko soldata gordinarekin, IFZarekin, Gizarte Segurantzako zenbakiarekin eta banku-kontuarekin."
           },
           "s2": {
-            "t": "Langileak bere orduak fitxatzen ditu",
-            "d": "Ordutegi-kontrolak automatikoki erregistratzen ditu hilabeteko egun bakoitzean lan egindako orduak."
+            "t": "Nominak sortzen dituzu",
+            "d": "YouWholek zirriborro bat sortzen du langile bakoitzeko, gordina, atxikipenak eta garbia dituela."
           },
           "s3": {
-            "t": "Nomina sortzen duzu",
-            "d": "Klik batekin, YouWholek nomina osoa kalkulatzen du: gordina, kenkariak, IRPFa, GSa eta garbia."
+            "t": "Berrikusi eta onartzen dituzu",
+            "d": "Aparteko orduak, osagarriak edo kenkariak gehitzen dituzu eta nomina bakoitza onartzen duzu."
           },
           "s4": {
-            "t": "Langileak kontsultatzen du",
-            "d": "Langileak bere nomina atarian kontsultatzen du. Zuk lan-kudeatzailerako esportatzen duzu."
+            "t": "Ordaintzen duzu",
+            "d": "SEPA igorpena deskargatzen duzu, nominak ordainduta gisa markatzen dituzu eta langile bakoitzak bere ordainagiria ikusten du."
+          }
+        }
+      },
+      "limits": {
+        "title": "YouWholek egiten ez duena",
+        "text": "YouWholek ez ditu gizarte-aseguruak RED Sisteman aurkezten, ez ditu kontratuak Contrat@-n jakinarazten eta ez ditu hitzarmen kolektiboen taulak aplikatzen. Lan-gestoria batekin lan egiten baduzu, nominak berrikus ditzake ordaindu aurretik."
+      },
+      "faq": {
+        "title": "YouWholeko nominei buruzko ohiko galderak",
+        "items": {
+          "q1": {
+            "q": "Zenbat balio du nominen programak?",
+            "a": "Nominak Pro planean daude: hilean 79 € BEZa barne, 10 langile arte eta iraunaldirik gabe. Langile gehiagorentzat Enterprise plana dago."
+          },
+          "q2": {
+            "q": "Nola kalkulatzen du YouWholek PFEZa?",
+            "a": "Langilearen urteko soldatatik abiatuta atxikipen bat proposatzen du. Nomina bakoitzean alda dezakezu zure gestoriak adierazten dizun tasarekin edo langilearen 145 ereduko datuetatik ateratzen denarekin."
+          },
+          "q3": {
+            "q": "YouWholek aurkezten ditu gizarte-aseguruak?",
+            "a": "Ez. YouWholek nominak kalkulatzen ditu, ordainketa-igorpena eta 111 eta 190 ereduen datuak prestatzen ditu, baina kotizazioak RED Sisteman enpresak edo bere gestoriak aurkezten ditu."
+          },
+          "q4": {
+            "q": "Langileen gastuak nominan ordain ditzaket?",
+            "a": "Bai. Nominan itzultzeko onartutako gastu-oharrak hileko nominari gehitzen zaizkio: zati salbuetsiak ez du zergarik ordaintzen eta gainerakoa ordainsari gisa gehitzen da."
+          },
+          "q5": {
+            "q": "Langileek beren nominak ikus ditzakete?",
+            "a": "Bai. Langile bakoitza bere kontuarekin sartzen da eta bere ordainagiriak kontsultatzen ditu. Inprimatu edo PDFn gorde ere egin ditzakezu."
           }
         }
       },
       "finalCta": {
-        "title": "Nominak minutu gutxitan hilero prest",
-        "subtitle": "Doan betiko. Txartelik gabe. IRPF eta GS automatikoki kalkulatuak.",
-        "cta": "Hasi doan orain"
+        "title": "Prestatu hileko nominak minutu gutxitan",
+        "subtitle": "Hasi doako planarekin eta pasa Prora zure lehen langilea kontratatzen duzunean. Iraunaldirik gabe.",
+        "cta": "Sortu kontua doan"
       }
     }
   },
