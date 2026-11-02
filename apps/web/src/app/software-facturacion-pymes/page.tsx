@@ -4,12 +4,14 @@ import { FacturacionPymesContent } from "@/components/marketing/pages/facturacio
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://youwhole.com";
 
 export const metadata: Metadata = {
-  title: { absolute: "Software de Facturación para Pymes — YouWhole" },
+  title: { absolute: "Software de facturación para pymes con VeriFactu — YouWhole" },
   description:
-    "Software de facturación para pymes españolas adaptado a VeriFactu, contabilidad PGC, nóminas, CRM y gestión de proyectos. Todo en uno. Desde 29 EUR/mes sin permanencia.",
+    "Programa de facturación para pymes adaptado a VeriFactu, con plan gratuito y facturas ilimitadas desde 29 €/mes con IVA. Contabilidad, CRM, inventario y banco en el mismo programa.",
   keywords: [
     "software facturación pymes",
+    "programa de facturación para pymes",
     "programa facturación España",
+    "programa facturación gratis",
     "software gestión pymes",
     "ERP pymes España",
     "facturación electrónica pymes",
@@ -28,8 +30,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Software de Facturación para Pymes — YouWhole",
-    description: "Todo lo que necesita tu pyme: facturación VeriFactu, nóminas, CRM, contabilidad PGC y más. Desde 29 EUR/mes.",
+    title: "Software de facturación para pymes — YouWhole",
+    description: "Facturas adaptadas a VeriFactu en cinco idiomas, con contabilidad, CRM, inventario y banco. Plan gratuito para empezar.",
     url: `${APP_URL}/software-facturacion-pymes`,
   },
 };

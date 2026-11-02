@@ -2814,10 +2814,10 @@
     },
     "facturacionPymes": {
       "seo": {
-        "title": "ETEentzako Fakturazio Softwarea — YouWhole",
-        "description": "ETEentzako fakturazio softwarea VeriFactu, PGC kontabilitatea, nominak eta CRM-arekin. Dena batean. 29 EUR/hilean hasita.",
-        "ogTitle": "ETEentzako Fakturazio Softwarea — YouWhole",
-        "ogDescription": "Zure ETEak behar duen guztia: VeriFactu fakturazioa, nominak, CRM, PGC kontabilitatea eta gehiago. 29 EUR/hilean hasita."
+        "title": "ETEentzako fakturazio programa VeriFacturekin — YouWhole",
+        "description": "ETEentzako fakturazio softwarea, VeriFacturako egokitua, euskarazko fakturekin, doako planarekin eta faktura mugagabeekin hilean 29 €-tik BEZarekin. Kontabilitatea, CRMa eta bankua barne.",
+        "ogTitle": "ETEentzako fakturazio programa — YouWhole",
+        "ogDescription": "Euskarazko fakturak VeriFacturako egokituta, kontabilitatearekin, CRMarekin, inbentarioarekin eta bankuarekin. Doako plana hasteko."
       },
       "badge": "Dena batean ETEentzat",
       "h1Line1": "Fakturak baino gehiago den",
@@ -2825,7 +2825,7 @@
       "subtitle": "YouWholek zure ETEak behar duen guztia biltzen du plataforma bakarrean: VeriFactu fakturazioa, kontabilitatea, nominak, CRMa, inbentarioa eta proiektuak. Integraziorik gabe. Ezustekorik gabe.",
       "ctaPrimary": "Probatu doan",
       "ctaSecondary": "Eskatu demo bat nire ETErako",
-      "trustLine": "Iraunkortasunik gabe · Euskarazko laguntza · Migrazio lagundua",
+      "trustLine": "Fakturak euskaraz · Doako plana · Iraunaldirik gabe",
       "modules": {
         "title": "8 modulu integratu plataforma bakarrean",
         "subtitle": "Ahaztu 5 programa desberdin konektatzeaz. YouWholek dena du eta datuak automatikoki partekatzen ditu moduluen artean.",
@@ -2836,11 +2836,11 @@
           },
           "m2": {
             "title": "PGC kontabilitatea",
-            "desc": "Asiento automatikoak Espainiako Kontu Plan Orokorraren arabera. Denbora errealeko kontabilitate-koadratzea aurretiko ezagutzarik gabe."
+            "desc": "Egunkari liburua KPOko kontu-planarekin, emaitzen kontua eta 303, 130 eta 347 ereduak zure faktura eta gastuetatik abiatuta. Gastuek beren idazpena automatikoki sortzen dute."
           },
           "m3": {
             "title": "Nominak eta giza baliabideak",
-            "desc": "Sortu nominak, kudeatu kontratuak eta kontrolatu langile bakoitzaren lan-denbora proiektuka."
+            "desc": "Ordutegi-kontrola proiektuka fitxatuta eta, Pro planean, nominak langile bakoitzaren ordainagiriarekin."
           },
           "m4": {
             "title": "CRM eta salmentak",
@@ -2848,15 +2848,15 @@
           },
           "m5": {
             "title": "Proiektu-kudeaketa",
-            "desc": "Kontrolatu proiektu bakoitzaren errentagarritasuna, esleitu langileak eta fakturatu lan egindako denbora."
+            "desc": "Kontrolatu proiektu bakoitzaren orduak eta errentagarritasuna eta lotu bertako fakturak."
           },
           "m6": {
             "title": "Inbentarioa eta biltegia",
-            "desc": "Kontrolatu stocka, kudeatu hornitzaileak eta sortu erosketa-eskaera automatikoak inbentarioa jaisten denean."
+            "desc": "Kontrolatu stocka, hornitzaileak eta erosketa-eskaerak, produktu bat gutxienekoaren azpitik jaisten denean abisuarekin."
           },
           "m7": {
             "title": "Bankua eta berdinkatzea",
-            "desc": "Konektatu zure banku-kontua eta berdinkatu automatikoki kobrantzak eta ordainketak zure fakturekin."
+            "desc": "Inportatu zure bankuko laburpena Excel edo CSV formatuan eta YouWholek zure fakturekin adiskidetzen du."
           },
           "m8": {
             "title": "Automatizazioak",
@@ -2886,8 +2886,33 @@
       },
       "finalCta": {
         "title": "Zure ETEa hurrengo mailarako prest?",
-        "subtitle": "Doan betiko. Txartelik gabe. Taldeak migrazioan laguntzen dizu.",
+        "subtitle": "Doan betiko. Txartelik gabe. Inportatu zure bezeroak eta fakturak minutu gutxitan.",
         "cta": "Hasi doan orain"
+      },
+      "faq": {
+        "title": "Fakturazio programari buruzko ohiko galderak",
+        "items": {
+          "q1": {
+            "q": "Ba al dago fakturatzeko doako planik?",
+            "a": "Bai. Doako planak ez du iraungitzen eta erabiltzaile 1, 5 bezero, hilean 10 faktura eta 5 aurrekontu ditu, VeriFacturekin. Starterrekin, hilean 29 € BEZarekin, fakturak mugagabeak dira."
+          },
+          "q2": {
+            "q": "Fakturak euskaraz egin ditzaket?",
+            "a": "Bai. Faktura bakoitza euskaraz, gaztelaniaz, katalanez, galizieraz edo ingelesez egin dezakezu, eta aplikazioa ere euskaraz dago."
+          },
+          "q3": {
+            "q": "Programa VeriFacturako egokituta dago?",
+            "a": "Bai, plan guztietan. Faktura bakoitzak bere erregistroa sortzen du hatz-marka digitalarekin eta QR kodearekin. 2027ko urtarrilaren 1etik derrigorrezkoa izango da sozietateentzat eta 2027ko uztailaren 1etik autonomoentzat."
+          },
+          "q4": {
+            "q": "Nire datuak beste programa batetik ekar ditzaket?",
+            "a": "Bai. Inportatzaileak bezeroak, produktuak, hornitzaileak eta fakturak kargatzen ditu zure aurreko programatik esportatutako Excel edo CSV fitxategietatik."
+          },
+          "q5": {
+            "q": "Bankua fakturekin adiskide dezaket?",
+            "a": "Bai. Zure bankuko laburpena Excel edo CSV formatuan inportatzen duzu eta YouWholek kobrantzak eta ordainketak zure fakturekin gurutzatzen ditu. Aurkitzen ez dituenak eskuz lotu ditzakezu."
+          }
+        }
       }
     },
     "verifactu": {

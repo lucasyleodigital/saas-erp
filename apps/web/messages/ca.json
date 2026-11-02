@@ -2868,10 +2868,10 @@
     },
     "facturacionPymes": {
       "seo": {
-        "title": "Software de Facturació per a Pimes — YouWhole",
-        "description": "Software de facturacio per a pimes amb VeriFactu, comptabilitat PGC, nomines i CRM. Tot en un. Des de 29 EUR/mes sense permanencia.",
-        "ogTitle": "Software de Facturació per a Pimes — YouWhole",
-        "ogDescription": "Tot el que necessita la teva pime: facturació VeriFactu, nòmines, CRM, comptabilitat PGC i més. Des de 29 EUR/mes."
+        "title": "Programa de facturació per a pimes amb VeriFactu — YouWhole",
+        "description": "Software de facturació per a pimes adaptat a VeriFactu, amb factures en català, pla gratuït i factures il·limitades des de 29 €/mes amb IVA. Comptabilitat, CRM i banc inclosos.",
+        "ogTitle": "Programa de facturació per a pimes — YouWhole",
+        "ogDescription": "Factures en català adaptades a VeriFactu, amb comptabilitat, CRM, inventari i banc. Pla gratuït per començar."
       },
       "badge": "Tot en un per a pimes",
       "h1Line1": "Software de facturació per a pimes",
@@ -2879,7 +2879,7 @@
       "subtitle": "YouWhole reuneix en una sola plataforma tot el que necessita la teva pime: facturació VeriFactu, comptabilitat, nòmines, CRM, inventari i projectes. Sense integracions. Sense sorpreses.",
       "ctaPrimary": "Provar gratis",
       "ctaSecondary": "Sol·licitar demo per a la meva pime",
-      "trustLine": "Sense permanència · Suport en català · Migració assistida",
+      "trustLine": "Factures en català · Pla gratuït · Sense permanència",
       "modules": {
         "title": "8 mòduls integrats en una sola plataforma",
         "subtitle": "Oblida't de connectar 5 programes diferents. YouWhole ho té tot i comparteix les dades entre mòduls automàticament.",
@@ -2890,11 +2890,11 @@
           },
           "m2": {
             "title": "Comptabilitat PGC",
-            "desc": "Assentaments automàtics segons el Pla General Comptable espanyol. Quadre comptable en temps real sense coneixements previs."
+            "desc": "Llibre diari amb el pla de comptes PGC, compte de resultats i models 303, 130 i 347 a partir de les teves factures i despeses. Les despeses generen el seu assentament automàticament."
           },
           "m3": {
             "title": "Nòmines i RRHH",
-            "desc": "Genera nòmines, gestiona contractes i controla el temps de treball de cada empleat per projecte."
+            "desc": "Control horari amb fitxatges per projecte i, en el pla Pro, nòmines amb rebut per a cada empleat."
           },
           "m4": {
             "title": "CRM i vendes",
@@ -2902,15 +2902,15 @@
           },
           "m5": {
             "title": "Gestió de projectes",
-            "desc": "Controla la rendibilitat de cada projecte, assigna empleats i factura el temps treballat."
+            "desc": "Controla les hores i la rendibilitat de cada projecte i vincula-hi les seves factures."
           },
           "m6": {
             "title": "Inventari i magatzem",
-            "desc": "Controla l'estoc, gestiona proveïdors i genera comandes de compra automàtiques quan l'inventari baixa."
+            "desc": "Controla l'estoc, els proveïdors i les comandes de compra, amb avís quan un producte baixa del mínim."
           },
           "m7": {
             "title": "Banc i conciliació",
-            "desc": "Connecta el teu compte bancari i concilia automàticament cobraments i pagaments amb les teves factures."
+            "desc": "Importa l'extracte del teu banc en Excel o CSV i YouWhole el concilia amb les teves factures."
           },
           "m8": {
             "title": "Automatitzacions",
@@ -2940,8 +2940,33 @@
       },
       "finalCta": {
         "title": "La teva pime preparada per al següent nivell?",
-        "subtitle": "Gratis per sempre. Sense targeta. L'equip t'ajuda amb la migració.",
+        "subtitle": "Gratis per sempre. Sense targeta. Importa els teus clients i factures en uns minuts.",
         "cta": "Començar gratis ara"
+      },
+      "faq": {
+        "title": "Preguntes freqüents sobre el programa de facturació",
+        "items": {
+          "q1": {
+            "q": "Hi ha un pla gratuït per facturar?",
+            "a": "Sí. El pla gratuït no caduca i inclou 1 usuari, 5 clients, 10 factures i 5 pressupostos al mes, amb VeriFactu. Amb Starter, per 29 € al mes amb IVA, les factures són il·limitades."
+          },
+          "q2": {
+            "q": "Puc fer les factures en català?",
+            "a": "Sí. Pots emetre cada factura en català, castellà, basc, gallec o anglès, i l'aplicació també està en català."
+          },
+          "q3": {
+            "q": "El programa està adaptat a VeriFactu?",
+            "a": "Sí, en tots els plans. Cada factura genera el seu registre amb empremta digital i codi QR. Serà obligatori des de l'1 de gener de 2027 per a societats i des de l'1 de juliol de 2027 per a autònoms."
+          },
+          "q4": {
+            "q": "Puc portar les meves dades d'un altre programa?",
+            "a": "Sí. L'importador carrega clients, productes, proveïdors i factures des de fitxers Excel o CSV exportats del teu programa anterior."
+          },
+          "q5": {
+            "q": "Puc conciliar el banc amb les factures?",
+            "a": "Sí. Importes l'extracte del teu banc en Excel o CSV i YouWhole creua els cobraments i pagaments amb les teves factures. Els que no trobi els pots vincular a mà."
+          }
+        }
       }
     },
     "verifactu": {

@@ -2729,10 +2729,10 @@
     },
     "facturacionPymes": {
       "seo": {
-        "title": "Software de Facturación para Pemes — YouWhole",
-        "description": "Software de facturacion para pemes con VeriFactu, contabilidade PGC, nominas e CRM. Todo en un. Desde 29 EUR/mes sen permanencia.",
-        "ogTitle": "Software de Facturación para Pemes — YouWhole",
-        "ogDescription": "Todo o que precisa a túa peme: facturación VeriFactu, nóminas, CRM, contabilidade PGC e máis. Desde 29 EUR/mes."
+        "title": "Programa de facturación para pemes con VeriFactu — YouWhole",
+        "description": "Software de facturación para pemes adaptado a VeriFactu, con facturas en galego, plan gratuíto e facturas ilimitadas desde 29 €/mes con IVE. Contabilidade, CRM e banco incluídos.",
+        "ogTitle": "Programa de facturación para pemes — YouWhole",
+        "ogDescription": "Facturas en galego adaptadas a VeriFactu, con contabilidade, CRM, inventario e banco. Plan gratuíto para comezar."
       },
       "badge": "Todo en un para pemes",
       "h1Line1": "Software de facturación para pemes",
@@ -2740,7 +2740,7 @@
       "subtitle": "YouWhole reúne nunha soa plataforma todo o que precisa a túa peme: facturación VeriFactu, contabilidade, nóminas, CRM, inventario e proxectos. Sen integracións. Sen sorpresas.",
       "ctaPrimary": "Probar gratis",
       "ctaSecondary": "Solicitar demo para a miña peme",
-      "trustLine": "Sen permanencia · Soporte en galego · Migración asistida",
+      "trustLine": "Facturas en galego · Plan gratuíto · Sen permanencia",
       "modules": {
         "title": "8 módulos integrados nunha soa plataforma",
         "subtitle": "Esquéncete de conectar 5 programas distintos. YouWhole téñoo todo e comparte os datos entre módulos automaticamente.",
@@ -2751,11 +2751,11 @@
           },
           "m2": {
             "title": "Contabilidade PGC",
-            "desc": "Asentos automáticos segundo o Plan Xeral Contable español. Cadre contable en tempo real sen coñecementos previos."
+            "desc": "Libro diario co plan de contas PXC, conta de resultados e modelos 303, 130 e 347 a partir das túas facturas e gastos. Os gastos xeran o seu asento automaticamente."
           },
           "m3": {
             "title": "Nóminas e RRHH",
-            "desc": "Xera nóminas, xestiona contratos e controla o tempo de traballo de cada empregado por proxecto."
+            "desc": "Control horario con fichaxes por proxecto e, no plan Pro, nóminas con recibo para cada empregado."
           },
           "m4": {
             "title": "CRM e vendas",
@@ -2763,15 +2763,15 @@
           },
           "m5": {
             "title": "Xestión de proxectos",
-            "desc": "Controla a rendibilidade de cada proxecto, asigna empregados e factura o tempo traballado."
+            "desc": "Controla as horas e a rendibilidade de cada proxecto e vincúlalle as súas facturas."
           },
           "m6": {
             "title": "Inventario e almacén",
-            "desc": "Controla o stock, xestiona provedores e xera pedidos de compra automáticos cando o inventario baixa."
+            "desc": "Controla o stock, os provedores e os pedidos de compra, con aviso cando un produto baixa do mínimo."
           },
           "m7": {
             "title": "Banco e conciliación",
-            "desc": "Conecta a túa conta bancaria e concilia automaticamente cobros e pagamentos coas túas facturas."
+            "desc": "Importa o extracto do teu banco en Excel ou CSV e YouWhole concílião coas túas facturas."
           },
           "m8": {
             "title": "Automatizacións",
@@ -2801,8 +2801,33 @@
       },
       "finalCta": {
         "title": "A túa peme lista para o seguinte nivel?",
-        "subtitle": "Gratis para sempre. Sen tarxeta. O equipo axúdache coa migración.",
+        "subtitle": "Gratis para sempre. Sen tarxeta. Importa os teus clientes e facturas nuns minutos.",
         "cta": "Comezar gratis agora"
+      },
+      "faq": {
+        "title": "Preguntas frecuentes sobre o programa de facturación",
+        "items": {
+          "q1": {
+            "q": "Hai un plan gratuíto para facturar?",
+            "a": "Si. O plan gratuíto non caduca e inclúe 1 usuario, 5 clientes, 10 facturas e 5 orzamentos ao mes, con VeriFactu. Con Starter, por 29 € ao mes con IVE, as facturas son ilimitadas."
+          },
+          "q2": {
+            "q": "Podo facer as facturas en galego?",
+            "a": "Si. Podes emitir cada factura en galego, castelán, catalán, éuscaro ou inglés, e a aplicación tamén está en galego."
+          },
+          "q3": {
+            "q": "O programa está adaptado a VeriFactu?",
+            "a": "Si, en todos os plans. Cada factura xera o seu rexistro con pegada dixital e código QR. Será obrigatorio desde o 1 de xaneiro de 2027 para sociedades e desde o 1 de xullo de 2027 para autónomos."
+          },
+          "q4": {
+            "q": "Podo traer os meus datos doutro programa?",
+            "a": "Si. O importador carga clientes, produtos, provedores e facturas desde ficheiros Excel ou CSV exportados do teu programa anterior."
+          },
+          "q5": {
+            "q": "Podo conciliar o banco coas facturas?",
+            "a": "Si. Importas o extracto do teu banco en Excel ou CSV e YouWhole cruza os cobramentos e pagamentos coas túas facturas. Os que non atope podes vinculalos á man."
+          }
+        }
       }
     },
     "verifactu": {

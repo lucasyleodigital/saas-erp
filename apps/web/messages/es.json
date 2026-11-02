@@ -2869,10 +2869,10 @@
     },
     "facturacionPymes": {
       "seo": {
-        "title": "Software de Facturación para Pymes — YouWhole",
-        "description": "Software de facturacion para pymes con VeriFactu, contabilidad PGC, nominas y CRM. Todo en uno. Desde 29 EUR/mes sin permanencia.",
-        "ogTitle": "Software de Facturación para Pymes — YouWhole",
-        "ogDescription": "Todo lo que necesita tu pyme: facturación VeriFactu, nóminas, CRM, contabilidad PGC y más. Desde 29 EUR/mes."
+        "title": "Software de facturación para pymes con VeriFactu — YouWhole",
+        "description": "Programa de facturación para pymes adaptado a VeriFactu, con plan gratuito y facturas ilimitadas desde 29 €/mes con IVA. Contabilidad, CRM, inventario y banco en el mismo programa.",
+        "ogTitle": "Software de facturación para pymes — YouWhole",
+        "ogDescription": "Facturas adaptadas a VeriFactu en cinco idiomas, con contabilidad, CRM, inventario y banco. Plan gratuito para empezar."
       },
       "badge": "Todo en uno para pymes",
       "h1Line1": "Software de facturación para pymes",
@@ -2880,7 +2880,7 @@
       "subtitle": "YouWhole reúne en una sola plataforma todo lo que necesita tu pyme: facturación VeriFactu, contabilidad, nóminas, CRM, inventario y proyectos. Sin integraciones. Sin sorpresas.",
       "ctaPrimary": "Probar gratis",
       "ctaSecondary": "Solicitar demo para mi pyme",
-      "trustLine": "Sin permanencia · Soporte en español · Migración asistida",
+      "trustLine": "Plan gratuito · Sin permanencia · Importador de clientes, productos y facturas",
       "modules": {
         "title": "8 módulos integrados en una sola plataforma",
         "subtitle": "Olvídate de conectar 5 programas distintos. YouWhole lo tiene todo y comparte los datos entre módulos automáticamente.",
@@ -2891,11 +2891,11 @@
           },
           "m2": {
             "title": "Contabilidad PGC",
-            "desc": "Asientos automáticos según el Plan General Contable español. Cuadre contable en tiempo real sin conocimientos previos."
+            "desc": "Libro diario con el plan de cuentas PGC, cuenta de resultados y modelos 303, 130 y 347 a partir de tus facturas y gastos. Los gastos generan su asiento automáticamente."
           },
           "m3": {
             "title": "Nóminas y RRHH",
-            "desc": "Genera nóminas, gestiona contratos y controla el tiempo de trabajo de cada empleado por proyecto."
+            "desc": "Control horario con fichajes por proyecto y, en el plan Pro, nóminas con recibo para cada empleado."
           },
           "m4": {
             "title": "CRM y ventas",
@@ -2903,15 +2903,15 @@
           },
           "m5": {
             "title": "Gestión de proyectos",
-            "desc": "Controla la rentabilidad de cada proyecto, asigna empleados y factura el tiempo trabajado."
+            "desc": "Controla las horas y la rentabilidad de cada proyecto y vincúlale sus facturas."
           },
           "m6": {
             "title": "Inventario y almacén",
-            "desc": "Controla el stock, gestiona proveedores y genera pedidos de compra automáticos cuando el inventario baja."
+            "desc": "Controla el stock, los proveedores y los pedidos de compra, con aviso cuando un producto baja del mínimo."
           },
           "m7": {
             "title": "Banco y conciliación",
-            "desc": "Conecta tu cuenta bancaria y concilia automáticamente cobros y pagos con tus facturas."
+            "desc": "Importa el extracto de tu banco en Excel o CSV y YouWhole lo concilia con tus facturas."
           },
           "m8": {
             "title": "Automatizaciones",
@@ -2941,8 +2941,33 @@
       },
       "finalCta": {
         "title": "¿Tu pyme lista para el siguiente nivel?",
-        "subtitle": "Gratis para siempre. Sin tarjeta. El equipo te ayuda con la migración.",
+        "subtitle": "Gratis para siempre. Sin tarjeta. Importa tus clientes y facturas en unos minutos.",
         "cta": "Empezar gratis ahora"
+      },
+      "faq": {
+        "title": "Preguntas frecuentes sobre el programa de facturación",
+        "items": {
+          "q1": {
+            "q": "¿Hay un plan gratuito para facturar?",
+            "a": "Sí. El plan gratuito no caduca e incluye 1 usuario, 5 clientes, 10 facturas y 5 presupuestos al mes, con VeriFactu. Con Starter, por 29 € al mes con IVA, las facturas son ilimitadas."
+          },
+          "q2": {
+            "q": "¿En qué idiomas puedo hacer las facturas?",
+            "a": "En castellano, catalán, euskera, gallego e inglés. Eliges el idioma en cada factura, y la aplicación también está en esos cinco idiomas."
+          },
+          "q3": {
+            "q": "¿El programa está adaptado a VeriFactu?",
+            "a": "Sí, en todos los planes. Cada factura genera su registro con huella digital y código QR. Será obligatorio desde el 1 de enero de 2027 para sociedades y desde el 1 de julio de 2027 para autónomos."
+          },
+          "q4": {
+            "q": "¿Puedo traer mis datos de otro programa?",
+            "a": "Sí. El importador carga clientes, productos, proveedores y facturas desde archivos Excel o CSV exportados de tu programa anterior."
+          },
+          "q5": {
+            "q": "¿Puedo conciliar el banco con las facturas?",
+            "a": "Sí. Importas el extracto de tu banco en Excel o CSV y YouWhole cruza los cobros y pagos con tus facturas. Los que no encuentre los puedes vincular a mano."
+          }
+        }
       }
     },
     "verifactu": {

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { MarketingNav } from "@/components/marketing/nav";
 import { MarketingFooter } from "@/components/marketing/footer";
+import { SatelliteFaq } from "@/components/marketing/pages/satellite-faq";
 import { PricingCards } from "@/components/billing/pricing-cards";
 
 const MODULE_KEYS = ["m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8"] as const;
@@ -92,6 +93,9 @@ export function FacturacionPymesContent() {
             <PricingCards />
           </div>
         </section>
+
+        {/* Preguntas frecuentes */}
+        <SatelliteFaq namespace="facturacionPymes" />
 
         {/* CTA */}
         <section className="py-24 bg-primary/5 border-t">

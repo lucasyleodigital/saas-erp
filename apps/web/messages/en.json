@@ -2869,10 +2869,10 @@
     },
     "facturacionPymes": {
       "seo": {
-        "title": "Invoicing Software for SMEs — YouWhole",
-        "description": "Invoicing software for SMEs with certified VeriFactu, Spanish GAAP accounting, payroll and CRM. All in one. From 29 EUR/month, no lock-in.",
-        "ogTitle": "Invoicing Software for SMEs — YouWhole",
-        "ogDescription": "Everything your SME needs: VeriFactu invoicing, payroll, CRM, Spanish GAAP accounting, and more. From €29/month."
+        "title": "Invoicing software for small businesses with VeriFactu — YouWhole",
+        "description": "Invoicing software for Spanish SMEs adapted to VeriFactu, with a free plan and unlimited invoices from €29/month with VAT. Accounting, CRM, inventory and banking in the same app.",
+        "ogTitle": "Invoicing software for small businesses — YouWhole",
+        "ogDescription": "VeriFactu-ready invoices in five languages, with accounting, CRM, inventory and banking. Free plan to get started."
       },
       "badge": "All-in-one for SMEs",
       "h1Line1": "Invoicing software for SMEs",
@@ -2880,7 +2880,7 @@
       "subtitle": "YouWhole brings everything your SME needs together in one platform: VeriFactu invoicing, accounting, payroll, CRM, inventory, and projects. No integrations. No surprises.",
       "ctaPrimary": "Try it for free",
       "ctaSecondary": "Request a demo for my SME",
-      "trustLine": "No lock-in · Support in English · Assisted migration",
+      "trustLine": "Free plan · No minimum term · Importer for clients, products and invoices",
       "modules": {
         "title": "8 modules built into one platform",
         "subtitle": "Forget connecting 5 different tools. YouWhole has it all, and shares data across modules automatically.",
@@ -2891,11 +2891,11 @@
           },
           "m2": {
             "title": "Spanish GAAP accounting",
-            "desc": "Automatic entries under the official Spanish chart of accounts. Real-time accounting balance with no prior knowledge needed."
+            "desc": "General journal with the Spanish PGC chart of accounts, profit and loss and forms 303, 130 and 347 from your invoices and expenses. Expenses create their journal entry automatically."
           },
           "m3": {
             "title": "Payroll & HR",
-            "desc": "Generate payroll, manage contracts, and track each employee's hours by project."
+            "desc": "Time tracking with clock-ins by project and, on the Pro plan, payroll with a payslip for each employee."
           },
           "m4": {
             "title": "CRM & sales",
@@ -2903,15 +2903,15 @@
           },
           "m5": {
             "title": "Project management",
-            "desc": "Track profitability per project, assign employees, and bill worked time."
+            "desc": "Track the hours and profitability of each project and link its invoices to it."
           },
           "m6": {
             "title": "Inventory & warehouse",
-            "desc": "Track stock, manage suppliers, and automatically generate purchase orders when inventory runs low."
+            "desc": "Manage stock, suppliers and purchase orders, with an alert when a product drops below its minimum."
           },
           "m7": {
             "title": "Banking & reconciliation",
-            "desc": "Connect your bank account and automatically reconcile payments with your invoices."
+            "desc": "Import your bank statement in Excel or CSV and YouWhole reconciles it with your invoices."
           },
           "m8": {
             "title": "Automations",
@@ -2941,8 +2941,33 @@
       },
       "finalCta": {
         "title": "Is your SME ready for the next level?",
-        "subtitle": "Free forever. No card. Our team helps with migration.",
+        "subtitle": "Free forever. No card required. Import your clients and invoices in minutes.",
         "cta": "Start for free now"
+      },
+      "faq": {
+        "title": "Frequently asked questions about the invoicing software",
+        "items": {
+          "q1": {
+            "q": "Is there a free invoicing plan?",
+            "a": "Yes. The free plan never expires and includes 1 user, 5 clients, 10 invoices and 5 quotes a month, with VeriFactu. With Starter, at €29 a month with VAT, invoices are unlimited."
+          },
+          "q2": {
+            "q": "Which languages can I invoice in?",
+            "a": "Spanish, Catalan, Basque, Galician and English. You choose the language for each invoice, and the app is available in those five languages too."
+          },
+          "q3": {
+            "q": "Is the software adapted to VeriFactu?",
+            "a": "Yes, on every plan. Each invoice generates its record with a digital fingerprint and QR code. It becomes mandatory on 1 January 2027 for companies and on 1 July 2027 for the self-employed."
+          },
+          "q4": {
+            "q": "Can I bring my data from another program?",
+            "a": "Yes. The importer loads clients, products, suppliers and invoices from Excel or CSV files exported from your previous software."
+          },
+          "q5": {
+            "q": "Can I reconcile my bank with my invoices?",
+            "a": "Yes. You import your bank statement in Excel or CSV and YouWhole matches payments in and out with your invoices. Anything it cannot match you can link by hand."
+          }
+        }
       }
     },
     "verifactu": {
