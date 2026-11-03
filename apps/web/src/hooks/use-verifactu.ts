@@ -51,6 +51,7 @@ export interface VerifactuSettings {
   lockedUntil: string | null;
   canDisable: boolean;
   environment: "test" | "prod";
+  canActivate: boolean;
   pending: number;
   rejected: number;
 }

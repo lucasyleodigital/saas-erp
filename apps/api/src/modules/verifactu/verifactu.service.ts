@@ -18,8 +18,15 @@ const AEAT_ENDPOINTS = {
   prod: "https://www1.agenciatributaria.gob.es/wlpl/TIKE-CONT/ws/SistemaFacturacion/VerifactuSOAP",
 };
 
-// Registros de la cadena VERI*FACTU actual; los de chain = 1 son anteriores y no se envían
-const CHAIN = 2;
+export function aeatEnv(): "test" | "prod" {
+  return (process.env.AEAT_ENV ?? "test").toLowerCase() === "prod" ? "prod" : "test";
+}
+
+// Cada entorno de la AEAT tiene su propia cadena: lo enviado a pruebas no se encadena ni se envía en producción.
+// Los de chain = 1 son anteriores a la cadena VERI*FACTU actual y no se envían.
+export function verifactuChain(): number {
+  return aeatEnv() === "prod" ? 3 : 2;
+}
 
 // Espera tras un fallo técnico: 1, 2, 5, 15 y 30 minutos; después, cada hora
 const RETRY_DELAYS_MIN = [1, 2, 5, 15, 30, 60];
@@ -38,7 +45,7 @@ export class VerifactuService {
   constructor(private prisma: PrismaService) {}
 
   private aeatEnv(): "test" | "prod" {
-    return (process.env.AEAT_ENV ?? "test").toLowerCase() === "prod" ? "prod" : "test";
+    return aeatEnv();
   }
 
   // ── Activación ───────────────────────────────────────────────────────────
@@ -47,11 +54,22 @@ export class VerifactuService {
     return new Date(Date.UTC(date.getUTCFullYear() + 1, 0, 1));
   }
 
-  async getSettings(companyId: string) {
+  /** La activación solo vale para el entorno de la AEAT en el que se hizo. */
+  private async currentSender(companyId: string) {
+    const sender = await this.prisma.verifactuSender.findUnique({ where: { companyId } });
+    return sender && sender.environment === this.aeatEnv() ? sender : null;
+  }
+
+  /** Mientras YouWhole esté conectado a pruebas, solo el administrador de la plataforma puede activarlo. */
+  private canActivate(role: string) {
+    return this.aeatEnv() === "prod" || role === "SUPER_ADMIN";
+  }
+
+  async getSettings(companyId: string, role: string) {
     const [sender, pending, rejected] = await Promise.all([
-      this.prisma.verifactuSender.findUnique({ where: { companyId } }),
-      this.prisma.verifactuRecord.count({ where: { companyId, chain: CHAIN, status: "GENERATED" } }),
-      this.prisma.verifactuRecord.count({ where: { companyId, chain: CHAIN, status: "REJECTED" } }),
+      this.currentSender(companyId),
+      this.prisma.verifactuRecord.count({ where: { companyId, chain: verifactuChain(), status: "GENERATED" } }),
+      this.prisma.verifactuRecord.count({ where: { companyId, chain: verifactuChain(), status: "REJECTED" } }),
     ]);
     // La opción por VERI*FACTU dura al menos hasta el fin del año natural del primer envío
     const lockedUntil = sender?.firstSentAt ? this.endOfYear(sender.firstSentAt) : null;
@@ -63,25 +81,35 @@ export class VerifactuService {
       lockedUntil,
       canDisable: !lockedUntil || lockedUntil <= new Date(),
       environment: this.aeatEnv(),
+      canActivate: this.canActivate(role),
       pending,
       rejected,
     };
   }
 
-  async setEnabled(companyId: string, enabled: boolean) {
+  async setEnabled(companyId: string, enabled: boolean, role: string) {
     if (enabled) {
+      if (!this.canActivate(role)) {
+        throw new BadRequestException("El envío a la AEAT estará disponible muy pronto. Te avisaremos en cuanto puedas activarlo.");
+      }
       const company = await this.prisma.company.findUniqueOrThrow({ where: { id: companyId } });
       if (!company.cif) throw new BadRequestException("Añade el NIF de la empresa en Empresa → Configuración antes de activar VERI*FACTU.");
       if (!(company.settings as any)?.verifactuCert?.data) {
         throw new BadRequestException("Sube el certificado digital de la empresa antes de activar VERI*FACTU.");
       }
+      const env = this.aeatEnv();
+      const previous = await this.prisma.verifactuSender.findUnique({ where: { companyId } });
+      // Una activación hecha en otro entorno de la AEAT no cuenta: se empieza de cero, sin bloqueo
+      const fresh = previous && previous.environment !== env
+        ? { environment: env, firstSentAt: null, lastSentAt: null, waitSeconds: DEFAULT_WAIT_SECONDS }
+        : {};
       await this.prisma.verifactuSender.upsert({
         where: { companyId },
-        create: { companyId, enabled: true, activatedAt: new Date() },
-        update: { enabled: true, activatedAt: new Date() },
+        create: { companyId, enabled: true, activatedAt: new Date(), environment: env },
+        update: { enabled: true, activatedAt: new Date(), ...fresh },
       });
     } else {
-      const settings = await this.getSettings(companyId);
+      const settings = await this.getSettings(companyId, role);
       if (!settings.canDisable) {
         throw new BadRequestException(
           `VERI*FACTU no se puede desactivar hasta el ${settings.lockedUntil!.toLocaleDateString("es-ES")}: la ley obliga a mantenerlo hasta el fin del año del primer envío.`,
@@ -89,12 +117,11 @@ export class VerifactuService {
       }
       await this.prisma.verifactuSender.updateMany({ where: { companyId }, data: { enabled: false } });
     }
-    return this.getSettings(companyId);
+    return this.getSettings(companyId, role);
   }
 
   private async isEnabled(companyId: string): Promise<boolean> {
-    const sender = await this.prisma.verifactuSender.findUnique({ where: { companyId } });
-    return !!sender?.enabled;
+    return !!(await this.currentSender(companyId))?.enabled;
   }
 
   // ── Datos del registro de alta ─────────────────────────────────────────────
@@ -191,7 +218,7 @@ export class VerifactuService {
     return this.prisma.$transaction(async (tx) => {
       await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${"verifactu:" + companyId}))`;
       const last = await tx.verifactuRecord.findFirst({
-        where: { companyId, chain: CHAIN },
+        where: { companyId, chain: verifactuChain() },
         orderBy: { seq: "desc" },
       });
       const anterior = last
@@ -203,7 +230,7 @@ export class VerifactuService {
 
   private latestForInvoice(companyId: string, invoiceId: string, tx: Tx | PrismaService = this.prisma) {
     return tx.verifactuRecord.findFirst({
-      where: { companyId, invoiceId, chain: CHAIN },
+      where: { companyId, invoiceId, chain: verifactuChain() },
       orderBy: { seq: "desc" },
     });
   }
@@ -220,7 +247,7 @@ export class VerifactuService {
       };
       const record = await tx.verifactuRecord.create({
         data: {
-          companyId, invoiceId, kind: "ALTA", chain: CHAIN, seq,
+          companyId, invoiceId, kind: "ALTA", chain: verifactuChain(), seq,
           xml: buildRegistroAlta(data), hash, previousHash: anterior?.huella ?? null,
           issuerNif: fields.idEmisor, numSerie: fields.numSerie, fechaExpedicion: fields.fechaExpedicion, fechaHoraHuso,
           status: "GENERATED",
@@ -239,7 +266,7 @@ export class VerifactuService {
 
   private async createAnulacion(companyId: string, invoiceId: string, opts: { sinRegistroPrevio?: boolean; rechazoPrevio?: boolean }) {
     const alta = await this.prisma.verifactuRecord.findFirst({
-      where: { companyId, invoiceId, chain: CHAIN, kind: "ALTA" },
+      where: { companyId, invoiceId, chain: verifactuChain(), kind: "ALTA" },
       orderBy: { seq: "desc" },
     });
     if (!alta) return null;
@@ -248,7 +275,7 @@ export class VerifactuService {
       const hash = huellaAnulacion({ ...id, huellaAnterior: anterior?.huella ?? null, fechaHoraHuso });
       const record = await tx.verifactuRecord.create({
         data: {
-          companyId, invoiceId, kind: "ANULACION", chain: CHAIN, seq,
+          companyId, invoiceId, kind: "ANULACION", chain: verifactuChain(), seq,
           xml: buildRegistroAnulacion({ ...id, ...opts, anterior, numeroInstalacion: companyId, fechaHoraHuso, huella: hash }),
           hash, previousHash: anterior?.huella ?? null,
           issuerNif: id.idEmisor, numSerie: id.numSerie, fechaExpedicion: id.fechaExpedicion, fechaHoraHuso,
@@ -275,19 +302,19 @@ export class VerifactuService {
     const latest = await this.latestForInvoice(companyId, invoiceId);
     if (!latest || latest.kind === "ANULACION") return latest;
     const everAccepted = await this.prisma.verifactuRecord.count({
-      where: { companyId, invoiceId, chain: CHAIN, kind: "ALTA", status: "ACCEPTED" },
+      where: { companyId, invoiceId, chain: verifactuChain(), kind: "ALTA", status: "ACCEPTED" },
     });
     // Un alta pendiente se enviará antes que la anulación; una rechazada nunca llegó a la AEAT
     return this.createAnulacion(companyId, invoiceId, { sinRegistroPrevio: latest.status === "REJECTED" && !everAccepted });
   }
 
   async hasRecords(companyId: string, invoiceId: string) {
-    return (await this.prisma.verifactuRecord.count({ where: { companyId, invoiceId, chain: CHAIN } })) > 0;
+    return (await this.prisma.verifactuRecord.count({ where: { companyId, invoiceId, chain: verifactuChain() } })) > 0;
   }
 
   /** Corrige un registro rechazado con los datos actuales (p. ej., tras arreglar el NIF del cliente). */
   async resubmit(companyId: string, recordId: string) {
-    const record = await this.prisma.verifactuRecord.findFirst({ where: { id: recordId, companyId, chain: CHAIN } });
+    const record = await this.prisma.verifactuRecord.findFirst({ where: { id: recordId, companyId, chain: verifactuChain() } });
     if (!record) throw new BadRequestException("Registro VeriFactu no encontrado");
     if (record.status !== "REJECTED") throw new BadRequestException("Solo se pueden corregir registros rechazados por la AEAT");
     const latest = await this.latestForInvoice(companyId, record.invoiceId);
@@ -297,7 +324,7 @@ export class VerifactuService {
       return this.createAnulacion(companyId, record.invoiceId, { rechazoPrevio: true });
     }
     const everAccepted = await this.prisma.verifactuRecord.count({
-      where: { companyId, invoiceId: record.invoiceId, chain: CHAIN, kind: "ALTA", status: "ACCEPTED" },
+      where: { companyId, invoiceId: record.invoiceId, chain: verifactuChain(), kind: "ALTA", status: "ACCEPTED" },
     });
     return this.createAlta(companyId, record.invoiceId, everAccepted ? { subsanacion: true } : { subsanacion: true, rechazoPrevio: "X" });
   }
@@ -312,9 +339,9 @@ export class VerifactuService {
     this.sending = true;
     try {
       const now = new Date();
-      const senders = await this.prisma.verifactuSender.findMany({ where: { enabled: true } });
+      const senders = await this.prisma.verifactuSender.findMany({ where: { enabled: true, environment: this.aeatEnv() } });
       for (const sender of senders) {
-        const due = { companyId: sender.companyId, chain: CHAIN, status: "GENERATED" as const, OR: [{ nextAttemptAt: null }, { nextAttemptAt: { lte: now } }] };
+        const due = { companyId: sender.companyId, chain: verifactuChain(), status: "GENERATED" as const, OR: [{ nextAttemptAt: null }, { nextAttemptAt: { lte: now } }] };
         const pending = await this.prisma.verifactuRecord.count({ where: due });
         if (!pending) continue;
         const waited = !sender.lastSentAt || now.getTime() - sender.lastSentAt.getTime() >= sender.waitSeconds * 1000;
@@ -437,7 +464,7 @@ export class VerifactuService {
   /** Adelanta el siguiente intento de los registros pendientes (p. ej., tras renovar el certificado). */
   async retryNow(companyId: string) {
     const { count } = await this.prisma.verifactuRecord.updateMany({
-      where: { companyId, chain: CHAIN, status: "GENERATED" },
+      where: { companyId, chain: verifactuChain(), status: "GENERATED" },
       data: { nextAttemptAt: null },
     });
     return { scheduled: count };
@@ -501,7 +528,7 @@ export class VerifactuService {
 
   async getStatus(companyId: string, invoiceId: string) {
     return this.prisma.verifactuRecord.findFirst({
-      where: { companyId, invoiceId, chain: CHAIN },
+      where: { companyId, invoiceId, chain: verifactuChain() },
       orderBy: { seq: "desc" },
       include: { events: { orderBy: { createdAt: "desc" } } },
     });
@@ -509,7 +536,7 @@ export class VerifactuService {
 
   async getAll(companyId: string) {
     const records = await this.prisma.verifactuRecord.findMany({
-      where: { companyId, chain: CHAIN },
+      where: { companyId, chain: verifactuChain() },
       include: {
         invoice: { select: { number: true, total: true, issueDate: true, client: { select: { id: true, name: true } } } },
         events: { orderBy: { createdAt: "desc" }, take: 1 },

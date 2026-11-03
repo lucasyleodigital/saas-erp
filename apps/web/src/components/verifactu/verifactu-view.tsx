@@ -110,15 +110,18 @@ export function VerifactuView() {
                 {t("activation.disable")}
               </Button>
             ) : (
-              <Button size="sm" className="shrink-0" disabled={!certUsable || !settings} onClick={() => setConfirmOpen(true)}>
+              <Button size="sm" className="shrink-0" disabled={!certUsable || !settings?.canActivate} onClick={() => setConfirmOpen(true)}>
                 {t("activation.enable")}
               </Button>
             )}
           </div>
-          {!settings?.enabled && !certUsable && (
+          {settings && !settings.enabled && !settings.canActivate && (
+            <p className="text-xs text-muted-foreground">{t("activation.comingSoon")}</p>
+          )}
+          {settings?.canActivate && !settings.enabled && !certUsable && (
             <p className="text-xs text-amber-600 dark:text-amber-400">{t("activation.needCert")}</p>
           )}
-          {settings?.environment === "test" && (
+          {settings?.environment === "test" && settings.canActivate && (
             <p className="text-xs text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
               <FlaskConical className="h-3.5 w-3.5" />
               {t("activation.testEnv")}

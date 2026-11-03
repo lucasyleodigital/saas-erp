@@ -12,7 +12,7 @@ import { EmailService } from "../email/email.service";
 import { NotificationsService } from "../notifications/notifications.service";
 import { AuditService } from "../audit/audit.service";
 import { CreateInvoiceDto } from "./dto/create-invoice.dto";
-import { VerifactuService } from "../verifactu/verifactu.service";
+import { VerifactuService, verifactuChain } from "../verifactu/verifactu.service";
 import type { PaginationParams } from "@saas/types";
 
 @Injectable()
@@ -92,7 +92,7 @@ export class InvoicesService {
         taxes: { include: { tax: true } },
         payments: { orderBy: { paidAt: "desc" } },
         series: { select: { prefix: true } },
-        verifactuRecords: { where: { chain: 2 }, orderBy: { seq: "desc" }, take: 1 },
+        verifactuRecords: { where: { chain: verifactuChain() }, orderBy: { seq: "desc" }, take: 1 },
       },
     });
     if (!invoice) throw new NotFoundException("Factura no encontrada");

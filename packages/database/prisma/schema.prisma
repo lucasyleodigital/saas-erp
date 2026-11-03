@@ -810,7 +810,8 @@ enum VerifactuKind {
 }
 
 // Una factura puede tener varios registros: el alta, sus subsanaciones y la anulación.
-// chain = 1 son registros anteriores a la cadena VERI*FACTU actual (no se envían ni se encadenan).
+// chain = 1 son registros anteriores a la cadena VERI*FACTU actual (no se envían ni se encadenan);
+// chain = 2 es la del entorno de pruebas de la AEAT y chain = 3 la de producción.
 model VerifactuRecord {
   id             String          @id @default(uuid())
   companyId      String
@@ -859,6 +860,8 @@ model VerifactuSender {
   firstSentAt  DateTime?
   waitSeconds  Int       @default(60)
   lastSentAt   DateTime?
+  // Entorno de la AEAT en el que se activó ("test" o "prod"); la activación no vale en el otro
+  environment  String    @default("test")
   updatedAt    DateTime  @updatedAt
 
   company      Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)

@@ -2037,7 +2037,8 @@
       "confirmTitle": "Activar VERI*FACTU?",
       "confirmBody": "A partir de agora, cada factura que emitas rexistrarase e enviarase automaticamente á AEAT, e non poderá volver a borrador. Despois do primeiro envío, a lei obriga a manter VERI*FACTU activado ata o 31 de decembro dese ano.",
       "enabledToast": "VERI*FACTU activado",
-      "disabledToast": "VERI*FACTU desactivado"
+      "disabledToast": "VERI*FACTU desactivado",
+      "comingSoon": "O envío automático á AEAT estará dispoñible moi pronto. Mentres tanto, xa podes subir o certificado dixital da empresa."
     }
   },
   "webhooks": {

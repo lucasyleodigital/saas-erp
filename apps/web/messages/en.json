@@ -2177,7 +2177,8 @@
       "confirmTitle": "Turn on VERI*FACTU?",
       "confirmBody": "From now on, every invoice you issue will be recorded and sent to the AEAT automatically, and it can't go back to draft. After the first submission, the law requires VERI*FACTU to stay on until 31 December of that year.",
       "enabledToast": "VERI*FACTU turned on",
-      "disabledToast": "VERI*FACTU turned off"
+      "disabledToast": "VERI*FACTU turned off",
+      "comingSoon": "Automatic submission to the AEAT will be available very soon. In the meantime, you can already upload the company’s digital certificate."
     }
   },
   "webhooks": {

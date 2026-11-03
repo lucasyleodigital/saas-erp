@@ -2122,7 +2122,8 @@
       "confirmTitle": "VERI*FACTU aktibatu?",
       "confirmBody": "Hemendik aurrera, egiten duzun faktura bakoitza automatikoki erregistratu eta AEATra bidaliko da, eta ezingo da zirriborrora itzuli. Lehen bidalketaren ondoren, legeak VERI*FACTU aktibatuta mantentzera behartzen du urte horretako abenduaren 31ra arte.",
       "enabledToast": "VERI*FACTU aktibatuta",
-      "disabledToast": "VERI*FACTU desaktibatuta"
+      "disabledToast": "VERI*FACTU desaktibatuta",
+      "comingSoon": "AEATra bidalketa automatikoa laster egongo da erabilgarri. Bitartean, enpresaren ziurtagiri digitala igo dezakezu."
     }
   },
   "webhooks": {

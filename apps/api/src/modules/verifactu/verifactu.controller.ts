@@ -36,14 +36,14 @@ export class VerifactuController {
 
   @Get("settings")
   getSettings(@CurrentUser() user: JwtPayload) {
-    return this.verifactuService.getSettings(user.companyId);
+    return this.verifactuService.getSettings(user.companyId, user.role as string);
   }
 
   @Post("settings")
   setEnabled(@CurrentUser() user: JwtPayload, @Body("enabled") enabled: boolean) {
     requireAdmin(user);
     if (typeof enabled !== "boolean") throw new BadRequestException("Indica si VERI*FACTU queda activado o no");
-    return this.verifactuService.setEnabled(user.companyId, enabled);
+    return this.verifactuService.setEnabled(user.companyId, enabled, user.role as string);
   }
 
   // ── Registros ────────────────────────────────────────────────────────────
