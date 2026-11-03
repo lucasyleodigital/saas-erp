@@ -8,8 +8,6 @@ import * as compression from "compression";
 import { AppModule } from "./app.module";
 import { DecimalInterceptor } from "./decimal.interceptor";
 import { SanitizePipe } from "./common/pipes/sanitize.pipe";
-import { TenantInterceptor } from "./database/tenant.interceptor";
-import { PrismaService } from "./database/prisma.service";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -62,12 +60,8 @@ async function bootstrap() {
     })
   );
 
-  // Interceptors: tenant isolation (RLS) + Decimal conversion
-  const prisma = app.get(PrismaService);
-  app.useGlobalInterceptors(
-    new TenantInterceptor(prisma),
-    new DecimalInterceptor(),
-  );
+  // Interceptors: Decimal conversion
+  app.useGlobalInterceptors(new DecimalInterceptor());
 
   // API prefix
   app.setGlobalPrefix("api/v1");

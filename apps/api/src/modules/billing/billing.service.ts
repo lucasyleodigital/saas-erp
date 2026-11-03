@@ -5,6 +5,7 @@ import { PrismaService } from "../../database/prisma.service";
 import { ContractsService } from "../contracts/contracts.service";
 import { EmailService } from "../email/email.service";
 import type { ContractPlan } from "../contracts/contract-content";
+import { clearPlanCache } from "../plans/plans.service";
 
 // These must be replaced with real Stripe price IDs from the Stripe dashboard
 const PRICE_IDS: Record<string, string> = {
@@ -303,6 +304,7 @@ export class BillingService {
       }
     }
 
+    clearPlanCache();
     return { received: true };
   }
 }

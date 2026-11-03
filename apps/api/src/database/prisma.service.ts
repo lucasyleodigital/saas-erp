@@ -12,7 +12,7 @@ export class PrismaService
     const dbUrl = process.env.DATABASE_URL ?? "";
     const separator = dbUrl.includes("?") ? "&" : "?";
     super({
-      datasources: { db: { url: `${dbUrl}${separator}connection_limit=5&pool_timeout=10` } },
+      datasources: { db: { url: `${dbUrl}${separator}connection_limit=10&pool_timeout=10` } },
       log: process.env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],
     });
   }

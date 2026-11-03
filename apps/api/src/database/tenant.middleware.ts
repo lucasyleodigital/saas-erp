@@ -3,8 +3,9 @@
  *
  * In Prisma 6+, $use() middleware is removed. Instead, we rely on:
  * 1. PostgreSQL RLS policies (database level - see rls-policies.sql)
- * 2. The TenantInterceptor (application level - sets session variable)
- * 3. Service-level companyId filtering (code convention)
+ *    The API connects as `postgres` (BYPASSRLS), so they only shield the
+ *    tables from Supabase's anon/authenticated roles.
+ * 2. Service-level companyId filtering (code convention)
  *
  * This module exports the list of tenant-scoped models
  * for reference by other security modules.

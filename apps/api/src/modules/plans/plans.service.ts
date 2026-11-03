@@ -31,26 +31,35 @@ const LIMIT_NAMES: Record<PlanLimitKey, string> = {
   maxAutomations: "automatizaciones",
 };
 
+// El plan se consulta en casi cada petición; se guarda unos segundos para no ir a la BD cada vez
+const PLAN_CACHE_MS = 30_000;
+const planCache = new Map<string, { plan: PlanType; expires: number }>();
+
+/** Olvida los planes guardados; llamar tras cambiar el plan de una empresa. */
+export function clearPlanCache() {
+  planCache.clear();
+}
+
 @Injectable()
 export class PlansService {
   constructor(private prisma: PrismaService) {}
 
   /** Returns the limits for the company's current plan */
   async getLimits(companyId: string) {
-    const company = await this.prisma.company.findUniqueOrThrow({
-      where: { id: companyId },
-      select: { plan: true },
-    });
-    return PLAN_LIMITS[company.plan as PlanType];
+    return PLAN_LIMITS[await this.getPlan(companyId)];
   }
 
   /** Returns the company plan */
   async getPlan(companyId: string) {
+    const cached = planCache.get(companyId);
+    if (cached && cached.expires > Date.now()) return cached.plan;
     const company = await this.prisma.company.findUniqueOrThrow({
       where: { id: companyId },
       select: { plan: true },
     });
-    return company.plan as PlanType;
+    const plan = company.plan as PlanType;
+    planCache.set(companyId, { plan, expires: Date.now() + PLAN_CACHE_MS });
+    return plan;
   }
 
   /** Throws ForbiddenException if the feature is not available in the plan */

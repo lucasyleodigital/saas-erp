@@ -5,6 +5,10 @@ import { ConfigService } from "@nestjs/config";
 import { PrismaService } from "../../../database/prisma.service";
 import type { JwtPayload } from "@saas/types";
 
+// Cada petición comprueba que el usuario sigue activo; se guarda unos segundos para no ir a la BD cada vez
+const ACTIVE_CACHE_MS = 30_000;
+const activeUntil = new Map<string, number>();
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
@@ -19,13 +23,19 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayload) {
+    if ((activeUntil.get(payload.sub) ?? 0) > Date.now()) return payload;
+
     const user = await this.prisma.user.findUnique({
       where: { id: payload.sub },
       select: { id: true, email: true, isActive: true },
     });
 
-    if (!user || !user.isActive) throw new UnauthorizedException();
+    if (!user || !user.isActive) {
+      activeUntil.delete(payload.sub);
+      throw new UnauthorizedException();
+    }
 
+    activeUntil.set(payload.sub, Date.now() + ACTIVE_CACHE_MS);
     return payload;
   }
 }

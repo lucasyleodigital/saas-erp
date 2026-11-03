@@ -2,6 +2,7 @@ import { Injectable, ForbiddenException, NotFoundException } from "@nestjs/commo
 import { JwtService } from "@nestjs/jwt";
 import { PrismaService } from "../../database/prisma.service";
 import { EmailService } from "../email/email.service";
+import { clearPlanCache } from "../plans/plans.service";
 
 const PLAN_PRICE: Record<string, number> = { FREE: 0, STARTER: 29, PRO: 79, ENTERPRISE: 199 };
 
@@ -126,6 +127,7 @@ export class AdminService {
     const valid = ["FREE", "STARTER", "PRO", "ENTERPRISE"];
     if (!valid.includes(plan)) throw new ForbiddenException("Plan no valido");
     await this.prisma.company.update({ where: { id: companyId }, data: { plan: plan as any } });
+    clearPlanCache();
     if (notify) await this.notifyPlanChanged(companyId, plan);
     return { ok: true };
   }
