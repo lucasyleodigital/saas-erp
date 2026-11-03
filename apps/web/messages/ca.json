@@ -163,6 +163,13 @@
       "google": "Registrar-se amb Google",
       "terms": "En registrar-te acceptes els nostres termes i condicions",
       "error": "No s'ha pogut crear el compte"
+    },
+    "recaptcha": {
+      "before": "Aquest lloc està protegit per reCAPTCHA i s’hi apliquen la",
+      "privacy": "Política de privadesa",
+      "and": "i les",
+      "terms": "Condicions del servei",
+      "after": "de Google."
     }
   },
   "dashboard": {

@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { RecaptchaNotice } from "./recaptcha-notice";
 
 const LOCALES = ["es", "ca", "eu", "gl", "en"];
 
@@ -158,6 +159,7 @@ export function RegisterForm() {
           <p className="text-xs text-destructive ml-6">{errors.acceptTerms.message}</p>
         )}
       </div>
+      <RecaptchaNotice />
     </form>
   );
 }

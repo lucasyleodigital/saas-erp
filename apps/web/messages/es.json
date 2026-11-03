@@ -163,6 +163,13 @@
       "google": "Registrarse con Google",
       "terms": "Al registrarte aceptas nuestros términos y condiciones",
       "error": "No se pudo crear la cuenta"
+    },
+    "recaptcha": {
+      "before": "Este sitio está protegido por reCAPTCHA y se aplican la",
+      "privacy": "Política de privacidad",
+      "and": "y los",
+      "terms": "Términos del servicio",
+      "after": "de Google."
     }
   },
   "dashboard": {

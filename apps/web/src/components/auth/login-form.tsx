@@ -14,6 +14,7 @@ import { loginAction, complete2FALoginAction } from "@/lib/auth";
 import { useAuthStore } from "@/store/auth.store";
 import { api } from "@/lib/api";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { RecaptchaNotice } from "./recaptcha-notice";
 
 const LOCALES = ["es", "ca", "eu", "gl", "en"];
 
@@ -230,6 +231,7 @@ export function LoginForm() {
         </svg>
         {t("google")}
       </Button>
+      <RecaptchaNotice />
     </form>
   );
 }

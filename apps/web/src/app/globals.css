@@ -120,3 +120,9 @@
     border-radius: 9999px;
   }
 }
+
+/* Sello de reCAPTCHA oculto: tapaba botones de la esquina inferior derecha.
+   El aviso legal de Google se muestra en login y registro (RecaptchaNotice). */
+.grecaptcha-badge {
+  visibility: hidden !important;
+}

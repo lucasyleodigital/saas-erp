@@ -163,6 +163,13 @@
       "google": "Sign up with Google",
       "terms": "By signing up you agree to our terms and conditions",
       "error": "Could not create account"
+    },
+    "recaptcha": {
+      "before": "This site is protected by reCAPTCHA and the Google",
+      "privacy": "Privacy Policy",
+      "and": "and",
+      "terms": "Terms of Service",
+      "after": "apply."
     }
   },
   "dashboard": {

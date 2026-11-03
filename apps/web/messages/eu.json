@@ -163,6 +163,13 @@
       "google": "Google-rekin erregistratu",
       "terms": "Erregistratzean gure baldintzak onartzen dituzu",
       "error": "Ezin izan da kontua sortu"
+    },
+    "recaptcha": {
+      "before": "Gune hau reCAPTCHAk babesten du, eta Googleren",
+      "privacy": "Pribatutasun-politika",
+      "and": "eta",
+      "terms": "Zerbitzu-baldintzak",
+      "after": "aplikatzen dira."
     }
   },
   "dashboard": {

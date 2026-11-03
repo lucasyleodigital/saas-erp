@@ -163,6 +163,13 @@
       "google": "Rexistrarse con Google",
       "terms": "Ao rexistrarte aceptas os nosos termos e condicions",
       "error": "Non se puido crear a conta"
+    },
+    "recaptcha": {
+      "before": "Este sitio está protexido por reCAPTCHA e aplícanse a",
+      "privacy": "Política de privacidade",
+      "and": "e os",
+      "terms": "Termos do servizo",
+      "after": "de Google."
     }
   },
   "dashboard": {
